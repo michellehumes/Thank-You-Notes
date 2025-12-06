@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You Notes Tracker</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            margin: 0 0 10px 0;
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-card.envelopes .number { color: #667eea; }
+        .stat-card.written .number { color: #f59e0b; }
+        .stat-card.sent .number { color: #10b981; }
+        .stat-card.total-value .number { color: #764ba2; font-size: 28px; }
+
+        .filters {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filters input[type="text"] {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .filters input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .filters select {
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .filters button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd6;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            cursor: pointer;
+        }
+
+        th:hover {
+            background: #f1f5f9;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        tr.completed {
+            background: #f0fdf4;
+        }
+
+        .guest-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .address {
+            font-size: 12px;
+            color: #6b7280;
+            max-width: 200px;
+        }
+
+        .gift {
+            font-size: 13px;
+            color: #4b5563;
+            max-width: 250px;
+        }
+
+        .value {
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .ty-preview {
+            font-size: 11px;
+            color: #9ca3af;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .ty-preview:hover {
+            color: #667eea;
+        }
+
+        .checkbox-cell {
+            text-align: center;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-wrapper label {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+
+        .modal-content .ty-text {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .modal-content button {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .progress-bar .fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .no-gift {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .export-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 900px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Thank You Notes Tracker</h1>
+        <p class="subtitle">Michelle & Gray's Wedding Gift Tracker</p>
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Guests</h3>
+                <div class="number" id="totalGuests">0</div>
+            </div>
+            <div class="stat-card envelopes">
+                <h3>Envelopes Created</h3>
+                <div class="number" id="envelopesCreated">0</div>
+                <div class="progress-bar"><div class="fill" id="envelopeProgress" style="background: #667eea; width: 0%"></div></div>
+            </div>
+            <div class="stat-card written">
+                <h3>Notes Written</h3>
+                <div class="number" id="notesWritten">0</div>
+                <div class="progress-bar"><div class="fill" id="writtenProgress" style="background: #f59e0b; width: 0%"></div></div>
+            </div>
+            <div class="stat-card sent">
+                <h3>Notes Sent</h3>
+                <div class="number" id="notesSent">0</div>
+                <div class="progress-bar"><div class="fill" id="sentProgress" style="background: #10b981; width: 0%"></div></div>
+            </div>
+            <div class="stat-card total-value">
+                <h3>Total Gift Value</h3>
+                <div class="number" id="totalValue">$0</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <input type="text" id="searchInput" placeholder="Search guests, gifts, addresses...">
+            <select id="filterStatus">
+                <option value="all">All Guests</option>
+                <option value="needs-envelope">Needs Envelope</option>
+                <option value="needs-writing">Needs Writing</option>
+                <option value="needs-sending">Needs Sending</option>
+                <option value="completed">Completed</option>
+                <option value="has-gift">Has Gift</option>
+                <option value="no-gift">No Gift</option>
+            </select>
+            <select id="filterRelation">
+                <option value="all">All Relations</option>
+                <option value="joint">Joint</option>
+                <option value="bride">Bride</option>
+            </select>
+            <button class="btn-secondary" onclick="resetFilters()">Reset</button>
+            <button class="btn-primary" onclick="exportProgress()">Export Progress</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable('name')">Guest Name</th>
+                        <th onclick="sortTable('address')">Address</th>
+                        <th onclick="sortTable('gift')">Gift</th>
+                        <th onclick="sortTable('value')">Value</th>
+                        <th>TY Note</th>
+                        <th onclick="sortTable('envelope')">Envelope</th>
+                        <th onclick="sortTable('written')">Written</th>
+                        <th onclick="sortTable('sent')">Sent</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="export-section">
+            <button class="btn-secondary" onclick="markAllEnvelopes()">Mark All Envelopes Done</button>
+            <button class="btn-secondary" onclick="clearAllProgress()">Clear All Progress</button>
+        </div>
+    </div>
+
+    <div class="modal" id="tyModal">
+        <div class="modal-content">
+            <h2 id="modalGuestName">Thank You Note</h2>
+            <div class="ty-text" id="modalTyText"></div>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Gift data from CSV
+        const giftData = [
+            {"name": "Jean Marie Woodard & Kenneth Munnelly", "address": "", "relation": "joint", "gift": "Cuisinart Precision Stand Mixer; Check", "value": 1319.95, "ty": ""},
+            {"name": "Kristen Munnelly", "address": "105 Steeplewood Dr, Exton, PA 19341", "relation": "joint", "gift": "Wüsthof 16-Piece Knife Block Set; Check", "value": 1495, "ty": ""},
+            {"name": "Randall & Lisa King", "address": "310 American Way, Gibsonia, PA 15044", "relation": "joint", "gift": "Bash Beverage Tub; Check", "value": 469.95, "ty": ""},
+            {"name": "Jane Van Damme", "address": "", "relation": "joint", "gift": "Check", "value": 300, "ty": ""},
+            {"name": "Michael & Paige Munnelly", "address": "", "relation": "joint", "gift": "Check", "value": 200, "ty": ""},
+            {"name": "Jenna Munnelly", "address": "", "relation": "joint", "gift": "Check", "value": 200, "ty": ""},
+            {"name": "Katie", "address": "", "relation": "bride", "gift": "", "value": 0, "ty": "Katie, Thank you so much for coming all the way to Florida to celebrate our wedding with us and for your generous honeymoon gift. We had the best time in Africa and kept thinking about how lucky we are to have you in our lives. Hopefully we can see you soon — I miss you already. Love, Michelle & Gray"},
+            {"name": "Mary & Eric", "address": "615 Glendale Drive, Glenview, IL 60025", "relation": "bride", "gift": "Cash Fund – Honeymoon Resort", "value": 400, "ty": "Mary & Eric, Thank you so much for being part of our wedding party and for your incredibly generous honeymoon gift. Mary, your speech at the rehearsal on Friday night meant the world to me. I loved spending so much time with you throughout the weekend, and you helping me figure out my tennis shoes still makes me laugh. I had the best time celebrating with you both. Love, Michelle & Gray"},
+            {"name": "Liza & Mike McNulty", "address": "2515 Beeler St, Denver, CO 80238", "relation": "bride", "gift": "Napkin Rings", "value": 79, "ty": "Liza & Mike, Thank you so much for celebrating with us and for the beautiful napkin rings. It meant so much having family with us in Florida for the weekend. We're so grateful for your love and generosity. Xoxo, Michelle & Gray"},
+            {"name": "Karmin", "address": "", "relation": "bride", "gift": "Vine Lattice Pitcher", "value": 138, "ty": "Karmin, Thank you so much for coming to the wedding and for the gorgeous pitcher — it's absolutely beautiful. It was so great having you there and being able to celebrate together. With love, Michelle & Gray"},
+            {"name": "Sapna", "address": "30 Tara Lane, Montville, NJ 07045", "relation": "bride", "gift": "Antique Brass Gallery Frames", "value": 95, "ty": "Sapna, Thank you so much for the gorgeous frames and for being there to celebrate with us. I know you missed the shower, but I felt your love. I'm so grateful for you and loved celebrating this chapter with you. With love, Michelle & Gray"},
+            {"name": "Michael & Anna Marzano", "address": "8 Egret Way, Phoenixville, PA 19460", "relation": "bride", "gift": "SMEG Matte Mocha Toaster; Potluck Baking Dish Set (3pc)", "value": 279.90, "ty": "Anna & Michael, Thank you so much for coming to the wedding and for your amazing gift. Anna, thank you for being in the wedding and for your beautiful speech on Friday night — it meant so much to me. I had so much fun celebrating with you both, as always. Love, Michelle & Gray"},
+            {"name": "Natalie Hennings", "address": "1294 South Elm Street, MONACA, PA 15061", "relation": "bride", "gift": "Cash Fund – Honeymoon Resort", "value": 50, "ty": "Natalie, Thank you for your generous honeymoon resort gift — it made our Africa trip even more special. We'll definitely let you know the next time we're in Pittsburgh, and hopefully we can see you soon. Miss you already. With love, Michelle & Gray"},
+            {"name": "Emily & Uel", "address": "", "relation": "bride", "gift": "Brass Salt & Pepper Mill Set", "value": 175, "ty": "Emily & Uel, Thank you so much for coming to the wedding — we had the best time celebrating with you both. Your gift is absolutely perfect, and we can't wait for our couple trip this year. Love you both. Love, Michelle & Gray"},
+            {"name": "Lauren Beck", "address": "870 Pacific Street, Apt 1F, New York, NY 11238", "relation": "bride", "gift": "Estelle Colored Glass Champagne Flutes (Set of 6)", "value": 205, "ty": "Lauren, We missed you so much at the wedding, but we can't wait to celebrate at dinner in a few weeks. Thank you for the stunning glasses — they're perfect, and you know I love you so much. Love, Michelle & Gray"},
+            {"name": "JV & David", "address": "35 Sawmill Lane, Greenwich, CT 06830", "relation": "bride", "gift": "Camille Long Stem Wine Glasses (Set)", "value": 419.40, "ty": "JV & David, We missed you at the wedding and hope all is well. Thank you so much for your incredibly generous gift — the glasses are absolutely perfect. With love, Michelle & Gray"},
+            {"name": "Connie Giovanini", "address": "4045 Werthers Ct, Fairfax, VA 22030", "relation": "bride", "gift": "Camille Long Stem Wine Glasses", "value": 139.80, "ty": "Connie, Thank you so much for coming to the wedding and for the beautiful wine glasses. Your thoughtfulness means so much to us. It was wonderful celebrating this chapter with you. With love, Michelle & Gray"},
+            {"name": "Liz & Tim", "address": "17 Danville Drive, Greenlawn, NY 11740", "relation": "bride", "gift": "Party of 12 Appetizer Plates", "value": 29.95, "ty": "Liz & Tim, Thank you so much for coming to the wedding — we had the best time celebrating with you both. And thank you for the plates — they're perfect for hosting. Hopefully you'll come visit us soon so we can put them to use together. With love, Michelle & Gray"},
+            {"name": "Mary Wood", "address": "1 John street, 9C, Brooklyn, NY 11201", "relation": "bride", "gift": "Napkin holders (Pottery Barn) - Shower", "value": 79, "ty": "Mary & Chloe, Thank you both for coming to the shower and for the beautiful napkin rings. Your excitement meant so much to me. I loved celebrating with you both. Xoxo, Michelle & Gray"},
+            {"name": "Chloe McCann", "address": "1 John street, 9C, Brooklyn, NY 11201", "relation": "bride", "gift": "Napkin holders (Pottery Barn) - Shower", "value": 79, "ty": "Mary & Chloe, Thank you both for coming to the shower and for the beautiful napkin rings. Your excitement meant so much to me. I loved celebrating with you both. Xoxo, Michelle & Gray"},
+            {"name": "Tiff & Sashi Shaw", "address": "", "relation": "joint", "gift": "Cash; Shower gift ($100)", "value": 100, "ty": ""},
+            {"name": "Emily & Nayer Whitsett", "address": "", "relation": "joint", "gift": "Cash", "value": 0, "ty": ""},
+            {"name": "Emily Africk", "address": "56 Seventh Ave, 3B, New York, NY 10011", "relation": "joint", "gift": "Estelle Colored Glass Stemmed Wine Glass (Set of 6); Throw; Wine glasses; Balloons (engagement)", "value": 185, "ty": "Emily, Thank you so much for coming to the wedding and for the gorgeous glasses. And thank you again for the engagement balloons — you're always so thoughtful. I loved celebrating this chapter with you. Love you endlessly. With love, Michelle & Gray"},
+            {"name": "Steve & Kathy Saunders", "address": "4657 Saint Benet Ct., Fort Worth, TX 76126", "relation": "joint", "gift": "Caraway 5-Piece Utensil Set; Check", "value": 545, "ty": ""},
+            {"name": "Zara Lopez", "address": "6401 Rialto Blvd., 238, Austin, TX 78735", "relation": "joint", "gift": "Marble Wine Cooler; Capri Blue Volcano Candle", "value": 77.95, "ty": ""},
+            {"name": "Dan & Jenny Hubner", "address": "89 Voorhis Ave, Rockville Centre, NY 11570", "relation": "bride", "gift": "Tall Ramekins (Set of 4); Monique Lhuillier Arles Footed Bowl", "value": 92.80, "ty": "Jenny, Thank you so much for coming to the shower and for the beautiful gifts. Your excitement about celebrating me as a bride made everything even more special. I love you so much. Love, Michelle & Gray"},
+            {"name": "Christopher Humes", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Frazer Humes", "address": "", "relation": "joint", "gift": "Bowl from canada", "value": 0, "ty": ""},
+            {"name": "Jeff & Terri Humes", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Jennifer Humes", "address": "1 MISSOURI AVE, RENSSELAER, NY 12144", "relation": "joint", "gift": "Reversible Ceramic Double Griddle", "value": 149.95, "ty": ""},
+            {"name": "Gray Perkins", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "T.J. & Meg Humes", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "William & Elsie Humes", "address": "", "relation": "joint", "gift": "Caraway Baking Sheet; Holiday Skiers Platter", "value": 119.50, "ty": ""},
+            {"name": "Jessica Humes-Delgado", "address": "", "relation": "bride", "gift": "Measuring Cups (Set of 4); Skier Jack Hand Towel; Heritage Pie Dish", "value": 140, "ty": "Jessica, Thank you for coming to the wedding and for being my bridesmaid. Having you by my side meant everything to me, and your speech on Friday night was so heartfelt. And of course — thank you for fixing the flower girl basket, even if Ruby rudely didn't end up using it. You've always been right there for me when I need you, and I had the best time celebrating with you all weekend. Love you, Michelle & Gray"},
+            {"name": "Noel Delgado", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Sapna Jalan", "address": "30 Tara Lane, Montville, NJ 07045", "relation": "joint", "gift": "Antique Brass Gallery Frames", "value": 95, "ty": ""},
+            {"name": "Beverly & Ian Johnson", "address": "18 Sawmill Lane, Greenwich, CT 06830", "relation": "joint", "gift": "Kaloh Dinnerware Set (16pc); Kaloh Mixing Bowls (Set of 3)", "value": 287.60, "ty": ""},
+            {"name": "Sasha Johnson", "address": "61 East 77, 4b, New York, NY 10075", "relation": "joint", "gift": "Scalloped Edge Placemat (Set of 4); Bamboo Natural Large Pitcher", "value": 272, "ty": ""},
+            {"name": "Charlie & Libby King", "address": "11 Oakwood Lane, Greenwich, CT 06830", "relation": "joint", "gift": "Estelle Colored Glass Set of 6 Stem Coupes; Speckled Fruit Stand", "value": 455, "ty": ""},
+            {"name": "Karmin Larson", "address": "", "relation": "joint", "gift": "Vine Lattice Pitcher", "value": 138, "ty": ""},
+            {"name": "Carolina Lira", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Fernanda Carvajal", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Jake & Krysty Long", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Jack & Amy Lowden", "address": "8 Deer Park Ct, Greenwich, CT 06830", "relation": "joint", "gift": "Berry & Thread Hostess Set (5pc); Ivory 20-Piece Flatware Set", "value": 708.75, "ty": ""},
+            {"name": "Jenna & Bryan MacPhie", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Baxter & Sam Male", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Katie Martell", "address": "1185 Park Ave, New York, NY 10128", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 150, "ty": ""},
+            {"name": "Gary & Lisa Matson", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Amy & Dan McCauley", "address": "1006 Weatherburn Dr., Valencia, PA 16059", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort; Kaloh Melamine Outdoor Serveware; Kaloh Melamine Tray", "value": 321.20, "ty": ""},
+            {"name": "Stephen & Margaret McLain", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "William McLain", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Gary & Jacqueline Meek", "address": "106 Easton Dr, Mooresville, NC 28117", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 100, "ty": ""},
+            {"name": "Tom & Brooks Melly", "address": "25 Meadowcroft Lane, Greenwich, CT 06830", "relation": "joint", "gift": "Make Mine A Double Cocktail Napkins; Speckled Serving Plate", "value": 288, "ty": ""},
+            {"name": "Sabrina Messmer", "address": "155 East 26th Street, New York, NY 10010", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 100, "ty": ""},
+            {"name": "Zelda & Matt Moss", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Edouard & Kelley Moueix", "address": "", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 300, "ty": ""},
+            {"name": "Katie & Frank Mueller", "address": "219 Barbara Ann Drive, Reedsburg, WI 53959", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 200, "ty": ""},
+            {"name": "Anne Munnelly", "address": "9000 236th Court, 33A, Salem, WI 54168", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 300, "ty": ""},
+            {"name": "Connor Munnelly & Lauren Aldrich", "address": "", "relation": "joint", "gift": "Cash", "value": 0, "ty": ""},
+            {"name": "Lauren Aldrich & Greg Munnelly", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Martie & Jenna Munnelly", "address": "", "relation": "joint", "gift": "Check", "value": 200, "ty": ""},
+            {"name": "Maxwell Greninger & Kenneth Munnelly", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Michael & Paige Munnelly", "address": "", "relation": "joint", "gift": "Check", "value": 200, "ty": ""},
+            {"name": "Rachel Munnelly", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Joseph & Susan Nicholas", "address": "", "relation": "joint", "gift": "Check", "value": 500, "ty": ""},
+            {"name": "Danielle Olivera & Eoin Heavey", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Gordy & Linda Opitz", "address": "540 Salem Heights Dr, Gibsonia, PA 15044", "relation": "joint", "gift": "Caraway 4-Piece Cutting Board Set; Check; Shower gift ($245)", "value": 990, "ty": ""},
+            {"name": "Lizzy Oullette", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Bridgette & Joel Pepmeyer", "address": "316 3RD ST, Aspinwall, PA 15215", "relation": "bride", "gift": "Arles Gravy Boat; Kanto Serving Platter; Caraway Nonstick Sauce Pan", "value": 203.50, "ty": "Bridgette & Joel, Thank you so much for coming to the wedding and for your beautiful gifts. We loved celebrating with you both — it meant so much to have you there. Love, Michelle & Gray"},
+            {"name": "Isabelle & Harry Perkins", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Bryan Portillo", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Elsie & Brian Pringle", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Peter & Alexa Quinn", "address": "6341 Ridgeway Road, Richmond, VA 23226", "relation": "joint", "gift": "York Mirror 5-Piece Flatware Set", "value": 159.80, "ty": ""},
+            {"name": "Terry & Allen Ravas", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Graham & Caroline Reynolds", "address": "2-21 Malt Drive, Apt 238, Long Island City, NY 11101", "relation": "joint", "gift": "Business & Pleasure Beach Blanket", "value": 119, "ty": ""},
+            {"name": "Kris Rodgers & Joanna Chinichi", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Vlora Rraci", "address": "175 Longview Dr, Scarsdale, NY 10583", "relation": "joint", "gift": "Aspen 8oz Martini Glass", "value": 49.95, "ty": ""},
+            {"name": "Brendan & Kelly Salvadore", "address": "630 Metropolitan Ave, 2A, Brooklyn, NY 11211", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort (Brendan: 250; Margaret Salvadore: 300)", "value": 550, "ty": ""},
+            {"name": "Tami & George Salvadore", "address": "", "relation": "joint", "gift": "Check", "value": 1000, "ty": ""},
+            {"name": "Margaret Salvadore", "address": "130 W Beardsley Ave, Beach Haven, NJ 08008", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 300, "ty": ""},
+            {"name": "Anthony D'Andreti & Scott Salvator", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Michael Zabriskie & Jessica San Filippo", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Scott San Filippo & Steve Saunders", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Ryan Setian", "address": "", "relation": "joint", "gift": "Caraway 5-Piece Utensil Set", "value": 145, "ty": ""},
+            {"name": "Gaby Cortes & Tiffany Shah", "address": "8761 Grady Drive, Breinigsville, PA 18031", "relation": "joint", "gift": "Kanto Stoneware Condiment Bowl Sets", "value": 104, "ty": ""},
+            {"name": "Shashi Shah & Elliott Simon", "address": "105 5th Avenue, 6C, New York, NY 10003", "relation": "joint", "gift": "Acacia Cheese Board Set; Condiment Trio", "value": 444.95, "ty": ""},
+            {"name": "Samantha & Jonathan Simon", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Joann Sirera", "address": "4801 Wexford Run Road, Wexford, PA 15090", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort (500 + 200)", "value": 700, "ty": ""},
+            {"name": "Melissa & Sam Thacker", "address": "13021 Malletto Drive, Austin, TX 78739", "relation": "joint", "gift": "Verre Fluted Vase (Set of 5)", "value": 165, "ty": ""},
+            {"name": "Alex Tirey", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Doug & Lisa Trepp", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Nick Trepp", "address": "440 Washington Street, 703, New York, NY 10013", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 150, "ty": ""},
+            {"name": "Will Trepp & Sydney Canfield", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Bea & Jane Van Dam", "address": "", "relation": "joint", "gift": "Check", "value": 300, "ty": ""},
+            {"name": "Walker Ward & Anna Catherine Wilson", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Emily & Uel Whitsett", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Fareesa Abbasi", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Andy & Susan Alisberg", "address": "5 pine lane west, boynton beach, FL 33436", "relation": "joint", "gift": "Jeanne Fitz Salad Bowl & Servers; Monos Check-In Large; All-Clad Stainless-Steel Utensils", "value": 804.94, "ty": ""},
+            {"name": "Matt & Katie Arundel", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Kaitlin & Michael Booth", "address": "", "relation": "joint", "gift": "Check", "value": 400, "ty": ""},
+            {"name": "Kerry & Pamela Bove", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Peter & Lori Clauson", "address": "307 Bayley Road, Charleston, SC 29492", "relation": "joint", "gift": "Amelia Scalloped Bath Towel Bundle", "value": 300, "ty": ""},
+            {"name": "Jason Cleary & Lauren Connors", "address": "5419 Western Avenue, Omaha, NE 68132", "relation": "joint", "gift": "Beast Blender Mega 1200", "value": 184, "ty": ""},
+            {"name": "Kempton & Cat Coady", "address": "", "relation": "joint", "gift": "Check", "value": 300, "ty": ""},
+            {"name": "Tom & Francie Corcoran", "address": "903 Sutton Hill Road, Nashville, TN 37204", "relation": "joint", "gift": "Le Creuset Covered Rectangular Casserole", "value": 134.99, "ty": ""},
+            {"name": "Alec & Kelsey Demet", "address": "8562 e Pierce st, Scottsdale, AZ 85257", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 300, "ty": ""},
+            {"name": "Quinn & Kathleen Drinan", "address": "", "relation": "joint", "gift": "Seashell bowls", "value": 0, "ty": ""},
+            {"name": "David & Jennifer Evans", "address": "35 Sawmill Lane, Greenwich, CT 06830", "relation": "joint", "gift": "Camille Long Stem Wine Glasses (Set)", "value": 419.40, "ty": ""},
+            {"name": "Eric & Mary Flanagan", "address": "", "relation": "joint", "gift": "Zola gift", "value": 400, "ty": ""},
+            {"name": "Doug & Kristin Flynn", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Don & Eileen Foster", "address": "15512 Monterosso Lane, Unit 102, Naples, FL 34108", "relation": "joint", "gift": "Le Creuset Classic Heritage Covered Casserole Dish; Check", "value": 269.98, "ty": ""},
+            {"name": "Patrick Gradus & Salen Andrews", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Salen Andrews", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Sam Harris", "address": "515 east 88th st, Apt 3G, New York, NY 10128", "relation": "joint", "gift": "Antibes Wicker Handled Serve Tray", "value": 129, "ty": ""},
+            {"name": "Natalie Hennings & Brandyn Defelice", "address": "1294 South Elm Street, MONACA, PA 15061", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 50, "ty": ""},
+            {"name": "Brandyn Defelice", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Paul & Lisa Hogan", "address": "", "relation": "joint", "gift": "Check", "value": 800, "ty": ""},
+            {"name": "Liz Hopkins", "address": "17 Danville Drive, Greenlawn, NY 11740", "relation": "joint", "gift": "Party of 12 Appetizer Plates", "value": 29.95, "ty": ""},
+            {"name": "Tim Heller", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Jessica Houghton", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Joseph Darco", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
+            {"name": "Edward Howard & Robin Perkins", "address": "103 West Lyon Farm Dr., Greenwich, CT 06831", "relation": "joint", "gift": "Caraway Squareware Set; Caraway Roasting Pan", "value": 760, "ty": ""},
+            {"name": "Henry Bassett", "address": "1208 E Rock Springs Rd Ne, Atlanta, GA 30306", "relation": "joint", "gift": "High-Glass Pedestal Candleholders; Avanti G2 Touchscreen Nugget Ice Dispenser", "value": 478.65, "ty": ""}
+        ];
+
+        let progress = JSON.parse(localStorage.getItem('tyProgress') || '{}');
+        let sortColumn = 'name';
+        let sortDirection = 'asc';
+
+        function getProgress(name, field) {
+            return progress[name] && progress[name][field] || false;
+        }
+
+        function setProgress(name, field, value) {
+            if (!progress[name]) progress[name] = {};
+            progress[name][field] = value;
+            localStorage.setItem('tyProgress', JSON.stringify(progress));
+            updateStats();
+            renderTable();
+        }
+
+        function updateStats() {
+            const total = giftData.length;
+            let envelopes = 0, written = 0, sent = 0, totalValue = 0;
+
+            giftData.forEach(g => {
+                if (getProgress(g.name, 'envelope')) envelopes++;
+                if (getProgress(g.name, 'written')) written++;
+                if (getProgress(g.name, 'sent')) sent++;
+                totalValue += g.value || 0;
+            });
+
+            document.getElementById('totalGuests').textContent = total;
+            document.getElementById('envelopesCreated').textContent = envelopes;
+            document.getElementById('notesWritten').textContent = written;
+            document.getElementById('notesSent').textContent = sent;
+            document.getElementById('totalValue').textContent = '$' + totalValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            document.getElementById('envelopeProgress').style.width = (envelopes/total*100) + '%';
+            document.getElementById('writtenProgress').style.width = (written/total*100) + '%';
+            document.getElementById('sentProgress').style.width = (sent/total*100) + '%';
+        }
+
+        function renderTable() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('filterStatus').value;
+            const relationFilter = document.getElementById('filterRelation').value;
+
+            let filtered = giftData.filter(g => {
+                const searchMatch = g.name.toLowerCase().includes(search) ||
+                                   g.address.toLowerCase().includes(search) ||
+                                   g.gift.toLowerCase().includes(search);
+
+                let statusMatch = true;
+                if (statusFilter === 'needs-envelope') statusMatch = !getProgress(g.name, 'envelope');
+                if (statusFilter === 'needs-writing') statusMatch = !getProgress(g.name, 'written');
+                if (statusFilter === 'needs-sending') statusMatch = !getProgress(g.name, 'sent');
+                if (statusFilter === 'completed') statusMatch = getProgress(g.name, 'sent');
+                if (statusFilter === 'has-gift') statusMatch = g.gift && g.gift.length > 0;
+                if (statusFilter === 'no-gift') statusMatch = !g.gift || g.gift.length === 0;
+
+                let relationMatch = relationFilter === 'all' || g.relation === relationFilter;
+
+                return searchMatch && statusMatch && relationMatch;
+            });
+
+            // Sort
+            filtered.sort((a, b) => {
+                let aVal, bVal;
+                switch(sortColumn) {
+                    case 'value': aVal = a.value; bVal = b.value; break;
+                    case 'envelope': aVal = getProgress(a.name, 'envelope') ? 1 : 0; bVal = getProgress(b.name, 'envelope') ? 1 : 0; break;
+                    case 'written': aVal = getProgress(a.name, 'written') ? 1 : 0; bVal = getProgress(b.name, 'written') ? 1 : 0; break;
+                    case 'sent': aVal = getProgress(a.name, 'sent') ? 1 : 0; bVal = getProgress(b.name, 'sent') ? 1 : 0; break;
+                    default: aVal = a[sortColumn] || ''; bVal = b[sortColumn] || '';
+                }
+                if (typeof aVal === 'string') {
+                    return sortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                }
+                return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+            });
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = filtered.map(g => {
+                const isCompleted = getProgress(g.name, 'sent');
+                const hasGift = g.gift && g.gift.length > 0;
+                return `
+                    <tr class="${isCompleted ? 'completed' : ''}">
+                        <td class="guest-name">${g.name}</td>
+                        <td class="address">${g.address || '<span class="no-gift">No address</span>'}</td>
+                        <td class="gift">${hasGift ? g.gift : '<span class="no-gift">No gift recorded</span>'}</td>
+                        <td class="value">${g.value ? '$' + g.value.toFixed(2) : '-'}</td>
+                        <td class="ty-preview" onclick="showTyNote('${g.name.replace(/'/g, "\\'")}', '${g.ty.replace(/'/g, "\\'").replace(/\n/g, "\\n")}')">${g.ty ? g.ty.substring(0, 40) + '...' : '<span class="no-gift">No draft</span>'}</td>
+                        <td class="checkbox-cell">
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" ${getProgress(g.name, 'envelope') ? 'checked' : ''} onchange="setProgress('${g.name.replace(/'/g, "\\'")}', 'envelope', this.checked)">
+                            </div>
+                        </td>
+                        <td class="checkbox-cell">
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" ${getProgress(g.name, 'written') ? 'checked' : ''} onchange="setProgress('${g.name.replace(/'/g, "\\'")}', 'written', this.checked)">
+                            </div>
+                        </td>
+                        <td class="checkbox-cell">
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" ${getProgress(g.name, 'sent') ? 'checked' : ''} onchange="setProgress('${g.name.replace(/'/g, "\\'")}', 'sent', this.checked)">
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function sortTable(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+            renderTable();
+        }
+
+        function showTyNote(name, text) {
+            document.getElementById('modalGuestName').textContent = name;
+            document.getElementById('modalTyText').textContent = text || 'No thank you note draft available.';
+            document.getElementById('tyModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('tyModal').classList.remove('active');
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterStatus').value = 'all';
+            document.getElementById('filterRelation').value = 'all';
+            renderTable();
+        }
+
+        function markAllEnvelopes() {
+            if (confirm('Mark all guests as having envelopes created?')) {
+                giftData.forEach(g => {
+                    if (!progress[g.name]) progress[g.name] = {};
+                    progress[g.name].envelope = true;
+                });
+                localStorage.setItem('tyProgress', JSON.stringify(progress));
+                updateStats();
+                renderTable();
+            }
+        }
+
+        function clearAllProgress() {
+            if (confirm('Clear all progress? This cannot be undone.')) {
+                progress = {};
+                localStorage.setItem('tyProgress', JSON.stringify(progress));
+                updateStats();
+                renderTable();
+            }
+        }
+
+        function exportProgress() {
+            const data = giftData.map(g => ({
+                ...g,
+                envelope: getProgress(g.name, 'envelope'),
+                written: getProgress(g.name, 'written'),
+                sent: getProgress(g.name, 'sent')
+            }));
+
+            const csv = 'Guest Name,Address,Relation,Gift,Value,TY Note,Envelope Done,Written,Sent\n' +
+                data.map(g => `"${g.name}","${g.address}","${g.relation}","${g.gift}",${g.value},"${g.ty.replace(/"/g, '""')}",${g.envelope},${g.written},${g.sent}`).join('\n');
+
+            const blob = new Blob([csv], {type: 'text/csv'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'thank-you-notes-progress.csv';
+            a.click();
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+        document.getElementById('filterStatus').addEventListener('change', renderTable);
+        document.getElementById('filterRelation').addEventListener('change', renderTable);
+        document.getElementById('tyModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('tyModal')) closeModal();
+        });
+
+        // Initialize
+        updateStats();
+        renderTable();
+    </script>
+</body>
+</html>
