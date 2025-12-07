@@ -561,7 +561,8 @@
 
         <div class="export-section">
             <span id="saveIndicator" class="save-indicator">All changes saved locally</span>
-            <button class="btn-primary" onclick="exportProgress()">Download Updated CSV</button>
+            <button class="btn-primary" onclick="manualSave()" style="background: #10b981;">Save Now</button>
+            <button class="btn-primary" onclick="exportProgress()">Download CSV</button>
             <button class="btn-secondary" onclick="markAllEnvelopes()">Mark All Envelopes Done</button>
             <button class="btn-secondary" onclick="clearAllProgress()">Clear All Progress</button>
         </div>
@@ -917,6 +918,32 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                 indicator.textContent = syncEnabled ? 'All changes synced' : 'All changes saved locally';
                 indicator.classList.remove('saving');
             }, 500);
+        }
+
+        async function manualSave() {
+            // Save to localStorage
+            localStorage.setItem('tyProgress', JSON.stringify(progress));
+            localStorage.setItem('tyEdits', JSON.stringify(edits));
+            localStorage.setItem('tyDeletions', JSON.stringify(deletions));
+
+            // Sync to Supabase immediately
+            if (syncEnabled) {
+                const indicator = document.getElementById('saveIndicator');
+                indicator.textContent = 'Saving to cloud...';
+                indicator.classList.add('syncing');
+
+                await saveToSupabase();
+
+                indicator.textContent = 'All changes synced!';
+                indicator.classList.remove('syncing');
+                indicator.classList.add('saving');
+                setTimeout(() => {
+                    indicator.textContent = 'All changes synced';
+                    indicator.classList.remove('saving');
+                }, 1500);
+            } else {
+                showSaveIndicator();
+            }
         }
 
         function saveEdit(originalName, field, newValue) {
