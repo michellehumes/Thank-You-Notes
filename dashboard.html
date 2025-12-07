@@ -66,7 +66,6 @@
         .stat-card.envelopes .number { color: #667eea; }
         .stat-card.written .number { color: #f59e0b; }
         .stat-card.sent .number { color: #10b981; }
-        .stat-card.total-value .number { color: #764ba2; font-size: 28px; }
 
         .filters {
             background: white;
@@ -305,13 +304,43 @@
             text-align: center;
         }
 
+        .editable {
+            cursor: text;
+            padding: 4px 8px;
+            border-radius: 4px;
+            min-width: 50px;
+            display: inline-block;
+        }
+
+        .editable:hover {
+            background: #e5e7eb;
+        }
+
+        .editable:focus {
+            outline: 2px solid #667eea;
+            background: white;
+        }
+
+        .relation-select {
+            padding: 4px 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            font-size: 12px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .relation-bride { color: #ec4899; }
+        .relation-groom { color: #3b82f6; }
+        .relation-joint { color: #6b7280; }
+
         @media (max-width: 768px) {
             .table-container {
                 overflow-x: auto;
             }
 
             table {
-                min-width: 900px;
+                min-width: 1000px;
             }
         }
     </style>
@@ -341,10 +370,6 @@
                 <div class="number" id="notesSent">0</div>
                 <div class="progress-bar"><div class="fill" id="sentProgress" style="background: #10b981; width: 0%"></div></div>
             </div>
-            <div class="stat-card total-value">
-                <h3>Total Gift Value</h3>
-                <div class="number" id="totalValue">$0</div>
-            </div>
         </div>
 
         <div class="filters">
@@ -362,6 +387,7 @@
                 <option value="all">All Relations</option>
                 <option value="joint">Joint</option>
                 <option value="bride">Bride</option>
+                <option value="groom">Groom</option>
             </select>
             <button class="btn-secondary" onclick="resetFilters()">Reset</button>
             <button class="btn-primary" onclick="exportProgress()">Export Progress</button>
@@ -373,6 +399,7 @@
                     <tr>
                         <th onclick="sortTable('name')">Guest Name</th>
                         <th onclick="sortTable('address')">Address</th>
+                        <th onclick="sortTable('relation')">Relation</th>
                         <th onclick="sortTable('gift')">Gift</th>
                         <th onclick="sortTable('value')">Value</th>
                         <th>TY Note</th>
@@ -402,7 +429,7 @@
 
     <script>
         // Gift data from CSV
-        const giftData = [
+        let giftData = [
             {"name": "Jean Marie Woodard & Kenneth Munnelly", "address": "", "relation": "joint", "gift": "Cuisinart Precision Stand Mixer; Check", "value": 1319.95, "ty": ""},
             {"name": "Kristen Munnelly", "address": "105 Steeplewood Dr, Exton, PA 19341", "relation": "joint", "gift": "Wüsthof 16-Piece Knife Block Set; Check", "value": 1495, "ty": ""},
             {"name": "Randall & Lisa King", "address": "310 American Way, Gibsonia, PA 15044", "relation": "joint", "gift": "Bash Beverage Tub; Check", "value": 469.95, "ty": ""},
@@ -412,7 +439,6 @@
             {"name": "Katie", "address": "", "relation": "bride", "gift": "", "value": 0, "ty": "Katie, Thank you so much for coming all the way to Florida to celebrate our wedding with us and for your generous honeymoon gift. We had the best time in Africa and kept thinking about how lucky we are to have you in our lives. Hopefully we can see you soon — I miss you already. Love, Michelle & Gray"},
             {"name": "Mary & Eric", "address": "615 Glendale Drive, Glenview, IL 60025", "relation": "bride", "gift": "Cash Fund – Honeymoon Resort", "value": 400, "ty": "Mary & Eric, Thank you so much for being part of our wedding party and for your incredibly generous honeymoon gift. Mary, your speech at the rehearsal on Friday night meant the world to me. I loved spending so much time with you throughout the weekend, and you helping me figure out my tennis shoes still makes me laugh. I had the best time celebrating with you both. Love, Michelle & Gray"},
             {"name": "Liza & Mike McNulty", "address": "2515 Beeler St, Denver, CO 80238", "relation": "bride", "gift": "Napkin Rings", "value": 79, "ty": "Liza & Mike, Thank you so much for celebrating with us and for the beautiful napkin rings. It meant so much having family with us in Florida for the weekend. We're so grateful for your love and generosity. Xoxo, Michelle & Gray"},
-            {"name": "Karmin", "address": "", "relation": "bride", "gift": "Vine Lattice Pitcher", "value": 138, "ty": "Karmin, Thank you so much for coming to the wedding and for the gorgeous pitcher — it's absolutely beautiful. It was so great having you there and being able to celebrate together. With love, Michelle & Gray"},
             {"name": "Sapna", "address": "30 Tara Lane, Montville, NJ 07045", "relation": "bride", "gift": "Antique Brass Gallery Frames", "value": 95, "ty": "Sapna, Thank you so much for the gorgeous frames and for being there to celebrate with us. I know you missed the shower, but I felt your love. I'm so grateful for you and loved celebrating this chapter with you. With love, Michelle & Gray"},
             {"name": "Michael & Anna Marzano", "address": "8 Egret Way, Phoenixville, PA 19460", "relation": "bride", "gift": "SMEG Matte Mocha Toaster; Potluck Baking Dish Set (3pc)", "value": 279.90, "ty": "Anna & Michael, Thank you so much for coming to the wedding and for your amazing gift. Anna, thank you for being in the wedding and for your beautiful speech on Friday night — it meant so much to me. I had so much fun celebrating with you both, as always. Love, Michelle & Gray"},
             {"name": "Natalie Hennings", "address": "1294 South Elm Street, MONACA, PA 15061", "relation": "bride", "gift": "Cash Fund – Honeymoon Resort", "value": 50, "ty": "Natalie, Thank you for your generous honeymoon resort gift — it made our Africa trip even more special. We'll definitely let you know the next time we're in Pittsburgh, and hopefully we can see you soon. Miss you already. With love, Michelle & Gray"},
@@ -530,8 +556,20 @@
         ];
 
         let progress = JSON.parse(localStorage.getItem('tyProgress') || '{}');
+        let edits = JSON.parse(localStorage.getItem('tyEdits') || '{}');
         let sortColumn = 'name';
         let sortDirection = 'asc';
+
+        // Apply saved edits to data
+        function applyEdits() {
+            giftData.forEach((g, i) => {
+                if (edits[g.name]) {
+                    if (edits[g.name].newName) giftData[i].name = edits[g.name].newName;
+                    if (edits[g.name].gift !== undefined) giftData[i].gift = edits[g.name].gift;
+                    if (edits[g.name].relation) giftData[i].relation = edits[g.name].relation;
+                }
+            });
+        }
 
         function getProgress(name, field) {
             return progress[name] && progress[name][field] || false;
@@ -545,22 +583,35 @@
             renderTable();
         }
 
+        function saveEdit(originalName, field, newValue) {
+            if (!edits[originalName]) edits[originalName] = {};
+            edits[originalName][field] = newValue;
+            localStorage.setItem('tyEdits', JSON.stringify(edits));
+
+            // Update giftData
+            const idx = giftData.findIndex(g => g.name === originalName);
+            if (idx !== -1) {
+                if (field === 'newName') giftData[idx].name = newValue;
+                if (field === 'gift') giftData[idx].gift = newValue;
+                if (field === 'relation') giftData[idx].relation = newValue;
+            }
+            renderTable();
+        }
+
         function updateStats() {
             const total = giftData.length;
-            let envelopes = 0, written = 0, sent = 0, totalValue = 0;
+            let envelopes = 0, written = 0, sent = 0;
 
             giftData.forEach(g => {
                 if (getProgress(g.name, 'envelope')) envelopes++;
                 if (getProgress(g.name, 'written')) written++;
                 if (getProgress(g.name, 'sent')) sent++;
-                totalValue += g.value || 0;
             });
 
             document.getElementById('totalGuests').textContent = total;
             document.getElementById('envelopesCreated').textContent = envelopes;
             document.getElementById('notesWritten').textContent = written;
             document.getElementById('notesSent').textContent = sent;
-            document.getElementById('totalValue').textContent = '$' + totalValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
             document.getElementById('envelopeProgress').style.width = (envelopes/total*100) + '%';
             document.getElementById('writtenProgress').style.width = (written/total*100) + '%';
@@ -610,13 +661,22 @@
             tbody.innerHTML = filtered.map(g => {
                 const isCompleted = getProgress(g.name, 'sent');
                 const hasGift = g.gift && g.gift.length > 0;
+                const originalName = Object.keys(edits).find(k => edits[k].newName === g.name) || g.name;
+                const relationClass = `relation-${g.relation}`;
                 return `
                     <tr class="${isCompleted ? 'completed' : ''}">
-                        <td class="guest-name">${g.name}</td>
+                        <td><span class="editable guest-name" contenteditable="true" data-original="${originalName}" data-field="newName" onblur="handleEdit(this)">${g.name}</span></td>
                         <td class="address">${g.address || '<span class="no-gift">No address</span>'}</td>
-                        <td class="gift">${hasGift ? g.gift : '<span class="no-gift">No gift recorded</span>'}</td>
+                        <td>
+                            <select class="relation-select ${relationClass}" onchange="saveEdit('${originalName}', 'relation', this.value); this.className='relation-select relation-'+this.value;">
+                                <option value="joint" ${g.relation === 'joint' ? 'selected' : ''}>Joint</option>
+                                <option value="bride" ${g.relation === 'bride' ? 'selected' : ''}>Bride</option>
+                                <option value="groom" ${g.relation === 'groom' ? 'selected' : ''}>Groom</option>
+                            </select>
+                        </td>
+                        <td><span class="editable gift" contenteditable="true" data-original="${originalName}" data-field="gift" onblur="handleEdit(this)">${hasGift ? g.gift : '<span class="no-gift">No gift</span>'}</span></td>
                         <td class="value">${g.value ? '$' + g.value.toFixed(2) : '-'}</td>
-                        <td class="ty-preview" onclick="showTyNote('${g.name.replace(/'/g, "\\'")}', '${g.ty.replace(/'/g, "\\'").replace(/\n/g, "\\n")}')">${g.ty ? g.ty.substring(0, 40) + '...' : '<span class="no-gift">No draft</span>'}</td>
+                        <td class="ty-preview" onclick="showTyNote('${g.name.replace(/'/g, "\\'")}', '${(g.ty || '').replace(/'/g, "\\'").replace(/\n/g, "\\n")}')">${g.ty ? g.ty.substring(0, 40) + '...' : '<span class="no-gift">No draft</span>'}</td>
                         <td class="checkbox-cell">
                             <div class="checkbox-wrapper">
                                 <input type="checkbox" ${getProgress(g.name, 'envelope') ? 'checked' : ''} onchange="setProgress('${g.name.replace(/'/g, "\\'")}', 'envelope', this.checked)">
@@ -635,6 +695,19 @@
                     </tr>
                 `;
             }).join('');
+        }
+
+        function handleEdit(el) {
+            const originalName = el.dataset.original;
+            const field = el.dataset.field;
+            let newValue = el.innerText.trim();
+
+            // Clean up "No gift" placeholder
+            if (newValue === 'No gift' || newValue === '') {
+                newValue = '';
+            }
+
+            saveEdit(originalName, field, newValue);
         }
 
         function sortTable(column) {
@@ -694,7 +767,7 @@
             }));
 
             const csv = 'Guest Name,Address,Relation,Gift,Value,TY Note,Envelope Done,Written,Sent\n' +
-                data.map(g => `"${g.name}","${g.address}","${g.relation}","${g.gift}",${g.value},"${g.ty.replace(/"/g, '""')}",${g.envelope},${g.written},${g.sent}`).join('\n');
+                data.map(g => `"${g.name}","${g.address}","${g.relation}","${g.gift}",${g.value},"${(g.ty || '').replace(/"/g, '""')}",${g.envelope},${g.written},${g.sent}`).join('\n');
 
             const blob = new Blob([csv], {type: 'text/csv'});
             const url = URL.createObjectURL(blob);
@@ -713,6 +786,7 @@
         });
 
         // Initialize
+        applyEdits();
         updateStats();
         renderTable();
     </script>
