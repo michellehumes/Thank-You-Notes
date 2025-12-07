@@ -757,10 +757,11 @@
                 const relationClass = `relation-${g.relation}`;
                 const escapedName = g.name.replace(/'/g, "\\'");
                 const escapedOriginal = originalName.replace(/'/g, "\\'");
+                const htmlEscapedOriginal = originalName.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
                 return `
                     <tr class="${isCompleted ? 'completed' : ''}">
-                        <td><span class="editable guest-name" contenteditable="true" data-original="${originalName}" data-field="newName" onblur="handleEdit(this)">${g.name}</span></td>
-                        <td><span class="editable address ${!g.address ? 'empty' : ''}" contenteditable="true" data-original="${originalName}" data-field="address" data-placeholder="No address" onblur="handleEdit(this)">${g.address || ''}</span></td>
+                        <td><span class="editable guest-name" contenteditable="true" data-original="${htmlEscapedOriginal}" data-field="newName" onblur="handleEdit(this)">${g.name}</span></td>
+                        <td><span class="editable address ${!g.address ? 'empty' : ''}" contenteditable="true" data-original="${htmlEscapedOriginal}" data-field="address" data-placeholder="No address" onblur="handleEdit(this)">${g.address || ''}</span></td>
                         <td>
                             <select class="relation-select ${relationClass}" onchange="saveEdit('${escapedOriginal}', 'relation', this.value); this.className='relation-select relation-'+this.value;">
                                 <option value="joint" ${g.relation === 'joint' ? 'selected' : ''}>Joint</option>
@@ -768,8 +769,8 @@
                                 <option value="groom" ${g.relation === 'groom' ? 'selected' : ''}>Groom</option>
                             </select>
                         </td>
-                        <td><span class="editable gift ${!hasGift ? 'empty' : ''}" contenteditable="true" data-original="${originalName}" data-field="gift" data-placeholder="No gift" onblur="handleEdit(this)">${hasGift ? g.gift : ''}</span></td>
-                        <td><span class="editable value ${!g.value ? 'empty' : ''}" contenteditable="true" data-original="${originalName}" data-field="value" data-placeholder="-" onblur="handleEdit(this)">${g.value ? '$' + g.value.toFixed(2) : ''}</span></td>
+                        <td><span class="editable gift ${!hasGift ? 'empty' : ''}" contenteditable="true" data-original="${htmlEscapedOriginal}" data-field="gift" data-placeholder="No gift" onblur="handleEdit(this)">${hasGift ? g.gift : ''}</span></td>
+                        <td><span class="editable value ${!g.value ? 'empty' : ''}" contenteditable="true" data-original="${htmlEscapedOriginal}" data-field="value" data-placeholder="-" onblur="handleEdit(this)">${g.value ? '$' + g.value.toFixed(2) : ''}</span></td>
                         <td class="ty-preview" onclick="showTyNote('${escapedName}', '${(g.ty || '').replace(/'/g, "\\'").replace(/\n/g, "\\n")}')">${g.ty ? g.ty.substring(0, 40) + '...' : '<span class="no-gift">No draft</span>'}</td>
                         <td class="checkbox-cell">
                             <div class="checkbox-wrapper">
@@ -795,7 +796,7 @@
         }
 
         function handleEdit(el) {
-            const originalName = el.dataset.original;
+            const originalName = el.dataset.original.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
             const field = el.dataset.field;
             let newValue = el.innerText.trim();
 
