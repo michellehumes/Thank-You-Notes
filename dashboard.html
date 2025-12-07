@@ -939,22 +939,43 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                 indicator.textContent = 'Saving to cloud...';
                 indicator.classList.add('syncing');
 
-                await saveToSupabase();
+                try {
+                    const { error } = await supabase
+                        .from('wedding_tracker')
+                        .upsert({
+                            id: 'shared_data',
+                            progress: progress,
+                            edits: edits,
+                            deletions: deletions,
+                            updated_at: new Date().toISOString()
+                        }, { onConflict: 'id' });
 
-                indicator.textContent = 'All changes synced!';
-                indicator.classList.remove('syncing');
-                indicator.classList.add('saving');
-                setTimeout(() => {
-                    indicator.textContent = 'All changes synced';
-                    indicator.classList.remove('saving');
-                }, 1500);
+                    if (error) {
+                        alert('Save FAILED: ' + error.message + '\n\nRun this in Supabase SQL Editor:\nALTER TABLE wedding_tracker DISABLE ROW LEVEL SECURITY;');
+                        indicator.textContent = 'Save failed!';
+                        indicator.classList.remove('syncing');
+                        indicator.classList.add('error');
+                        return;
+                    }
+
+                    alert('Saved successfully!');
+                    indicator.textContent = 'All changes synced!';
+                    indicator.classList.remove('syncing');
+                } catch (err) {
+                    alert('Save FAILED: ' + err.message);
+                    indicator.textContent = 'Save failed!';
+                    indicator.classList.remove('syncing');
+                    indicator.classList.add('error');
+                }
             } else {
+                alert('Saved to local storage (Supabase not configured)');
                 showSaveIndicator();
             }
         }
 
         function saveEdit(originalName, field, newValue) {
             originalName = originalName.replace(/&amp;/g, '&');
+            console.log('saveEdit called:', originalName, field, newValue);
             if (!edits[originalName]) edits[originalName] = {};
             edits[originalName][field] = newValue;
             localStorage.setItem('tyEdits', JSON.stringify(edits));
