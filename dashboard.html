@@ -337,6 +337,7 @@
             padding: 4px 8px;
             border-radius: 4px;
             min-width: 50px;
+            min-height: 20px;
             display: inline-block;
         }
 
@@ -347,6 +348,16 @@
         .editable:focus {
             outline: 2px solid #667eea;
             background: white;
+        }
+
+        .editable.empty:empty::before {
+            content: attr(data-placeholder);
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .editable:focus::before {
+            content: '';
         }
 
         .relation-select {
@@ -748,7 +759,7 @@
                 return `
                     <tr class="${isCompleted ? 'completed' : ''}">
                         <td><span class="editable guest-name" contenteditable="true" data-original="${originalName}" data-field="newName" onblur="handleEdit(this)">${g.name}</span></td>
-                        <td><span class="editable address" contenteditable="true" data-original="${originalName}" data-field="address" onblur="handleEdit(this)">${g.address || '<span class="no-gift">No address</span>'}</span></td>
+                        <td><span class="editable address ${!g.address ? 'empty' : ''}" contenteditable="true" data-original="${originalName}" data-field="address" data-placeholder="No address" onblur="handleEdit(this)">${g.address || ''}</span></td>
                         <td>
                             <select class="relation-select ${relationClass}" onchange="saveEdit('${originalName}', 'relation', this.value); this.className='relation-select relation-'+this.value;">
                                 <option value="joint" ${g.relation === 'joint' ? 'selected' : ''}>Joint</option>
@@ -756,8 +767,8 @@
                                 <option value="groom" ${g.relation === 'groom' ? 'selected' : ''}>Groom</option>
                             </select>
                         </td>
-                        <td><span class="editable gift" contenteditable="true" data-original="${originalName}" data-field="gift" onblur="handleEdit(this)">${hasGift ? g.gift : '<span class="no-gift">No gift</span>'}</span></td>
-                        <td><span class="editable value" contenteditable="true" data-original="${originalName}" data-field="value" onblur="handleEdit(this)">${g.value ? '$' + g.value.toFixed(2) : '-'}</span></td>
+                        <td><span class="editable gift ${!hasGift ? 'empty' : ''}" contenteditable="true" data-original="${originalName}" data-field="gift" data-placeholder="No gift" onblur="handleEdit(this)">${hasGift ? g.gift : ''}</span></td>
+                        <td><span class="editable value ${!g.value ? 'empty' : ''}" contenteditable="true" data-original="${originalName}" data-field="value" data-placeholder="-" onblur="handleEdit(this)">${g.value ? '$' + g.value.toFixed(2) : ''}</span></td>
                         <td class="ty-preview" onclick="showTyNote('${escapedName}', '${(g.ty || '').replace(/'/g, "\\'").replace(/\n/g, "\\n")}')">${g.ty ? g.ty.substring(0, 40) + '...' : '<span class="no-gift">No draft</span>'}</td>
                         <td class="checkbox-cell">
                             <div class="checkbox-wrapper">
@@ -790,11 +801,18 @@
             // Clean up placeholders
             if (newValue === 'No gift' || newValue === 'No address' || newValue === '-' || newValue === '') {
                 newValue = '';
+                el.classList.add('empty');
+            } else {
+                el.classList.remove('empty');
             }
 
             // Handle value field - parse number
             if (field === 'value') {
                 newValue = parseFloat(newValue.replace(/[$,]/g, '')) || 0;
+                if (newValue === 0) {
+                    el.classList.add('empty');
+                    el.textContent = '';
+                }
             }
 
             saveEdit(originalName, field, newValue);
