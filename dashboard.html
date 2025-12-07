@@ -808,7 +808,10 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
         }
 
         async function saveToSupabase() {
-            if (!syncEnabled) return;
+            if (!syncEnabled) {
+                console.log('Sync not enabled');
+                return;
+            }
 
             try {
                 showSyncIndicator('syncing');
@@ -825,6 +828,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
 
                 if (error) {
                     console.error('Supabase save error:', error);
+                    alert('Save failed: ' + error.message + '\n\nTry disabling Row Level Security in Supabase SQL Editor:\nALTER TABLE wedding_tracker DISABLE ROW LEVEL SECURITY;');
                     showSyncIndicator('error');
                     return;
                 }
@@ -832,6 +836,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                 showSyncIndicator('success');
             } catch (err) {
                 console.error('Supabase save error:', err);
+                alert('Save failed: ' + err.message);
                 showSyncIndicator('error');
             }
         }
