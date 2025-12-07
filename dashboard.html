@@ -671,8 +671,12 @@
             localStorage.setItem('tyEdits', JSON.stringify(edits));
             showSaveIndicator();
 
-            // Update giftData
-            const idx = giftData.findIndex(g => g.name === originalName);
+            // Update giftData - find by original name or by renamed name
+            let idx = giftData.findIndex(g => g.name === originalName);
+            if (idx === -1 && edits[originalName] && edits[originalName].newName) {
+                // Guest was renamed, find by new name
+                idx = giftData.findIndex(g => g.name === edits[originalName].newName);
+            }
             if (idx !== -1) {
                 if (field === 'newName') giftData[idx].name = newValue;
                 if (field === 'gift') giftData[idx].gift = newValue;
