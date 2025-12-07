@@ -415,11 +415,71 @@ if (enteredPassword !== correctPassword) {
 }
 </script>
     <script>
-// Supabase Configuration
-https://wllgsnhlzduwehxxwdpt.supabase.co
-sb_publishable_DbsFVxw1ZpEOhUAvEVG8JA_8i7oJ2Yu
-</script>
-    <div class="container">
+/// Supabase Configuration
+    const SUPABASE_URL = 'https://wllgsnhlzduwehxxwdpt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsbGdzbmhsemR1d2VoeHh3ZHB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwNzM0NjYsImV4cCI6MjA4MDY0OTQ2Nn0.s1QssScNjYw2BezCCzLrO2BSoaioHcja7uYHR_5gdEw';
+
+        // Initialize Supabase client
+        let supabase;
+        (async () => {
+            const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+            supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            // Load data from Supabase on init
+            await loadFromSupabase();
+        })();
+
+        // Sync functions
+        async function loadFromSupabase() {
+            if (!supabase) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('thank_you_notes')
+                    .select('*')
+                    .single();
+                
+                if (data && !error) {
+                    if (data.gift_data) giftData = data.gift_data;
+                    if (data.progress) {
+                        Object.assign(guestProgress, data.progress);
+                    }
+                }
+            } catch (err) {
+                console.log('No existing data, starting fresh');
+            }
+            
+            // Update UI after loading
+            updateStats();
+            displayGifts();
+        }
+
+        async function saveToSupabase() {
+            if (!supabase) return;
+            
+            try {
+                const { error } = await supabase
+                    .from('thank_you_notes')
+                    .upsert({
+                        id: 'main',
+                        gift_data: giftData,
+                        progress: guestProgress
+                    });
+                
+                if (error) console.error('Supabase save error:', error);
+            } catch (err) {
+                console.error('Save error:', err);
+            }
+        }
+
+        // Override localStorage functions to also sync with Supabase
+        const originalSaveData = window.saveData || function() {};
+        window.saveData = function() {
+            originalSaveData();
+            saveToSupabase();
+        };
+
+    </script><div class="container">
         <h1>Thank You Notes Tracker</h1>
         <p class="subtitle">Michelle & Gray's Wedding Gift Tracker</p>
 
