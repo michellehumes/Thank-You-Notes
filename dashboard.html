@@ -647,6 +647,7 @@
         }
 
         function setProgress(name, field, value) {
+            name = name.replace(/&amp;/g, '&');
             if (!progress[name]) progress[name] = {};
             progress[name][field] = value;
             localStorage.setItem('tyProgress', JSON.stringify(progress));
@@ -666,6 +667,7 @@
         }
 
         function saveEdit(originalName, field, newValue) {
+            originalName = originalName.replace(/&amp;/g, '&');
             if (!edits[originalName]) edits[originalName] = {};
             edits[originalName][field] = newValue;
             localStorage.setItem('tyEdits', JSON.stringify(edits));
@@ -759,9 +761,9 @@
                 const hasGift = g.gift && g.gift.length > 0;
                 const originalName = Object.keys(edits).find(k => edits[k].newName === g.name) || g.name;
                 const relationClass = `relation-${g.relation}`;
-                const escapedName = g.name.replace(/'/g, "\\'");
-                const escapedOriginal = originalName.replace(/'/g, "\\'");
-                const htmlEscapedOriginal = originalName.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                const escapedName = g.name.replace(/&/g, '&amp;').replace(/'/g, "\\'");
+                const escapedOriginal = originalName.replace(/&/g, '&amp;').replace(/'/g, "\\'");
+                const htmlEscapedOriginal = originalName.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
                 return `
                     <tr class="${isCompleted ? 'completed' : ''}">
                         <td><span class="editable guest-name" contenteditable="true" data-original="${htmlEscapedOriginal}" data-field="newName" onblur="handleEdit(this)">${g.name}</span></td>
@@ -800,7 +802,7 @@
         }
 
         function handleEdit(el) {
-            const originalName = el.dataset.original.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+            const originalName = el.dataset.original.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
             const field = el.dataset.field;
             let newValue = el.innerText.trim();
 
@@ -853,6 +855,7 @@
         let currentEditingGuest = null;
 
         function showTyNote(name, text) {
+            name = name.replace(/&amp;/g, '&');
             currentEditingGuest = name;
             document.getElementById('modalGuestName').textContent = name;
             document.getElementById('modalTyText').value = text || '';
