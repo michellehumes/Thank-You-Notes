@@ -310,6 +310,26 @@
         .export-section {
             margin-top: 20px;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .save-indicator {
+            color: #10b981;
+            font-size: 14px;
+            padding: 8px 15px;
+            background: #f0fdf4;
+            border-radius: 20px;
+            border: 1px solid #10b981;
+        }
+
+        .save-indicator.saving {
+            color: #f59e0b;
+            background: #fffbeb;
+            border-color: #f59e0b;
         }
 
         .editable {
@@ -445,6 +465,8 @@
         </div>
 
         <div class="export-section">
+            <span id="saveIndicator" class="save-indicator">All changes saved locally</span>
+            <button class="btn-primary" onclick="exportProgress()">Download Updated CSV</button>
             <button class="btn-secondary" onclick="markAllEnvelopes()">Mark All Envelopes Done</button>
             <button class="btn-secondary" onclick="clearAllProgress()">Clear All Progress</button>
         </div>
@@ -617,14 +639,26 @@
             if (!progress[name]) progress[name] = {};
             progress[name][field] = value;
             localStorage.setItem('tyProgress', JSON.stringify(progress));
+            showSaveIndicator();
             updateStats();
             renderTable();
+        }
+
+        function showSaveIndicator() {
+            const indicator = document.getElementById('saveIndicator');
+            indicator.textContent = 'Saving...';
+            indicator.classList.add('saving');
+            setTimeout(() => {
+                indicator.textContent = 'All changes saved locally';
+                indicator.classList.remove('saving');
+            }, 500);
         }
 
         function saveEdit(originalName, field, newValue) {
             if (!edits[originalName]) edits[originalName] = {};
             edits[originalName][field] = newValue;
             localStorage.setItem('tyEdits', JSON.stringify(edits));
+            showSaveIndicator();
 
             // Update giftData
             const idx = giftData.findIndex(g => g.name === originalName);
@@ -775,6 +809,7 @@
                     let deletions = JSON.parse(localStorage.getItem('tyDeletions') || '[]');
                     deletions.push(name);
                     localStorage.setItem('tyDeletions', JSON.stringify(deletions));
+                    showSaveIndicator();
                     updateStats();
                     renderTable();
                 }
