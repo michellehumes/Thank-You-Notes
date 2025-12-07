@@ -472,6 +472,22 @@
     </style>
 </head>
 <body>
+    <script>
+        // Password protection
+        const correctPassword = "wedding2025";
+        const enteredPassword = sessionStorage.getItem('dashboardPassword');
+
+        if (enteredPassword !== correctPassword) {
+            const password = prompt("Enter password to access the dashboard:");
+            if (password === correctPassword) {
+                sessionStorage.setItem('dashboardPassword', password);
+            } else {
+                alert("Incorrect password!");
+                window.location.href = "about:blank";
+            }
+        }
+    </script>
+
     <!-- Loading overlay -->
     <div id="loadingOverlay" class="loading-overlay hidden">
         <div class="loading-spinner"></div>
