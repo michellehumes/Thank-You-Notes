@@ -425,8 +425,6 @@ if (enteredPassword !== correctPassword) {
             const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
             supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
-            // Load data from Supabase on init
-            await loadFromSupabase();
         })();
 
         // Sync functions
@@ -1023,6 +1021,7 @@ if (enteredPassword !== correctPassword) {
         applyEdits();
         updateStats();
         renderTable();
+        loadFromSupabase();
     </script>
 </body>
 </html>
