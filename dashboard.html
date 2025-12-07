@@ -334,6 +334,20 @@
         .relation-groom { color: #3b82f6; }
         .relation-joint { color: #6b7280; }
 
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
         @media (max-width: 768px) {
             .table-container {
                 overflow-x: auto;
@@ -354,6 +368,14 @@
             <div class="stat-card">
                 <h3>Total Guests</h3>
                 <div class="number" id="totalGuests">0</div>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid #8b5cf6;">
+                <h3>Gifts Received</h3>
+                <div class="number" style="color: #8b5cf6;" id="giftsReceived">0</div>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid #ef4444;">
+                <h3>TY Notes Remaining</h3>
+                <div class="number" style="color: #ef4444;" id="notesRemaining">0</div>
             </div>
             <div class="stat-card envelopes">
                 <h3>Envelopes Created</h3>
@@ -406,6 +428,7 @@
                         <th onclick="sortTable('envelope')">Envelope</th>
                         <th onclick="sortTable('written')">Written</th>
                         <th onclick="sortTable('sent')">Sent</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -435,7 +458,7 @@
             {"name": "Randall & Lisa King", "address": "310 American Way, Gibsonia, PA 15044", "relation": "joint", "gift": "Bash Beverage Tub; Check", "value": 469.95, "ty": ""},
             {"name": "Jane Van Damme", "address": "", "relation": "joint", "gift": "Check", "value": 300, "ty": ""},
             {"name": "Michael & Paige Munnelly", "address": "", "relation": "joint", "gift": "Check", "value": 200, "ty": ""},
-            {"name": "Jenna Munnelly", "address": "", "relation": "joint", "gift": "Check", "value": 200, "ty": ""},
+            {"name": "Jenna Munnelly & Max Greniger", "address": "", "relation": "joint", "gift": "Check", "value": 200, "ty": ""},
             {"name": "Katie", "address": "", "relation": "bride", "gift": "", "value": 0, "ty": "Katie, Thank you so much for coming all the way to Florida to celebrate our wedding with us and for your generous honeymoon gift. We had the best time in Africa and kept thinking about how lucky we are to have you in our lives. Hopefully we can see you soon — I miss you already. Love, Michelle & Gray"},
             {"name": "Mary & Eric", "address": "615 Glendale Drive, Glenview, IL 60025", "relation": "bride", "gift": "Cash Fund – Honeymoon Resort", "value": 400, "ty": "Mary & Eric, Thank you so much for being part of our wedding party and for your incredibly generous honeymoon gift. Mary, your speech at the rehearsal on Friday night meant the world to me. I loved spending so much time with you throughout the weekend, and you helping me figure out my tennis shoes still makes me laugh. I had the best time celebrating with you both. Love, Michelle & Gray"},
             {"name": "Liza & Mike McNulty", "address": "2515 Beeler St, Denver, CO 80238", "relation": "bride", "gift": "Napkin Rings", "value": 79, "ty": "Liza & Mike, Thank you so much for celebrating with us and for the beautiful napkin rings. It meant so much having family with us in Florida for the weekend. We're so grateful for your love and generosity. Xoxo, Michelle & Gray"},
@@ -468,7 +491,6 @@
             {"name": "Beverly & Ian Johnson", "address": "18 Sawmill Lane, Greenwich, CT 06830", "relation": "joint", "gift": "Kaloh Dinnerware Set (16pc); Kaloh Mixing Bowls (Set of 3)", "value": 287.60, "ty": ""},
             {"name": "Sasha Johnson", "address": "61 East 77, 4b, New York, NY 10075", "relation": "joint", "gift": "Scalloped Edge Placemat (Set of 4); Bamboo Natural Large Pitcher", "value": 272, "ty": ""},
             {"name": "Charlie & Libby King", "address": "11 Oakwood Lane, Greenwich, CT 06830", "relation": "joint", "gift": "Estelle Colored Glass Set of 6 Stem Coupes; Speckled Fruit Stand", "value": 455, "ty": ""},
-            {"name": "Karmin Larson", "address": "", "relation": "joint", "gift": "Vine Lattice Pitcher", "value": 138, "ty": ""},
             {"name": "Carolina Lira", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Fernanda Carvajal", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Jake & Krysty Long", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
@@ -488,10 +510,7 @@
             {"name": "Katie & Frank Mueller", "address": "219 Barbara Ann Drive, Reedsburg, WI 53959", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 200, "ty": ""},
             {"name": "Anne Munnelly", "address": "9000 236th Court, 33A, Salem, WI 54168", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 300, "ty": ""},
             {"name": "Connor Munnelly & Lauren Aldrich", "address": "", "relation": "joint", "gift": "Cash", "value": 0, "ty": ""},
-            {"name": "Lauren Aldrich & Greg Munnelly", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Martie & Jenna Munnelly", "address": "", "relation": "joint", "gift": "Check", "value": 200, "ty": ""},
-            {"name": "Maxwell Greninger & Kenneth Munnelly", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
-            {"name": "Michael & Paige Munnelly", "address": "", "relation": "joint", "gift": "Check", "value": 200, "ty": ""},
             {"name": "Rachel Munnelly", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Joseph & Susan Nicholas", "address": "", "relation": "joint", "gift": "Check", "value": 500, "ty": ""},
             {"name": "Danielle Olivera & Eoin Heavey", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
@@ -560,13 +579,19 @@
         let sortColumn = 'name';
         let sortDirection = 'asc';
 
-        // Apply saved edits to data
+        // Apply saved edits and deletions to data
         function applyEdits() {
+            // Apply deletions first
+            let deletions = JSON.parse(localStorage.getItem('tyDeletions') || '[]');
+            giftData = giftData.filter(g => !deletions.includes(g.name));
+
             giftData.forEach((g, i) => {
                 if (edits[g.name]) {
                     if (edits[g.name].newName) giftData[i].name = edits[g.name].newName;
                     if (edits[g.name].gift !== undefined) giftData[i].gift = edits[g.name].gift;
                     if (edits[g.name].relation) giftData[i].relation = edits[g.name].relation;
+                    if (edits[g.name].address !== undefined) giftData[i].address = edits[g.name].address;
+                    if (edits[g.name].value !== undefined) giftData[i].value = edits[g.name].value;
                 }
             });
         }
@@ -594,21 +619,29 @@
                 if (field === 'newName') giftData[idx].name = newValue;
                 if (field === 'gift') giftData[idx].gift = newValue;
                 if (field === 'relation') giftData[idx].relation = newValue;
+                if (field === 'address') giftData[idx].address = newValue;
+                if (field === 'value') giftData[idx].value = newValue;
             }
+            updateStats();
             renderTable();
         }
 
         function updateStats() {
             const total = giftData.length;
-            let envelopes = 0, written = 0, sent = 0;
+            let envelopes = 0, written = 0, sent = 0, giftsReceived = 0;
 
             giftData.forEach(g => {
                 if (getProgress(g.name, 'envelope')) envelopes++;
                 if (getProgress(g.name, 'written')) written++;
                 if (getProgress(g.name, 'sent')) sent++;
+                if (g.gift && g.gift.length > 0 && g.gift !== 'No gift recorded') giftsReceived++;
             });
 
+            const notesRemaining = giftsReceived - written;
+
             document.getElementById('totalGuests').textContent = total;
+            document.getElementById('giftsReceived').textContent = giftsReceived;
+            document.getElementById('notesRemaining').textContent = notesRemaining;
             document.getElementById('envelopesCreated').textContent = envelopes;
             document.getElementById('notesWritten').textContent = written;
             document.getElementById('notesSent').textContent = sent;
@@ -663,10 +696,11 @@
                 const hasGift = g.gift && g.gift.length > 0;
                 const originalName = Object.keys(edits).find(k => edits[k].newName === g.name) || g.name;
                 const relationClass = `relation-${g.relation}`;
+                const escapedName = g.name.replace(/'/g, "\\'");
                 return `
                     <tr class="${isCompleted ? 'completed' : ''}">
                         <td><span class="editable guest-name" contenteditable="true" data-original="${originalName}" data-field="newName" onblur="handleEdit(this)">${g.name}</span></td>
-                        <td class="address">${g.address || '<span class="no-gift">No address</span>'}</td>
+                        <td><span class="editable address" contenteditable="true" data-original="${originalName}" data-field="address" onblur="handleEdit(this)">${g.address || '<span class="no-gift">No address</span>'}</span></td>
                         <td>
                             <select class="relation-select ${relationClass}" onchange="saveEdit('${originalName}', 'relation', this.value); this.className='relation-select relation-'+this.value;">
                                 <option value="joint" ${g.relation === 'joint' ? 'selected' : ''}>Joint</option>
@@ -675,22 +709,25 @@
                             </select>
                         </td>
                         <td><span class="editable gift" contenteditable="true" data-original="${originalName}" data-field="gift" onblur="handleEdit(this)">${hasGift ? g.gift : '<span class="no-gift">No gift</span>'}</span></td>
-                        <td class="value">${g.value ? '$' + g.value.toFixed(2) : '-'}</td>
-                        <td class="ty-preview" onclick="showTyNote('${g.name.replace(/'/g, "\\'")}', '${(g.ty || '').replace(/'/g, "\\'").replace(/\n/g, "\\n")}')">${g.ty ? g.ty.substring(0, 40) + '...' : '<span class="no-gift">No draft</span>'}</td>
+                        <td><span class="editable value" contenteditable="true" data-original="${originalName}" data-field="value" onblur="handleEdit(this)">${g.value ? '$' + g.value.toFixed(2) : '-'}</span></td>
+                        <td class="ty-preview" onclick="showTyNote('${escapedName}', '${(g.ty || '').replace(/'/g, "\\'").replace(/\n/g, "\\n")}')">${g.ty ? g.ty.substring(0, 40) + '...' : '<span class="no-gift">No draft</span>'}</td>
                         <td class="checkbox-cell">
                             <div class="checkbox-wrapper">
-                                <input type="checkbox" ${getProgress(g.name, 'envelope') ? 'checked' : ''} onchange="setProgress('${g.name.replace(/'/g, "\\'")}', 'envelope', this.checked)">
+                                <input type="checkbox" ${getProgress(g.name, 'envelope') ? 'checked' : ''} onchange="setProgress('${escapedName}', 'envelope', this.checked)">
                             </div>
                         </td>
                         <td class="checkbox-cell">
                             <div class="checkbox-wrapper">
-                                <input type="checkbox" ${getProgress(g.name, 'written') ? 'checked' : ''} onchange="setProgress('${g.name.replace(/'/g, "\\'")}', 'written', this.checked)">
+                                <input type="checkbox" ${getProgress(g.name, 'written') ? 'checked' : ''} onchange="setProgress('${escapedName}', 'written', this.checked)">
                             </div>
                         </td>
                         <td class="checkbox-cell">
                             <div class="checkbox-wrapper">
-                                <input type="checkbox" ${getProgress(g.name, 'sent') ? 'checked' : ''} onchange="setProgress('${g.name.replace(/'/g, "\\'")}', 'sent', this.checked)">
+                                <input type="checkbox" ${getProgress(g.name, 'sent') ? 'checked' : ''} onchange="setProgress('${escapedName}', 'sent', this.checked)">
                             </div>
+                        </td>
+                        <td class="checkbox-cell">
+                            <button class="delete-btn" onclick="deleteRow('${escapedName}')">X</button>
                         </td>
                     </tr>
                 `;
@@ -702,12 +739,32 @@
             const field = el.dataset.field;
             let newValue = el.innerText.trim();
 
-            // Clean up "No gift" placeholder
-            if (newValue === 'No gift' || newValue === '') {
+            // Clean up placeholders
+            if (newValue === 'No gift' || newValue === 'No address' || newValue === '-' || newValue === '') {
                 newValue = '';
             }
 
+            // Handle value field - parse number
+            if (field === 'value') {
+                newValue = parseFloat(newValue.replace(/[$,]/g, '')) || 0;
+            }
+
             saveEdit(originalName, field, newValue);
+        }
+
+        function deleteRow(name) {
+            if (confirm(`Delete "${name}" from the list?`)) {
+                const idx = giftData.findIndex(g => g.name === name);
+                if (idx !== -1) {
+                    giftData.splice(idx, 1);
+                    // Track deletions in localStorage
+                    let deletions = JSON.parse(localStorage.getItem('tyDeletions') || '[]');
+                    deletions.push(name);
+                    localStorage.setItem('tyDeletions', JSON.stringify(deletions));
+                    updateStats();
+                    renderTable();
+                }
+            }
         }
 
         function sortTable(column) {
