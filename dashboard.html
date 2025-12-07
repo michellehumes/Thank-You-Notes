@@ -623,9 +623,13 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
         let supabase = null;
         let syncEnabled = false;
 
-        if (SUPABASE_URL && SUPABASE_KEY) {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            syncEnabled = true;
+        try {
+            if (SUPABASE_URL && SUPABASE_KEY && window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                syncEnabled = true;
+            }
+        } catch (e) {
+            console.log('Supabase not available, using local storage only');
         }
 
         // Gift data from CSV
@@ -1176,21 +1180,29 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
 
         // Initialize
         async function init() {
-            // Show/hide setup instructions based on Supabase config
-            if (!syncEnabled) {
-                document.getElementById('setupBanner').style.display = 'block';
-            } else {
-                document.getElementById('setupInstructions').style.display = 'none';
-            }
+            try {
+                // Show/hide setup instructions based on Supabase config
+                if (!syncEnabled) {
+                    document.getElementById('setupBanner').style.display = 'block';
+                } else {
+                    document.getElementById('setupInstructions').style.display = 'none';
+                }
 
-            // Try to load from Supabase first
-            if (syncEnabled) {
-                await loadFromSupabase();
-            }
+                // Try to load from Supabase first
+                if (syncEnabled) {
+                    await loadFromSupabase();
+                }
 
-            applyEdits();
-            updateStats();
-            renderTable();
+                applyEdits();
+                updateStats();
+                renderTable();
+            } catch (e) {
+                console.error('Init error:', e);
+                // Still try to render with local data
+                applyEdits();
+                updateStats();
+                renderTable();
+            }
         }
 
         init();
