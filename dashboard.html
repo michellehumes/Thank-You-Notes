@@ -778,6 +778,8 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                     .eq('id', 'shared_data')
                     .single();
 
+                document.getElementById('loadingOverlay').classList.add('hidden');
+
                 if (error && error.code !== 'PGRST116') {
                     console.error('Supabase load error:', error);
                     return false;
@@ -793,7 +795,6 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                     localStorage.setItem('tyDeletions', JSON.stringify(deletions));
                 }
 
-                document.getElementById('loadingOverlay').classList.add('hidden');
                 return true;
             } catch (err) {
                 console.error('Supabase load error:', err);
