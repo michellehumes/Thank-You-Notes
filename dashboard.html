@@ -437,14 +437,20 @@ if (enteredPassword !== correctPassword) {
             
             try {
                 const { data, error } = await supabase
-                    .from('thank_you_notes')
+                    .from('wedding_tracker')
                     .select('*')
                     .single();
                 
                 if (data && !error) {
-                    if (data.gift_data) giftData = data.gift_data;
                     if (data.progress) {
                         Object.assign(progress, data.progress);
+                                        if (data.edits) {
+                    Object.assign(edits, data.edits);
+                    localStorage.setItem('tyEdits', JSON.stringify(edits));
+                }
+                if (data.deletions) {
+                    localStorage.setItem('tyDeletions', JSON.stringify(data.deletions));
+                }
                     }
                 }
             } catch (err) {
@@ -452,7 +458,8 @@ if (enteredPassword !== correctPassword) {
             }
             
             // Update UI after loading
-            updateStats();
+            applyEdits();
+        updateStats();
             renderTable();
         }
 
@@ -461,11 +468,12 @@ if (enteredPassword !== correctPassword) {
             
             try {
                 const { error } = await supabase
-                    .from('thank_you_notes')
+                    .from('wedding_tracker')
                     .upsert({
                         id: 'main',
-                        gift_data: giftData,
-                        progress: progress
+                        progress: progress,
+                    edits: edits,
+                    deletions: JSON.parse(localStorage.getItem('tyDeletions') || '[]')
                     });
                 
                 if (error) console.error('Supabase save error:', error);
