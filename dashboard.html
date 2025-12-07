@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thank You Notes Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -132,7 +133,8 @@
         .table-container {
             background: white;
             border-radius: 12px;
-            overflow: hidden;
+            overflow: auto;
+            max-height: 70vh;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
@@ -147,6 +149,7 @@
             text-align: left;
             font-weight: 600;
             color: #374151;
+            z-index: 10;
             border-bottom: 2px solid #e5e7eb;
             position: sticky;
             top: 0;
@@ -332,6 +335,76 @@
             border-color: #f59e0b;
         }
 
+        .save-indicator.syncing {
+            color: #3b82f6;
+            background: #eff6ff;
+            border-color: #3b82f6;
+        }
+
+        .save-indicator.error {
+            color: #ef4444;
+            background: #fef2f2;
+            border-color: #ef4444;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(102, 126, 234, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .setup-banner {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #92400e;
+        }
+
+        .setup-banner h3 {
+            margin: 0 0 10px 0;
+            color: #92400e;
+        }
+
+        .setup-banner code {
+            background: #fde68a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
         .editable {
             cursor: text;
             padding: 4px 8px;
@@ -400,99 +473,34 @@
 </head>
 <body>
     <script>
-// Password protection
-const correctPassword = "wedding2025";
-const enteredPassword = sessionStorage.getItem('dashboardPassword');
+        // Password protection
+        const correctPassword = "wedding2025";
+        const enteredPassword = sessionStorage.getItem('dashboardPassword');
 
-if (enteredPassword !== correctPassword) {
-    const password = prompt("Enter password to access the dashboard:");
-    if (password === correctPassword) {
-        sessionStorage.setItem('dashboardPassword', password);
-    } else {
-        alert("Incorrect password!");
-        window.location.href = "about:blank";
-    }
-}
-</script>
-    <script>
-/// Supabase Configuration
-    const SUPABASE_URL = 'https://wllgsnhlzduwehxxwdpt.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsbGdzbmhsemR1d2VoeHh3ZHB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwNzM0NjYsImV4cCI6MjA4MDY0OTQ2Nn0.s1QssScNjYw2BezCCzLrO2BSoaioHcja7uYHR_5gdEw';
-
-        // Initialize Supabase client
-        let supabase;
-        (async () => {
-            const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-            supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-                    // Initialize app
-        applyEdits();
-        await loadFromSupabase();
-            
-        })();
-
-        // Sync functions
-        async function loadFromSupabase() {
-            if (!supabase) return;
-            
-            try {
-                const { data, error } = await supabase
-                    .from('wedding_tracker')
-                    .select('*')
-                    .single();
-                
-                if (data && !error) {
-                    if (data.progress) {
-                        Object.assign(progress, data.progress);
-                                        if (data.edits) {
-                    Object.assign(edits, data.edits);
-                    localStorage.setItem('tyEdits', JSON.stringify(edits));
-                }
-                if (data.deletions) {
-                    localStorage.setItem('tyDeletions', JSON.stringify(data.deletions));
-                }
-                    }
-                }
-            } catch (err) {
-                console.log('No existing data, starting fresh');
-            }
-            
-            // Update UI after loading
-            applyEdits();
-        updateStats();
-            renderTable();
-            
-    // Hide loading overlay
-    document.getElementById('loadingOverlay').style.display = 'none';
-        }
-
-        async function saveToSupabase() {
-            if (!supabase) return;
-            
-            try {
-                const { error } = await supabase
-                    .from('wedding_tracker')
-                    .upsert({
-                        id: 'main',
-                        progress: progress,
-                    edits: edits,
-                    deletions: JSON.parse(localStorage.getItem('tyDeletions') || '[]')
-                    });
-                
-                if (error) console.error('Supabase save error:', error);
-            } catch (err) {
-                console.error('Save error:', err);
+        if (enteredPassword !== correctPassword) {
+            const password = prompt("Enter password to access the dashboard:");
+            if (password === correctPassword) {
+                sessionStorage.setItem('dashboardPassword', password);
+            } else {
+                alert("Incorrect password!");
+                window.location.href = "about:blank";
             }
         }
+    </script>
 
-        // Override localStorage functions to also sync with Supabase
-        const originalSaveData = window.saveData || function() {};
-        window.saveData = function() {
-            originalSaveData();
-            saveToSupabase();
-        };
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Syncing data...</div>
+    </div>
 
-    </script><div class="container">
+    <div class="container">
+        <!-- Setup banner (shown if Supabase not configured) -->
+        <div id="setupBanner" class="setup-banner" style="display: none;">
+            <h3>Setup Required for Shared Access</h3>
+            <p>To enable syncing between you and your partner, you need to configure Supabase. See the setup instructions below the tracker.</p>
+        </div>
+
         <h1>Thank You Notes Tracker</h1>
         <p class="subtitle">Michelle & Gray's Wedding Gift Tracker</p>
 
@@ -544,7 +552,7 @@ if (enteredPassword !== correctPassword) {
                 <option value="groom">Groom</option>
             </select>
             <button class="btn-secondary" onclick="resetFilters()">Reset</button>
-            <button class="btn-primary" onclick="exportProgress()">Export Progress</button>
+            <button class="btn-primary" onclick="addNewGuest()">+ Add Guest</button>
         </div>
 
         <div class="table-container">
@@ -560,6 +568,7 @@ if (enteredPassword !== correctPassword) {
                         <th onclick="sortTable('envelope')">Envelope</th>
                         <th onclick="sortTable('written')">Written</th>
                         <th onclick="sortTable('sent')">Sent</th>
+                        <th onclick="sortTable('xmasCard')">Xmas Card</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -570,9 +579,45 @@ if (enteredPassword !== correctPassword) {
 
         <div class="export-section">
             <span id="saveIndicator" class="save-indicator">All changes saved locally</span>
-            <button class="btn-primary" onclick="exportProgress()">Download Updated CSV</button>
+            <button class="btn-primary" onclick="manualSave()" style="background: #10b981;">Save Now</button>
+            <button class="btn-primary" onclick="exportProgress()">Download CSV</button>
             <button class="btn-secondary" onclick="markAllEnvelopes()">Mark All Envelopes Done</button>
             <button class="btn-secondary" onclick="clearAllProgress()">Clear All Progress</button>
+        </div>
+
+        <!-- Setup Instructions (shown when Supabase not configured) -->
+        <div id="setupInstructions" class="setup-banner" style="margin-top: 30px;">
+            <h3>Setup Instructions for Shared Access</h3>
+            <p>To share this tracker with your partner so both of you can make changes that sync:</p>
+            <ol style="margin: 15px 0; padding-left: 20px;">
+                <li><strong>Create a free Supabase account:</strong> Go to <a href="https://supabase.com" target="_blank">supabase.com</a> and sign up</li>
+                <li><strong>Create a new project</strong> (choose any name and password)</li>
+                <li><strong>Go to Table Editor</strong> and create a new table called <code>wedding_tracker</code> with these columns:
+                    <ul style="margin: 10px 0;">
+                        <li><code>id</code> (text, primary key)</li>
+                        <li><code>progress</code> (jsonb)</li>
+                        <li><code>edits</code> (jsonb)</li>
+                        <li><code>deletions</code> (jsonb)</li>
+                        <li><code>updated_at</code> (timestamptz)</li>
+                    </ul>
+                </li>
+                <li><strong>Go to Project Settings → API</strong> and copy your Project URL and anon/public key</li>
+                <li><strong>Update this file:</strong> Edit the SUPABASE_URL and SUPABASE_KEY values at the top of the script section</li>
+                <li><strong>Enable Row Level Security:</strong> Go to Authentication → Policies and enable RLS on the wedding_tracker table, then add a policy to allow all operations</li>
+            </ol>
+            <p><strong>Quick SQL Setup:</strong> In the SQL Editor, run this:</p>
+            <pre style="background: #fde68a; padding: 10px; border-radius: 4px; overflow-x: auto; font-size: 12px;">
+CREATE TABLE wedding_tracker (
+    id TEXT PRIMARY KEY,
+    progress JSONB DEFAULT '{}',
+    edits JSONB DEFAULT '{}',
+    deletions JSONB DEFAULT '[]',
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE wedding_tracker ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (true);</pre>
         </div>
     </div>
 
@@ -588,6 +633,25 @@ if (enteredPassword !== correctPassword) {
     </div>
 
     <script>
+        // =============================================
+        // SUPABASE CONFIGURATION - Update these values!
+        // =============================================
+        const SUPABASE_URL = 'https://yclfhiuunstkqjvzzobd.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljbGZoaXV1bnN0a3Fqdnp6b2JkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM1MzEwMjYsImV4cCI6MjA0OTEwNzAyNn0.cY1Hbu5dAGLU0XZKy3KKv_rwFipwIYw6tqhDVAD_GEU';
+
+        // Initialize Supabase client (if configured)
+        let supabase = null;
+        let syncEnabled = false;
+
+        try {
+            if (SUPABASE_URL && SUPABASE_KEY && window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                syncEnabled = true;
+            }
+        } catch (e) {
+            console.log('Supabase not available, using local storage only');
+        }
+
         // Gift data from CSV
         let giftData = [
             {"name": "Jean Marie Woodard & Kenneth Munnelly", "address": "", "relation": "joint", "gift": "Cuisinart Precision Stand Mixer; Check", "value": 1319.95, "ty": ""},
@@ -714,15 +778,120 @@ if (enteredPassword !== correctPassword) {
 
         let progress = JSON.parse(localStorage.getItem('tyProgress') || '{}');
         let edits = JSON.parse(localStorage.getItem('tyEdits') || '{}');
+        let deletions = JSON.parse(localStorage.getItem('tyDeletions') || '[]');
         let sortColumn = 'name';
         let sortDirection = 'asc';
+
+        // =============================================
+        // SUPABASE SYNC FUNCTIONS
+        // =============================================
+
+        async function loadFromSupabase() {
+            if (!syncEnabled) return false;
+
+            try {
+                document.getElementById('loadingOverlay').classList.remove('hidden');
+
+                const { data, error } = await supabase
+                    .from('wedding_tracker')
+                    .select('*')
+                    .eq('id', 'shared_data')
+                    .single();
+
+                document.getElementById('loadingOverlay').classList.add('hidden');
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Supabase load error:', error);
+                    return false;
+                }
+
+                if (data) {
+                    progress = data.progress || {};
+                    edits = data.edits || {};
+                    deletions = data.deletions || [];
+                    // Also save to localStorage as cache
+                    localStorage.setItem('tyProgress', JSON.stringify(progress));
+                    localStorage.setItem('tyEdits', JSON.stringify(edits));
+                    localStorage.setItem('tyDeletions', JSON.stringify(deletions));
+                }
+
+                return true;
+            } catch (err) {
+                console.error('Supabase load error:', err);
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                return false;
+            }
+        }
+
+        async function saveToSupabase() {
+            if (!syncEnabled) {
+                console.log('Sync not enabled');
+                return;
+            }
+
+            try {
+                showSyncIndicator('syncing');
+
+                const { error } = await supabase
+                    .from('wedding_tracker')
+                    .upsert({
+                        id: 'shared_data',
+                        progress: progress,
+                        edits: edits,
+                        deletions: deletions,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'id' });
+
+                if (error) {
+                    console.error('Supabase save error:', error);
+                    alert('Save failed: ' + error.message + '\n\nTry disabling Row Level Security in Supabase SQL Editor:\nALTER TABLE wedding_tracker DISABLE ROW LEVEL SECURITY;');
+                    showSyncIndicator('error');
+                    return;
+                }
+
+                showSyncIndicator('success');
+            } catch (err) {
+                console.error('Supabase save error:', err);
+                alert('Save failed: ' + err.message);
+                showSyncIndicator('error');
+            }
+        }
+
+        function showSyncIndicator(status) {
+            const indicator = document.getElementById('saveIndicator');
+            indicator.classList.remove('saving', 'syncing', 'error');
+
+            if (status === 'syncing') {
+                indicator.textContent = 'Syncing...';
+                indicator.classList.add('syncing');
+            } else if (status === 'error') {
+                indicator.textContent = 'Sync error - saved locally';
+                indicator.classList.add('error');
+                setTimeout(() => {
+                    indicator.textContent = 'All changes saved locally';
+                    indicator.classList.remove('error');
+                }, 3000);
+            } else if (status === 'success') {
+                indicator.textContent = syncEnabled ? 'All changes synced' : 'All changes saved locally';
+                setTimeout(() => {
+                    indicator.textContent = syncEnabled ? 'All changes synced' : 'All changes saved locally';
+                }, 500);
+            }
+        }
+
+        // Debounced save to avoid too many API calls
+        let saveTimeout = null;
+        function debouncedSaveToSupabase() {
+            if (saveTimeout) clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveToSupabase, 1000);
+        }
 
         // Apply saved edits and deletions to data
         function applyEdits() {
             // Apply deletions first
-            let deletions = JSON.parse(localStorage.getItem('tyDeletions') || '[]');
             giftData = giftData.filter(g => !deletions.includes(g.name));
 
+            // Apply edits to existing guests
             giftData.forEach((g, i) => {
                 if (edits[g.name]) {
                     if (edits[g.name].newName) giftData[i].name = edits[g.name].newName;
@@ -731,6 +900,20 @@ if (enteredPassword !== correctPassword) {
                     if (edits[g.name].address !== undefined) giftData[i].address = edits[g.name].address;
                     if (edits[g.name].value !== undefined) giftData[i].value = edits[g.name].value;
                     if (edits[g.name].ty !== undefined) giftData[i].ty = edits[g.name].ty;
+                }
+            });
+
+            // Add new guests that were created
+            Object.keys(edits).forEach(name => {
+                if (edits[name].isNew && !giftData.some(g => g.name === name)) {
+                    giftData.unshift({
+                        name: name,
+                        address: edits[name].address || '',
+                        relation: edits[name].relation || 'joint',
+                        gift: edits[name].gift || '',
+                        value: edits[name].value || 0,
+                        ty: edits[name].ty || ''
+                    });
                 }
             });
         }
@@ -745,6 +928,7 @@ if (enteredPassword !== correctPassword) {
             progress[name][field] = value;
             localStorage.setItem('tyProgress', JSON.stringify(progress));
             showSaveIndicator();
+            debouncedSaveToSupabase();
             updateStats();
             renderTable();
         }
@@ -754,17 +938,65 @@ if (enteredPassword !== correctPassword) {
             indicator.textContent = 'Saving...';
             indicator.classList.add('saving');
             setTimeout(() => {
-                indicator.textContent = 'All changes saved locally';
+                indicator.textContent = syncEnabled ? 'All changes synced' : 'All changes saved locally';
                 indicator.classList.remove('saving');
             }, 500);
         }
 
+        async function manualSave() {
+            // Save to localStorage
+            localStorage.setItem('tyProgress', JSON.stringify(progress));
+            localStorage.setItem('tyEdits', JSON.stringify(edits));
+            localStorage.setItem('tyDeletions', JSON.stringify(deletions));
+
+            // Sync to Supabase immediately
+            if (syncEnabled) {
+                const indicator = document.getElementById('saveIndicator');
+                indicator.textContent = 'Saving to cloud...';
+                indicator.classList.add('syncing');
+
+                try {
+                    const { error } = await supabase
+                        .from('wedding_tracker')
+                        .upsert({
+                            id: 'shared_data',
+                            progress: progress,
+                            edits: edits,
+                            deletions: deletions,
+                            updated_at: new Date().toISOString()
+                        }, { onConflict: 'id' });
+
+                    if (error) {
+                        alert('Save FAILED: ' + error.message + '\n\nRun this in Supabase SQL Editor:\nALTER TABLE wedding_tracker DISABLE ROW LEVEL SECURITY;');
+                        indicator.textContent = 'Save failed!';
+                        indicator.classList.remove('syncing');
+                        indicator.classList.add('error');
+                        return;
+                    }
+
+                    alert('Saved successfully!');
+                    indicator.textContent = 'All changes synced!';
+                    indicator.classList.remove('syncing');
+                } catch (err) {
+                    alert('Save FAILED: ' + err.message);
+                    indicator.textContent = 'Save failed!';
+                    indicator.classList.remove('syncing');
+                    indicator.classList.add('error');
+                }
+            } else {
+                alert('Saved to local storage (Supabase not configured)');
+                showSaveIndicator();
+            }
+        }
+
         function saveEdit(originalName, field, newValue) {
             originalName = originalName.replace(/&amp;/g, '&');
+            console.log('saveEdit called:', originalName, field, newValue);
             if (!edits[originalName]) edits[originalName] = {};
             edits[originalName][field] = newValue;
             localStorage.setItem('tyEdits', JSON.stringify(edits));
             showSaveIndicator();
+            debouncedSaveToSupabase();
 
             // Update giftData - find by original name or by renamed name
             let idx = giftData.findIndex(g => g.name === originalName);
@@ -840,6 +1072,7 @@ if (enteredPassword !== correctPassword) {
                     case 'envelope': aVal = getProgress(a.name, 'envelope') ? 1 : 0; bVal = getProgress(b.name, 'envelope') ? 1 : 0; break;
                     case 'written': aVal = getProgress(a.name, 'written') ? 1 : 0; bVal = getProgress(b.name, 'written') ? 1 : 0; break;
                     case 'sent': aVal = getProgress(a.name, 'sent') ? 1 : 0; bVal = getProgress(b.name, 'sent') ? 1 : 0; break;
+                    case 'xmasCard': aVal = getProgress(a.name, 'xmasCard') ? 1 : 0; bVal = getProgress(b.name, 'xmasCard') ? 1 : 0; break;
                     default: aVal = a[sortColumn] || ''; bVal = b[sortColumn] || '';
                 }
                 if (typeof aVal === 'string') {
@@ -887,6 +1120,11 @@ if (enteredPassword !== correctPassword) {
                             </div>
                         </td>
                         <td class="checkbox-cell">
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" ${getProgress(g.name, 'xmasCard') ? 'checked' : ''} onchange="setProgress('${escapedName}', 'xmasCard', this.checked)">
+                            </div>
+                        </td>
+                        <td class="checkbox-cell">
                             <button class="delete-btn" onclick="deleteRow('${escapedName}')">X</button>
                         </td>
                     </tr>
@@ -924,15 +1162,47 @@ if (enteredPassword !== correctPassword) {
                 const idx = giftData.findIndex(g => g.name === name);
                 if (idx !== -1) {
                     giftData.splice(idx, 1);
-                    // Track deletions in localStorage
-                    let deletions = JSON.parse(localStorage.getItem('tyDeletions') || '[]');
+                    // Track deletions
                     deletions.push(name);
                     localStorage.setItem('tyDeletions', JSON.stringify(deletions));
                     showSaveIndicator();
+                    debouncedSaveToSupabase();
                     updateStats();
                     renderTable();
                 }
             }
+        }
+
+        function addNewGuest() {
+            const name = prompt('Enter guest name:');
+            if (!name || name.trim() === '') return;
+
+            // Check if name already exists
+            if (giftData.some(g => g.name.toLowerCase() === name.trim().toLowerCase())) {
+                alert('A guest with this name already exists!');
+                return;
+            }
+
+            const newGuest = {
+                name: name.trim(),
+                address: '',
+                relation: 'joint',
+                gift: '',
+                value: 0,
+                ty: ''
+            };
+
+            giftData.unshift(newGuest); // Add to beginning of list
+
+            // Save as an edit so it syncs
+            if (!edits[newGuest.name]) edits[newGuest.name] = {};
+            edits[newGuest.name].isNew = true;
+            localStorage.setItem('tyEdits', JSON.stringify(edits));
+
+            showSaveIndicator();
+            debouncedSaveToSupabase();
+            updateStats();
+            renderTable();
         }
 
         function sortTable(column) {
@@ -991,6 +1261,7 @@ if (enteredPassword !== correctPassword) {
                     progress[g.name].envelope = true;
                 });
                 localStorage.setItem('tyProgress', JSON.stringify(progress));
+                debouncedSaveToSupabase();
                 updateStats();
                 renderTable();
             }
@@ -1000,6 +1271,7 @@ if (enteredPassword !== correctPassword) {
             if (confirm('Clear all progress? This cannot be undone.')) {
                 progress = {};
                 localStorage.setItem('tyProgress', JSON.stringify(progress));
+                debouncedSaveToSupabase();
                 updateStats();
                 renderTable();
             }
@@ -1010,11 +1282,12 @@ if (enteredPassword !== correctPassword) {
                 ...g,
                 envelope: getProgress(g.name, 'envelope'),
                 written: getProgress(g.name, 'written'),
-                sent: getProgress(g.name, 'sent')
+                sent: getProgress(g.name, 'sent'),
+                xmasCard: getProgress(g.name, 'xmasCard')
             }));
 
-            const csv = 'Guest Name,Address,Relation,Gift,Value,TY Note,Envelope Done,Written,Sent\n' +
-                data.map(g => `"${g.name}","${g.address}","${g.relation}","${g.gift}",${g.value},"${(g.ty || '').replace(/"/g, '""')}",${g.envelope},${g.written},${g.sent}`).join('\n');
+            const csv = 'Guest Name,Address,Relation,Gift,Value,TY Note,Envelope Done,Written,Sent,Xmas Card\n' +
+                data.map(g => `"${g.name}","${g.address}","${g.relation}","${g.gift}",${g.value},"${(g.ty || '').replace(/"/g, '""')}",${g.envelope},${g.written},${g.sent},${g.xmasCard}`).join('\n');
 
             const blob = new Blob([csv], {type: 'text/csv'});
             const url = URL.createObjectURL(blob);
@@ -1032,6 +1305,34 @@ if (enteredPassword !== correctPassword) {
             if (e.target === document.getElementById('tyModal')) closeModal();
         });
 
+        // Initialize
+        async function init() {
+            try {
+                // Show/hide setup instructions based on Supabase config
+                if (!syncEnabled) {
+                    document.getElementById('setupBanner').style.display = 'block';
+                } else {
+                    document.getElementById('setupInstructions').style.display = 'none';
+                }
+
+                // Try to load from Supabase first
+                if (syncEnabled) {
+                    await loadFromSupabase();
+                }
+
+                applyEdits();
+                updateStats();
+                renderTable();
+            } catch (e) {
+                console.error('Init error:', e);
+                // Still try to render with local data
+                applyEdits();
+                updateStats();
+                renderTable();
+            }
+        }
+
+        init();
     </script>
 </body>
 </html>
