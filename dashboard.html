@@ -262,16 +262,24 @@
             color: #1f2937;
         }
 
-        .modal-content .ty-text {
-            background: #f8fafc;
-            padding: 20px;
+        .ty-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
             border-radius: 8px;
+            font-size: 14px;
             line-height: 1.6;
-            white-space: pre-wrap;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .ty-textarea:focus {
+            outline: none;
+            border-color: #667eea;
         }
 
         .modal-content button {
-            margin-top: 20px;
             padding: 10px 30px;
             background: #667eea;
             color: white;
@@ -445,8 +453,11 @@
     <div class="modal" id="tyModal">
         <div class="modal-content">
             <h2 id="modalGuestName">Thank You Note</h2>
-            <div class="ty-text" id="modalTyText"></div>
-            <button onclick="closeModal()">Close</button>
+            <textarea id="modalTyText" class="ty-textarea" placeholder="Write your thank you note here..."></textarea>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="saveTyNote()" style="background: #10b981;">Save</button>
+                <button onclick="closeModal()">Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -593,6 +604,7 @@
                     if (edits[g.name].relation) giftData[i].relation = edits[g.name].relation;
                     if (edits[g.name].address !== undefined) giftData[i].address = edits[g.name].address;
                     if (edits[g.name].value !== undefined) giftData[i].value = edits[g.name].value;
+                    if (edits[g.name].ty !== undefined) giftData[i].ty = edits[g.name].ty;
                 }
             });
         }
@@ -622,6 +634,7 @@
                 if (field === 'relation') giftData[idx].relation = newValue;
                 if (field === 'address') giftData[idx].address = newValue;
                 if (field === 'value') giftData[idx].value = newValue;
+                if (field === 'ty') giftData[idx].ty = newValue;
             }
             updateStats();
             renderTable();
@@ -778,14 +791,35 @@
             renderTable();
         }
 
+        let currentEditingGuest = null;
+
         function showTyNote(name, text) {
+            currentEditingGuest = name;
             document.getElementById('modalGuestName').textContent = name;
-            document.getElementById('modalTyText').textContent = text || 'No thank you note draft available.';
+            document.getElementById('modalTyText').value = text || '';
             document.getElementById('tyModal').classList.add('active');
+            document.getElementById('modalTyText').focus();
+        }
+
+        function saveTyNote() {
+            if (currentEditingGuest) {
+                const newText = document.getElementById('modalTyText').value;
+                saveEdit(currentEditingGuest, 'ty', newText);
+
+                // Update giftData directly
+                const idx = giftData.findIndex(g => g.name === currentEditingGuest);
+                if (idx !== -1) {
+                    giftData[idx].ty = newText;
+                }
+
+                renderTable();
+                closeModal();
+            }
         }
 
         function closeModal() {
             document.getElementById('tyModal').classList.remove('active');
+            currentEditingGuest = null;
         }
 
         function resetFilters() {
