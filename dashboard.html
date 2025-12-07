@@ -399,6 +399,26 @@
     </style>
 </head>
 <body>
+    <script>
+// Password protection
+const correctPassword = "wedding2025";
+const enteredPassword = sessionStorage.getItem('dashboardPassword');
+
+if (enteredPassword !== correctPassword) {
+    const password = prompt("Enter password to access the dashboard:");
+    if (password === correctPassword) {
+        sessionStorage.setItem('dashboardPassword', password);
+    } else {
+        alert("Incorrect password!");
+        window.location.href = "about:blank";
+    }
+}
+</script>
+    <script>
+// Supabase Configuration
+const SUPABASE_URL = 'https://yclfhiuunstkqjvzzobd.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljbGZoaXV1bnN0a3Fqdnp6b2JkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM1MzEwMjYsImV4cCI6MjA0OTEwNzAyNn0.cY1Hbu5dAGLU0XZKy3KKv_rwFipwIYw6tqhDVAD_GEU';
+</script>
     <div class="container">
         <h1>Thank You Notes Tracker</h1>
         <p class="subtitle">Michelle & Gray's Wedding Gift Tracker</p>
