@@ -424,6 +424,10 @@ if (enteredPassword !== correctPassword) {
         (async () => {
             const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
             supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+                    // Initialize app
+        applyEdits();
+        await loadFromSupabase();
             
         })();
 
@@ -1017,11 +1021,6 @@ if (enteredPassword !== correctPassword) {
             if (e.target === document.getElementById('tyModal')) closeModal();
         });
 
-        // Initialize
-        applyEdits();
-        updateStats();
-        renderTable();
-        loadFromSupabase();
     </script>
 </body>
 </html>
