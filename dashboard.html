@@ -442,7 +442,7 @@ if (enteredPassword !== correctPassword) {
                 if (data && !error) {
                     if (data.gift_data) giftData = data.gift_data;
                     if (data.progress) {
-                        Object.assign(guestProgress, data.progress);
+                        Object.assign(progress, data.progress);
                     }
                 }
             } catch (err) {
@@ -451,7 +451,7 @@ if (enteredPassword !== correctPassword) {
             
             // Update UI after loading
             updateStats();
-            displayGifts();
+            renderTable();
         }
 
         async function saveToSupabase() {
@@ -463,7 +463,7 @@ if (enteredPassword !== correctPassword) {
                     .upsert({
                         id: 'main',
                         gift_data: giftData,
-                        progress: guestProgress
+                        progress: progress
                     });
                 
                 if (error) console.error('Supabase save error:', error);
