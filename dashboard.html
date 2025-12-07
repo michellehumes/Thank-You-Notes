@@ -461,6 +461,9 @@ if (enteredPassword !== correctPassword) {
             applyEdits();
         updateStats();
             renderTable();
+            
+    // Hide loading overlay
+    document.getElementById('loadingOverlay').style.display = 'none';
         }
 
         async function saveToSupabase() {
