@@ -806,10 +806,41 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                 }
 
                 if (data) {
-                    console.log('Loaded from Supabase - edits:', JSON.stringify(data.edits, null, 2));
+                    console.log('=== SUPABASE DATA LOADED ===');
+                    console.log('Raw data.edits:', data.edits);
+                    console.log('data.edits type:', typeof data.edits);
+                    console.log('Edits keys:', data.edits ? Object.keys(data.edits) : 'null/undefined');
+
+                    // Check specifically for Alec & Kelsey
+                    if (data.edits) {
+                        const alecKey = Object.keys(data.edits).find(k => k.includes('Alec'));
+                        if (alecKey) {
+                            console.log('Found Alec entry:', JSON.stringify(alecKey), '=', JSON.stringify(data.edits[alecKey]));
+                        }
+                    }
+
                     progress = data.progress || {};
-                    edits = data.edits || {};
                     deletions = data.deletions || [];
+
+                    // Normalize edits keys - fix any potential HTML entity encoding issues
+                    const rawEdits = data.edits || {};
+                    edits = {};
+                    Object.keys(rawEdits).forEach(key => {
+                        // Normalize the key: decode HTML entities and normalize unicode
+                        const normalizedKey = key
+                            .replace(/&amp;/g, '&')
+                            .replace(/&#39;/g, "'")
+                            .replace(/&quot;/g, '"')
+                            .replace(/&#x27;/g, "'");
+                        edits[normalizedKey] = rawEdits[key];
+                        if (normalizedKey !== key) {
+                            console.log('Normalized key:', JSON.stringify(key), '->', JSON.stringify(normalizedKey));
+                        }
+                    });
+
+                    console.log('After normalization - edits keys:', Object.keys(edits));
+                    console.log('=== END SUPABASE DATA ===');
+
                     // Also save to localStorage as cache
                     localStorage.setItem('tyProgress', JSON.stringify(progress));
                     localStorage.setItem('tyEdits', JSON.stringify(edits));
@@ -887,28 +918,97 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             saveTimeout = setTimeout(saveToSupabase, 1000);
         }
 
+        // Helper function to normalize names for matching
+        function normalizeName(name) {
+            return name
+                .replace(/&amp;/g, '&')
+                .replace(/&#39;/g, "'")
+                .replace(/&quot;/g, '"')
+                .replace(/&#x27;/g, "'")
+                .replace(/\\'/g, "'")
+                .trim();
+        }
+
+        // Build a lookup map with normalized keys for faster matching
+        function buildEditsLookup() {
+            const lookup = {};
+            Object.keys(edits).forEach(key => {
+                const normalizedKey = normalizeName(key);
+                lookup[normalizedKey] = edits[key];
+                // Also keep original key mapping
+                lookup[key] = edits[key];
+            });
+            return lookup;
+        }
+
         // Apply saved edits and deletions to data
         function applyEdits() {
-            console.log('applyEdits called. edits object:', JSON.stringify(edits, null, 2));
+            console.log('=== APPLY EDITS START ===');
+            console.log('edits keys:', Object.keys(edits));
+            console.log('Total edits:', Object.keys(edits).length);
+
+            // Build normalized lookup
+            const editsLookup = buildEditsLookup();
+            console.log('Lookup keys:', Object.keys(editsLookup));
+
+            // Debug: Check for Alec specifically
+            const alecInGiftData = giftData.find(g => g.name.includes('Alec'));
+            const alecInEdits = Object.keys(edits).find(k => k.includes('Alec'));
+            console.log('Alec in giftData:', alecInGiftData ? JSON.stringify(alecInGiftData.name) : 'NOT FOUND');
+            console.log('Alec in edits:', alecInEdits ? JSON.stringify(alecInEdits) : 'NOT FOUND');
+            if (alecInGiftData && alecInEdits) {
+                console.log('Alec names match:', alecInGiftData.name === alecInEdits);
+                console.log('giftData name chars:', [...alecInGiftData.name].map(c => c.charCodeAt(0)));
+                console.log('edits key chars:', [...alecInEdits].map(c => c.charCodeAt(0)));
+            }
 
             // Apply deletions first
             giftData = giftData.filter(g => !deletions.includes(g.name));
 
             // Apply edits to existing guests
+            let matchCount = 0;
+            let relationUpdates = 0;
             giftData.forEach((g, i) => {
-                if (edits[g.name]) {
-                    console.log('Applying edits for:', g.name, edits[g.name]);
-                    if (edits[g.name].newName) giftData[i].name = edits[g.name].newName;
-                    if (edits[g.name].gift !== undefined) giftData[i].gift = edits[g.name].gift;
-                    if (edits[g.name].relation !== undefined) {
-                        console.log('Applying relation:', edits[g.name].relation, 'to', g.name);
-                        giftData[i].relation = edits[g.name].relation;
+                // Normalize the guest name for lookup
+                const normalizedGuestName = normalizeName(g.name);
+
+                // Try multiple lookup strategies
+                let editEntry = editsLookup[g.name] ||
+                               editsLookup[normalizedGuestName] ||
+                               edits[g.name] ||
+                               edits[normalizedGuestName];
+
+                // If still no match, try to find a fuzzy match
+                if (!editEntry) {
+                    const similarKey = Object.keys(edits).find(k => {
+                        const normalizedK = normalizeName(k);
+                        return normalizedK === normalizedGuestName ||
+                               k.toLowerCase() === g.name.toLowerCase() ||
+                               normalizedK.toLowerCase() === normalizedGuestName.toLowerCase();
+                    });
+                    if (similarKey) {
+                        console.log('FUZZY MATCH! giftData:', JSON.stringify(g.name), 'edits key:', JSON.stringify(similarKey));
+                        editEntry = edits[similarKey];
                     }
-                    if (edits[g.name].address !== undefined) giftData[i].address = edits[g.name].address;
-                    if (edits[g.name].value !== undefined) giftData[i].value = edits[g.name].value;
-                    if (edits[g.name].ty !== undefined) giftData[i].ty = edits[g.name].ty;
+                }
+
+                if (editEntry) {
+                    matchCount++;
+                    console.log('Match found for:', g.name, 'Edit:', JSON.stringify(editEntry));
+                    if (editEntry.newName) giftData[i].name = editEntry.newName;
+                    if (editEntry.gift !== undefined) giftData[i].gift = editEntry.gift;
+                    if (editEntry.relation !== undefined) {
+                        relationUpdates++;
+                        console.log('APPLYING RELATION:', editEntry.relation, 'to', g.name, '(was:', g.relation, ')');
+                        giftData[i].relation = editEntry.relation;
+                    }
+                    if (editEntry.address !== undefined) giftData[i].address = editEntry.address;
+                    if (editEntry.value !== undefined) giftData[i].value = editEntry.value;
+                    if (editEntry.ty !== undefined) giftData[i].ty = editEntry.ty;
                 }
             });
+            console.log('Total matches:', matchCount, 'Relation updates:', relationUpdates);
+            console.log('=== APPLY EDITS END ===');
 
             // Add new guests that were created
             Object.keys(edits).forEach(name => {
@@ -1027,10 +1127,34 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
         }
 
         function updateStats() {
-            const total = giftData.length;
+            // Get current filter values
+            const search = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+            const statusFilter = document.getElementById('filterStatus')?.value || 'all';
+            const relationFilter = document.getElementById('filterRelation')?.value || 'all';
+
+            // Apply the same filtering logic as renderTable
+            const filtered = giftData.filter(g => {
+                const searchMatch = g.name.toLowerCase().includes(search) ||
+                                   g.address.toLowerCase().includes(search) ||
+                                   g.gift.toLowerCase().includes(search);
+
+                let statusMatch = true;
+                if (statusFilter === 'needs-envelope') statusMatch = !getProgress(g.name, 'envelope');
+                if (statusFilter === 'needs-writing') statusMatch = !getProgress(g.name, 'written');
+                if (statusFilter === 'needs-sending') statusMatch = !getProgress(g.name, 'sent');
+                if (statusFilter === 'completed') statusMatch = getProgress(g.name, 'sent');
+                if (statusFilter === 'has-gift') statusMatch = g.gift && g.gift.length > 0;
+                if (statusFilter === 'no-gift') statusMatch = !g.gift || g.gift.length === 0;
+
+                let relationMatch = relationFilter === 'all' || g.relation === relationFilter;
+
+                return searchMatch && statusMatch && relationMatch;
+            });
+
+            const total = filtered.length;
             let envelopes = 0, written = 0, sent = 0, giftsReceived = 0;
 
-            giftData.forEach(g => {
+            filtered.forEach(g => {
                 if (getProgress(g.name, 'envelope')) envelopes++;
                 if (getProgress(g.name, 'written')) written++;
                 if (getProgress(g.name, 'sent')) sent++;
@@ -1039,6 +1163,9 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
 
             const notesRemaining = giftsReceived - written;
 
+            // Update stat card labels based on filter
+            const filterLabel = relationFilter !== 'all' ? ` (${relationFilter.charAt(0).toUpperCase() + relationFilter.slice(1)})` : '';
+
             document.getElementById('totalGuests').textContent = total;
             document.getElementById('giftsReceived').textContent = giftsReceived;
             document.getElementById('notesRemaining').textContent = notesRemaining;
@@ -1046,9 +1173,35 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             document.getElementById('notesWritten').textContent = written;
             document.getElementById('notesSent').textContent = sent;
 
-            document.getElementById('envelopeProgress').style.width = (envelopes/total*100) + '%';
-            document.getElementById('writtenProgress').style.width = (written/total*100) + '%';
-            document.getElementById('sentProgress').style.width = (sent/total*100) + '%';
+            // Update progress bars based on filtered data
+            const progressBase = giftsReceived > 0 ? giftsReceived : total;
+            document.getElementById('envelopeProgress').style.width = (total > 0 ? envelopes/total*100 : 0) + '%';
+            document.getElementById('writtenProgress').style.width = (progressBase > 0 ? written/progressBase*100 : 0) + '%';
+            document.getElementById('sentProgress').style.width = (progressBase > 0 ? sent/progressBase*100 : 0) + '%';
+
+            // Update labels to show filter context
+            updateStatLabels(relationFilter, statusFilter);
+        }
+
+        function updateStatLabels(relationFilter, statusFilter) {
+            const suffix = relationFilter !== 'all' ? ` (${relationFilter.charAt(0).toUpperCase() + relationFilter.slice(1)})` : '';
+
+            // Update the h3 labels in stat cards
+            const labels = {
+                'totalGuests': `Total Guests${suffix}`,
+                'giftsReceived': `Gifts Received${suffix}`,
+                'notesRemaining': `TY Notes Remaining${suffix}`,
+                'envelopesCreated': `Envelopes Created${suffix}`,
+                'notesWritten': `Notes Written${suffix}`,
+                'notesSent': `Notes Sent${suffix}`
+            };
+
+            Object.entries(labels).forEach(([id, label]) => {
+                const el = document.getElementById(id);
+                if (el && el.previousElementSibling && el.previousElementSibling.tagName === 'H3') {
+                    el.previousElementSibling.textContent = label;
+                }
+            });
         }
 
         function renderTable() {
@@ -1318,6 +1471,10 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
         // Initialize
         async function init() {
             try {
+                console.log('=== INIT START ===');
+                console.log('syncEnabled:', syncEnabled);
+                console.log('edits BEFORE load:', Object.keys(edits).length, 'keys');
+
                 // Show/hide setup instructions based on Supabase config
                 if (!syncEnabled) {
                     document.getElementById('setupBanner').style.display = 'block';
@@ -1327,12 +1484,24 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
 
                 // Try to load from Supabase first
                 if (syncEnabled) {
-                    await loadFromSupabase();
+                    console.log('Calling loadFromSupabase...');
+                    const loadResult = await loadFromSupabase();
+                    console.log('loadFromSupabase returned:', loadResult);
                 }
 
+                console.log('edits AFTER load:', Object.keys(edits).length, 'keys');
+                console.log('Calling applyEdits...');
                 applyEdits();
+
+                // Verify a specific guest after applyEdits
+                const alecGuest = giftData.find(g => g.name.includes('Alec'));
+                if (alecGuest) {
+                    console.log('After applyEdits - Alec guest relation:', alecGuest.relation);
+                }
+
                 updateStats();
                 renderTable();
+                console.log('=== INIT COMPLETE ===');
             } catch (e) {
                 console.error('Init error:', e);
                 // Still try to render with local data
