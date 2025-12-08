@@ -1127,10 +1127,34 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
         }
 
         function updateStats() {
-            const total = giftData.length;
+            // Get current filter values
+            const search = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+            const statusFilter = document.getElementById('filterStatus')?.value || 'all';
+            const relationFilter = document.getElementById('filterRelation')?.value || 'all';
+
+            // Apply the same filtering logic as renderTable
+            const filtered = giftData.filter(g => {
+                const searchMatch = g.name.toLowerCase().includes(search) ||
+                                   g.address.toLowerCase().includes(search) ||
+                                   g.gift.toLowerCase().includes(search);
+
+                let statusMatch = true;
+                if (statusFilter === 'needs-envelope') statusMatch = !getProgress(g.name, 'envelope');
+                if (statusFilter === 'needs-writing') statusMatch = !getProgress(g.name, 'written');
+                if (statusFilter === 'needs-sending') statusMatch = !getProgress(g.name, 'sent');
+                if (statusFilter === 'completed') statusMatch = getProgress(g.name, 'sent');
+                if (statusFilter === 'has-gift') statusMatch = g.gift && g.gift.length > 0;
+                if (statusFilter === 'no-gift') statusMatch = !g.gift || g.gift.length === 0;
+
+                let relationMatch = relationFilter === 'all' || g.relation === relationFilter;
+
+                return searchMatch && statusMatch && relationMatch;
+            });
+
+            const total = filtered.length;
             let envelopes = 0, written = 0, sent = 0, giftsReceived = 0;
 
-            giftData.forEach(g => {
+            filtered.forEach(g => {
                 if (getProgress(g.name, 'envelope')) envelopes++;
                 if (getProgress(g.name, 'written')) written++;
                 if (getProgress(g.name, 'sent')) sent++;
@@ -1139,6 +1163,9 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
 
             const notesRemaining = giftsReceived - written;
 
+            // Update stat card labels based on filter
+            const filterLabel = relationFilter !== 'all' ? ` (${relationFilter.charAt(0).toUpperCase() + relationFilter.slice(1)})` : '';
+
             document.getElementById('totalGuests').textContent = total;
             document.getElementById('giftsReceived').textContent = giftsReceived;
             document.getElementById('notesRemaining').textContent = notesRemaining;
@@ -1146,9 +1173,35 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             document.getElementById('notesWritten').textContent = written;
             document.getElementById('notesSent').textContent = sent;
 
-            document.getElementById('envelopeProgress').style.width = (envelopes/total*100) + '%';
-            document.getElementById('writtenProgress').style.width = (written/total*100) + '%';
-            document.getElementById('sentProgress').style.width = (sent/total*100) + '%';
+            // Update progress bars based on filtered data
+            const progressBase = giftsReceived > 0 ? giftsReceived : total;
+            document.getElementById('envelopeProgress').style.width = (total > 0 ? envelopes/total*100 : 0) + '%';
+            document.getElementById('writtenProgress').style.width = (progressBase > 0 ? written/progressBase*100 : 0) + '%';
+            document.getElementById('sentProgress').style.width = (progressBase > 0 ? sent/progressBase*100 : 0) + '%';
+
+            // Update labels to show filter context
+            updateStatLabels(relationFilter, statusFilter);
+        }
+
+        function updateStatLabels(relationFilter, statusFilter) {
+            const suffix = relationFilter !== 'all' ? ` (${relationFilter.charAt(0).toUpperCase() + relationFilter.slice(1)})` : '';
+
+            // Update the h3 labels in stat cards
+            const labels = {
+                'totalGuests': `Total Guests${suffix}`,
+                'giftsReceived': `Gifts Received${suffix}`,
+                'notesRemaining': `TY Notes Remaining${suffix}`,
+                'envelopesCreated': `Envelopes Created${suffix}`,
+                'notesWritten': `Notes Written${suffix}`,
+                'notesSent': `Notes Sent${suffix}`
+            };
+
+            Object.entries(labels).forEach(([id, label]) => {
+                const el = document.getElementById(id);
+                if (el && el.previousElementSibling && el.previousElementSibling.tagName === 'H3') {
+                    el.previousElementSibling.textContent = label;
+                }
+            });
         }
 
         function renderTable() {
