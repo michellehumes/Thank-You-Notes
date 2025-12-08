@@ -820,10 +820,25 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                     }
 
                     progress = data.progress || {};
-                    edits = data.edits || {};
                     deletions = data.deletions || [];
 
-                    console.log('After assignment - edits keys:', Object.keys(edits));
+                    // Normalize edits keys - fix any potential HTML entity encoding issues
+                    const rawEdits = data.edits || {};
+                    edits = {};
+                    Object.keys(rawEdits).forEach(key => {
+                        // Normalize the key: decode HTML entities and normalize unicode
+                        const normalizedKey = key
+                            .replace(/&amp;/g, '&')
+                            .replace(/&#39;/g, "'")
+                            .replace(/&quot;/g, '"')
+                            .replace(/&#x27;/g, "'");
+                        edits[normalizedKey] = rawEdits[key];
+                        if (normalizedKey !== key) {
+                            console.log('Normalized key:', JSON.stringify(key), '->', JSON.stringify(normalizedKey));
+                        }
+                    });
+
+                    console.log('After normalization - edits keys:', Object.keys(edits));
                     console.log('=== END SUPABASE DATA ===');
 
                     // Also save to localStorage as cache
@@ -903,11 +918,49 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             saveTimeout = setTimeout(saveToSupabase, 1000);
         }
 
+        // Helper function to normalize names for matching
+        function normalizeName(name) {
+            return name
+                .replace(/&amp;/g, '&')
+                .replace(/&#39;/g, "'")
+                .replace(/&quot;/g, '"')
+                .replace(/&#x27;/g, "'")
+                .replace(/\\'/g, "'")
+                .trim();
+        }
+
+        // Build a lookup map with normalized keys for faster matching
+        function buildEditsLookup() {
+            const lookup = {};
+            Object.keys(edits).forEach(key => {
+                const normalizedKey = normalizeName(key);
+                lookup[normalizedKey] = edits[key];
+                // Also keep original key mapping
+                lookup[key] = edits[key];
+            });
+            return lookup;
+        }
+
         // Apply saved edits and deletions to data
         function applyEdits() {
             console.log('=== APPLY EDITS START ===');
             console.log('edits keys:', Object.keys(edits));
             console.log('Total edits:', Object.keys(edits).length);
+
+            // Build normalized lookup
+            const editsLookup = buildEditsLookup();
+            console.log('Lookup keys:', Object.keys(editsLookup));
+
+            // Debug: Check for Alec specifically
+            const alecInGiftData = giftData.find(g => g.name.includes('Alec'));
+            const alecInEdits = Object.keys(edits).find(k => k.includes('Alec'));
+            console.log('Alec in giftData:', alecInGiftData ? JSON.stringify(alecInGiftData.name) : 'NOT FOUND');
+            console.log('Alec in edits:', alecInEdits ? JSON.stringify(alecInEdits) : 'NOT FOUND');
+            if (alecInGiftData && alecInEdits) {
+                console.log('Alec names match:', alecInGiftData.name === alecInEdits);
+                console.log('giftData name chars:', [...alecInGiftData.name].map(c => c.charCodeAt(0)));
+                console.log('edits key chars:', [...alecInEdits].map(c => c.charCodeAt(0)));
+            }
 
             // Apply deletions first
             giftData = giftData.filter(g => !deletions.includes(g.name));
@@ -916,19 +969,25 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             let matchCount = 0;
             let relationUpdates = 0;
             giftData.forEach((g, i) => {
-                // Try exact match first
-                let editEntry = edits[g.name];
+                // Normalize the guest name for lookup
+                const normalizedGuestName = normalizeName(g.name);
 
-                // If no exact match, try to find a similar key (debugging)
+                // Try multiple lookup strategies
+                let editEntry = editsLookup[g.name] ||
+                               editsLookup[normalizedGuestName] ||
+                               edits[g.name] ||
+                               edits[normalizedGuestName];
+
+                // If still no match, try to find a fuzzy match
                 if (!editEntry) {
-                    // Check for potential encoding differences
-                    const similarKey = Object.keys(edits).find(k =>
-                        k.toLowerCase() === g.name.toLowerCase() ||
-                        k.replace(/&amp;/g, '&') === g.name ||
-                        k === g.name.replace(/&/g, '&amp;')
-                    );
+                    const similarKey = Object.keys(edits).find(k => {
+                        const normalizedK = normalizeName(k);
+                        return normalizedK === normalizedGuestName ||
+                               k.toLowerCase() === g.name.toLowerCase() ||
+                               normalizedK.toLowerCase() === normalizedGuestName.toLowerCase();
+                    });
                     if (similarKey) {
-                        console.log('FOUND SIMILAR KEY! giftData name:', JSON.stringify(g.name), 'edits key:', JSON.stringify(similarKey));
+                        console.log('FUZZY MATCH! giftData:', JSON.stringify(g.name), 'edits key:', JSON.stringify(similarKey));
                         editEntry = edits[similarKey];
                     }
                 }
