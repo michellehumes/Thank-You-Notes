@@ -806,6 +806,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                 }
 
                 if (data) {
+                    console.log('Loaded from Supabase - edits:', JSON.stringify(data.edits, null, 2));
                     progress = data.progress || {};
                     edits = data.edits || {};
                     deletions = data.deletions || [];
@@ -888,15 +889,21 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
 
         // Apply saved edits and deletions to data
         function applyEdits() {
+            console.log('applyEdits called. edits object:', JSON.stringify(edits, null, 2));
+
             // Apply deletions first
             giftData = giftData.filter(g => !deletions.includes(g.name));
 
             // Apply edits to existing guests
             giftData.forEach((g, i) => {
                 if (edits[g.name]) {
+                    console.log('Applying edits for:', g.name, edits[g.name]);
                     if (edits[g.name].newName) giftData[i].name = edits[g.name].newName;
                     if (edits[g.name].gift !== undefined) giftData[i].gift = edits[g.name].gift;
-                    if (edits[g.name].relation !== undefined) giftData[i].relation = edits[g.name].relation;
+                    if (edits[g.name].relation !== undefined) {
+                        console.log('Applying relation:', edits[g.name].relation, 'to', g.name);
+                        giftData[i].relation = edits[g.name].relation;
+                    }
                     if (edits[g.name].address !== undefined) giftData[i].address = edits[g.name].address;
                     if (edits[g.name].value !== undefined) giftData[i].value = edits[g.name].value;
                     if (edits[g.name].ty !== undefined) giftData[i].ty = edits[g.name].ty;
@@ -944,6 +951,9 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
         }
 
         async function manualSave() {
+            // Debug: Log what we're about to save
+            console.log('manualSave - edits object being saved:', JSON.stringify(edits, null, 2));
+
             // Save to localStorage
             localStorage.setItem('tyProgress', JSON.stringify(progress));
             localStorage.setItem('tyEdits', JSON.stringify(edits));
