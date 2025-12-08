@@ -896,7 +896,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                 if (edits[g.name]) {
                     if (edits[g.name].newName) giftData[i].name = edits[g.name].newName;
                     if (edits[g.name].gift !== undefined) giftData[i].gift = edits[g.name].gift;
-                    if (edits[g.name].relation) giftData[i].relation = edits[g.name].relation;
+                    if (edits[g.name].relation !== undefined) giftData[i].relation = edits[g.name].relation;
                     if (edits[g.name].address !== undefined) giftData[i].address = edits[g.name].address;
                     if (edits[g.name].value !== undefined) giftData[i].value = edits[g.name].value;
                     if (edits[g.name].ty !== undefined) giftData[i].ty = edits[g.name].ty;
@@ -923,7 +923,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
         }
 
         function setProgress(name, field, value) {
-            name = name.replace(/&amp;/g, '&');
+            name = name.replace(/&amp;/g, '&').replace(/\\'/g, "'");
             if (!progress[name]) progress[name] = {};
             progress[name][field] = value;
             localStorage.setItem('tyProgress', JSON.stringify(progress));
@@ -990,7 +990,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
         }
 
         function saveEdit(originalName, field, newValue) {
-            originalName = originalName.replace(/&amp;/g, '&');
+            originalName = originalName.replace(/&amp;/g, '&').replace(/\\'/g, "'");
             console.log('saveEdit called:', originalName, field, newValue);
             if (!edits[originalName]) edits[originalName] = {};
             edits[originalName][field] = newValue;
