@@ -951,6 +951,9 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
         }
 
         async function manualSave() {
+            // Debug: Log what we're about to save
+            console.log('manualSave - edits object being saved:', JSON.stringify(edits, null, 2));
+
             // Save to localStorage
             localStorage.setItem('tyProgress', JSON.stringify(progress));
             localStorage.setItem('tyEdits', JSON.stringify(edits));
