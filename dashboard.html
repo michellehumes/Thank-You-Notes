@@ -1161,7 +1161,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                 if (g.gift && g.gift.length > 0 && g.gift !== 'No gift recorded') giftsReceived++;
             });
 
-            const notesRemaining = giftsReceived - written;
+            const notesRemaining = giftsReceived - sent;
 
             // Update stat card labels based on filter
             const filterLabel = relationFilter !== 'all' ? ` (${relationFilter.charAt(0).toUpperCase() + relationFilter.slice(1)})` : '';
