@@ -174,6 +174,16 @@
             background: #f0fdf4;
         }
 
+        tr.no-gift-row {
+            background: #f3f4f6;
+            opacity: 0.6;
+        }
+
+        tr.no-gift-row .checkbox-cell input[type="checkbox"]:not(.xmas-checkbox) {
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
         .guest-name {
             font-weight: 600;
             color: #1f2937;
@@ -1215,12 +1225,14 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                                    g.gift.toLowerCase().includes(search);
 
                 let statusMatch = true;
-                if (statusFilter === 'needs-envelope') statusMatch = !getProgress(g.name, 'envelope');
-                if (statusFilter === 'needs-writing') statusMatch = !getProgress(g.name, 'written');
-                if (statusFilter === 'needs-sending') statusMatch = !getProgress(g.name, 'sent');
+                const guestHasGift = g.gift && g.gift.length > 0;
+                // For needs-envelope/writing/sending, only show guests who have gifts
+                if (statusFilter === 'needs-envelope') statusMatch = guestHasGift && !getProgress(g.name, 'envelope');
+                if (statusFilter === 'needs-writing') statusMatch = guestHasGift && !getProgress(g.name, 'written');
+                if (statusFilter === 'needs-sending') statusMatch = guestHasGift && !getProgress(g.name, 'sent');
                 if (statusFilter === 'completed') statusMatch = getProgress(g.name, 'sent');
-                if (statusFilter === 'has-gift') statusMatch = g.gift && g.gift.length > 0;
-                if (statusFilter === 'no-gift') statusMatch = !g.gift || g.gift.length === 0;
+                if (statusFilter === 'has-gift') statusMatch = guestHasGift;
+                if (statusFilter === 'no-gift') statusMatch = !guestHasGift;
 
                 let relationMatch = relationFilter === 'all' || g.relation === relationFilter;
 
@@ -1253,8 +1265,9 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                 const escapedName = g.name.replace(/&/g, '&amp;').replace(/'/g, "\\'");
                 const escapedOriginal = originalName.replace(/&/g, '&amp;').replace(/'/g, "\\'");
                 const htmlEscapedOriginal = originalName.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                const rowClass = isCompleted ? 'completed' : (!hasGift ? 'no-gift-row' : '');
                 return `
-                    <tr class="${isCompleted ? 'completed' : ''}">
+                    <tr class="${rowClass}">
                         <td><span class="editable guest-name" contenteditable="true" data-original="${htmlEscapedOriginal}" data-field="newName" onblur="handleEdit(this)">${g.name}</span></td>
                         <td><span class="editable address ${!g.address ? 'empty' : ''}" contenteditable="true" data-original="${htmlEscapedOriginal}" data-field="address" data-placeholder="No address" onblur="handleEdit(this)">${g.address || ''}</span></td>
                         <td>
@@ -1284,7 +1297,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                         </td>
                         <td class="checkbox-cell">
                             <div class="checkbox-wrapper">
-                                <input type="checkbox" ${getProgress(g.name, 'xmasCard') ? 'checked' : ''} onchange="setProgress('${escapedName}', 'xmasCard', this.checked)">
+                                <input type="checkbox" class="xmas-checkbox" ${getProgress(g.name, 'xmasCard') ? 'checked' : ''} onchange="setProgress('${escapedName}', 'xmasCard', this.checked)">
                             </div>
                         </td>
                         <td class="checkbox-cell">
