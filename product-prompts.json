@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "category": "amazon_main",
+    "aspect_ratio": "1:1",
+    "tags": ["amazon_main", "studio", "single_bottle", "front_facing"],
+    "lighting": "even, soft studio lighting, minimal shadows",
+    "name_color": "deep navy blue",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Always render the Shelzys Designs white aluminum matte flip-straw bottle with the exact same shape, silhouette, height, curvature, handle, lid seam, and flip-straw mechanism as my real product photos. Smooth vertical wall, no distortion. Never change the bottle or lid structure. Use clean premium fonts for personalization, perfectly straight, crisp, and centered, in bold high-contrast colors with no warping. Create a hyper realistic Amazon main image: single bottle, centered on a pure white background, even studio lighting, ultra sharp detail, no props, composition optimized for product detail and conversion."
+  },
+  {
+    "id": 2,
+    "category": "amazon_main",
+    "aspect_ratio": "1:1",
+    "tags": ["amazon_main", "studio", "single_bottle", "angled_view"],
+    "lighting": "softbox studio lighting, subtle shadow behind bottle",
+    "name_color": "black",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Always render the Shelzys Designs white aluminum matte flip-straw bottle with the exact same silhouette, proportions, curvature, handle, lid seam, and flip-straw design as my reference photos. The bottle wall must be perfectly smooth and vertical with no distortion. Never modify the bottle or lid geometry. Use a clean premium sans serif font for the name, horizontal across the front, perfectly centered and sharp in solid black. Create a hyper realistic Amazon main image on a pure white background, showing the bottle at a slight three quarter angle to reveal the flip straw and handle, with minimal soft shadow and extremely crisp detail."
+  },
+  {
+    "id": 3,
+    "category": "amazon_main",
+    "aspect_ratio": "1:1",
+    "tags": ["amazon_main", "studio", "single_bottle", "close_up"],
+    "lighting": "bright studio lighting with subtle reflections",
+    "name_color": "sage green",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Render the Shelzys Designs white aluminum matte flip-straw bottle with the exact same height, diameter, curvature, handle shape, lid seam, and flip-straw mechanism as the real product. The body must be smooth and straight, with no warping. Never alter the bottle or lid structure. Use a refined serif font for the name in sage green, horizontally centered, very crisp. Create a hyper realistic Amazon ready close up main image on a pure white background, framed tightly to highlight the texture of the matte metal, the precise printing, and the lid details, optimized for zoom on desktop and mobile."
+  },
+  {
+    "id": 4,
+    "category": "amazon_main",
+    "aspect_ratio": "1:1",
+    "tags": ["amazon_main", "studio", "single_bottle", "back_view"],
+    "lighting": "neutral white studio light, very soft shadow",
+    "name_color": "pool blue",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Always render the white aluminum matte Shelzys Designs bottle using the exact same shape, silhouette, and lid structure as my source photos, including the flip-straw hinge, handle, height, and straight vertical wall. Do not change any physical proportions. Use a clean modern font in pool blue for the name, vertically printed from bottom to top along one side of the bottle, perfectly straight and crisp. Create a hyper realistic Amazon main style studio image on a pure white background, showing the bottle from a slight rear angle so both the handle and the vertical name are clearly visible, with minimal shadow and very sharp edges."
+  },
+  {
+    "id": 5,
+    "category": "amazon_infographic",
+    "aspect_ratio": "4:5",
+    "tags": ["amazon_secondary", "infographic", "feature_callouts"],
+    "lighting": "bright, neutral studio lighting",
+    "name_color": "navy blue",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Always render the Shelzys Designs white aluminum matte flip-straw bottle with the exact same silhouette, curvature, height, lid structure, handle shape, and flip-straw proportions as the real product, with a smooth vertical wall and zero distortion. Never modify the bottle or lid geometry. Personalization uses a premium clean font in deep navy, perfectly straight and crisp. Create a hyper realistic Amazon infographic image on a light neutral background with the bottle large in the center and minimal modern text callouts around it highlighting features like flip-straw lid, spill resistant design, durable matte aluminum, and custom name printing. Keep the layout clean and conversion focused."
+  },
+  {
+    "id": 6,
+    "category": "amazon_infographic",
+    "aspect_ratio": "4:5",
+    "tags": ["amazon_secondary", "infographic", "size_chart"],
+    "lighting": "even studio light with soft shadows",
+    "name_color": "charcoal gray",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Render the Shelzys Designs white aluminum matte bottle with perfectly accurate silhouette, height, diameter, curvature, handle, lid seam, and flip-straw design matching my real product photos. The body must be perfectly straight, no bulging or bending. Never alter the bottle or lid structure. Print the name in a clean sans serif font in charcoal gray, centered and sharp. Create a hyper realistic Amazon infographic image that includes the bottle on a clean background along with measurements for height and width, simple icons for care instructions, and a compact size comparison graphic, all in a modern minimal style that reinforces premium quality."
+  },
+  {
+    "id": 7,
+    "category": "amazon_infographic",
+    "aspect_ratio": "4:5",
+    "tags": ["amazon_secondary", "infographic", "benefits"],
+    "lighting": "soft, bright studio lighting",
+    "name_color": "dark forest green",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Always depict the Shelzys Designs white aluminum matte flip-straw bottle with the correct and consistent shape, including the exact curvature, height, diameter, handle, lid seam, and flip-straw hinge from my actual product. The side walls must be smooth and vertical. Never change the bottle or lid geometry. Use a refined premium font in dark forest green for the personalized name, perfectly aligned and crisp. Create a hyper realistic Amazon infographic image on a soft light background that presents the bottle with three or four clean benefit blocks such as stay hydrated, personalized for you, durable and reusable, and great for travel, using very minimal icons and typography."
+  },
+  {
+    "id": 8,
+    "category": "amazon_group",
+    "aspect_ratio": "4:5",
+    "tags": ["amazon_secondary", "group_shot", "multiple_bottles"],
+    "lighting": "studio lighting with gentle gradient background",
+    "name_color": "mixed navy, coral, sage",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Render multiple Shelzys Designs white aluminum matte flip-straw bottles, each with the exact same silhouette, height, curvature, diameter, handle shape, and lid seam as my physical product photos. The walls must be perfectly smooth and straight with no distortion. Never alter the bottle or lid structure on any bottle. Use premium fonts with names in a mix of navy, soft coral, and sage green, all perfectly straight and crisp. Create a hyper realistic Amazon group studio image on a light gradient background, showing four to six bottles arranged in a gentle arc to demonstrate color options and personalization, with subtle reflections and a premium catalog feel."
+  },
+  {
+    "id": 9,
+    "category": "amazon_group",
+    "aspect_ratio": "3:2",
+    "tags": ["amazon_secondary", "family_set", "multiple_bottles"],
+    "lighting": "softbox studio lighting with mild front shadow",
+    "name_color": "mixed black and navy",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Depict several Shelzys Designs white aluminum matte flip-straw bottles, all sharing the exact same shape, proportions, curvature, handle, lid seam, and flip-straw mechanism as the real product. The vertical walls must be smooth and perfectly straight, with no warping or bending. Never change the bottle or lid geometry. Use clean modern fonts with names in black and navy, centered and crisp. Create a hyper realistic Amazon group image on a pure white or extremely light background, showing a family set of bottles of the same size side by side, labeled with different names, conveying matching family or team personalization in a premium way."
+  },
+  {
+    "id": 10,
+    "category": "amazon_group",
+    "aspect_ratio": "16:9",
+    "tags": ["amazon_secondary", "panoramic_group", "multiple_bottles"],
+    "lighting": "even studio light with subtle floor reflection",
+    "name_color": "sunset coral",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Show a wide row of Shelzys Designs white aluminum matte flip-straw bottles, each rendered with the exact same silhouette, curvature, height, handle, lid seam, and flip-straw mechanism as my actual product photos, with perfectly straight vertical walls. Do not modify the bottle or lid structure on any unit. Use a premium bold font in sunset coral for each name, vertical along the bottle body, sharp and aligned. Create a hyper realistic panoramic studio image suitable as an Amazon secondary image, with bottles evenly spaced in a row on a clean light background and a subtle floor reflection for a high end catalog feel."
+  },
+  {
+    "id": 11,
+    "category": "pinterest",
+    "aspect_ratio": "2:3",
+    "tags": ["pinterest", "flat_lay", "aesthetic", "desktop"],
+    "lighting": "soft natural window light with gentle shadows",
+    "name_color": "soft sage green",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Always render the Shelzys Designs white aluminum matte flip-straw bottle with perfectly accurate silhouette, height, curvature, handle, lid seam, and flip-straw geometry matching my product photos, with a smooth straight wall and no distortion. Never alter the bottle or lid structure. Use an elegant serif font in soft sage green for the name, horizontal and centered. Create a hyper realistic Pinterest friendly flat lay: the bottle placed on a white desk with a laptop, notebook, pen, a sprig of greenery, and delicate gold accessories, shot from above with soft natural light and plenty of negative space for overlays, giving an aspirational work from anywhere mood."
+  },
+  {
+    "id": 12,
+    "category": "pinterest",
+    "aspect_ratio": "2:3",
+    "tags": ["pinterest", "wellness", "morning_routine"],
+    "lighting": "golden morning window light",
+    "name_color": "warm sand",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Render the Shelzys Designs white aluminum matte flip-straw bottle with the exact same height, diameter, curvature, handle, lid seam, and flip-straw details as the real product, keeping the vertical wall perfectly smooth and straight. Never change the bottle or lid geometry. Use a clean modern font in a warm sand tone for the name, crisp and centered. Create a hyper realistic Pinterest style morning routine scene on a bedside table with a book, a small vase with flowers, linen bedding in the background, and soft golden morning light, designed to feel calming, wellness focused, and highly shareable."
+  },
+  {
+    "id": 13,
+    "category": "pinterest",
+    "aspect_ratio": "2:3",
+    "tags": ["pinterest", "gym_bag", "active_lifestyle"],
+    "lighting": "bright natural light with light vignette",
+    "name_color": "electric blue",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Show the Shelzys Designs white aluminum matte flip-straw bottle with its exact correct silhouette, handle, lid seam, and flip-straw mechanism as seen in my reference photos, with a perfectly straight smooth body and no warping. Never alter the bottle or lid structure. Use a bold sans serif font in electric blue for the personalized name, vertical along the bottle, sharp and clean. Create a hyper realistic Pinterest ready lifestyle image with the bottle partially tucked into a stylish gym bag alongside a towel, sneakers, and headphones, shot in bright natural light on a concrete or wood floor for an active, motivating vibe."
+  },
+  {
+    "id": 14,
+    "category": "pinterest",
+    "aspect_ratio": "2:3",
+    "tags": ["pinterest", "poolside", "summer"],
+    "lighting": "strong sun with soft fill, slight sparkle on water",
+    "name_color": "hot pink",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Depict the white aluminum matte Shelzys Designs flip-straw bottle with the exact same dimensions, curvature, handle, lid seam, and flip-straw structure as the real product, with straight smooth walls and no distortion. Never change the bottle or lid geometry. Use a playful but premium font in hot pink for the name, vertical on the bottle and very crisp. Create a hyper realistic Pinterest style poolside scene with the bottle on a towel near a swimming pool, sunglasses and a paperback nearby, water sparkling in the background, and bright summer sun for a fun weekend vibe."
+  },
+  {
+    "id": 15,
+    "category": "pinterest",
+    "aspect_ratio": "2:3",
+    "tags": ["pinterest", "meal_prep", "kitchen_counter"],
+    "lighting": "soft kitchen daylight with slight backlight",
+    "name_color": "forest green",
+    "prompt": "You are the dedicated creative director and senior product photographer for Shelzys Designs. Show the Shelzys Designs white aluminum matte flip-straw bottle with precise and consistent silhouette, height, handle, lid seam, and flip-straw hinge, matching my real product images, with a straight smooth wall and absolutely no warping. Never alter the bottle or lid structure. Use a premium serif font in forest green for the name, horizontal and centered. Create a hyper realistic Pinterest ready kitchen scene on a clean counter with meal prep containers, fresh produce, and a cutting board, with soft daylight and a slightly blurred background, evoking healthy, organized meal prep."
+  }
+]
