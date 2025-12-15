@@ -554,6 +554,8 @@
                 <option value="completed">Completed</option>
                 <option value="has-gift">Has Gift</option>
                 <option value="no-gift">No Gift</option>
+                <option value="xmas-yes">Sending Xmas Card</option>
+                <option value="xmas-no">Not Sending Xmas Card</option>
             </select>
             <select id="filterRelation">
                 <option value="all">All Relations</option>
@@ -675,14 +677,14 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             {"name": "Liza & Mike McNulty", "address": "2515 Beeler St, Denver, CO 80238", "relation": "bride", "gift": "Napkin Rings", "value": 79, "ty": "Liza & Mike, Thank you so much for celebrating with us and for the beautiful napkin rings. It meant so much having family with us in Florida for the weekend. We're so grateful for your love and generosity. Xoxo, Michelle & Gray"},
             {"name": "Sapna", "address": "30 Tara Lane, Montville, NJ 07045", "relation": "bride", "gift": "Antique Brass Gallery Frames", "value": 95, "ty": "Sapna, Thank you so much for the gorgeous frames and for being there to celebrate with us. I know you missed the shower, but I felt your love. I'm so grateful for you and loved celebrating this chapter with you. With love, Michelle & Gray"},
             {"name": "Michael & Anna Marzano", "address": "8 Egret Way, Phoenixville, PA 19460", "relation": "bride", "gift": "SMEG Matte Mocha Toaster; Potluck Baking Dish Set (3pc)", "value": 279.90, "ty": "Anna & Michael, Thank you so much for coming to the wedding and for your amazing gift. Anna, thank you for being in the wedding and for your beautiful speech on Friday night — it meant so much to me. I had so much fun celebrating with you both, as always. Love, Michelle & Gray"},
-            {"name": "Natalie Hennings", "address": "1294 South Elm Street, MONACA, PA 15061", "relation": "bride", "gift": "Cash Fund – Honeymoon Resort", "value": 50, "ty": "Natalie, Thank you for your generous honeymoon resort gift — it made our Africa trip even more special. We'll definitely let you know the next time we're in Pittsburgh, and hopefully we can see you soon. Miss you already. With love, Michelle & Gray"},
+            {"name": "Natalie Hennings", "address": "1294 South Elm Street, Monaca, PA 15061", "relation": "bride", "gift": "Cash Fund – Honeymoon Resort", "value": 50, "ty": "Natalie, Thank you for your generous honeymoon resort gift — it made our Africa trip even more special. We'll definitely let you know the next time we're in Pittsburgh, and hopefully we can see you soon. Miss you already. With love, Michelle & Gray"},
             {"name": "Emily & Uel", "address": "", "relation": "bride", "gift": "Brass Salt & Pepper Mill Set", "value": 175, "ty": "Emily & Uel, Thank you so much for coming to the wedding — we had the best time celebrating with you both. Your gift is absolutely perfect, and we can't wait for our couple trip this year. Love you both. Love, Michelle & Gray"},
             {"name": "Lauren Beck", "address": "870 Pacific Street, Apt 1F, New York, NY 11238", "relation": "bride", "gift": "Estelle Colored Glass Champagne Flutes (Set of 6)", "value": 205, "ty": "Lauren, We missed you so much at the wedding, but we can't wait to celebrate at dinner in a few weeks. Thank you for the stunning glasses — they're perfect, and you know I love you so much. Love, Michelle & Gray"},
             {"name": "JV & David", "address": "35 Sawmill Lane, Greenwich, CT 06830", "relation": "bride", "gift": "Camille Long Stem Wine Glasses (Set)", "value": 419.40, "ty": "JV & David, We missed you at the wedding and hope all is well. Thank you so much for your incredibly generous gift — the glasses are absolutely perfect. With love, Michelle & Gray"},
             {"name": "Connie Giovanini", "address": "4045 Werthers Ct, Fairfax, VA 22030", "relation": "bride", "gift": "Camille Long Stem Wine Glasses", "value": 139.80, "ty": "Connie, Thank you so much for coming to the wedding and for the beautiful wine glasses. Your thoughtfulness means so much to us. It was wonderful celebrating this chapter with you. With love, Michelle & Gray"},
             {"name": "Liz & Tim", "address": "17 Danville Drive, Greenlawn, NY 11740", "relation": "bride", "gift": "Party of 12 Appetizer Plates", "value": 29.95, "ty": "Liz & Tim, Thank you so much for coming to the wedding — we had the best time celebrating with you both. And thank you for the plates — they're perfect for hosting. Hopefully you'll come visit us soon so we can put them to use together. With love, Michelle & Gray"},
-            {"name": "Mary Wood", "address": "1 John street, 9C, Brooklyn, NY 11201", "relation": "bride", "gift": "Napkin holders (Pottery Barn) - Shower", "value": 79, "ty": "Mary & Chloe, Thank you both for coming to the shower and for the beautiful napkin rings. Your excitement meant so much to me. I loved celebrating with you both. Xoxo, Michelle & Gray"},
-            {"name": "Chloe McCann", "address": "1 John street, 9C, Brooklyn, NY 11201", "relation": "bride", "gift": "Napkin holders (Pottery Barn) - Shower", "value": 79, "ty": "Mary & Chloe, Thank you both for coming to the shower and for the beautiful napkin rings. Your excitement meant so much to me. I loved celebrating with you both. Xoxo, Michelle & Gray"},
+            {"name": "Mary Wood", "address": "1 John Street, 9C, Brooklyn, NY 11201", "relation": "bride", "gift": "Napkin holders (Pottery Barn) - Shower", "value": 79, "ty": "Mary & Chloe, Thank you both for coming to the shower and for the beautiful napkin rings. Your excitement meant so much to me. I loved celebrating with you both. Xoxo, Michelle & Gray"},
+            {"name": "Chloe McCann", "address": "1 John Street, 9C, Brooklyn, NY 11201", "relation": "bride", "gift": "Napkin holders (Pottery Barn) - Shower", "value": 79, "ty": "Mary & Chloe, Thank you both for coming to the shower and for the beautiful napkin rings. Your excitement meant so much to me. I loved celebrating with you both. Xoxo, Michelle & Gray"},
             {"name": "Tiff & Sashi Shaw", "address": "", "relation": "joint", "gift": "Cash; Shower gift ($100)", "value": 100, "ty": ""},
             {"name": "Emily & Nayer Whitsett", "address": "", "relation": "joint", "gift": "Cash", "value": 0, "ty": ""},
             {"name": "Emily Africk", "address": "56 Seventh Ave, 3B, New York, NY 10011", "relation": "joint", "gift": "Estelle Colored Glass Stemmed Wine Glass (Set of 6); Throw; Wine glasses; Balloons (engagement)", "value": 185, "ty": "Emily, Thank you so much for coming to the wedding and for the gorgeous glasses. And thank you again for the engagement balloons — you're always so thoughtful. I loved celebrating this chapter with you. Love you endlessly. With love, Michelle & Gray"},
@@ -692,7 +694,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             {"name": "Christopher Humes", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Frazer Humes", "address": "", "relation": "joint", "gift": "Bowl from canada", "value": 0, "ty": ""},
             {"name": "Jeff & Terri Humes", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
-            {"name": "Jennifer Humes", "address": "1 MISSOURI AVE, RENSSELAER, NY 12144", "relation": "joint", "gift": "Reversible Ceramic Double Griddle", "value": 149.95, "ty": ""},
+            {"name": "Jennifer Humes", "address": "1 Missouri Ave, Rensselaer, NY 12144", "relation": "joint", "gift": "Reversible Ceramic Double Griddle", "value": 149.95, "ty": ""},
             {"name": "Gray Perkins", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "T.J. & Meg Humes", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "William & Elsie Humes", "address": "", "relation": "joint", "gift": "Caraway Baking Sheet; Holiday Skiers Platter", "value": 119.50, "ty": ""},
@@ -700,7 +702,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             {"name": "Noel Delgado", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Sapna Jalan", "address": "30 Tara Lane, Montville, NJ 07045", "relation": "joint", "gift": "Antique Brass Gallery Frames", "value": 95, "ty": ""},
             {"name": "Beverly & Ian Johnson", "address": "18 Sawmill Lane, Greenwich, CT 06830", "relation": "joint", "gift": "Kaloh Dinnerware Set (16pc); Kaloh Mixing Bowls (Set of 3)", "value": 287.60, "ty": ""},
-            {"name": "Sasha Johnson", "address": "61 East 77, 4b, New York, NY 10075", "relation": "joint", "gift": "Scalloped Edge Placemat (Set of 4); Bamboo Natural Large Pitcher", "value": 272, "ty": ""},
+            {"name": "Sasha Johnson", "address": "61 East 77th St, 4B, New York, NY 10075", "relation": "joint", "gift": "Scalloped Edge Placemat (Set of 4); Bamboo Natural Large Pitcher", "value": 272, "ty": ""},
             {"name": "Charlie & Libby King", "address": "11 Oakwood Lane, Greenwich, CT 06830", "relation": "joint", "gift": "Estelle Colored Glass Set of 6 Stem Coupes; Speckled Fruit Stand", "value": 455, "ty": ""},
             {"name": "Carolina Lira", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Fernanda Carvajal", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
@@ -758,7 +760,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             {"name": "Walker Ward & Anna Catherine Wilson", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Emily & Uel Whitsett", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Fareesa Abbasi", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
-            {"name": "Andy & Susan Alisberg", "address": "5 pine lane west, boynton beach, FL 33436", "relation": "joint", "gift": "Jeanne Fitz Salad Bowl & Servers; Monos Check-In Large; All-Clad Stainless-Steel Utensils", "value": 804.94, "ty": ""},
+            {"name": "Andy & Susan Alisberg", "address": "5 Pine Lane West, Boynton Beach, FL 33436", "relation": "joint", "gift": "Jeanne Fitz Salad Bowl & Servers; Monos Check-In Large; All-Clad Stainless-Steel Utensils", "value": 804.94, "ty": ""},
             {"name": "Matt & Katie Arundel", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Kaitlin & Michael Booth", "address": "", "relation": "joint", "gift": "Check", "value": 400, "ty": ""},
             {"name": "Kerry & Pamela Bove", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
@@ -766,7 +768,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             {"name": "Jason Cleary & Lauren Connors", "address": "5419 Western Avenue, Omaha, NE 68132", "relation": "joint", "gift": "Beast Blender Mega 1200", "value": 184, "ty": ""},
             {"name": "Kempton & Cat Coady", "address": "", "relation": "joint", "gift": "Check", "value": 300, "ty": ""},
             {"name": "Tom & Francie Corcoran", "address": "903 Sutton Hill Road, Nashville, TN 37204", "relation": "joint", "gift": "Le Creuset Covered Rectangular Casserole", "value": 134.99, "ty": ""},
-            {"name": "Alec & Kelsey Demet", "address": "8562 e Pierce st, Scottsdale, AZ 85257", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 300, "ty": ""},
+            {"name": "Alec & Kelsey Demet", "address": "8562 E Pierce St, Scottsdale, AZ 85257", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 300, "ty": ""},
             {"name": "Quinn & Kathleen Drinan", "address": "", "relation": "joint", "gift": "Seashell bowls", "value": 0, "ty": ""},
             {"name": "David & Jennifer Evans", "address": "35 Sawmill Lane, Greenwich, CT 06830", "relation": "joint", "gift": "Camille Long Stem Wine Glasses (Set)", "value": 419.40, "ty": ""},
             {"name": "Eric & Mary Flanagan", "address": "", "relation": "joint", "gift": "Zola gift", "value": 400, "ty": ""},
@@ -774,8 +776,8 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             {"name": "Don & Eileen Foster", "address": "15512 Monterosso Lane, Unit 102, Naples, FL 34108", "relation": "joint", "gift": "Le Creuset Classic Heritage Covered Casserole Dish; Check", "value": 269.98, "ty": ""},
             {"name": "Patrick Gradus & Salen Andrews", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Salen Andrews", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
-            {"name": "Sam Harris", "address": "515 east 88th st, Apt 3G, New York, NY 10128", "relation": "joint", "gift": "Antibes Wicker Handled Serve Tray", "value": 129, "ty": ""},
-            {"name": "Natalie Hennings & Brandyn Defelice", "address": "1294 South Elm Street, MONACA, PA 15061", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 50, "ty": ""},
+            {"name": "Sam Harris", "address": "515 East 88th St, Apt 3G, New York, NY 10128", "relation": "joint", "gift": "Antibes Wicker Handled Serve Tray", "value": 129, "ty": ""},
+            {"name": "Natalie Hennings & Brandyn Defelice", "address": "1294 South Elm Street, Monaca, PA 15061", "relation": "joint", "gift": "Cash Fund – Honeymoon Resort", "value": 50, "ty": ""},
             {"name": "Brandyn Defelice", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Paul & Lisa Hogan", "address": "", "relation": "joint", "gift": "Check", "value": 800, "ty": ""},
             {"name": "Liz Hopkins", "address": "17 Danville Drive, Greenlawn, NY 11740", "relation": "joint", "gift": "Party of 12 Appetizer Plates", "value": 29.95, "ty": ""},
@@ -783,7 +785,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
             {"name": "Jessica Houghton", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Joseph Darco", "address": "", "relation": "joint", "gift": "", "value": 0, "ty": ""},
             {"name": "Edward Howard & Robin Perkins", "address": "103 West Lyon Farm Dr., Greenwich, CT 06831", "relation": "joint", "gift": "Caraway Squareware Set; Caraway Roasting Pan", "value": 760, "ty": ""},
-            {"name": "Henry Bassett", "address": "1208 E Rock Springs Rd Ne, Atlanta, GA 30306", "relation": "joint", "gift": "High-Glass Pedestal Candleholders; Avanti G2 Touchscreen Nugget Ice Dispenser", "value": 478.65, "ty": ""}
+            {"name": "Henry Bassett", "address": "1208 E Rock Springs Rd NE, Atlanta, GA 30306", "relation": "joint", "gift": "High-Glass Pedestal Candleholders; Avanti G2 Touchscreen Nugget Ice Dispenser", "value": 478.65, "ty": ""}
         ];
 
         let progress = JSON.parse(localStorage.getItem('tyProgress') || '{}');
@@ -1070,6 +1072,8 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
                 if (statusFilter === 'completed') statusMatch = getProgress(g.name, 'sent');
                 if (statusFilter === 'has-gift') statusMatch = guestHasGift;
                 if (statusFilter === 'no-gift') statusMatch = !guestHasGift;
+                if (statusFilter === 'xmas-yes') statusMatch = getProgress(g.name, 'xmasCard');
+                if (statusFilter === 'xmas-no') statusMatch = !getProgress(g.name, 'xmasCard');
 
                 let relationMatch = relationFilter === 'all' || g.relation === relationFilter;
 
