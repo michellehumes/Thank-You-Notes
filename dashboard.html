@@ -650,7 +650,7 @@ CREATE POLICY "Allow all" ON wedding_tracker FOR ALL USING (true) WITH CHECK (tr
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsbGdzbmhsemR1d2VoeHh3ZHB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwNzM0NjYsImV4cCI6MjA4MDY0OTQ2Nn0.s1QssScNjYw2BezCCzLrO2BSoaioHcja7uYHR_5gdEw';
 
         // Initialize Supabase client (if configured)
-        let supabase = null;
+        var supabase = null;
         let syncEnabled = false;
 
         try {
