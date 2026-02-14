@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerForge Pro — Client Intake</title>
+<style>
+  :root {
+    --bg: #09090b;
+    --surface: #111114;
+    --surface2: #18181b;
+    --border: #27272a;
+    --text: #fafafa;
+    --text-dim: #a1a1aa;
+    --accent: #7c3aed;
+    --accent-hover: #8b5cf6;
+    --accent-glow: #7c3aed33;
+    --success: #10b981;
+    --danger: #ef4444;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+
+  .back-link {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .back-link:hover { color: var(--text); }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-desc {
+    color: var(--text-dim);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tier-display {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  .tier-1-badge { background: #7c3aed20; color: #8b5cf6; border: 1px solid #7c3aed40; }
+  .tier-2-badge { background: #10b98120; color: #10b981; border: 1px solid #10b98140; }
+  .tier-3-badge { background: #f59e0b20; color: #f59e0b; border: 1px solid #f59e0b40; }
+
+  .progress-bar {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 3rem;
+  }
+
+  .progress-segment {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    transition: background 0.3s;
+  }
+
+  .progress-segment.active { background: var(--accent); }
+  .progress-segment.done { background: var(--success); }
+
+  .form-section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .form-section.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-desc {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+
+  label .required { color: var(--danger); }
+
+  .label-hint {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    display: block;
+    margin-top: 0.25rem;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  textarea { resize: vertical; min-height: 140px; }
+
+  .file-upload {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .file-upload:hover { border-color: var(--accent); background: var(--accent-glow); }
+
+  .file-upload input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .file-upload-text {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+
+  .file-upload-text strong { color: var(--accent-hover); }
+
+  .file-name {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--success);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-outline { background: none; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--accent); }
+  .btn-success { background: var(--success); color: var(--bg); }
+
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .tip-box {
+    background: var(--accent-glow);
+    border: 1px solid #7c3aed40;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--accent-hover);
+  }
+
+  .tip-box strong { display: block; margin-bottom: 0.25rem; }
+
+  .success-screen {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .success-icon { font-size: 4rem; margin-bottom: 1.5rem; }
+  .success-screen h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+  .success-screen p { color: var(--text-dim); max-width: 500px; margin: 0 auto; }
+
+  .checklist {
+    text-align: left;
+    max-width: 400px;
+    margin: 2rem auto;
+    list-style: none;
+  }
+
+  .checklist li {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+  }
+
+  .checklist li span { color: var(--success); font-weight: 700; }
+
+  @media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="landing-page.html" class="back-link">&larr; Back to CareerForge Pro</a>
+
+  <h1>Client Intake Form</h1>
+  <p class="page-desc">Tell us about your career goals. This takes about 10 minutes.</p>
+  <div id="tierBadge" class="tier-display tier-2-badge">Tier 2 — Career Accelerator</div>
+
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-segment active"></div>
+    <div class="progress-segment"></div>
+    <div class="progress-segment"></div>
+    <div class="progress-segment"></div>
+  </div>
+
+  <!-- STEP 1: BASIC INFO -->
+  <div class="form-section active" id="step1">
+    <div class="section-header">About You</div>
+    <div class="section-desc">Basic information to get started.</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Full Name <span class="required">*</span></label>
+        <input type="text" id="fullName" placeholder="Jane Smith" required>
+      </div>
+      <div class="form-group">
+        <label>Email <span class="required">*</span></label>
+        <input type="email" id="email" placeholder="jane@email.com" required>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Current Job Title <span class="required">*</span></label>
+        <input type="text" id="currentTitle" placeholder="Marketing Manager">
+      </div>
+      <div class="form-group">
+        <label>Years of Experience <span class="required">*</span></label>
+        <input type="number" id="yoe" placeholder="8" min="0" max="50">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Industry</label>
+        <input type="text" id="industry" placeholder="B2B SaaS / Technology">
+      </div>
+      <div class="form-group">
+        <label>Target Job Title(s) <span class="required">*</span></label>
+        <input type="text" id="targetTitle" placeholder="Senior Marketing Manager">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goToStep(2)">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: RESUME & JDs -->
+  <div class="form-section" id="step2">
+    <div class="section-header">Your Materials</div>
+    <div class="section-desc">We need your current resume and the job descriptions you're targeting.</div>
+
+    <div class="tip-box">
+      <strong>Pro tip:</strong> Paste your resume as plain text for best results. If you only have a PDF, copy the text from it. ATS systems read plain text — that's what we optimize for.
+    </div>
+
+    <div class="form-group">
+      <label>Current Resume <span class="required">*</span>
+        <span class="label-hint">Paste the full text of your current resume</span>
+      </label>
+      <textarea id="resume" rows="12" placeholder="Paste your entire resume text here..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Or upload your resume (PDF/DOCX)</label>
+      <div class="file-upload">
+        <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" onchange="handleFile(this)">
+        <div class="file-upload-text">
+          <strong>Click to upload</strong> or drag and drop<br>
+          PDF or DOCX, up to 5MB
+        </div>
+        <div class="file-name" id="fileName"></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Target Job Description #1 <span class="required">*</span>
+        <span class="label-hint">Paste the full job description for your primary target role</span>
+      </label>
+      <textarea id="jd1" rows="8" placeholder="Paste the complete job description..."></textarea>
+    </div>
+
+    <div class="form-group" id="jd2Group">
+      <label>Target Job Description #2
+        <span class="label-hint">Paste a second job description (recommended for Tier 2+)</span>
+      </label>
+      <textarea id="jd2" rows="8" placeholder="Paste the second job description..."></textarea>
+    </div>
+
+    <div class="form-group" id="jd3Group" style="display:none;">
+      <label>Target Job Description #3
+        <span class="label-hint">Paste a third job description (Tier 3 only)</span>
+      </label>
+      <textarea id="jd3" rows="8" placeholder="Paste the third job description..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goToStep(1)">&larr; Back</button>
+      <button class="btn btn-primary" onclick="goToStep(3)">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: CONTEXT -->
+  <div class="form-section" id="step3">
+    <div class="section-header">Career Context</div>
+    <div class="section-desc">Help us understand what you're trying to achieve so we can position you effectively.</div>
+
+    <div class="form-group">
+      <label>What's driving your job search? <span class="required">*</span></label>
+      <select id="searchReason">
+        <option value="">Select one...</option>
+        <option value="promotion">Targeting a promotion / senior role</option>
+        <option value="lateral">Lateral move (same level, different company)</option>
+        <option value="pivot">Career pivot (new industry or function)</option>
+        <option value="reentry">Re-entering workforce after a break</option>
+        <option value="layoff">Recently laid off / need to move quickly</option>
+        <option value="passive">Passively exploring — want to be prepared</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Career Goals
+        <span class="label-hint">What does your ideal next role look like? What matters most to you?</span>
+      </label>
+      <textarea id="goals" rows="4" placeholder="I'm looking to move into a leadership role at a Series B-D startup where I can own the growth function..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Key Achievements
+        <span class="label-hint">List 3-5 of your biggest professional accomplishments. Include numbers where possible.</span>
+      </label>
+      <textarea id="achievements" rows="5" placeholder="- Grew MQLs 150% YoY through ABM program launch&#10;- Managed $500K marketing budget with 35% CAC reduction&#10;- Led team of 4 direct reports&#10;- Built and launched company's first content marketing program"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Anything else we should know?
+        <span class="label-hint">Employment gaps, sensitive situations, specific companies you're targeting, etc.</span>
+      </label>
+      <textarea id="notes" rows="3" placeholder="Optional — any context that would help us write better materials for you."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goToStep(2)">&larr; Back</button>
+      <button class="btn btn-primary" onclick="goToStep(4)">Review &rarr;</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: REVIEW & SUBMIT -->
+  <div class="form-section" id="step4">
+    <div class="section-header">Review & Submit</div>
+    <div class="section-desc">Please review your information. You'll receive your deliverables within 48 hours.</div>
+
+    <div id="reviewSummary" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem;"></div>
+
+    <div class="tip-box">
+      <strong>What happens next:</strong> After submitting, you'll receive a confirmation email. We'll begin working on your materials immediately. Expect delivery within 48 hours. If we have questions, we'll reach out via email.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goToStep(3)">&larr; Back</button>
+      <button class="btn btn-success" onclick="submitForm()">Submit &amp; Start My Project</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="form-section" id="stepSuccess">
+    <div class="success-screen">
+      <div class="success-icon">&#10003;</div>
+      <h2>We're on it.</h2>
+      <p>Your submission has been received. Here's what happens next:</p>
+      <ul class="checklist">
+        <li><span>&#10003;</span> Confirmation email sent</li>
+        <li><span>&#10003;</span> Keyword analysis begins immediately</li>
+        <li><span>&#10003;</span> First draft within 24 hours</li>
+        <li><span>&#10003;</span> Full delivery within 48 hours</li>
+      </ul>
+      <p style="margin-top: 2rem; font-size: 0.9rem;">Questions? Reply to your confirmation email or contact us anytime.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentStep = 1;
+let selectedTier = 2;
+
+// Read tier from URL
+const params = new URLSearchParams(window.location.search);
+const tierParam = params.get('tier');
+if (tierParam) {
+  selectedTier = parseInt(tierParam);
+}
+
+// Set tier display
+const tierNames = { 1: 'Tier 1 — Career Kickstart', 2: 'Tier 2 — Career Accelerator', 3: 'Tier 3 — Executive Edge' };
+const tierClasses = { 1: 'tier-1-badge', 2: 'tier-2-badge', 3: 'tier-3-badge' };
+
+document.getElementById('tierBadge').textContent = tierNames[selectedTier] || tierNames[2];
+document.getElementById('tierBadge').className = 'tier-display ' + (tierClasses[selectedTier] || tierClasses[2]);
+
+// Show/hide JD fields based on tier
+if (selectedTier >= 3) {
+  document.getElementById('jd3Group').style.display = 'block';
+}
+
+function goToStep(step) {
+  // Basic validation
+  if (step > currentStep) {
+    if (currentStep === 1) {
+      const name = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+      const title = document.getElementById('currentTitle').value;
+      if (!name || !email || !title) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+    }
+    if (currentStep === 2) {
+      const resume = document.getElementById('resume').value;
+      const jd1 = document.getElementById('jd1').value;
+      if (!resume || !jd1) {
+        alert('Please provide your resume text and at least one job description.');
+        return;
+      }
+    }
+  }
+
+  // Build review summary on step 4
+  if (step === 4) {
+    buildReview();
+  }
+
+  document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + step).classList.add('active');
+
+  // Update progress bar
+  document.querySelectorAll('.progress-segment').forEach((seg, i) => {
+    seg.className = 'progress-segment';
+    if (i < step - 1) seg.classList.add('done');
+    if (i === step - 1) seg.classList.add('active');
+  });
+
+  currentStep = step;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildReview() {
+  const data = gatherData();
+  const html = `
+    <div style="display: grid; gap: 1rem;">
+      <div><strong style="color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase;">Name</strong><br>${data.fullName}</div>
+      <div><strong style="color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase;">Email</strong><br>${data.email}</div>
+      <div><strong style="color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase;">Current → Target</strong><br>${data.currentTitle} → ${data.targetTitle}</div>
+      <div><strong style="color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase;">Experience</strong><br>${data.yoe} years in ${data.industry || 'N/A'}</div>
+      <div><strong style="color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase;">Search Reason</strong><br>${data.searchReason || 'Not specified'}</div>
+      <div><strong style="color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase;">Resume</strong><br>${data.resume.split(/\s+/).length} words submitted</div>
+      <div><strong style="color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase;">Job Descriptions</strong><br>${[data.jd1, data.jd2, data.jd3].filter(j => j.trim()).length} submitted</div>
+      <div><strong style="color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase;">Achievements</strong><br>${data.achievements ? data.achievements.split('\n').filter(l => l.trim()).length + ' listed' : 'None provided'}</div>
+    </div>
+  `;
+  document.getElementById('reviewSummary').innerHTML = html;
+}
+
+function gatherData() {
+  return {
+    tier: selectedTier,
+    fullName: document.getElementById('fullName').value,
+    email: document.getElementById('email').value,
+    currentTitle: document.getElementById('currentTitle').value,
+    targetTitle: document.getElementById('targetTitle').value,
+    yoe: document.getElementById('yoe').value,
+    industry: document.getElementById('industry').value,
+    resume: document.getElementById('resume').value,
+    jd1: document.getElementById('jd1').value,
+    jd2: document.getElementById('jd2').value,
+    jd3: document.getElementById('jd3').value,
+    searchReason: document.getElementById('searchReason').value,
+    goals: document.getElementById('goals').value,
+    achievements: document.getElementById('achievements').value,
+    notes: document.getElementById('notes').value,
+    submittedAt: new Date().toISOString()
+  };
+}
+
+function submitForm() {
+  const data = gatherData();
+
+  // Save to localStorage for now (replace with backend/email/webhook later)
+  const submissions = JSON.parse(localStorage.getItem('careerforge_submissions') || '[]');
+  submissions.push(data);
+  localStorage.setItem('careerforge_submissions', JSON.stringify(submissions));
+
+  // Also download as JSON backup
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `intake-${data.fullName.replace(/\s+/g, '-')}-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  // Show success
+  document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('stepSuccess').classList.add('active');
+  document.querySelectorAll('.progress-segment').forEach(s => s.classList.add('done'));
+}
+
+function handleFile(input) {
+  if (input.files.length > 0) {
+    document.getElementById('fileName').textContent = input.files[0].name;
+  }
+}
+</script>
+
+</body>
+</html>
