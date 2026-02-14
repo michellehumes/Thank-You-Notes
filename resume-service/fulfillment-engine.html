@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerForge Pro — Fulfillment Engine</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3a;
+    --text: #e4e4ef;
+    --text-dim: #8888a0;
+    --accent: #6c5ce7;
+    --accent-light: #a29bfe;
+    --success: #00cec9;
+    --warn: #fdcb6e;
+    --danger: #ff6b6b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-light), var(--success));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle { color: var(--text-dim); margin-bottom: 2rem; }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 2rem;
+  }
+
+  .tab {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--accent-light);
+    border-bottom-color: var(--accent);
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  input, textarea, select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  textarea { resize: vertical; min-height: 120px; }
+
+  .btn {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover { background: var(--accent-light); }
+
+  .btn-success {
+    background: var(--success);
+    color: var(--bg);
+  }
+
+  .btn-outline {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .btn-outline:hover { border-color: var(--accent); }
+
+  .output-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .output-section h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--accent-light);
+  }
+
+  .output-content {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    white-space: pre-wrap;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  .output-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+  }
+
+  .status-dot.processing { background: var(--warn); animation: pulse 1s infinite; }
+  .status-dot.error { background: var(--danger); }
+
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .keyword-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .keyword-tag {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .keyword-tag .count {
+    color: var(--success);
+    font-weight: 600;
+  }
+
+  .checklist { list-style: none; }
+  .checklist li {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+
+  .check { color: var(--success); font-weight: bold; }
+  .warn-icon { color: var(--warn); font-weight: bold; }
+
+  .tier-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .tier-1 { background: #6c5ce720; color: var(--accent-light); }
+  .tier-2 { background: #00cec920; color: var(--success); }
+  .tier-3 { background: #fdcb6e20; color: var(--warn); }
+
+  .progress-steps {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2rem;
+  }
+
+  .step {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  .step:first-child { border-radius: 8px 0 0 8px; }
+  .step:last-child { border-radius: 0 8px 8px 0; }
+  .step.done { background: var(--accent); color: white; border-color: var(--accent); }
+  .step.current { background: var(--surface2); color: var(--accent-light); border-color: var(--accent); }
+
+  .split-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .split-view { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>CareerForge Pro</h1>
+  <p class="subtitle">Fulfillment Engine — Internal Tool</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('input')">1. Client Input</button>
+    <button class="tab" onclick="switchTab('analyze')">2. Analyze</button>
+    <button class="tab" onclick="switchTab('resume')">3. Resume</button>
+    <button class="tab" onclick="switchTab('cover')">4. Cover Letter</button>
+    <button class="tab" onclick="switchTab('linkedin')">5. LinkedIn</button>
+    <button class="tab" onclick="switchTab('extras')">6. Extras</button>
+    <button class="tab" onclick="switchTab('export')">7. Export</button>
+  </div>
+
+  <!-- PANEL 1: CLIENT INPUT -->
+  <div id="panel-input" class="panel active">
+    <div class="status-bar">
+      <div class="status-dot"></div>
+      <span>Ready for new client</span>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Client Name</label>
+        <input type="text" id="clientName" placeholder="Jane Smith">
+      </div>
+      <div class="form-group">
+        <label>Service Tier</label>
+        <select id="tier">
+          <option value="1">Tier 1 — Career Kickstart ($149)</option>
+          <option value="2">Tier 2 — Career Accelerator ($279)</option>
+          <option value="3">Tier 3 — Executive Edge ($379)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Current Title</label>
+        <input type="text" id="currentTitle" placeholder="Marketing Manager">
+      </div>
+      <div class="form-group">
+        <label>Target Title(s)</label>
+        <input type="text" id="targetTitle" placeholder="Senior Marketing Manager, Director of Marketing">
+      </div>
+      <div class="form-group">
+        <label>Years of Experience</label>
+        <input type="number" id="yoe" placeholder="8">
+      </div>
+      <div class="form-group">
+        <label>Industry</label>
+        <input type="text" id="industry" placeholder="SaaS / B2B Technology">
+      </div>
+      <div class="form-group full">
+        <label>Current Resume (paste text)</label>
+        <textarea id="currentResume" rows="10" placeholder="Paste the client's current resume text here..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Target Job Description #1</label>
+        <textarea id="jd1" rows="6" placeholder="Paste the first target job description..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Target Job Description #2</label>
+        <textarea id="jd2" rows="6" placeholder="Paste the second target job description (Tier 2+)..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Target Job Description #3</label>
+        <textarea id="jd3" rows="6" placeholder="Paste the third target job description (Tier 3 only)..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Career Goals / Context</label>
+        <textarea id="goals" rows="4" placeholder="What is the client trying to achieve? Career pivot? Promotion? Industry change?"></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Key Achievements (client-provided)</label>
+        <textarea id="achievements" rows="4" placeholder="List any notable achievements, metrics, awards..."></textarea>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+      <button class="btn btn-primary" onclick="runAnalysis()">Run Analysis &rarr;</button>
+      <button class="btn btn-outline" onclick="clearAll()">Clear All</button>
+      <button class="btn btn-outline" onclick="loadSample()">Load Sample Data</button>
+    </div>
+  </div>
+
+  <!-- PANEL 2: ANALYZE -->
+  <div id="panel-analyze" class="panel">
+    <div class="progress-steps">
+      <div class="step done">Input</div>
+      <div class="step current">Analyze</div>
+      <div class="step">Resume</div>
+      <div class="step">Cover Letter</div>
+      <div class="step">LinkedIn</div>
+      <div class="step">Extras</div>
+      <div class="step">Export</div>
+    </div>
+
+    <div class="split-view">
+      <div class="output-section">
+        <h3>Keyword Extraction — Job Descriptions</h3>
+        <div id="keywordResults"></div>
+      </div>
+      <div class="output-section">
+        <h3>Gap Analysis</h3>
+        <div id="gapAnalysis"></div>
+      </div>
+    </div>
+
+    <div class="output-section">
+      <h3>ATS Compliance Check — Current Resume</h3>
+      <ul class="checklist" id="atsChecklist"></ul>
+    </div>
+
+    <div class="output-section">
+      <h3>Achievement Audit</h3>
+      <div class="output-content" id="achievementAudit"></div>
+    </div>
+
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+      <button class="btn btn-primary" onclick="generateResume()">Generate Resume &rarr;</button>
+      <button class="btn btn-outline" onclick="switchTab('input')">&larr; Back</button>
+    </div>
+  </div>
+
+  <!-- PANEL 3: RESUME -->
+  <div id="panel-resume" class="panel">
+    <div class="progress-steps">
+      <div class="step done">Input</div>
+      <div class="step done">Analyze</div>
+      <div class="step current">Resume</div>
+      <div class="step">Cover Letter</div>
+      <div class="step">LinkedIn</div>
+      <div class="step">Extras</div>
+      <div class="step">Export</div>
+    </div>
+
+    <div class="output-section">
+      <h3>Optimized Resume — Primary Version</h3>
+      <div class="output-content" id="resumeOutput" contenteditable="true"></div>
+      <div class="output-actions">
+        <button class="btn btn-outline" onclick="copyToClipboard('resumeOutput')">Copy</button>
+        <button class="btn btn-outline" onclick="regenerateSection('resume')">Regenerate</button>
+      </div>
+    </div>
+
+    <div id="tailoredVersions"></div>
+
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+      <button class="btn btn-primary" onclick="generateCoverLetter()">Generate Cover Letter &rarr;</button>
+      <button class="btn btn-outline" onclick="switchTab('analyze')">&larr; Back</button>
+    </div>
+  </div>
+
+  <!-- PANEL 4: COVER LETTER -->
+  <div id="panel-cover" class="panel">
+    <div class="progress-steps">
+      <div class="step done">Input</div>
+      <div class="step done">Analyze</div>
+      <div class="step done">Resume</div>
+      <div class="step current">Cover Letter</div>
+      <div class="step">LinkedIn</div>
+      <div class="step">Extras</div>
+      <div class="step">Export</div>
+    </div>
+
+    <div class="output-section">
+      <h3>Cover Letter</h3>
+      <div class="output-content" id="coverLetterOutput" contenteditable="true"></div>
+      <div class="output-actions">
+        <button class="btn btn-outline" onclick="copyToClipboard('coverLetterOutput')">Copy</button>
+        <button class="btn btn-outline" onclick="regenerateSection('cover')">Regenerate</button>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+      <button class="btn btn-primary" onclick="generateLinkedIn()">Generate LinkedIn &rarr;</button>
+      <button class="btn btn-outline" onclick="switchTab('resume')">&larr; Back</button>
+    </div>
+  </div>
+
+  <!-- PANEL 5: LINKEDIN -->
+  <div id="panel-linkedin" class="panel">
+    <div class="progress-steps">
+      <div class="step done">Input</div>
+      <div class="step done">Analyze</div>
+      <div class="step done">Resume</div>
+      <div class="step done">Cover Letter</div>
+      <div class="step current">LinkedIn</div>
+      <div class="step">Extras</div>
+      <div class="step">Export</div>
+    </div>
+
+    <div class="output-section">
+      <h3>LinkedIn Headline</h3>
+      <div class="output-content" id="linkedinHeadline" contenteditable="true"></div>
+    </div>
+
+    <div class="output-section">
+      <h3>LinkedIn About Section</h3>
+      <div class="output-content" id="linkedinAbout" contenteditable="true"></div>
+    </div>
+
+    <div class="output-section">
+      <h3>LinkedIn Experience (Current Role)</h3>
+      <div class="output-content" id="linkedinExperience" contenteditable="true"></div>
+    </div>
+
+    <div class="output-actions">
+      <button class="btn btn-outline" onclick="copyToClipboard('linkedinHeadline')">Copy Headline</button>
+      <button class="btn btn-outline" onclick="copyToClipboard('linkedinAbout')">Copy About</button>
+      <button class="btn btn-outline" onclick="copyToClipboard('linkedinExperience')">Copy Experience</button>
+    </div>
+
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+      <button class="btn btn-primary" onclick="generateExtras()">Generate Extras &rarr;</button>
+      <button class="btn btn-outline" onclick="switchTab('cover')">&larr; Back</button>
+    </div>
+  </div>
+
+  <!-- PANEL 6: EXTRAS -->
+  <div id="panel-extras" class="panel">
+    <div class="progress-steps">
+      <div class="step done">Input</div>
+      <div class="step done">Analyze</div>
+      <div class="step done">Resume</div>
+      <div class="step done">Cover Letter</div>
+      <div class="step done">LinkedIn</div>
+      <div class="step current">Extras</div>
+      <div class="step">Export</div>
+    </div>
+
+    <div id="interviewGuide" class="output-section" style="display:none;">
+      <h3>Interview Preparation Guide</h3>
+      <div class="output-content" id="interviewOutput" contenteditable="true"></div>
+      <div class="output-actions">
+        <button class="btn btn-outline" onclick="copyToClipboard('interviewOutput')">Copy</button>
+      </div>
+    </div>
+
+    <div id="salaryGuide" class="output-section" style="display:none;">
+      <h3>Salary Negotiation Script</h3>
+      <div class="output-content" id="salaryOutput" contenteditable="true"></div>
+      <div class="output-actions">
+        <button class="btn btn-outline" onclick="copyToClipboard('salaryOutput')">Copy</button>
+      </div>
+    </div>
+
+    <div class="output-section">
+      <h3>Keyword Alignment Explanation (All Tiers)</h3>
+      <div class="output-content" id="keywordExplanation" contenteditable="true"></div>
+      <div class="output-actions">
+        <button class="btn btn-outline" onclick="copyToClipboard('keywordExplanation')">Copy</button>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+      <button class="btn btn-primary" onclick="switchTab('export')">Review & Export &rarr;</button>
+      <button class="btn btn-outline" onclick="switchTab('linkedin')">&larr; Back</button>
+    </div>
+  </div>
+
+  <!-- PANEL 7: EXPORT -->
+  <div id="panel-export" class="panel">
+    <div class="progress-steps">
+      <div class="step done">Input</div>
+      <div class="step done">Analyze</div>
+      <div class="step done">Resume</div>
+      <div class="step done">Cover Letter</div>
+      <div class="step done">LinkedIn</div>
+      <div class="step done">Extras</div>
+      <div class="step current">Export</div>
+    </div>
+
+    <div class="output-section">
+      <h3>Delivery Checklist</h3>
+      <ul class="checklist" id="deliveryChecklist"></ul>
+    </div>
+
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+      <button class="btn btn-success" onclick="exportAll()">Export All as Text Files</button>
+      <button class="btn btn-outline" onclick="exportJSON()">Export as JSON (Backup)</button>
+      <button class="btn btn-outline" onclick="switchTab('extras')">&larr; Back</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================
+// STATE
+// ============================================
+const state = {
+  client: {},
+  keywords: { jd1: [], jd2: [], jd3: [] },
+  gaps: [],
+  outputs: {
+    resume: '',
+    tailored: [],
+    coverLetter: '',
+    linkedinHeadline: '',
+    linkedinAbout: '',
+    linkedinExperience: '',
+    interviewGuide: '',
+    salaryScript: '',
+    keywordExplanation: ''
+  }
+};
+
+// ============================================
+// TAB NAVIGATION
+// ============================================
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  const tabs = ['input','analyze','resume','cover','linkedin','extras','export'];
+  const idx = tabs.indexOf(id);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+}
+
+// ============================================
+// KEYWORD EXTRACTION
+// ============================================
+function extractKeywords(text) {
+  if (!text.trim()) return [];
+  const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','of','with','by','from','is','are','was','were','be','been','being','have','has','had','do','does','did','will','would','could','should','may','might','shall','can','need','must','that','this','these','those','it','its','we','our','you','your','they','their','as','if','not','no','so','up','out','about','into','over','after','before','between','under','above','such','each','which','what','when','where','how','all','both','few','more','most','other','some','than','too','very','just','also','now','new','one','two','who','whom','any','etc','per','via','vs']);
+
+  const skillPatterns = [
+    /\b(?:project management|data analysis|machine learning|deep learning|natural language processing|cloud computing|agile methodology|scrum|kanban|stakeholder management|strategic planning|business development|account management|product management|product development|user experience|user interface|quality assurance|continuous integration|continuous deployment|supply chain|financial modeling|market research|competitive analysis|risk management|change management|performance management|talent acquisition|employee engagement|customer success|customer experience|sales operations|revenue operations|demand generation|content strategy|brand strategy|digital marketing|email marketing|social media marketing|search engine optimization|pay per click|conversion rate optimization|growth hacking|full stack|front end|back end|dev ops|site reliability|information security|cyber security|data engineering|data science|business intelligence|cross functional)\b/gi,
+    /\b(?:Python|Java|JavaScript|TypeScript|React|Angular|Vue|Node\.js|SQL|NoSQL|MongoDB|PostgreSQL|MySQL|AWS|Azure|GCP|Docker|Kubernetes|Terraform|Jenkins|Git|Linux|Tableau|Power BI|Salesforce|HubSpot|SAP|Oracle|Jira|Confluence|Figma|Sketch|Adobe|Excel|PowerPoint|Slack|Zoom)\b/gi,
+    /\b(?:MBA|PMP|CPA|CFA|CISSP|AWS Certified|Google Certified|Scrum Master|Six Sigma|Lean|ITIL|TOGAF|PRINCE2)\b/gi
+  ];
+
+  const words = text.toLowerCase().replace(/[^a-z0-9\s\-\.]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w));
+
+  const freq = {};
+  words.forEach(w => { freq[w] = (freq[w] || 0) + 1; });
+
+  // Extract multi-word skills
+  const skills = [];
+  skillPatterns.forEach(pattern => {
+    let match;
+    const regex = new RegExp(pattern.source, pattern.flags);
+    while ((match = regex.exec(text)) !== null) {
+      const skill = match[0].toLowerCase();
+      skills.push(skill);
+      freq[skill] = (freq[skill] || 0) + 2; // Boost skill matches
+    }
+  });
+
+  return Object.entries(freq)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 30)
+    .map(([word, count]) => ({ word, count }));
+}
+
+function findGaps(resumeKeywords, jdKeywords) {
+  const resumeSet = new Set(resumeKeywords.map(k => k.word));
+  return jdKeywords.filter(k => !resumeSet.has(k.word) && k.count >= 2);
+}
+
+// ============================================
+// ATS COMPLIANCE CHECK
+// ============================================
+function checkATS(resumeText) {
+  const checks = [];
+  const text = resumeText.toLowerCase();
+
+  // Check for tables (ATS-breaking)
+  checks.push({
+    pass: !text.includes('<table') && !text.includes('|---'),
+    label: 'No tables detected (tables break most ATS parsers)'
+  });
+
+  // Check for special characters
+  const specialChars = (resumeText.match(/[^\x00-\x7F]/g) || []).length;
+  checks.push({
+    pass: specialChars < 5,
+    label: `Special characters: ${specialChars} found (keep under 5)`
+  });
+
+  // Check for contact info
+  checks.push({
+    pass: /\b[\w.-]+@[\w.-]+\.\w+\b/.test(resumeText),
+    label: 'Email address present'
+  });
+
+  checks.push({
+    pass: /\b\d{3}[-.)]\s?\d{3}[-.)]\s?\d{4}\b/.test(resumeText),
+    label: 'Phone number present'
+  });
+
+  // Check for quantified achievements
+  const numbers = (resumeText.match(/\d+%|\$[\d,]+|\d+ (?:people|team|clients|projects|million|billion)/gi) || []).length;
+  checks.push({
+    pass: numbers >= 3,
+    label: `Quantified achievements: ${numbers} found (aim for 5+)`
+  });
+
+  // Check for action verbs
+  const actionVerbs = ['led', 'managed', 'developed', 'created', 'implemented', 'designed', 'launched', 'built', 'drove', 'increased', 'reduced', 'optimized', 'established', 'delivered', 'spearheaded', 'orchestrated', 'transformed', 'accelerated', 'generated', 'negotiated'];
+  const foundVerbs = actionVerbs.filter(v => text.includes(v));
+  checks.push({
+    pass: foundVerbs.length >= 5,
+    label: `Action verbs: ${foundVerbs.length} found (${foundVerbs.slice(0, 5).join(', ')})`
+  });
+
+  // Length check
+  const wordCount = resumeText.split(/\s+/).length;
+  checks.push({
+    pass: wordCount >= 300 && wordCount <= 800,
+    label: `Word count: ${wordCount} (target: 400-700 for most roles)`
+  });
+
+  // Section headers
+  const headers = ['experience', 'education', 'skills', 'summary', 'professional'];
+  const foundHeaders = headers.filter(h => text.includes(h));
+  checks.push({
+    pass: foundHeaders.length >= 3,
+    label: `Standard sections: ${foundHeaders.join(', ')}`
+  });
+
+  return checks;
+}
+
+// ============================================
+// RESUME GENERATION PROMPTS
+// These generate the AI prompts you'll paste into Claude/ChatGPT
+// ============================================
+function buildResumePrompt(client, keywords, gaps) {
+  const tier = parseInt(client.tier);
+  const keywordList = keywords.jd1.slice(0, 15).map(k => k.word).join(', ');
+  const gapList = gaps.slice(0, 10).map(g => g.word).join(', ');
+
+  return `You are an expert resume writer specializing in ATS-optimized, achievement-focused resumes for ${client.industry || 'professional'} roles.
+
+TASK: Rewrite the following resume for a ${client.currentTitle} targeting a ${client.targetTitle} role.
+
+CLIENT CONTEXT:
+- Years of experience: ${client.yoe}
+- Industry: ${client.industry}
+- Career goals: ${client.goals}
+- Key achievements: ${client.achievements}
+
+TARGET KEYWORDS TO NATURALLY INTEGRATE:
+${keywordList}
+
+GAPS TO ADDRESS (present in job descriptions but missing from current resume):
+${gapList}
+
+CURRENT RESUME:
+---
+${client.currentResume}
+---
+
+REQUIREMENTS:
+1. Use single-column layout with clear section headers
+2. Start every bullet with a strong action verb
+3. Include quantified results (%, $, numbers) in at least 60% of bullets
+4. Naturally integrate target keywords without stuffing
+5. Use this structure: CONTACT → PROFESSIONAL SUMMARY → EXPERIENCE → SKILLS → EDUCATION
+6. Professional Summary: 3-4 lines, ${tier === 3 ? 'executive tone emphasizing leadership impact and strategic vision' : 'results-focused, highlighting key strengths and career trajectory'}
+7. Each role: Company name, title, dates, then 4-6 bullet points
+8. Skills section: Categorized (Technical, Industry, Leadership)
+9. NO tables, NO columns, NO graphics, NO headers/footers
+10. ${tier === 3 ? 'Use executive language: "orchestrated", "spearheaded", "transformed", "drove enterprise-wide"' : 'Use strong professional language: "led", "developed", "implemented", "achieved"'}
+
+FORMAT: Plain text, ready for ATS parsing. Use ALL CAPS for section headers. Use "•" for bullets.
+
+Write the complete, optimized resume now.`;
+}
+
+function buildTailoredPrompt(client, jdText, jdNumber) {
+  return `You are an expert resume writer. Take this master resume and create a TAILORED VERSION specifically optimized for the following job description.
+
+MASTER RESUME:
+---
+${state.outputs.resume}
+---
+
+TARGET JOB DESCRIPTION #${jdNumber}:
+---
+${jdText}
+---
+
+INSTRUCTIONS:
+1. Reorder and emphasize bullets that directly match this JD's requirements
+2. Mirror the language and terminology used in this specific JD
+3. Adjust the Professional Summary to directly address this role's top 3 requirements
+4. Ensure every required skill mentioned in the JD appears somewhere in the resume
+5. Keep the same format and structure as the master resume
+6. Add a "RELEVANT SKILLS" section at the top if this JD emphasizes specific technical requirements
+7. This should feel like it was written specifically for this one job
+
+Write the complete tailored resume now.`;
+}
+
+function buildCoverLetterPrompt(client) {
+  return `You are an expert cover letter writer. Write a compelling, professional cover letter for:
+
+CANDIDATE: ${client.currentTitle} with ${client.yoe} years of experience in ${client.industry}
+TARGET ROLE: ${client.targetTitle}
+KEY ACHIEVEMENTS: ${client.achievements}
+CAREER GOALS: ${client.goals}
+
+JOB DESCRIPTION:
+---
+${client.jd1}
+---
+
+OPTIMIZED RESUME:
+---
+${state.outputs.resume}
+---
+
+REQUIREMENTS:
+1. 3-4 paragraphs, under 400 words
+2. Opening: Hook with a relevant achievement or insight (NOT "I am writing to apply...")
+3. Body: Connect 2-3 specific achievements to the role's top requirements
+4. Include at least 2 quantified results
+5. Close: Confident call to action
+6. ${parseInt(client.tier) === 3 ? 'Executive tone: strategic, visionary, leadership-focused' : 'Professional tone: confident, specific, results-oriented'}
+7. Mirror key terminology from the job description
+8. Show you understand the company's challenges
+
+Write the complete cover letter now.`;
+}
+
+function buildLinkedInPrompt(client) {
+  return `You are a LinkedIn optimization expert. Create optimized LinkedIn content for:
+
+CANDIDATE: ${client.currentTitle} → targeting ${client.targetTitle}
+INDUSTRY: ${client.industry}
+EXPERIENCE: ${client.yoe} years
+ACHIEVEMENTS: ${client.achievements}
+
+RESUME:
+---
+${state.outputs.resume}
+---
+
+CREATE THREE SECTIONS:
+
+1. LINKEDIN HEADLINE (max 220 characters):
+- Include target role + key value proposition
+- Use | or • as separators
+- Include 1-2 keywords that recruiters search for
+- Example format: "Target Title | Key Skill | Value Proposition | Industry"
+
+2. LINKEDIN ABOUT SECTION (max 2,600 characters):
+- First line must hook the reader (this appears in preview)
+- Write in first person
+- Structure: Hook → What I do → Key achievements (3-4 with numbers) → What I'm looking for → CTA
+- Include relevant keywords naturally
+- End with "Open to connecting about [topics]"
+
+3. LINKEDIN EXPERIENCE — CURRENT ROLE:
+- Rewrite the most recent role for LinkedIn format
+- More narrative than resume, but still achievement-focused
+- 3-5 bullet points with quantified results
+- Include relevant keywords
+
+Write all three sections now, clearly labeled.`;
+}
+
+function buildInterviewPrompt(client) {
+  return `You are an interview preparation coach. Create an interview guide for:
+
+CANDIDATE: ${client.currentTitle} → targeting ${client.targetTitle}
+INDUSTRY: ${client.industry}
+EXPERIENCE: ${client.yoe} years
+ACHIEVEMENTS: ${client.achievements}
+CAREER GOALS: ${client.goals}
+
+JOB DESCRIPTION:
+---
+${client.jd1}
+---
+
+CREATE AN INTERVIEW PREPARATION GUIDE WITH:
+
+1. TOP 15 LIKELY INTERVIEW QUESTIONS for this specific role, organized by category:
+   - Role-specific (5 questions)
+   - Behavioral/STAR (5 questions)
+   - Leadership/Strategic (3 questions)
+   - Culture fit (2 questions)
+
+2. For EACH question provide:
+   - The question
+   - Why they're asking (what they really want to know)
+   - A STAR-method answer framework using the candidate's actual achievements
+   - Key phrases to include
+
+3. 5 QUESTIONS TO ASK THE INTERVIEWER (smart, strategic questions)
+
+4. PREPARATION CHECKLIST:
+   - Research points about the company
+   - Stories to prepare
+   - Numbers to memorize
+
+Write the complete guide now.`;
+}
+
+function buildSalaryPrompt(client) {
+  return `You are a salary negotiation expert. Create a negotiation script for:
+
+CANDIDATE: ${client.currentTitle} → targeting ${client.targetTitle}
+INDUSTRY: ${client.industry}
+EXPERIENCE: ${client.yoe} years
+ACHIEVEMENTS: ${client.achievements}
+
+CREATE A SALARY NEGOTIATION GUIDE WITH:
+
+1. MARKET POSITIONING ANALYSIS:
+   - Typical salary range for this role/experience level
+   - Factors that increase negotiating power
+   - Candidate's specific leverage points based on achievements
+
+2. NEGOTIATION SCRIPT — WORD FOR WORD:
+   - When they ask current salary: [exact response]
+   - When they make initial offer: [exact response]
+   - Counter-offer language: [exact phrasing]
+   - If they say "that's our best offer": [exact response]
+   - Negotiating beyond base salary (equity, bonus, PTO, remote, title)
+
+3. EMAIL TEMPLATES:
+   - Counter-offer email
+   - Acceptance email
+   - Decline email (keeping door open)
+
+4. RULES:
+   - Never be the first to say a number
+   - Always express enthusiasm before negotiating
+   - Use "I'd like to find a number that works for both of us"
+   - Anchor high but reasonable
+
+Write the complete guide now.`;
+}
+
+// ============================================
+// WORKFLOW ACTIONS
+// ============================================
+function runAnalysis() {
+  // Collect input
+  state.client = {
+    name: document.getElementById('clientName').value,
+    tier: document.getElementById('tier').value,
+    currentTitle: document.getElementById('currentTitle').value,
+    targetTitle: document.getElementById('targetTitle').value,
+    yoe: document.getElementById('yoe').value,
+    industry: document.getElementById('industry').value,
+    currentResume: document.getElementById('currentResume').value,
+    jd1: document.getElementById('jd1').value,
+    jd2: document.getElementById('jd2').value,
+    jd3: document.getElementById('jd3').value,
+    goals: document.getElementById('goals').value,
+    achievements: document.getElementById('achievements').value,
+  };
+
+  if (!state.client.currentResume || !state.client.jd1) {
+    alert('Please provide at least the current resume and one job description.');
+    return;
+  }
+
+  // Extract keywords
+  const resumeKw = extractKeywords(state.client.currentResume);
+  state.keywords.jd1 = extractKeywords(state.client.jd1);
+  state.keywords.jd2 = extractKeywords(state.client.jd2);
+  state.keywords.jd3 = extractKeywords(state.client.jd3);
+
+  // Find gaps
+  state.gaps = findGaps(resumeKw, state.keywords.jd1);
+
+  // Render keyword grid
+  let kwHtml = '<p style="margin-bottom:0.75rem;font-weight:600;">JD #1 Keywords:</p><div class="keyword-grid">';
+  state.keywords.jd1.slice(0, 20).forEach(k => {
+    const inResume = resumeKw.some(rk => rk.word === k.word);
+    kwHtml += `<div class="keyword-tag" style="border-color: ${inResume ? 'var(--success)' : 'var(--danger)'}">
+      <span>${k.word}</span>
+      <span class="count" style="color: ${inResume ? 'var(--success)' : 'var(--danger)'}">${inResume ? '✓' : 'MISSING'}</span>
+    </div>`;
+  });
+  kwHtml += '</div>';
+  document.getElementById('keywordResults').innerHTML = kwHtml;
+
+  // Render gaps
+  let gapHtml = '<div class="keyword-grid">';
+  state.gaps.slice(0, 15).forEach(g => {
+    gapHtml += `<div class="keyword-tag" style="border-color: var(--warn)">
+      <span>${g.word}</span>
+      <span class="count" style="color: var(--warn)">+ADD</span>
+    </div>`;
+  });
+  gapHtml += '</div>';
+  if (state.gaps.length === 0) gapHtml = '<p style="color: var(--success);">Good coverage — no critical gaps detected.</p>';
+  document.getElementById('gapAnalysis').innerHTML = gapHtml;
+
+  // ATS check
+  const atsResults = checkATS(state.client.currentResume);
+  let atsHtml = '';
+  atsResults.forEach(r => {
+    atsHtml += `<li><span class="${r.pass ? 'check' : 'warn-icon'}">${r.pass ? '✓' : '⚠'}</span> ${r.label}</li>`;
+  });
+  document.getElementById('atsChecklist').innerHTML = atsHtml;
+
+  // Achievement audit
+  document.getElementById('achievementAudit').textContent = buildResumePrompt(state.client, state.keywords, state.gaps);
+
+  switchTab('analyze');
+}
+
+function generateResume() {
+  const prompt = buildResumePrompt(state.client, state.keywords, state.gaps);
+  state.outputs.resume = prompt;
+  document.getElementById('resumeOutput').textContent = prompt;
+
+  // Generate tailored version prompts
+  const tier = parseInt(state.client.tier);
+  let tailoredHtml = '';
+
+  if (tier >= 2 && state.client.jd1) {
+    tailoredHtml += buildTailoredSection(1, state.client.jd1);
+  }
+  if (tier >= 2 && state.client.jd2) {
+    tailoredHtml += buildTailoredSection(2, state.client.jd2);
+  }
+  if (tier >= 3 && state.client.jd3) {
+    tailoredHtml += buildTailoredSection(3, state.client.jd3);
+  }
+
+  document.getElementById('tailoredVersions').innerHTML = tailoredHtml;
+  switchTab('resume');
+}
+
+function buildTailoredSection(num, jdText) {
+  const prompt = buildTailoredPrompt(state.client, jdText, num);
+  return `<div class="output-section">
+    <h3>Tailored Version #${num}</h3>
+    <div class="output-content" id="tailored${num}" contenteditable="true">${escapeHtml(prompt)}</div>
+    <div class="output-actions">
+      <button class="btn btn-outline" onclick="copyToClipboard('tailored${num}')">Copy Prompt</button>
+    </div>
+  </div>`;
+}
+
+function generateCoverLetter() {
+  const tier = parseInt(state.client.tier);
+  if (tier < 2) {
+    document.getElementById('coverLetterOutput').textContent = 'Cover letter is included in Tier 2+ packages only.';
+  } else {
+    const prompt = buildCoverLetterPrompt(state.client);
+    state.outputs.coverLetter = prompt;
+    document.getElementById('coverLetterOutput').textContent = prompt;
+  }
+  switchTab('cover');
+}
+
+function generateLinkedIn() {
+  const tier = parseInt(state.client.tier);
+  if (tier < 2) {
+    document.getElementById('linkedinHeadline').textContent = 'LinkedIn optimization is included in Tier 2+ packages only.';
+    document.getElementById('linkedinAbout').textContent = '';
+    document.getElementById('linkedinExperience').textContent = '';
+  } else {
+    const prompt = buildLinkedInPrompt(state.client);
+    state.outputs.linkedinAbout = prompt;
+    document.getElementById('linkedinHeadline').textContent = '[ Copy the full prompt below into Claude/ChatGPT to generate ]';
+    document.getElementById('linkedinAbout').textContent = prompt;
+    document.getElementById('linkedinExperience').textContent = '[ LinkedIn experience will be included in the generated output above ]';
+  }
+  switchTab('linkedin');
+}
+
+function generateExtras() {
+  const tier = parseInt(state.client.tier);
+
+  // Keyword explanation (all tiers)
+  const kwExplanation = `KEYWORD ALIGNMENT REPORT
+========================
+
+Client: ${state.client.name}
+Target: ${state.client.targetTitle}
+
+TOP KEYWORDS FROM TARGET JOB DESCRIPTIONS:
+${state.keywords.jd1.slice(0, 10).map(k => `  • ${k.word} (appeared ${k.count}x)`).join('\n')}
+
+GAPS IDENTIFIED AND ADDRESSED:
+${state.gaps.slice(0, 10).map(g => `  • ${g.word} — Added to optimized resume`).join('\n')}
+
+OPTIMIZATION STRATEGY:
+- Keywords were naturally integrated into achievement bullets and skills sections
+- Professional summary was aligned to mirror JD language
+- Skills section reorganized to prioritize JD-matched competencies
+- Each tailored version emphasizes role-specific keywords`;
+
+  state.outputs.keywordExplanation = kwExplanation;
+  document.getElementById('keywordExplanation').textContent = kwExplanation;
+
+  // Interview guide (Tier 3)
+  if (tier >= 3) {
+    document.getElementById('interviewGuide').style.display = 'block';
+    const prompt = buildInterviewPrompt(state.client);
+    state.outputs.interviewGuide = prompt;
+    document.getElementById('interviewOutput').textContent = prompt;
+  }
+
+  // Salary script (Tier 3)
+  if (tier >= 3) {
+    document.getElementById('salaryGuide').style.display = 'block';
+    const prompt = buildSalaryPrompt(state.client);
+    state.outputs.salaryScript = prompt;
+    document.getElementById('salaryOutput').textContent = prompt;
+  }
+
+  switchTab('extras');
+}
+
+// ============================================
+// EXPORT
+// ============================================
+function exportAll() {
+  const tier = parseInt(state.client.tier);
+  const tierNames = { 1: 'Career-Kickstart', 2: 'Career-Accelerator', 3: 'Executive-Edge' };
+
+  // Build delivery checklist
+  const items = [
+    { label: 'Resume (Primary)', done: !!state.outputs.resume },
+    { label: 'Keyword Alignment Report', done: !!state.outputs.keywordExplanation },
+  ];
+  if (tier >= 2) {
+    items.push({ label: 'Cover Letter', done: !!state.outputs.coverLetter });
+    items.push({ label: 'LinkedIn Profile', done: !!state.outputs.linkedinAbout });
+    items.push({ label: 'Tailored Versions', done: true });
+  }
+  if (tier >= 3) {
+    items.push({ label: 'Interview Prep Guide', done: !!state.outputs.interviewGuide });
+    items.push({ label: 'Salary Negotiation Script', done: !!state.outputs.salaryScript });
+  }
+
+  let checkHtml = '';
+  items.forEach(i => {
+    checkHtml += `<li><span class="${i.done ? 'check' : 'warn-icon'}">${i.done ? '✓' : '⚠'}</span> ${i.label}</li>`;
+  });
+  document.getElementById('deliveryChecklist').innerHTML = checkHtml;
+
+  // Create downloadable text
+  let fullExport = `CAREERFORGE PRO — DELIVERABLE PACKAGE
+======================================
+Client: ${state.client.name}
+Tier: ${tierNames[tier]}
+Date: ${new Date().toLocaleDateString()}
+
+${'='.repeat(50)}
+RESUME — PRIMARY VERSION
+${'='.repeat(50)}
+[AI PROMPT — Paste into Claude to generate final resume]
+
+${state.outputs.resume}
+
+`;
+
+  if (tier >= 2) {
+    fullExport += `
+${'='.repeat(50)}
+COVER LETTER
+${'='.repeat(50)}
+[AI PROMPT — Paste into Claude to generate final cover letter]
+
+${state.outputs.coverLetter}
+
+${'='.repeat(50)}
+LINKEDIN OPTIMIZATION
+${'='.repeat(50)}
+[AI PROMPT — Paste into Claude to generate LinkedIn content]
+
+${state.outputs.linkedinAbout}
+
+`;
+  }
+
+  if (tier >= 3) {
+    fullExport += `
+${'='.repeat(50)}
+INTERVIEW PREPARATION GUIDE
+${'='.repeat(50)}
+[AI PROMPT — Paste into Claude to generate interview guide]
+
+${state.outputs.interviewGuide}
+
+${'='.repeat(50)}
+SALARY NEGOTIATION SCRIPT
+${'='.repeat(50)}
+[AI PROMPT — Paste into Claude to generate salary script]
+
+${state.outputs.salaryScript}
+
+`;
+  }
+
+  fullExport += `
+${'='.repeat(50)}
+KEYWORD ALIGNMENT REPORT
+${'='.repeat(50)}
+
+${state.outputs.keywordExplanation}
+`;
+
+  const blob = new Blob([fullExport], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `CareerForge-${state.client.name?.replace(/\s+/g, '-') || 'Client'}-${tierNames[tier]}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify({ state }, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `CareerForge-${state.client.name?.replace(/\s+/g, '-') || 'Client'}-backup.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============================================
+// UTILITIES
+// ============================================
+function copyToClipboard(id) {
+  const el = document.getElementById(id);
+  const text = el.textContent || el.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = el.closest('.output-section')?.querySelector('.btn-outline') || el.nextElementSibling?.querySelector('.btn-outline');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    }
+  });
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function clearAll() {
+  if (confirm('Clear all fields?')) {
+    document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+  }
+}
+
+function regenerateSection(section) {
+  alert('Edit the prompt in the box above, then copy and paste it into Claude/ChatGPT to regenerate.');
+}
+
+function loadSample() {
+  document.getElementById('clientName').value = 'Sarah Chen';
+  document.getElementById('tier').value = '2';
+  document.getElementById('currentTitle').value = 'Marketing Manager';
+  document.getElementById('targetTitle').value = 'Senior Marketing Manager, Director of Growth';
+  document.getElementById('yoe').value = '7';
+  document.getElementById('industry').value = 'B2B SaaS / Technology';
+  document.getElementById('currentResume').value = `Sarah Chen
+sarah.chen@email.com | (555) 123-4567 | San Francisco, CA | linkedin.com/in/sarahchen
+
+Marketing Manager at TechCorp Inc. (2020 - Present)
+- Manage digital marketing campaigns across multiple channels
+- Work with the sales team to create content
+- Handle social media accounts and email newsletters
+- Coordinate with agencies for paid advertising
+- Report on marketing metrics monthly
+
+Marketing Coordinator at StartupXYZ (2018 - 2020)
+- Assisted the marketing team with campaign execution
+- Created social media posts and blog content
+- Helped organize events and webinars
+- Maintained the company website content
+
+Marketing Assistant at AgencyCo (2017 - 2018)
+- Supported senior marketers on client accounts
+- Created presentations and reports
+- Managed project timelines
+
+Education: BS Marketing, UC Berkeley, 2017
+Skills: Google Analytics, HubSpot, Mailchimp, Canva, Microsoft Office`;
+
+  document.getElementById('jd1').value = `Senior Marketing Manager — GrowthTech (Series B, $50M ARR)
+
+We're looking for a Senior Marketing Manager to lead our demand generation and content strategy. You'll own the marketing funnel from awareness to SQL and work cross-functionally with Sales, Product, and Customer Success.
+
+Requirements:
+- 5-8 years of B2B SaaS marketing experience
+- Proven track record of driving pipeline and revenue through marketing programs
+- Experience with marketing automation (HubSpot, Marketo) and CRM (Salesforce)
+- Data-driven approach with experience in attribution modeling and funnel optimization
+- Experience managing a team of 2-4 marketers
+- Strong background in content marketing, demand generation, and ABM
+- Experience with SEO, SEM, and paid social campaigns
+- Excellent communication and stakeholder management skills
+
+Nice to have:
+- Experience in product-led growth environments
+- Familiarity with intent data platforms (6sense, Bombora)
+- MBA or advanced marketing certification`;
+
+  document.getElementById('jd2').value = `Director of Growth Marketing — ScaleUp Software
+
+ScaleUp Software ($100M+ ARR) is seeking a Director of Growth Marketing to own our growth engine. This role reports to the VP of Marketing and leads a team of 5.
+
+Requirements:
+- 7+ years in growth/demand gen marketing, B2B SaaS required
+- Experience scaling marketing programs from $10M to $100M+ ARR
+- Deep expertise in multi-touch attribution and marketing analytics
+- Track record of building and leading high-performing marketing teams
+- Experience with enterprise and mid-market sales cycles
+- Budget management ($1M+ annual marketing spend)
+- Strategic thinker who can also execute tactically
+
+Tech stack: Salesforce, HubSpot, Google Analytics 4, Looker, 6sense`;
+
+  document.getElementById('goals').value = 'Looking to step into a senior leadership role at a high-growth B2B SaaS company. Want to move from execution-focused to strategy-focused. Open to Director-level positions. Interested in companies between Series B and pre-IPO.';
+  document.getElementById('achievements').value = `- Grew marketing qualified leads by 150% year-over-year
+- Launched ABM program that generated $2.3M pipeline in first quarter
+- Reduced customer acquisition cost by 35% through channel optimization
+- Built and managed team of 3 direct reports
+- Led website redesign that increased conversion rate from 2.1% to 4.8%
+- Managed $500K annual marketing budget`;
+}
+</script>
+
+</body>
+</html>
