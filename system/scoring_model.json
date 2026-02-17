@@ -1,0 +1,253 @@
+{
+  "scoring_model": {
+    "version": "1.1.0",
+    "name": "Priority Score — Role Fit & Interview Probability",
+    "description": "Dual-axis scoring: Priority Score (0-100) measures strategic fit. Interview Probability (0-100%) predicts likelihood of landing an interview within 72 hours. v1.1: Rebalanced after stress test — added hard gates, raised oncology/HCP weight, smoothed comp curve.",
+    "changelog": {
+      "v1.1.0": "Post-stress-test rebalance. (1) Added hard disqualification gates for comp <200K and seniority below Director. (2) Raised oncology_hcp_alignment from 18→20 max, took 2pts from enterprise_budget_oversight (14→12). (3) Smoothed compensation scoring: $200K-215K raised from 8→10 to prevent premature kill of negotiable roles. (4) Added 'negotiable_likely_above_215k' tier at 11 points."
+    },
+
+    "hard_gates": {
+      "description": "Automatic disqualifiers. If ANY gate triggers, role is Tier 4 regardless of score.",
+      "gates": [
+        {
+          "name": "compensation_floor",
+          "rule": "Stated compensation max < $200K",
+          "result": "Auto Tier 4 — Archive. Do not apply.",
+          "exception": "If comp is undisclosed AND company/title suggest $215K+ is likely, gate does not trigger."
+        },
+        {
+          "name": "seniority_floor",
+          "rule": "Title is Associate Director or below",
+          "result": "Auto Tier 4 — Archive. Do not apply.",
+          "exception": "None."
+        },
+        {
+          "name": "exclusion_list",
+          "rule": "Company matches hard exclusion list (Omnicom, IPG, Initiative, CMI, Phreesia, MediaSense)",
+          "result": "Reject — do not score, do not log.",
+          "exception": "None."
+        },
+        {
+          "name": "location_gate",
+          "rule": "Role requires in-office and is NOT remote US",
+          "result": "Auto Tier 4 — Archive. Do not apply.",
+          "exception": "Hybrid with <2 days/week in NYC metro may proceed if other factors are Tier 1."
+        }
+      ]
+    },
+
+    "priority_score": {
+      "max_score": 100,
+      "formula": "SUM(weighted_factor_scores)",
+      "factors": {
+        "compensation_alignment": {
+          "weight": 20,
+          "max_points": 20,
+          "scoring": {
+            "above_250k": 20,
+            "230k_to_250k": 18,
+            "215k_to_230k": 14,
+            "200k_to_215k_negotiable": 10,
+            "below_200k": 0,
+            "undisclosed_but_likely_above_215k": 12,
+            "undisclosed_negotiable_likely_above_215k": 11
+          },
+          "rationale": "Compensation is a hard filter. Roles below 200K are auto-gated. The 200K-215K band now scores 10 (up from 8) to preserve negotiable opportunities.",
+          "change_note": "v1.1: Raised 200K-215K from 8→10. Added 'negotiable' undisclosed tier at 11."
+        },
+        "seniority_match": {
+          "weight": 18,
+          "max_points": 18,
+          "scoring": {
+            "SVP": 18,
+            "VP": 16,
+            "Head_of": 17,
+            "Senior_Director": 14,
+            "Director": 8,
+            "Associate_Director_or_below": 0
+          },
+          "rationale": "VP/SVP/Head-of roles signal decision-making authority and career trajectory alignment. Director allowed but penalized.",
+          "change_note": "v1.1: No change to points. Hard gate now auto-kills Associate Director and below."
+        },
+        "oncology_hcp_alignment": {
+          "weight": 20,
+          "max_points": 20,
+          "scoring": {
+            "oncology_hcp_primary_focus": 20,
+            "oncology_adjacent_or_specialty_pharma": 15,
+            "general_pharma_with_hcp": 11,
+            "healthtech_with_hcp_component": 13,
+            "no_hcp_or_pharma_relevance": 0
+          },
+          "rationale": "Core differentiation. This is the single most important signal for resume-to-role fit. Oncology + HCP = maximum competitive advantage. Non-healthcare roles lose 20 points — a decisive penalty.",
+          "change_note": "v1.1: Raised from 18→20 max. Oncology primary 18→20. Specialty pharma 14→15. General pharma 10→11. Healthtech HCP 12→13. This increases separation between healthcare and non-healthcare by 2 additional points."
+        },
+        "enterprise_budget_oversight": {
+          "weight": 12,
+          "max_points": 12,
+          "scoring": {
+            "50M_plus": 12,
+            "20M_to_50M": 10,
+            "10M_to_20M": 8,
+            "5M_to_10M": 4,
+            "under_5M_or_unknown": 2
+          },
+          "rationale": "Budget scale signals operational complexity and peer-level fit. Reduced from 14 to fund the oncology/HCP weight increase.",
+          "change_note": "v1.1: Reduced from 14→12 max. All tiers proportionally adjusted. Donated 2pts to oncology_hcp_alignment."
+        },
+        "strategic_authority": {
+          "weight": 12,
+          "max_points": 12,
+          "scoring": {
+            "reports_to_cmo_or_cco": 12,
+            "reports_to_vp_svp": 9,
+            "reports_to_director": 5,
+            "unclear_reporting": 6
+          },
+          "rationale": "Proximity to C-suite indicates strategic influence and growth ceiling.",
+          "change_note": "v1.1: No change."
+        },
+        "company_growth_trajectory": {
+          "weight": 10,
+          "max_points": 10,
+          "scoring": {
+            "high_growth_well_funded_or_ipo_track": 10,
+            "stable_enterprise_fortune_500": 8,
+            "mid_market_growth_stage": 7,
+            "early_stage_or_uncertain": 4,
+            "declining_or_restructuring": 2
+          },
+          "rationale": "Growth-stage companies offer title elevation and equity upside.",
+          "change_note": "v1.1: No change."
+        },
+        "revenue_impact_visibility": {
+          "weight": 8,
+          "max_points": 8,
+          "scoring": {
+            "direct_revenue_ownership_or_p_and_l_adjacent": 8,
+            "influences_revenue_through_media_investment": 6,
+            "cost_center_role": 3,
+            "unclear": 4
+          },
+          "rationale": "Revenue-visible roles accelerate career trajectory and negotiation leverage.",
+          "change_note": "v1.1: No change."
+        }
+      }
+    },
+
+    "interview_probability": {
+      "max_probability": 95,
+      "formula": "min(BASE_PROBABILITY * MODIFIER_MULTIPLIER, 95)",
+      "base_probability": {
+        "description": "Starting probability based on resume-to-JD keyword match density",
+        "keyword_match_90_plus": 55,
+        "keyword_match_70_to_89": 40,
+        "keyword_match_50_to_69": 25,
+        "keyword_match_below_50": 10
+      },
+      "modifiers": {
+        "positive": {
+          "referral_or_warm_intro": {
+            "multiplier": 1.8,
+            "description": "Internal referral or warm LinkedIn connection"
+          },
+          "recruiter_inbound": {
+            "multiplier": 1.6,
+            "description": "Recruiter reached out proactively"
+          },
+          "exact_title_match": {
+            "multiplier": 1.3,
+            "description": "Current/recent title matches target title"
+          },
+          "brand_portfolio_overlap": {
+            "multiplier": 1.25,
+            "description": "Shared brand experience (e.g., Keytruda, Merck)"
+          },
+          "industry_vertical_match": {
+            "multiplier": 1.2,
+            "description": "Oncology, pharma, or exact industry match"
+          },
+          "applied_within_48hrs_of_posting": {
+            "multiplier": 1.15,
+            "description": "Early application advantage"
+          }
+        },
+        "negative": {
+          "overqualified_signal": {
+            "multiplier": 0.7,
+            "description": "Title is below current level (e.g., Director when at Group Director)"
+          },
+          "location_mismatch": {
+            "multiplier": 0.5,
+            "description": "Not remote or requires relocation"
+          },
+          "agency_to_brand_side_friction": {
+            "multiplier": 0.8,
+            "description": "Transition from agency to in-house may face bias"
+          },
+          "stale_posting_over_30_days": {
+            "multiplier": 0.6,
+            "description": "Role likely has advanced candidates"
+          }
+        }
+      },
+      "change_note": "v1.1: Added hard cap at 95% — no role should show 100% interview certainty."
+    },
+
+    "composite_ranking": {
+      "formula": "(priority_score * 0.6) + (interview_probability * 0.4)",
+      "description": "Weighted composite favoring strategic fit while accounting for conversion likelihood. Used for final rank ordering. Hard gates override composite — a gated role is Tier 4 regardless of score.",
+      "tiers": {
+        "tier_1_immediate_action": {
+          "range": "75-100",
+          "action": "Apply within 24 hours. Tailored cover letter. Outreach draft."
+        },
+        "tier_2_high_priority": {
+          "range": "55-74",
+          "action": "Apply within 48 hours. Standard cover letter. Monitor."
+        },
+        "tier_3_opportunistic": {
+          "range": "35-54",
+          "action": "Apply within 72 hours if pipeline allows. Generic application."
+        },
+        "tier_4_archive": {
+          "range": "0-34",
+          "action": "Log but do not apply. Revisit if pipeline thins."
+        }
+      },
+      "change_note": "v1.1: Hard gates now override tier assignment. A role that fails a gate is Tier 4 even if composite exceeds 35."
+    }
+  },
+
+  "resume_matching_logic": {
+    "description": "Assigns optimal resume version based on role characteristics",
+    "rules": [
+      {
+        "condition": "Industry is Pharma, Oncology, or Biotech AND title is VP/SVP/Head-of AND budget > $10M",
+        "assign": "v1_vp_svp_enterprise",
+        "rationale": "Core enterprise resume maximizes pharma/oncology signal"
+      },
+      {
+        "condition": "Industry is Healthtech or Healthcare SaaS OR company is a platform/technology vendor",
+        "assign": "v2_healthtech_saas_pivot",
+        "rationale": "Pivot resume translates agency experience into tech-native language"
+      },
+      {
+        "condition": "Title is SVP or C-suite adjacent AND company is Fortune 500 or PE-backed",
+        "assign": "v3_ultra_executive",
+        "rationale": "One-page format for board-level or executive search audiences"
+      },
+      {
+        "condition": "Recruiter outreach or executive search firm",
+        "assign": "v3_ultra_executive",
+        "rationale": "Recruiters prefer concise, scannable formats"
+      },
+      {
+        "default": true,
+        "assign": "v1_vp_svp_enterprise",
+        "rationale": "Default to the strongest comprehensive version"
+      }
+    ]
+  }
+}
