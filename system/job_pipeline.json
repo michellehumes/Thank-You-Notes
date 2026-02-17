@@ -1,0 +1,77 @@
+{
+  "pipeline_metadata": {
+    "version": "1.0.0",
+    "created": "2026-02-17",
+    "owner": "Michelle E. Humes",
+    "system": "Autonomous Job Acquisition Engine",
+    "hard_exclusions": [
+      "Omnicom",
+      "Interpublic Group (IPG)",
+      "Initiative",
+      "CMI",
+      "Phreesia",
+      "MediaSense"
+    ],
+    "exclusion_reasons": {
+      "Omnicom": "holding_company_exclusion",
+      "Interpublic Group (IPG)": "holding_company_exclusion",
+      "Initiative": "holding_company_exclusion",
+      "CMI": "applied_awaiting_response",
+      "Phreesia": "applied_not_moving_forward",
+      "MediaSense": "interviewed_not_selected"
+    }
+  },
+  "target_criteria": {
+    "location": "Remote US Only",
+    "compensation_minimum": 215000,
+    "compensation_target": 235000,
+    "compensation_stretch": 280000,
+    "titles": [
+      "Senior Director",
+      "VP",
+      "SVP",
+      "Head of Media",
+      "Head of Omnichannel",
+      "Commercial Media Lead",
+      "HCP Engagement Lead",
+      "Commercial Transformation Lead"
+    ],
+    "industries": [
+      "Pharma",
+      "Oncology",
+      "Biotech",
+      "Healthtech",
+      "Medical Device",
+      "Healthcare SaaS"
+    ],
+    "preferences": [
+      "HCP engagement ownership",
+      "Enterprise omnichannel oversight",
+      "Oncology portfolio exposure",
+      "Commercial media investment authority"
+    ]
+  },
+  "roles": [],
+  "analytics": {
+    "total_roles_tracked": 0,
+    "applied": 0,
+    "interviews_scheduled": 0,
+    "offers_received": 0,
+    "avg_priority_score": 0,
+    "avg_interview_probability": 0,
+    "title_distribution": {},
+    "industry_distribution": {},
+    "compensation_distribution": {
+      "below_215k": 0,
+      "215k_to_230k": 0,
+      "230k_to_250k": 0,
+      "250k_to_300k": 0,
+      "above_300k": 0
+    },
+    "resume_version_usage": {
+      "v1_vp_svp_enterprise": 0,
+      "v2_healthtech_saas_pivot": 0,
+      "v3_ultra_executive": 0
+    }
+  }
+}
