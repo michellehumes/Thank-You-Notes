@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mother's Day Handprint Bouquet - 8x10</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Dancing+Script:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 8in;
+    height: 10in;
+    background: #fdf8f4;
+    font-family: 'Playfair Display', serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .page {
+    width: 8in;
+    height: 10in;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #fdf8f4 0%, #fef6ee 40%, #fdf2e9 100%);
+  }
+
+  /* Soft watercolor wash background */
+  .watercolor-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.12;
+    background:
+      radial-gradient(ellipse 300px 250px at 15% 20%, #e8b4c8 0%, transparent 70%),
+      radial-gradient(ellipse 250px 200px at 85% 15%, #c8dae8 0%, transparent 70%),
+      radial-gradient(ellipse 200px 300px at 50% 80%, #d4e8c8 0%, transparent 70%),
+      radial-gradient(ellipse 180px 180px at 80% 75%, #e8d4c8 0%, transparent 70%);
+  }
+
+  /* Top heading */
+  .heading {
+    text-align: center;
+    padding-top: 0.55in;
+    position: relative;
+    z-index: 2;
+  }
+
+  .heading h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 42pt;
+    color: #8b6b5e;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+  }
+
+  .heading .subtitle {
+    font-family: 'Lora', serif;
+    font-size: 12pt;
+    color: #b8977e;
+    font-style: italic;
+    margin-top: 4px;
+    letter-spacing: 2px;
+  }
+
+  /* Vase area */
+  .vase-section {
+    position: absolute;
+    bottom: 1.6in;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5.5in;
+    text-align: center;
+    z-index: 2;
+  }
+
+  /* SVG Vase */
+  .vase-svg {
+    width: 2.8in;
+    height: auto;
+  }
+
+  /* Stems coming out of vase */
+  .stems {
+    position: absolute;
+    bottom: 1.1in;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4in;
+    height: 3.2in;
+    z-index: 1;
+  }
+
+  .stem {
+    position: absolute;
+    bottom: 0;
+    width: 3px;
+    background: #7a9e6b;
+    border-radius: 2px;
+    transform-origin: bottom center;
+  }
+
+  .stem:nth-child(1) { left: 18%; height: 2.8in; transform: rotate(-18deg); }
+  .stem:nth-child(2) { left: 30%; height: 3.0in; transform: rotate(-10deg); }
+  .stem:nth-child(3) { left: 42%; height: 3.1in; transform: rotate(-3deg); }
+  .stem:nth-child(4) { left: 50%; height: 3.2in; transform: rotate(0deg); }
+  .stem:nth-child(5) { left: 58%; height: 3.1in; transform: rotate(3deg); }
+  .stem:nth-child(6) { left: 70%; height: 3.0in; transform: rotate(10deg); }
+  .stem:nth-child(7) { left: 82%; height: 2.8in; transform: rotate(18deg); }
+
+  /* Leaf accents on stems */
+  .leaf {
+    position: absolute;
+    width: 18px;
+    height: 30px;
+    background: #8ab478;
+    border-radius: 50% 0 50% 0;
+    opacity: 0.7;
+  }
+
+  .stem:nth-child(1) .leaf { top: 40%; right: -14px; transform: rotate(30deg); }
+  .stem:nth-child(2) .leaf { top: 35%; left: -14px; transform: rotate(-30deg); }
+  .stem:nth-child(3) .leaf { top: 45%; right: -14px; transform: rotate(25deg); }
+  .stem:nth-child(5) .leaf { top: 45%; left: -14px; transform: rotate(-25deg); }
+  .stem:nth-child(6) .leaf { top: 35%; right: -14px; transform: rotate(30deg); }
+  .stem:nth-child(7) .leaf { top: 40%; left: -14px; transform: rotate(-30deg); }
+
+  /* Handprint circles - where kids place their handprints */
+  .handprint-zones {
+    position: absolute;
+    bottom: 3.0in;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6in;
+    height: 3.5in;
+    z-index: 3;
+  }
+
+  .handprint-circle {
+    position: absolute;
+    border: 2.5px dashed #c9a98c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(253, 248, 244, 0.4);
+  }
+
+  .handprint-circle .label {
+    font-family: 'Lora', serif;
+    font-size: 9pt;
+    color: #c9a98c;
+    text-align: center;
+    line-height: 1.3;
+    font-style: italic;
+  }
+
+  .handprint-circle .hand-icon {
+    font-size: 20pt;
+    color: #d4b8a0;
+    opacity: 0.5;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* Position 7 handprint circles in a bouquet arrangement */
+  .handprint-circle:nth-child(1) { width: 1.5in; height: 1.5in; left: 0.2in; top: 0.8in; }
+  .handprint-circle:nth-child(2) { width: 1.5in; height: 1.5in; left: 1.1in; top: 0.0in; }
+  .handprint-circle:nth-child(3) { width: 1.5in; height: 1.5in; left: 2.25in; top: 0.5in; }
+  .handprint-circle:nth-child(4) { width: 1.5in; height: 1.5in; left: 2.25in; top: -0.3in; }
+  .handprint-circle:nth-child(5) { width: 1.5in; height: 1.5in; left: 3.4in; top: 0.0in; }
+  .handprint-circle:nth-child(6) { width: 1.5in; height: 1.5in; left: 4.3in; top: 0.8in; }
+  .handprint-circle:nth-child(7) { width: 1.5in; height: 1.5in; left: 1.8in; top: 1.5in; }
+
+  /* Poem section */
+  .poem {
+    position: absolute;
+    bottom: 0.35in;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 5;
+    width: 6in;
+  }
+
+  .poem p {
+    font-family: 'Lora', serif;
+    font-size: 10.5pt;
+    color: #8b6b5e;
+    line-height: 1.65;
+    font-style: italic;
+  }
+
+  .poem .signature-line {
+    margin-top: 10px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 14pt;
+    color: #b8977e;
+    font-style: normal;
+  }
+
+  .signature-line .blank {
+    display: inline-block;
+    width: 1.8in;
+    border-bottom: 1.5px solid #d4c4b0;
+    margin: 0 4px;
+    vertical-align: baseline;
+  }
+
+  /* Decorative corner flourishes */
+  .corner-flourish {
+    position: absolute;
+    width: 1.2in;
+    height: 1.2in;
+    z-index: 1;
+    opacity: 0.15;
+  }
+
+  .corner-flourish.top-left {
+    top: 0.15in;
+    left: 0.15in;
+  }
+
+  .corner-flourish.top-right {
+    top: 0.15in;
+    right: 0.15in;
+    transform: scaleX(-1);
+  }
+
+  .corner-flourish.bottom-left {
+    bottom: 0.15in;
+    left: 0.15in;
+    transform: scaleY(-1);
+  }
+
+  .corner-flourish.bottom-right {
+    bottom: 0.15in;
+    right: 0.15in;
+    transform: scale(-1, -1);
+  }
+
+  /* Thin decorative border */
+  .border-frame {
+    position: absolute;
+    top: 0.25in;
+    left: 0.25in;
+    right: 0.25in;
+    bottom: 0.25in;
+    border: 1px solid rgba(200, 175, 155, 0.25);
+    border-radius: 4px;
+    z-index: 0;
+  }
+
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    @page { size: 8in 10in; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="watercolor-bg"></div>
+  <div class="border-frame"></div>
+
+  <!-- Corner flourishes -->
+  <svg class="corner-flourish top-left" viewBox="0 0 100 100">
+    <path d="M5,5 Q5,50 30,60 Q15,40 20,20 Q40,15 60,30 Q50,5 5,5Z" fill="#8b6b5e"/>
+    <path d="M5,5 Q20,25 15,45 Q10,30 5,5Z" fill="#a08472"/>
+    <path d="M5,5 Q25,20 45,15 Q30,10 5,5Z" fill="#a08472"/>
+  </svg>
+  <svg class="corner-flourish top-right" viewBox="0 0 100 100">
+    <path d="M5,5 Q5,50 30,60 Q15,40 20,20 Q40,15 60,30 Q50,5 5,5Z" fill="#8b6b5e"/>
+    <path d="M5,5 Q20,25 15,45 Q10,30 5,5Z" fill="#a08472"/>
+    <path d="M5,5 Q25,20 45,15 Q30,10 5,5Z" fill="#a08472"/>
+  </svg>
+  <svg class="corner-flourish bottom-left" viewBox="0 0 100 100">
+    <path d="M5,5 Q5,50 30,60 Q15,40 20,20 Q40,15 60,30 Q50,5 5,5Z" fill="#8b6b5e"/>
+    <path d="M5,5 Q20,25 15,45 Q10,30 5,5Z" fill="#a08472"/>
+    <path d="M5,5 Q25,20 45,15 Q30,10 5,5Z" fill="#a08472"/>
+  </svg>
+  <svg class="corner-flourish bottom-right" viewBox="0 0 100 100">
+    <path d="M5,5 Q5,50 30,60 Q15,40 20,20 Q40,15 60,30 Q50,5 5,5Z" fill="#8b6b5e"/>
+    <path d="M5,5 Q20,25 15,45 Q10,30 5,5Z" fill="#a08472"/>
+    <path d="M5,5 Q25,20 45,15 Q30,10 5,5Z" fill="#a08472"/>
+  </svg>
+
+  <!-- Heading -->
+  <div class="heading">
+    <h1>Happy Mother's Day</h1>
+    <div class="subtitle">A BOUQUET MADE WITH LOVE</div>
+  </div>
+
+  <!-- Stems -->
+  <div class="stems">
+    <div class="stem"><div class="leaf"></div></div>
+    <div class="stem"><div class="leaf"></div></div>
+    <div class="stem"><div class="leaf"></div></div>
+    <div class="stem"></div>
+    <div class="stem"><div class="leaf"></div></div>
+    <div class="stem"><div class="leaf"></div></div>
+    <div class="stem"><div class="leaf"></div></div>
+  </div>
+
+  <!-- Handprint placement circles -->
+  <div class="handprint-zones">
+    <div class="handprint-circle">
+      <div>
+        <span class="hand-icon">✋</span>
+        <div class="label">place<br>handprint<br>here</div>
+      </div>
+    </div>
+    <div class="handprint-circle">
+      <div>
+        <span class="hand-icon">✋</span>
+        <div class="label">place<br>handprint<br>here</div>
+      </div>
+    </div>
+    <div class="handprint-circle">
+      <div>
+        <span class="hand-icon">✋</span>
+        <div class="label">place<br>handprint<br>here</div>
+      </div>
+    </div>
+    <div class="handprint-circle">
+      <div>
+        <span class="hand-icon">✋</span>
+        <div class="label">place<br>handprint<br>here</div>
+      </div>
+    </div>
+    <div class="handprint-circle">
+      <div>
+        <span class="hand-icon">✋</span>
+        <div class="label">place<br>handprint<br>here</div>
+      </div>
+    </div>
+    <div class="handprint-circle">
+      <div>
+        <span class="hand-icon">✋</span>
+        <div class="label">place<br>handprint<br>here</div>
+      </div>
+    </div>
+    <div class="handprint-circle">
+      <div>
+        <span class="hand-icon">✋</span>
+        <div class="label">place<br>handprint<br>here</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vase -->
+  <div class="vase-section">
+    <svg class="vase-svg" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Vase body - elegant curved shape -->
+      <defs>
+        <linearGradient id="vaseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#d4b896;stop-opacity:1" />
+          <stop offset="30%" style="stop-color:#e8d5bc;stop-opacity:1" />
+          <stop offset="70%" style="stop-color:#c9a882;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#b8956e;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="vaseHighlight" x1="20%" y1="0%" x2="80%" y2="100%">
+          <stop offset="0%" style="stop-color:#f0e6d6;stop-opacity:0.5" />
+          <stop offset="100%" style="stop-color:#c9a882;stop-opacity:0" />
+        </linearGradient>
+      </defs>
+      <!-- Vase shape -->
+      <path d="M60,10 L140,10 Q145,10 145,15 L145,25 Q145,30 140,32 L138,33 Q155,70 150,110 Q148,130 130,145 Q120,152 100,155 Q80,152 70,145 Q52,130 50,110 Q45,70 62,33 L60,32 Q55,30 55,25 L55,15 Q55,10 60,10Z" fill="url(#vaseGrad)" stroke="#b8956e" stroke-width="0.5"/>
+      <!-- Highlight -->
+      <path d="M75,35 Q90,70 88,110 Q87,130 85,140 Q80,135 75,125 Q65,100 68,70 Q70,50 75,35Z" fill="url(#vaseHighlight)"/>
+      <!-- Rim detail -->
+      <rect x="58" y="10" width="84" height="4" rx="2" fill="#c9a882" opacity="0.5"/>
+      <!-- Decorative band -->
+      <path d="M65,55 Q100,50 135,55" stroke="#b8956e" stroke-width="0.8" fill="none" opacity="0.4"/>
+      <path d="M65,58 Q100,53 135,58" stroke="#b8956e" stroke-width="0.8" fill="none" opacity="0.3"/>
+    </svg>
+  </div>
+
+  <!-- Poem -->
+  <div class="poem">
+    <p>
+      This little bouquet was made with care,<br>
+      tiny hands that show how much we share.<br>
+      A gift of love that will never fade &mdash;<br>
+      the sweetest flowers these hands have made.
+    </p>
+    <div class="signature-line">
+      With love from <span class="blank"></span> &bull; Age <span class="blank" style="width:0.8in"></span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
