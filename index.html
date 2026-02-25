@@ -831,11 +831,51 @@ function loadData() {
 
 function defaultData() {
   return {
-    tasks: { urgent: [], upcoming: [], longterm: [] },
+    tasks: {
+      urgent: [
+        { text: 'Unemployment Call', owner: 'M', done: false, date: '2025-02-24' },
+        { text: 'BB Tennis', owner: 'G', done: false, date: '2025-02-24' },
+        { text: 'Salen Andrews Birthday', owner: 'J', done: false, date: '2025-02-28' },
+        { text: 'Matt & Lauren in EH (Feb 28–Mar 1)', owner: 'J', done: false, date: '2025-02-28' },
+        { text: 'Pay Rent', owner: 'J', done: false, date: '2025-03-01' }
+      ],
+      upcoming: [
+        { text: 'Court case virtual request', owner: 'G', done: false, date: '2025-03-04' },
+        { text: 'State of the Union Meeting', owner: 'J', done: false, date: '2025-03-08' },
+        { text: 'Kath & Quinn Wedding Anniversary', owner: 'J', done: false, date: '2025-03-11' },
+        { text: 'Court case', owner: 'G', done: false, date: '2025-03-11' },
+        { text: 'Cancel EHG', owner: 'G', done: false, date: '2025-03-11' },
+        { text: 'Danielle/Sapna/Liz/Emily/Tim/Eoin visiting (Mar 13–15)', owner: 'J', done: false, date: '2025-03-13' },
+        { text: 'BB California Work Trip (Mar 23–27)', owner: 'G', done: false, date: '2025-03-23' }
+      ],
+      longterm: [
+        { text: 'Good Friday', owner: 'J', done: false, date: '2025-04-03' },
+        { text: 'Ruby\'s Birthday', owner: 'J', done: false, date: '2025-04-05' },
+        { text: 'Jason Wedding — Sonnenalp Vail, CO (Apr 9–12)', owner: 'J', done: false, date: '2025-04-09' },
+        { text: 'Nate SanFillipos Birthday', owner: 'J', done: false, date: '2025-04-13' },
+        { text: 'Ivy/Zara in town (Apr 16–19)', owner: 'J', done: false, date: '2025-04-16' },
+        { text: 'Kaitlin\'s Birthday / Zara\'s Perkins Family Birthday', owner: 'J', done: false, date: '2025-04-17' },
+        { text: 'Mike Munnelly\'s Birthday', owner: 'J', done: false, date: '2025-04-28' },
+        { text: 'Jeff Birthday', owner: 'J', done: false, date: '2025-05-21' }
+      ]
+    },
     texts: [],
     finance: { expenses: [], creditcards: [], shared: [], notes: '' },
-    trips: [],
-    gifts: [],
+    trips: [
+      { dest: 'Matt & Lauren in East Hampton', dates: 'Feb 28 – Mar 1, 2025', owner: 'J', notes: 'Friends visiting', budget: '' },
+      { dest: 'Friends Visiting (Danielle, Sapna, Liz, Emily, Tim, Eoin)', dates: 'Mar 13–15, 2025', owner: 'J', notes: '', budget: '' },
+      { dest: 'BB California Work Trip', dates: 'Mar 23–27, 2025', owner: 'G', notes: 'Gray work travel', budget: '' },
+      { dest: 'Jason Wedding — Sonnenalp Vail, CO', dates: 'Apr 9–12, 2025', owner: 'J', notes: 'Wedding in Vail', budget: '' },
+      { dest: 'Ivy & Zara in Town', dates: 'Apr 16–19, 2025', owner: 'J', notes: '', budget: '' }
+    ],
+    gifts: [
+      { person: 'Salen Andrews', date: '2025-02-28', idea: '', purchased: false, owner: 'J' },
+      { person: 'Ruby', date: '2025-04-05', idea: '', purchased: false, owner: 'J' },
+      { person: 'Nate SanFillipos', date: '2025-04-13', idea: '', purchased: false, owner: 'J' },
+      { person: 'Kaitlin', date: '2025-04-17', idea: '', purchased: false, owner: 'J' },
+      { person: 'Mike Munnelly', date: '2025-04-28', idea: '', purchased: false, owner: 'J' },
+      { person: 'Jeff', date: '2025-05-21', idea: '', purchased: false, owner: 'J' }
+    ],
     theme: 'dark'
   };
 }
