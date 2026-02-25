@@ -1,14 +1,1351 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=dashboard.html">
-    <title>Redirecting...</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M&G Life Dashboard</title>
+<style>
+/* ============================================
+   CSS RESET & VARIABLES
+   ============================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #111111;
+  --card-bg: #1a1a1a;
+  --card-bg-light: #222222;
+  --pink: #ff2e88;
+  --blue: #00cfff;
+  --green: #00ff88;
+  --yellow: #ffd700;
+  --red: #ff4444;
+  --text: #e0e0e0;
+  --text-dim: #888888;
+  --border: #333333;
+  --radius: 16px;
+  --glow-pink: 0 0 20px rgba(255, 46, 136, 0.3);
+  --glow-blue: 0 0 20px rgba(0, 207, 255, 0.3);
+  --glow-green: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+body.light-mode {
+  --bg: #1a1a2e;
+  --card-bg: #242444;
+  --card-bg-light: #2a2a4a;
+  --border: #3a3a5a;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 40px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(0,207,255,0.05), rgba(255,46,136,0.05));
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--blue), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.header-actions button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.header-actions button:hover {
+  border-color: var(--blue);
+  box-shadow: var(--glow-blue);
+}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* ============================================
+   CARD BASE — GLASSMORPHISM
+   ============================================ */
+.card {
+  background: linear-gradient(135deg, var(--card-bg), rgba(26,26,26,0.9));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.card:hover {
+  border-color: #444;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-title .icon { font-size: 22px; }
+
+/* ============================================
+   EXECUTIVE OVERVIEW — 3 LANE GRID
+   ============================================ */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.lane {
+  background: var(--card-bg-light);
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 200px;
+}
+
+.lane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.lane-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lane-header .count {
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.dot-red { color: var(--red); }
+.dot-yellow { color: var(--yellow); }
+.dot-green { color: var(--green); }
+
+/* Task items */
+.task-item {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--border);
+  transition: all 0.2s;
+}
+
+.task-item:hover { transform: translateX(2px); }
+.task-item.owner-michelle { border-left-color: var(--pink); }
+.task-item.owner-gray { border-left-color: var(--blue); }
+.task-item.owner-joint { border-left-color: var(--green); }
+.task-item.completed .task-text { text-decoration: line-through; opacity: 0.5; }
+
+.task-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.task-text {
+  flex: 1;
+  font-size: 14px;
+  outline: none;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.task-meta {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-dim);
+}
+
+.tag.michelle { color: var(--pink); border: 1px solid rgba(255,46,136,0.3); }
+.tag.gray { color: var(--blue); border: 1px solid rgba(0,207,255,0.3); }
+.tag.joint { color: var(--green); border: 1px solid rgba(0,255,136,0.3); }
+
+.task-actions button {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.task-actions button:hover { color: var(--text); background: rgba(255,255,255,0.1); }
+
+/* Add task form */
+.add-task-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.add-task-form input, .add-task-form select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.add-task-form input[type="text"] { flex: 1; min-width: 150px; }
+.add-task-form input[type="date"] { width: 140px; }
+
+.btn-add {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, var(--blue), var(--pink));
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.btn-add:hover { opacity: 0.85; transform: scale(1.02); }
+
+/* ============================================
+   TABLE STYLES — Texts, Gifts
+   ============================================ */
+.table-wrap { overflow-x: auto; }
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  vertical-align: middle;
+}
+
+.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+.data-table input, .data-table select {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.data-table input:focus, .data-table select:focus {
+  border-color: var(--blue);
+  outline: none;
+  background: var(--bg);
+}
+
+.data-table select { cursor: pointer; }
+.data-table select option { background: var(--card-bg); }
+
+.btn-sm {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card-bg-light);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-sm:hover { border-color: var(--blue); }
+.btn-sm.sent { background: rgba(0,255,136,0.1); border-color: var(--green); color: var(--green); }
+.btn-sm.danger:hover { border-color: var(--red); color: var(--red); }
+
+.add-row-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 13px;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.add-row-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+/* Sent section */
+.sent-section { margin-top: 16px; }
+
+.sent-toggle {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.sent-toggle:hover { color: var(--text); }
+.sent-items { display: none; margin-top: 8px; }
+.sent-items.open { display: block; }
+.sent-items .data-table td { opacity: 0.5; }
+
+/* ============================================
+   FINANCIAL PANEL
+   ============================================ */
+.finance-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.finance-sub {
+  background: var(--card-bg-light);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.finance-sub h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.finance-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  gap: 10px;
+}
+
+.finance-item input {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.finance-item input:focus {
+  border-color: var(--blue);
+  outline: none;
+  background: var(--bg);
+}
+
+.finance-item input.label-input { flex: 1; }
+.finance-item input.amount-input {
+  width: 110px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.finance-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0 0;
+  font-weight: 700;
+  font-size: 16px;
+  border-top: 2px solid var(--border);
+  margin-top: 8px;
+}
+
+.finance-total .amount { color: var(--green); }
+
+.finance-notes textarea {
+  width: 100%;
+  min-height: 80px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 10px;
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.finance-notes textarea:focus { border-color: var(--blue); outline: none; }
+
+/* ============================================
+   TRIPS PANEL
+   ============================================ */
+.trips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.trip-card {
+  background: var(--card-bg-light);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: grab;
+}
+
+.trip-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.trip-card.dragging { opacity: 0.5; transform: rotate(2deg); }
+
+.trip-header {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background: rgba(255,255,255,0.02);
+}
+
+.trip-header h4 { font-size: 15px; display: flex; align-items: center; gap: 8px; }
+
+.trip-header .chevron {
+  transition: transform 0.3s;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.trip-card.open .trip-header .chevron { transform: rotate(180deg); }
+
+.trip-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.trip-card.open .trip-body { max-height: 600px; }
+
+.trip-body-inner {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trip-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trip-field label {
+  font-size: 12px;
+  color: var(--text-dim);
+  min-width: 80px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.trip-field input, .trip-field select {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.trip-field input:focus, .trip-field select:focus { border-color: var(--blue); outline: none; }
+
+.trip-field input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); flex: 0; }
+
+.trip-field textarea {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  min-height: 50px;
+  resize: vertical;
+}
+
+.trip-field textarea:focus { border-color: var(--blue); outline: none; }
+
+.trip-delete { margin-top: 6px; text-align: right; }
+
+/* ============================================
+   GIFT BANK
+   ============================================ */
+.gift-upcoming { background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.2); }
+.gift-purchased td { opacity: 0.5; }
+
+/* ============================================
+   WEEKLY BRIEF
+   ============================================ */
+.brief-content {
+  background: var(--card-bg-light);
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.brief-section { margin-bottom: 16px; }
+
+.brief-section h4 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.brief-section ul { list-style: none; padding: 0; }
+
+.brief-section li {
+  padding: 4px 0 4px 16px;
+  position: relative;
+}
+
+.brief-section li::before {
+  content: '\203A';
+  position: absolute;
+  left: 0;
+  color: var(--blue);
+}
+
+/* ============================================
+   CHECKBOX GLOBAL
+   ============================================ */
+input[type="checkbox"] { accent-color: var(--green); width: 16px; height: 16px; cursor: pointer; }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .overview-grid { grid-template-columns: 1fr; }
+  .finance-grid { grid-template-columns: 1fr; }
+  .dashboard { padding: 20px; }
+  .header { padding: 16px 20px; }
+}
+
+@media (max-width: 768px) {
+  .header h1 { font-size: 20px; }
+  .header-actions { flex-wrap: wrap; }
+  .trips-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+#jsonUpload { display: none; }
+</style>
 </head>
 <body>
-    <p>Redirecting to dashboard...</p>
-    <script>
-        window.location.href = 'dashboard.html';
-    </script>
+
+<!-- ============================================
+     HEADER
+     ============================================ -->
+<header class="header">
+  <h1>M&amp;G Life Dashboard</h1>
+  <div class="header-actions">
+    <button onclick="toggleTheme()" title="Toggle theme">Theme</button>
+    <button onclick="resetWeek()" title="Reset completed urgent tasks and sent texts">Reset Week</button>
+    <button onclick="downloadJSON()" title="Export all data as JSON">Export JSON</button>
+    <button onclick="document.getElementById('jsonUpload').click()" title="Import data from JSON">Import JSON</button>
+    <input type="file" id="jsonUpload" accept=".json" onchange="uploadJSON(event)">
+  </div>
+</header>
+
+<main class="dashboard">
+
+  <!-- ============================================
+       1. EXECUTIVE OVERVIEW
+       ============================================ -->
+  <section class="card" id="overview-section">
+    <div class="card-title"><span class="icon">&#x1F4CB;</span> Executive Overview</div>
+    <div class="overview-grid">
+      <div class="lane" id="lane-urgent">
+        <div class="lane-header">
+          <h3><span class="dot-red">&#9679;</span> Urgent (7 Days)</h3>
+          <span class="count" id="count-urgent">0</span>
+        </div>
+        <div id="tasks-urgent"></div>
+        <div class="add-task-form">
+          <input type="text" placeholder="New task..." id="input-urgent">
+          <select id="owner-urgent">
+            <option value="michelle">Michelle</option>
+            <option value="gray">Gray</option>
+            <option value="joint">Joint</option>
+          </select>
+          <input type="date" id="date-urgent">
+          <button class="btn-add" onclick="addTask('urgent')">+</button>
+        </div>
+      </div>
+      <div class="lane" id="lane-upcoming">
+        <div class="lane-header">
+          <h3><span class="dot-yellow">&#9679;</span> Upcoming (30 Days)</h3>
+          <span class="count" id="count-upcoming">0</span>
+        </div>
+        <div id="tasks-upcoming"></div>
+        <div class="add-task-form">
+          <input type="text" placeholder="New task..." id="input-upcoming">
+          <select id="owner-upcoming">
+            <option value="michelle">Michelle</option>
+            <option value="gray">Gray</option>
+            <option value="joint">Joint</option>
+          </select>
+          <input type="date" id="date-upcoming">
+          <button class="btn-add" onclick="addTask('upcoming')">+</button>
+        </div>
+      </div>
+      <div class="lane" id="lane-longterm">
+        <div class="lane-header">
+          <h3><span class="dot-green">&#9679;</span> Longer Term (90 Days)</h3>
+          <span class="count" id="count-longterm">0</span>
+        </div>
+        <div id="tasks-longterm"></div>
+        <div class="add-task-form">
+          <input type="text" placeholder="New task..." id="input-longterm">
+          <select id="owner-longterm">
+            <option value="michelle">Michelle</option>
+            <option value="gray">Gray</option>
+            <option value="joint">Joint</option>
+          </select>
+          <input type="date" id="date-longterm">
+          <button class="btn-add" onclick="addTask('longterm')">+</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       2. WHO NEEDS TO TEXT WHO
+       ============================================ -->
+  <section class="card" id="texts-section">
+    <div class="card-title"><span class="icon">&#x1F4AC;</span> Who Needs To Text Who</div>
+    <div class="table-wrap">
+      <table class="data-table" id="texts-table">
+        <thead>
+          <tr>
+            <th>Person</th>
+            <th>Reason</th>
+            <th>Who Sends</th>
+            <th>Suggested Date</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="texts-body"></tbody>
+      </table>
+    </div>
+    <button class="add-row-btn" onclick="addTextRow()">+ Add Person</button>
+    <div class="sent-section">
+      <button class="sent-toggle" onclick="toggleSentSection()">
+        <span id="sent-chevron">&#9656;</span> Sent Messages (<span id="sent-count">0</span>)
+      </button>
+      <div class="sent-items" id="sent-items">
+        <table class="data-table"><tbody id="sent-body"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       3. FINANCIAL WATCH
+       ============================================ -->
+  <section class="card" id="finance-section">
+    <div class="card-title"><span class="icon">&#x1F4B0;</span> Financial Watch</div>
+    <div class="finance-grid">
+      <div class="finance-sub">
+        <h4>Upcoming Large Expenses</h4>
+        <div id="expenses-list"></div>
+        <button class="add-row-btn" onclick="addFinanceItem('expenses')">+ Add Expense</button>
+        <div class="finance-total"><span>Total</span><span class="amount" id="expenses-total">$0.00</span></div>
+      </div>
+      <div class="finance-sub">
+        <h4>Credit Card Due Dates</h4>
+        <div id="creditcards-list"></div>
+        <button class="add-row-btn" onclick="addFinanceItem('creditcards')">+ Add Card</button>
+        <div class="finance-total"><span>Total Due</span><span class="amount" id="creditcards-total">$0.00</span></div>
+      </div>
+      <div class="finance-sub">
+        <h4>Shared Payment Balances</h4>
+        <div id="shared-list"></div>
+        <button class="add-row-btn" onclick="addFinanceItem('shared')">+ Add Balance</button>
+        <div class="finance-total"><span>Total</span><span class="amount" id="shared-total">$0.00</span></div>
+      </div>
+      <div class="finance-sub finance-notes">
+        <h4>Notes</h4>
+        <textarea id="finance-notes" placeholder="Financial notes..." oninput="saveFinance()"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       4. TRIPS & EXPERIENCES
+       ============================================ -->
+  <section class="card" id="trips-section">
+    <div class="card-title"><span class="icon">&#9992;&#65039;</span> Trips &amp; Experiences Planner</div>
+    <div class="trips-grid" id="trips-grid"></div>
+    <button class="add-row-btn" onclick="addTrip()" style="margin-top:16px">+ Add Trip</button>
+  </section>
+
+  <!-- ============================================
+       5. GIFT BANK
+       ============================================ -->
+  <section class="card" id="gifts-section">
+    <div class="card-title"><span class="icon">&#x1F381;</span> Gift Bank</div>
+    <div class="table-wrap">
+      <table class="data-table" id="gifts-table">
+        <thead>
+          <tr>
+            <th>Person</th>
+            <th>Occasion</th>
+            <th>Date</th>
+            <th>Budget Tier</th>
+            <th>Gift Idea</th>
+            <th>Purchased</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="gifts-body"></tbody>
+      </table>
+    </div>
+    <button class="add-row-btn" onclick="addGiftRow()">+ Add Gift</button>
+  </section>
+
+  <!-- ============================================
+       6. WEEKLY EXECUTIVE BRIEF
+       ============================================ -->
+  <section class="card" id="brief-section">
+    <div class="card-title"><span class="icon">&#x1F4CA;</span> Weekly Executive Brief</div>
+    <div class="brief-content" id="brief-content"></div>
+    <button class="btn-add" onclick="generateBrief()" style="margin-top:16px">Regenerate Brief</button>
+  </section>
+
+</main>
+
+<script>
+/* ============================================
+   DATA STORE
+   ============================================ */
+var STORE_KEY = 'mg_dashboard_v2';
+
+function loadData() {
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return defaultData();
+}
+
+function defaultData() {
+  return {
+    tasks: { urgent: [], upcoming: [], longterm: [] },
+    texts: [],
+    finance: { expenses: [], creditcards: [], shared: [], notes: '' },
+    trips: [],
+    gifts: [],
+    theme: 'dark'
+  };
+}
+
+function saveData(d) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(d));
+}
+
+var data = loadData();
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+function escHTML(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function capitalize(s) {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+}
+
+function fmtMoney(n) {
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function fmtDate(d) {
+  if (!d) return '';
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+/* ============================================
+   THEME
+   ============================================ */
+function toggleTheme() {
+  data.theme = data.theme === 'dark' ? 'light' : 'dark';
+  document.body.classList.toggle('light-mode', data.theme === 'light');
+  saveData(data);
+}
+
+if (data.theme === 'light') document.body.classList.add('light-mode');
+
+/* ============================================
+   1. EXECUTIVE OVERVIEW — TASKS
+   ============================================ */
+function renderTasks(lane) {
+  var container = document.getElementById('tasks-' + lane);
+  var tasks = data.tasks[lane].sort(function(a, b) {
+    return new Date(a.deadline || '2099-12-31') - new Date(b.deadline || '2099-12-31');
+  });
+  container.innerHTML = '';
+  var active = 0;
+
+  tasks.forEach(function(t, i) {
+    if (!t.completed) active++;
+    var div = document.createElement('div');
+    div.className = 'task-item owner-' + t.owner + (t.completed ? ' completed' : '');
+    div.innerHTML =
+      '<div class="task-top">' +
+        '<input type="checkbox"' + (t.completed ? ' checked' : '') + ' onchange="toggleTask(\'' + lane + '\',' + i + ')">' +
+        '<input type="text" class="task-text" value="' + escHTML(t.text) + '" onblur="editTask(\'' + lane + '\',' + i + ',this.value)">' +
+        '<div class="task-actions"><button onclick="deleteTask(\'' + lane + '\',' + i + ')" title="Delete">&#10005;</button></div>' +
+      '</div>' +
+      '<div class="task-meta">' +
+        '<span class="tag ' + t.owner + '">' + capitalize(t.owner) + '</span>' +
+        (t.deadline ? '<span class="tag">' + fmtDate(t.deadline) + '</span>' : '') +
+      '</div>';
+    container.appendChild(div);
+  });
+
+  document.getElementById('count-' + lane).textContent = active;
+}
+
+function addTask(lane) {
+  var input = document.getElementById('input-' + lane);
+  var owner = document.getElementById('owner-' + lane).value;
+  var dateEl = document.getElementById('date-' + lane);
+  var text = input.value.trim();
+  if (!text) return;
+  data.tasks[lane].push({ text: text, owner: owner, deadline: dateEl.value, completed: false });
+  input.value = '';
+  dateEl.value = '';
+  saveData(data);
+  renderTasks(lane);
+}
+
+function toggleTask(lane, idx) {
+  data.tasks[lane][idx].completed = !data.tasks[lane][idx].completed;
+  saveData(data);
+  renderTasks(lane);
+}
+
+function editTask(lane, idx, val) {
+  data.tasks[lane][idx].text = val;
+  saveData(data);
+}
+
+function deleteTask(lane, idx) {
+  data.tasks[lane].splice(idx, 1);
+  saveData(data);
+  renderTasks(lane);
+}
+
+['urgent', 'upcoming', 'longterm'].forEach(function(lane) {
+  document.getElementById('input-' + lane).addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') addTask(lane);
+  });
+});
+
+/* ============================================
+   2. TEXTS PANEL
+   ============================================ */
+function renderTexts() {
+  var tbody = document.getElementById('texts-body');
+  var sentBody = document.getElementById('sent-body');
+  tbody.innerHTML = '';
+  sentBody.innerHTML = '';
+  var sentCount = 0;
+
+  data.texts.forEach(function(t, i) {
+    if (t.status === 'sent') {
+      sentCount++;
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + escHTML(t.person) + '</td>' +
+        '<td>' + escHTML(t.reason) + '</td>' +
+        '<td>' + capitalize(t.who) + '</td>' +
+        '<td>' + (t.date ? fmtDate(t.date) : '') + '</td>' +
+        '<td><span class="tag" style="color:var(--green)">Sent</span></td>' +
+        '<td><button class="btn-sm danger" onclick="deleteText(' + i + ')">&#10005;</button></td>';
+      sentBody.appendChild(tr);
+      return;
+    }
+
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><input value="' + escHTML(t.person) + '" onblur="editText(' + i + ',\'person\',this.value)"></td>' +
+      '<td><input value="' + escHTML(t.reason) + '" onblur="editText(' + i + ',\'reason\',this.value)"></td>' +
+      '<td><select onchange="editText(' + i + ',\'who\',this.value)">' +
+        '<option value="michelle"' + (t.who === 'michelle' ? ' selected' : '') + '>Michelle</option>' +
+        '<option value="gray"' + (t.who === 'gray' ? ' selected' : '') + '>Gray</option>' +
+      '</select></td>' +
+      '<td><input type="date" value="' + (t.date || '') + '" onchange="editText(' + i + ',\'date\',this.value)"></td>' +
+      '<td><button class="btn-sm" onclick="markSent(' + i + ')">Mark Sent</button></td>' +
+      '<td><button class="btn-sm danger" onclick="deleteText(' + i + ')">&#10005;</button></td>';
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('sent-count').textContent = sentCount;
+}
+
+function addTextRow() {
+  data.texts.push({ person: '', reason: '', who: 'michelle', date: '', status: 'pending' });
+  saveData(data);
+  renderTexts();
+}
+
+function editText(i, field, val) {
+  data.texts[i][field] = val;
+  saveData(data);
+}
+
+function markSent(i) {
+  data.texts[i].status = 'sent';
+  saveData(data);
+  renderTexts();
+}
+
+function deleteText(i) {
+  data.texts.splice(i, 1);
+  saveData(data);
+  renderTexts();
+}
+
+function toggleSentSection() {
+  var el = document.getElementById('sent-items');
+  el.classList.toggle('open');
+  document.getElementById('sent-chevron').innerHTML = el.classList.contains('open') ? '&#9662;' : '&#9656;';
+}
+
+/* ============================================
+   3. FINANCIAL WATCH
+   ============================================ */
+function renderFinance() {
+  ['expenses', 'creditcards', 'shared'].forEach(function(key) {
+    var container = document.getElementById(key + '-list');
+    container.innerHTML = '';
+    var total = 0;
+
+    data.finance[key].forEach(function(item, i) {
+      var amt = parseFloat(item.amount) || 0;
+      total += amt;
+      var div = document.createElement('div');
+      div.className = 'finance-item';
+      div.innerHTML =
+        '<input class="label-input" value="' + escHTML(item.label) + '" placeholder="Description" onblur="editFinanceItem(\'' + key + '\',' + i + ',\'label\',this.value)">' +
+        '<input class="amount-input" type="number" step="0.01" value="' + (item.amount || '') + '" placeholder="$0.00" oninput="editFinanceItem(\'' + key + '\',' + i + ',\'amount\',this.value)">' +
+        '<button class="btn-sm danger" onclick="deleteFinanceItem(\'' + key + '\',' + i + ')" style="flex:0">&#10005;</button>';
+      container.appendChild(div);
+    });
+
+    document.getElementById(key + '-total').textContent = fmtMoney(total);
+  });
+
+  document.getElementById('finance-notes').value = data.finance.notes || '';
+}
+
+function addFinanceItem(key) {
+  data.finance[key].push({ label: '', amount: '' });
+  saveData(data);
+  renderFinance();
+}
+
+function editFinanceItem(key, i, field, val) {
+  data.finance[key][i][field] = val;
+  saveData(data);
+  /* Re-calculate total live */
+  var total = 0;
+  data.finance[key].forEach(function(item) { total += parseFloat(item.amount) || 0; });
+  document.getElementById(key + '-total').textContent = fmtMoney(total);
+}
+
+function deleteFinanceItem(key, i) {
+  data.finance[key].splice(i, 1);
+  saveData(data);
+  renderFinance();
+}
+
+function saveFinance() {
+  data.finance.notes = document.getElementById('finance-notes').value;
+  saveData(data);
+}
+
+/* ============================================
+   4. TRIPS & EXPERIENCES
+   ============================================ */
+var dragIdx = null;
+
+function renderTrips() {
+  var grid = document.getElementById('trips-grid');
+  grid.innerHTML = '';
+
+  data.trips.forEach(function(trip, i) {
+    var card = document.createElement('div');
+    card.className = 'trip-card' + (trip.open ? ' open' : '');
+    card.draggable = true;
+    card.dataset.index = i;
+    card.addEventListener('dragstart', handleDragStart);
+    card.addEventListener('dragover', handleDragOver);
+    card.addEventListener('drop', handleDrop);
+    card.addEventListener('dragend', handleDragEnd);
+
+    var ownerColor = trip.owner === 'michelle' ? 'var(--pink)' : trip.owner === 'gray' ? 'var(--blue)' : 'var(--green)';
+
+    card.innerHTML =
+      '<div class="trip-header" onclick="toggleTrip(' + i + ')" style="border-left:3px solid ' + ownerColor + '">' +
+        '<h4>' + (escHTML(trip.destination) || 'New Trip') + '</h4>' +
+        '<span class="chevron">&#9660;</span>' +
+      '</div>' +
+      '<div class="trip-body"><div class="trip-body-inner">' +
+        '<div class="trip-field"><label>Dest</label><input value="' + escHTML(trip.destination) + '" onblur="editTrip(' + i + ',\'destination\',this.value)"></div>' +
+        '<div class="trip-field"><label>Start</label><input type="date" value="' + (trip.startDate || '') + '" onchange="editTrip(' + i + ',\'startDate\',this.value)"></div>' +
+        '<div class="trip-field"><label>End</label><input type="date" value="' + (trip.endDate || '') + '" onchange="editTrip(' + i + ',\'endDate\',this.value)"></div>' +
+        '<div class="trip-field"><label>Budget</label><input type="number" step="0.01" value="' + (trip.budget || '') + '" placeholder="$0" onblur="editTrip(' + i + ',\'budget\',this.value)"></div>' +
+        '<div class="trip-field"><label>Flights</label><input type="checkbox"' + (trip.flights ? ' checked' : '') + ' onchange="editTrip(' + i + ',\'flights\',this.checked)"></div>' +
+        '<div class="trip-field"><label>Hotel</label><input type="checkbox"' + (trip.hotel ? ' checked' : '') + ' onchange="editTrip(' + i + ',\'hotel\',this.checked)"></div>' +
+        '<div class="trip-field"><label>Owner</label><select onchange="editTrip(' + i + ',\'owner\',this.value)">' +
+          '<option value="michelle"' + (trip.owner === 'michelle' ? ' selected' : '') + '>Michelle</option>' +
+          '<option value="gray"' + (trip.owner === 'gray' ? ' selected' : '') + '>Gray</option>' +
+          '<option value="joint"' + (trip.owner === 'joint' ? ' selected' : '') + '>Joint</option>' +
+        '</select></div>' +
+        '<div class="trip-field"><label>Notes</label><textarea onblur="editTrip(' + i + ',\'notes\',this.value)">' + escHTML(trip.notes || '') + '</textarea></div>' +
+        '<div class="trip-delete"><button class="btn-sm danger" onclick="deleteTrip(' + i + ')">Delete Trip</button></div>' +
+      '</div></div>';
+
+    grid.appendChild(card);
+  });
+}
+
+function addTrip() {
+  data.trips.push({ destination: '', startDate: '', endDate: '', budget: '', flights: false, hotel: false, owner: 'joint', notes: '', open: true });
+  saveData(data);
+  renderTrips();
+}
+
+function toggleTrip(i) {
+  data.trips[i].open = !data.trips[i].open;
+  saveData(data);
+  renderTrips();
+}
+
+function editTrip(i, field, val) {
+  data.trips[i][field] = val;
+  saveData(data);
+  if (field === 'destination') renderTrips();
+}
+
+function deleteTrip(i) {
+  data.trips.splice(i, 1);
+  saveData(data);
+  renderTrips();
+}
+
+function handleDragStart(e) {
+  dragIdx = parseInt(e.currentTarget.dataset.index);
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+
+function handleDrop(e) {
+  e.preventDefault();
+  var dropIdx = parseInt(e.currentTarget.dataset.index);
+  if (dragIdx === null || dragIdx === dropIdx) return;
+  var item = data.trips.splice(dragIdx, 1)[0];
+  data.trips.splice(dropIdx, 0, item);
+  saveData(data);
+  renderTrips();
+}
+
+function handleDragEnd(e) { dragIdx = null; e.currentTarget.classList.remove('dragging'); }
+
+/* ============================================
+   5. GIFT BANK
+   ============================================ */
+function renderGifts() {
+  var tbody = document.getElementById('gifts-body');
+  tbody.innerHTML = '';
+  var now = new Date();
+  var in30 = new Date(now.getTime() + 30 * 86400000);
+
+  var sorted = data.gifts.map(function(g, i) { return Object.assign({}, g, { _i: i }); }).sort(function(a, b) {
+    if (a.purchased && !b.purchased) return 1;
+    if (!a.purchased && b.purchased) return -1;
+    return new Date(a.date || '2099-12-31') - new Date(b.date || '2099-12-31');
+  });
+
+  sorted.forEach(function(g) {
+    var i = g._i;
+    var giftDate = g.date ? new Date(g.date + 'T00:00:00') : null;
+    var isUpcoming = giftDate && giftDate >= now && giftDate <= in30;
+    var tr = document.createElement('tr');
+    tr.className = (isUpcoming && !g.purchased ? 'gift-upcoming ' : '') + (g.purchased ? 'gift-purchased' : '');
+    tr.innerHTML =
+      '<td><input value="' + escHTML(g.person) + '" onblur="editGift(' + i + ',\'person\',this.value)"></td>' +
+      '<td><input value="' + escHTML(g.occasion) + '" onblur="editGift(' + i + ',\'occasion\',this.value)"></td>' +
+      '<td><input type="date" value="' + (g.date || '') + '" onchange="editGift(' + i + ',\'date\',this.value)"></td>' +
+      '<td><select onchange="editGift(' + i + ',\'budget\',this.value)">' +
+        '<option value=""' + (!g.budget ? ' selected' : '') + '>&mdash;</option>' +
+        '<option value="$"' + (g.budget === '$' ? ' selected' : '') + '>$ (Under $50)</option>' +
+        '<option value="$$"' + (g.budget === '$$' ? ' selected' : '') + '>$$ ($50-150)</option>' +
+        '<option value="$$$"' + (g.budget === '$$$' ? ' selected' : '') + '>$$$ ($150+)</option>' +
+      '</select></td>' +
+      '<td><input value="' + escHTML(g.idea) + '" onblur="editGift(' + i + ',\'idea\',this.value)"></td>' +
+      '<td><input type="checkbox"' + (g.purchased ? ' checked' : '') + ' onchange="editGift(' + i + ',\'purchased\',this.checked)"></td>' +
+      '<td><button class="btn-sm danger" onclick="deleteGift(' + i + ')">&#10005;</button></td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function addGiftRow() {
+  data.gifts.push({ person: '', occasion: '', date: '', budget: '', idea: '', purchased: false });
+  saveData(data);
+  renderGifts();
+}
+
+function editGift(i, field, val) {
+  data.gifts[i][field] = val;
+  saveData(data);
+  renderGifts();
+}
+
+function deleteGift(i) {
+  data.gifts.splice(i, 1);
+  saveData(data);
+  renderGifts();
+}
+
+/* ============================================
+   6. WEEKLY EXECUTIVE BRIEF
+   ============================================ */
+function generateBrief() {
+  var now = new Date();
+  var in30 = new Date(now.getTime() + 30 * 86400000);
+
+  var urgentTasks = data.tasks.urgent.filter(function(t) { return !t.completed; });
+  var pendingTexts = data.texts.filter(function(t) { return t.status !== 'sent'; });
+
+  var upcomingGifts = data.gifts.filter(function(g) {
+    if (g.purchased) return false;
+    var d = g.date ? new Date(g.date + 'T00:00:00') : null;
+    return d && d >= now && d <= in30;
+  });
+
+  var upcomingTrips = data.trips.filter(function(t) {
+    var d = t.startDate ? new Date(t.startDate + 'T00:00:00') : null;
+    return d && d >= now;
+  }).sort(function(a, b) { return new Date(a.startDate) - new Date(b.startDate); });
+
+  var expenseTotal = 0;
+  data.finance.expenses.forEach(function(e) { expenseTotal += parseFloat(e.amount) || 0; });
+  var ccTotal = 0;
+  data.finance.creditcards.forEach(function(c) { ccTotal += parseFloat(c.amount) || 0; });
+
+  var html = '';
+
+  html += '<div class="brief-section"><h4>Priority Actions This Week</h4>';
+  if (urgentTasks.length) {
+    html += '<ul>' + urgentTasks.map(function(t) {
+      return '<li><strong>' + capitalize(t.owner) + ':</strong> ' + escHTML(t.text) + '</li>';
+    }).join('') + '</ul>';
+  } else {
+    html += '<p style="color:var(--green)">No urgent tasks &mdash; great work!</p>';
+  }
+  html += '</div>';
+
+  html += '<div class="brief-section"><h4>Texts to Send</h4>';
+  if (pendingTexts.length) {
+    html += '<ul>' + pendingTexts.map(function(t) {
+      return '<li><strong>' + capitalize(t.who) + '</strong> texts ' + escHTML(t.person) + ' &mdash; ' + escHTML(t.reason) + '</li>';
+    }).join('') + '</ul>';
+  } else {
+    html += '<p style="color:var(--green)">All caught up!</p>';
+  }
+  html += '</div>';
+
+  html += '<div class="brief-section"><h4>Financial Snapshot</h4><ul>' +
+    '<li>Upcoming expenses: <strong>' + fmtMoney(expenseTotal) + '</strong></li>' +
+    '<li>Credit card dues: <strong>' + fmtMoney(ccTotal) + '</strong></li>' +
+    '</ul></div>';
+
+  if (upcomingTrips.length) {
+    var nt = upcomingTrips[0];
+    html += '<div class="brief-section"><h4>Next Trip</h4><ul><li><strong>' + escHTML(nt.destination || 'TBD') + '</strong> &mdash; ' +
+      (nt.startDate ? fmtDate(nt.startDate) : 'TBD') +
+      (nt.flights ? ' &#9992;&#65039; Booked' : ' &#9992;&#65039; Needs booking') +
+      (nt.hotel ? ' &#127976; Booked' : ' &#127976; Needs booking') +
+      '</li></ul></div>';
+  }
+
+  if (upcomingGifts.length) {
+    html += '<div class="brief-section"><h4>Gifts Due Soon</h4><ul>' + upcomingGifts.map(function(g) {
+      return '<li>' + escHTML(g.person) + ' &mdash; ' + escHTML(g.occasion) + ' (' + escHTML(g.idea || 'No idea yet') + ')</li>';
+    }).join('') + '</ul></div>';
+  }
+
+  html += '<div class="brief-section" style="margin-top:12px;color:var(--text-dim);font-size:12px;">Generated ' +
+    now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) +
+    ' at ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) + '</div>';
+
+  document.getElementById('brief-content').innerHTML = html;
+}
+
+/* ============================================
+   IMPORT / EXPORT
+   ============================================ */
+function downloadJSON() {
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'mg-dashboard-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function uploadJSON(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      var imported = JSON.parse(ev.target.result);
+      data = imported;
+      saveData(data);
+      renderAll();
+    } catch (err) {
+      alert('Invalid JSON file');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+/* ============================================
+   RESET WEEK
+   ============================================ */
+function resetWeek() {
+  if (!confirm('Clear completed urgent tasks and sent texts for a fresh week?')) return;
+  data.tasks.urgent = data.tasks.urgent.filter(function(t) { return !t.completed; });
+  data.texts = data.texts.filter(function(t) { return t.status !== 'sent'; });
+  saveData(data);
+  renderAll();
+}
+
+/* ============================================
+   RENDER ALL & INIT
+   ============================================ */
+function renderAll() {
+  ['urgent', 'upcoming', 'longterm'].forEach(renderTasks);
+  renderTexts();
+  renderFinance();
+  renderTrips();
+  renderGifts();
+  generateBrief();
+  document.body.classList.toggle('light-mode', data.theme === 'light');
+}
+
+renderAll();
+</script>
 </body>
 </html>
