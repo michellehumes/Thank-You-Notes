@@ -11,25 +11,26 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #111111;
-  --card-bg: #1a1a1a;
-  --card-bg-light: #222222;
-  --pink: #ff2e88;
-  --blue: #00cfff;
-  --green: #00ff88;
-  --yellow: #ffd700;
-  --red: #ff4444;
-  --text: #e0e0e0;
-  --text-dim: #888888;
-  --border: #333333;
-  --radius: 16px;
-  --glow-pink: 0 0 20px rgba(255, 46, 136, 0.3);
-  --glow-blue: 0 0 20px rgba(0, 207, 255, 0.3);
-  --glow-green: 0 0 20px rgba(0, 255, 136, 0.3);
+  --bg: #ffffff;
+  --card-bg: #f8f9fa;
+  --card-bg-light: #f0f2f5;
+  --pink: #c2185b;
+  --blue: #1565c0;
+  --green: #2e7d32;
+  --yellow: #f57f17;
+  --red: #c62828;
+  --text: #212121;
+  --text-dim: #757575;
+  --border: #e0e0e0;
+  --radius: 10px;
+  --glow-pink: 0 1px 4px rgba(194, 24, 91, 0.15);
+  --glow-blue: 0 1px 4px rgba(21, 101, 192, 0.15);
+  --glow-green: 0 1px 4px rgba(46, 125, 50, 0.15);
 }
 
 body {
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Calibri', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11pt;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
@@ -37,10 +38,10 @@ body {
 }
 
 body.light-mode {
-  --bg: #1a1a2e;
-  --card-bg: #242444;
-  --card-bg-light: #2a2a4a;
-  --border: #3a3a5a;
+  --bg: #f5f5f5;
+  --card-bg: #eaeef2;
+  --card-bg-light: #dfe4ea;
+  --border: #ccc;
 }
 
 /* ============================================
@@ -52,21 +53,18 @@ body.light-mode {
   align-items: center;
   padding: 24px 40px;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(135deg, rgba(0,207,255,0.05), rgba(255,46,136,0.05));
-  backdrop-filter: blur(10px);
+  background: var(--bg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
 .header h1 {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--blue), var(--pink));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
+  color: var(--text);
+  letter-spacing: -0.3px;
 }
 
 .header-actions {
@@ -76,19 +74,20 @@ body.light-mode {
 }
 
 .header-actions button {
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 7px 14px;
+  border-radius: 6px;
   border: 1px solid var(--border);
-  background: var(--card-bg);
+  background: var(--bg);
   color: var(--text);
   cursor: pointer;
-  font-size: 13px;
+  font-size: 11pt;
+  font-family: inherit;
   transition: all 0.2s;
 }
 
 .header-actions button:hover {
   border-color: var(--blue);
-  box-shadow: var(--glow-blue);
+  background: var(--card-bg-light);
 }
 
 /* ============================================
@@ -107,29 +106,30 @@ body.light-mode {
    CARD BASE — GLASSMORPHISM
    ============================================ */
 .card {
-  background: linear-gradient(135deg, var(--card-bg), rgba(26,26,26,0.9));
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 24px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .card:hover {
-  border-color: #444;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  border-color: #bbb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .card-title {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  color: var(--text);
 }
 
-.card-title .icon { font-size: 22px; }
+.card-title .icon { font-size: 18px; }
 
 /* ============================================
    EXECUTIVE OVERVIEW — 3 LANE GRID
@@ -179,14 +179,14 @@ body.light-mode {
 /* Task items */
 .task-item {
   background: var(--bg);
-  border-radius: 10px;
-  padding: 12px;
-  margin-bottom: 8px;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
   border-left: 3px solid var(--border);
   transition: all 0.2s;
 }
 
-.task-item:hover { transform: translateX(2px); }
+.task-item:hover { box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
 .task-item.owner-michelle { border-left-color: var(--pink); }
 .task-item.owner-gray { border-left-color: var(--blue); }
 .task-item.owner-joint { border-left-color: var(--green); }
@@ -201,7 +201,7 @@ body.light-mode {
 
 .task-text {
   flex: 1;
-  font-size: 14px;
+  font-size: 11pt;
   outline: none;
   border: none;
   background: transparent;
@@ -218,16 +218,16 @@ body.light-mode {
 }
 
 .tag {
-  font-size: 11px;
+  font-size: 10px;
   padding: 2px 8px;
-  border-radius: 6px;
-  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  background: #f0f0f0;
   color: var(--text-dim);
 }
 
-.tag.michelle { color: var(--pink); border: 1px solid rgba(255,46,136,0.3); }
-.tag.gray { color: var(--blue); border: 1px solid rgba(0,207,255,0.3); }
-.tag.joint { color: var(--green); border: 1px solid rgba(0,255,136,0.3); }
+.tag.michelle { color: var(--pink); background: rgba(194,24,91,0.08); border: 1px solid rgba(194,24,91,0.2); }
+.tag.gray { color: var(--blue); background: rgba(21,101,192,0.08); border: 1px solid rgba(21,101,192,0.2); }
+.tag.joint { color: var(--green); background: rgba(46,125,50,0.08); border: 1px solid rgba(46,125,50,0.2); }
 
 .task-actions button {
   background: none;
@@ -251,12 +251,12 @@ body.light-mode {
 }
 
 .add-task-form input, .add-task-form select {
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 7px 10px;
+  border-radius: 6px;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: #fff;
   color: var(--text);
-  font-size: 13px;
+  font-size: 11pt;
   font-family: inherit;
 }
 
@@ -264,18 +264,19 @@ body.light-mode {
 .add-task-form input[type="date"] { width: 140px; }
 
 .btn-add {
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 7px 14px;
+  border-radius: 6px;
   border: none;
-  background: linear-gradient(135deg, var(--blue), var(--pink));
+  background: var(--blue);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 11pt;
+  font-family: inherit;
   transition: all 0.2s;
 }
 
-.btn-add:hover { opacity: 0.85; transform: scale(1.02); }
+.btn-add:hover { opacity: 0.9; }
 
 /* ============================================
    TABLE STYLES — Texts, Gifts
@@ -285,7 +286,7 @@ body.light-mode {
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 11pt;
 }
 
 .data-table th {
@@ -302,11 +303,11 @@ body.light-mode {
 
 .data-table td {
   padding: 10px 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
 
-.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+.data-table tr:hover td { background: rgba(0,0,0,0.02); }
 
 .data-table input, .data-table select {
   background: transparent;
@@ -323,11 +324,11 @@ body.light-mode {
 .data-table input:focus, .data-table select:focus {
   border-color: var(--blue);
   outline: none;
-  background: var(--bg);
+  background: #fff;
 }
 
 .data-table select { cursor: pointer; }
-.data-table select option { background: var(--card-bg); }
+.data-table select option { background: #fff; }
 
 .btn-sm {
   padding: 4px 10px;
@@ -407,7 +408,7 @@ body.light-mode {
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid var(--border);
   gap: 10px;
 }
 
@@ -425,7 +426,7 @@ body.light-mode {
 .finance-item input:focus {
   border-color: var(--blue);
   outline: none;
-  background: var(--bg);
+  background: #fff;
 }
 
 .finance-item input.label-input { flex: 1; }
@@ -480,7 +481,7 @@ body.light-mode {
   cursor: grab;
 }
 
-.trip-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.trip-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .trip-card.dragging { opacity: 0.5; transform: rotate(2deg); }
 
 .trip-header {
@@ -489,7 +490,7 @@ body.light-mode {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  background: rgba(255,255,255,0.02);
+  background: rgba(0,0,0,0.02);
 }
 
 .trip-header h4 { font-size: 15px; display: flex; align-items: center; gap: 8px; }
@@ -561,7 +562,7 @@ body.light-mode {
 /* ============================================
    GIFT BANK
    ============================================ */
-.gift-upcoming { background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.2); }
+.gift-upcoming { background: rgba(245,127,23,0.06); border: 1px solid rgba(245,127,23,0.2); }
 .gift-purchased td { opacity: 0.5; }
 
 /* ============================================
@@ -569,9 +570,9 @@ body.light-mode {
    ============================================ */
 .brief-content {
   background: var(--card-bg-light);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
-  font-size: 14px;
+  font-size: 11pt;
   line-height: 1.8;
 }
 
@@ -624,9 +625,9 @@ input[type="checkbox"] { accent-color: var(--green); width: 16px; height: 16px; 
    SCROLLBAR
    ============================================ */
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #555; }
+::-webkit-scrollbar-track { background: #f5f5f5; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #aaa; }
 
 #jsonUpload { display: none; }
 </style>
@@ -833,6 +834,7 @@ function defaultData() {
   return {
     tasks: {
       urgent: [
+        { text: 'Call Optimum — negotiate rate', owner: 'M', done: false, date: '2025-02-25' },
         { text: 'Unemployment Call', owner: 'M', done: false, date: '2025-02-24' },
         { text: 'BB Tennis', owner: 'G', done: false, date: '2025-02-24' },
         { text: 'Salen Andrews Birthday', owner: 'J', done: false, date: '2025-02-28' },
