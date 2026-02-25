@@ -1,14 +1,553 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=dashboard.html">
-    <title>Redirecting...</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Michelle & Gray, Inc. — Executive Life OS</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#0f0f0f;--card:#1a1a1a;--card2:#141414;
+--michelle:#ff2e88;--gray:#00cfff;--joint:#00ff88;
+--warn:#ff3b3b;--success:#1aff6b;--caution:#ffd83b;
+--text:#e0e0e0;--text2:#888;--radius:16px;
+--glow-m:0 0 20px rgba(255,46,136,.15);
+--glow-g:0 0 20px rgba(0,207,255,.15);
+--glow-j:0 0 20px rgba(0,255,136,.15);
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.5;padding:0 16px 60px}
+h1,h2,h3,h4{font-weight:600;letter-spacing:-.02em}
+a{color:var(--joint);text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit;font-size:.85rem;border-radius:8px;padding:6px 14px;transition:all .2s}
+input,select,textarea{background:#222;color:var(--text);border:1px solid #333;border-radius:8px;padding:6px 10px;font-family:inherit;font-size:.85rem;outline:none;transition:border .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--joint)}
+textarea{resize:vertical;min-height:60px}
+.container{max-width:1400px;margin:0 auto}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--card);border-radius:var(--radius);padding:20px;transition:box-shadow .3s,transform .2s}
+.card:hover{box-shadow:0 4px 30px rgba(0,0,0,.4);transform:translateY(-1px)}
+.card2{background:var(--card2);border-radius:12px;padding:14px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.7rem;font-weight:600;text-transform:uppercase}
+.badge-m{background:rgba(255,46,136,.15);color:var(--michelle)}
+.badge-g{background:rgba(0,207,255,.15);color:var(--gray)}
+.badge-j{background:rgba(0,255,136,.15);color:var(--joint)}
+.badge-w{background:rgba(255,59,59,.15);color:var(--warn)}
+.btn-m{background:var(--michelle);color:#fff}
+.btn-m:hover{background:#e0256f;box-shadow:var(--glow-m)}
+.btn-g{background:var(--gray);color:#000}
+.btn-g:hover{background:#00b8e0;box-shadow:var(--glow-g)}
+.btn-j{background:var(--joint);color:#000}
+.btn-j:hover{background:#00dd77;box-shadow:var(--glow-j)}
+.btn-d{background:#333;color:var(--text)}
+.btn-d:hover{background:#444}
+.btn-w{background:var(--warn);color:#fff}
+.btn-w:hover{background:#dd2a2a}
+.btn-sm{padding:4px 10px;font-size:.75rem}
+.flex{display:flex;align-items:center;gap:10px}
+.flex-b{display:flex;align-items:center;justify-content:space-between}
+.gap-sm{gap:6px}
+.mt{margin-top:12px}
+.mb{margin-bottom:12px}
+.tag{font-size:.7rem;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.owner-m{border-left:3px solid var(--michelle);padding-left:10px}
+.owner-g{border-left:3px solid var(--gray);padding-left:10px}
+.owner-j{border-left:3px solid var(--joint);padding-left:10px}
+.progress-bar{height:6px;background:#333;border-radius:3px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:3px;transition:width .4s}
+.section{margin-bottom:24px}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0;cursor:pointer;user-select:none}
+.section-header h2{font-size:1.1rem;display:flex;align-items:center;gap:8px}
+.section-header .chevron{transition:transform .3s;font-size:.8rem;color:var(--text2)}
+.section-header.collapsed .chevron{transform:rotate(-90deg)}
+.section-body{overflow:hidden;transition:max-height .4s ease,opacity .3s;max-height:8000px;opacity:1}
+.section-body.collapsed{max-height:0;opacity:0;pointer-events:none}
+.score-ring{width:80px;height:80px;position:relative}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring .value{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.2rem;font-weight:700}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.kpi-grid{grid-template-columns:1fr}.g2,.g3,.g4{grid-template-columns:1fr}}
+.alert-bar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;gap:8px;padding:8px 16px;overflow-x:auto;background:linear-gradient(180deg,#0f0f0fee,#0f0f0f00);pointer-events:none}
+.alert-pill{pointer-events:all;padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:600;white-space:nowrap;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay.active{opacity:1;pointer-events:all}
+.modal{background:var(--card);border-radius:var(--radius);padding:24px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
+.modal h3{margin-bottom:12px}
+.form-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.form-row>*{flex:1;min-width:120px}
+.form-row label{font-size:.75rem;color:var(--text2);display:block;margin-bottom:2px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;color:var(--text2);font-weight:500;padding:6px 8px;border-bottom:1px solid #333;font-size:.72rem;text-transform:uppercase}
+td{padding:6px 8px;border-bottom:1px solid #1f1f1f}
+tr:hover{background:#ffffff05}
+.empty-state{text-align:center;padding:30px;color:var(--text2);font-size:.85rem}
+.tab-bar{display:flex;gap:4px;margin-bottom:12px;overflow-x:auto}
+.tab-btn{padding:6px 14px;border-radius:8px;font-size:.78rem;background:#222;color:var(--text2);border:none;cursor:pointer;white-space:nowrap}
+.tab-btn.active{background:var(--joint);color:#000;font-weight:600}
+.inline-edit{background:transparent;border:1px solid transparent;color:var(--text);padding:2px 4px;border-radius:4px;width:100%}
+.inline-edit:hover{border-color:#333}
+.inline-edit:focus{border-color:var(--joint);background:#1a1a1a}
+.drag-handle{cursor:grab;color:var(--text2);margin-right:4px}
+.drag-handle:active{cursor:grabbing}
+.countdown{font-size:.72rem;padding:2px 6px;border-radius:4px}
+.countdown.urgent{background:rgba(255,59,59,.15);color:var(--warn)}
+.countdown.soon{background:rgba(255,216,59,.15);color:var(--caution)}
+.countdown.ok{background:rgba(0,255,136,.1);color:var(--joint)}
+.mode-toggle{display:flex;gap:4px;background:#222;padding:3px;border-radius:10px}
+.mode-toggle button{border-radius:8px;font-size:.75rem;padding:4px 12px;background:transparent;color:var(--text2)}
+.mode-toggle button.active{background:var(--joint);color:#000;font-weight:600}
+</style>
 </head>
 <body>
-    <p>Redirecting to dashboard...</p>
-    <script>
-        window.location.href = 'dashboard.html';
-    </script>
+<div id="alert-bar" class="alert-bar"></div>
+<div class="container">
+
+<!-- HEADER -->
+<header style="padding:50px 0 20px;text-align:center">
+<h1 style="font-size:1.6rem;letter-spacing:-.03em">
+<span style="color:var(--michelle)">Michelle</span>
+<span style="color:var(--text2)">&</span>
+<span style="color:var(--gray)">Gray</span>
+<span style="color:var(--text2)">, Inc.</span>
+</h1>
+<p style="color:var(--text2);font-size:.8rem;margin-top:4px">Executive Life Operating System</p>
+<div class="flex" style="justify-content:center;margin-top:12px;gap:12px">
+<div class="mode-toggle" id="mode-toggle">
+<button class="active" onclick="setMode('executive',this)">Executive</button>
+<button onclick="setMode('focus',this)">Focus</button>
+<button onclick="setMode('sunday',this)">Sunday CEO</button>
+</div>
+<div class="flex gap-sm">
+<button class="btn-d btn-sm" onclick="exportData()">Export</button>
+<button class="btn-d btn-sm" onclick="document.getElementById('import-file').click()">Import</button>
+<input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+<button class="btn-d btn-sm" onclick="createSnapshot()">Snapshot</button>
+</div>
+</div>
+<div class="flex" style="justify-content:center;margin-top:8px">
+<label style="font-size:.75rem;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer">
+<input type="checkbox" id="pregnancy-mode-cb" onchange="togglePregnancyMode(this.checked)"> Pregnancy Mode
+</label>
+</div>
+</header>
+
+<!-- SCOREBOARD -->
+<div id="sec-scoreboard" class="section">
+<div class="section-header" onclick="toggleSection('scoreboard')">
+<h2>Executive Scoreboard <span class="chevron">&#9660;</span></h2>
+</div>
+<div class="section-body" id="body-scoreboard">
+<div class="kpi-grid" id="kpi-cards"></div>
+</div>
+</div>
+
+<!-- STRATEGIC PILLARS -->
+<div id="sec-pillars" class="section">
+<div class="section-header" onclick="toggleSection('pillars')">
+<h2>Strategic Pillars <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openPillarModal()">+ Pillar</button>
+</div>
+<div class="section-body" id="body-pillars">
+<div class="grid g2" id="pillars-grid"></div>
+</div>
+</div>
+
+<!-- QUARTERLY GOALS -->
+<div id="sec-goals" class="section">
+<div class="section-header" onclick="toggleSection('goals')">
+<h2>Quarterly Goals <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openGoalModal()">+ Goal</button>
+</div>
+<div class="section-body" id="body-goals"><div id="goals-list"></div></div>
+</div>
+
+<!-- 90 DAY ROADMAP -->
+<div id="sec-roadmap" class="section">
+<div class="section-header" onclick="toggleSection('roadmap')">
+<h2>90-Day Roadmap <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openRoadmapModal()">+ Milestone</button>
+</div>
+<div class="section-body" id="body-roadmap"><div id="roadmap-list"></div></div>
+</div>
+
+<!-- WEEKLY EXECUTION -->
+<div id="sec-weekly" class="section">
+<div class="section-header" onclick="toggleSection('weekly')">
+<h2>Weekly Execution Engine <span class="chevron">&#9660;</span></h2>
+</div>
+<div class="section-body" id="body-weekly"><div class="grid g3" id="weekly-panels"></div></div>
+</div>
+
+<!-- DAILY TODO -->
+<div id="sec-todo" class="section">
+<div class="section-header" onclick="toggleSection('todo')">
+<h2>Daily To-Do Engine <span class="chevron">&#9660;</span></h2>
+</div>
+<div class="section-body" id="body-todo">
+<div class="flex mb" style="gap:8px;flex-wrap:wrap">
+<input type="text" id="todo-input" placeholder="Quick add task..." style="flex:1;min-width:200px" onkeydown="if(event.key==='Enter')addTodo()">
+<select id="todo-owner-sel"><option value="Michelle">Michelle</option><option value="Gray">Gray</option><option value="Joint">Joint</option></select>
+<select id="todo-priority-sel"><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+<select id="todo-cat-sel"><option value="general">General</option><option value="financial">Financial</option><option value="household">Household</option><option value="social">Social</option><option value="career">Career</option><option value="health">Health</option><option value="business">Business</option></select>
+<button class="btn-j" onclick="addTodo()">Add</button>
+</div>
+<div class="flex mb gap-sm" style="flex-wrap:wrap">
+<span class="tag">Filter:</span>
+<button class="tab-btn active" onclick="filterTodos('all',this)">All</button>
+<button class="tab-btn" onclick="filterTodos('active',this)">Active</button>
+<button class="tab-btn" onclick="filterTodos('completed',this)">Done</button>
+<button class="tab-btn" onclick="filterTodos('overdue',this)">Overdue</button>
+</div>
+<div id="todo-list"></div>
+<div id="todo-analytics" class="card2 mt" style="font-size:.8rem"></div>
+</div>
+</div>
+
+<!-- RECURRING CHORES -->
+<div id="sec-chores" class="section">
+<div class="section-header" onclick="toggleSection('chores')">
+<h2>Recurring Chores <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openChoreModal()">+ Chore</button>
+</div>
+<div class="section-body" id="body-chores"><div id="chores-list"></div></div>
+</div>
+
+<!-- ADMIN LOAD BALANCER -->
+<div id="sec-admin" class="section">
+<div class="section-header" onclick="toggleSection('admin')">
+<h2>Admin Load Balancer <span class="chevron">&#9660;</span></h2>
+</div>
+<div class="section-body" id="body-admin"><div id="admin-balancer"></div></div>
+</div>
+
+<!-- TEXT TRACKER -->
+<div id="sec-texts" class="section">
+<div class="section-header" onclick="toggleSection('texts')">
+<h2>Who Needs To Text Who <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openTextModal()">+ Contact</button>
+</div>
+<div class="section-body" id="body-texts"><div id="texts-list"></div></div>
+</div>
+
+<!-- BIRTHDAYS + GIFTS -->
+<div id="sec-birthdays" class="section">
+<div class="section-header" onclick="toggleSection('birthdays')">
+<h2>Birthdays, Gifts &amp; Holidays <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openBirthdayModal()">+ Entry</button>
+</div>
+<div class="section-body" id="body-birthdays"><div id="birthdays-list"></div></div>
+</div>
+
+<!-- WEEKEND PLANNER -->
+<div id="sec-weekend" class="section">
+<div class="section-header" onclick="toggleSection('weekend')">
+<h2>Weekend &amp; Experience Planner <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openWeekendModal()">+ Plan</button>
+</div>
+<div class="section-body" id="body-weekend"><div class="grid g2" id="weekend-grid"></div></div>
+</div>
+
+<!-- TRAVEL -->
+<div id="sec-travel" class="section">
+<div class="section-header" onclick="toggleSection('travel')">
+<h2>Travel &amp; Points Tracker <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openTravelModal()">+ Trip</button>
+</div>
+<div class="section-body" id="body-travel">
+<div id="travel-points" class="card2 mb"></div>
+<div id="travel-list"></div>
+</div>
+</div>
+
+<!-- FINANCIAL -->
+<div id="sec-finance" class="section">
+<div class="section-header" onclick="toggleSection('finance')">
+<h2>Financial Command Center <span class="chevron">&#9660;</span></h2>
+</div>
+<div class="section-body" id="body-finance"><div id="finance-dashboard"></div></div>
+</div>
+
+<!-- CAREER -->
+<div id="sec-career" class="section">
+<div class="section-header" onclick="toggleSection('career')">
+<h2>Career Pipeline <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openCareerModal()">+ Application</button>
+</div>
+<div class="section-body" id="body-career"><div id="career-list"></div></div>
+</div>
+
+<!-- BUSINESS -->
+<div id="sec-business" class="section">
+<div class="section-header" onclick="toggleSection('business')">
+<h2>Business Operations <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openBusinessModal()">+ Item</button>
+</div>
+<div class="section-body" id="body-business"><div id="business-dashboard"></div></div>
+</div>
+
+<!-- HEALTH & TTC -->
+<div id="sec-health" class="section">
+<div class="section-header" onclick="toggleSection('health')">
+<h2 id="health-title">Health &amp; TTC <span class="chevron">&#9660;</span></h2>
+</div>
+<div class="section-body" id="body-health"><div id="health-dashboard"></div></div>
+</div>
+
+<!-- PREGNANCY MODE -->
+<div id="sec-pregnancy" class="section" style="display:none">
+<div class="section-header" onclick="toggleSection('pregnancy')">
+<h2>Pregnancy Tracker <span class="chevron">&#9660;</span></h2>
+</div>
+<div class="section-body" id="body-pregnancy"><div id="pregnancy-dashboard"></div></div>
+</div>
+
+<!-- HOME MAINTENANCE -->
+<div id="sec-home" class="section">
+<div class="section-header" onclick="toggleSection('home')">
+<h2>Home Maintenance Register <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();openHomeModal()">+ Asset</button>
+</div>
+<div class="section-body" id="body-home"><div id="home-list"></div></div>
+</div>
+
+<!-- SEASONAL RESET -->
+<div id="sec-seasonal" class="section">
+<div class="section-header" onclick="toggleSection('seasonal')">
+<h2>Seasonal Reset Engine <span class="chevron">&#9660;</span></h2>
+</div>
+<div class="section-body" id="body-seasonal"><div id="seasonal-checklist"></div></div>
+</div>
+
+<!-- RELATIONSHIP HEALTH -->
+<div id="sec-relationship" class="section">
+<div class="section-header" onclick="toggleSection('relationship')">
+<h2>Relationship Health <span class="chevron">&#9660;</span></h2>
+</div>
+<div class="section-body" id="body-relationship"><div id="relationship-dashboard"></div></div>
+</div>
+
+<!-- SUNDAY CEO -->
+<div id="sec-sunday" class="section">
+<div class="section-header" onclick="toggleSection('sunday')">
+<h2>Sunday CEO Meeting <span class="chevron">&#9660;</span></h2>
+<button class="btn-j btn-sm" onclick="event.stopPropagation();generateSundayReport()">Generate Report</button>
+</div>
+<div class="section-body" id="body-sunday"><div id="sunday-report"></div></div>
+</div>
+
+<!-- DATA MANAGEMENT -->
+<div id="sec-data" class="section">
+<div class="section-header" onclick="toggleSection('data')">
+<h2>Data &amp; Snapshots <span class="chevron">&#9660;</span></h2>
+</div>
+<div class="section-body" id="body-data">
+<div id="snapshots-list"></div>
+<div class="mt flex gap-sm">
+<button class="btn-w btn-sm" onclick="clearAllData()">Clear All Data</button>
+</div>
+</div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+<div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+const STORE_KEY='mg_life_os',SNAP_KEY='mg_life_os_snapshots';
+function defaultData(){return{version:3,pregnancyMode:false,currentMode:'executive',collapsedSections:{},
+pillars:[{id:uid(),title:'Career',objective:'Secure stable high-comp roles',kpis:'Salary target, interview pipeline',risks:'Market downturn',nextDecision:'Finalize target companies',owner:'Joint',timeline:'Q1 2026'},{id:uid(),title:'Family Expansion',objective:'Healthy conception and pregnancy',kpis:'Cycle tracking, health metrics',risks:'Stress, timing',nextDecision:'OB consultation',owner:'Joint',timeline:'2026'},{id:uid(),title:'Financial Infrastructure',objective:'12-month runway, investment growth',kpis:'Savings rate, burn rate, runway',risks:'Unexpected expenses',nextDecision:'Budget review',owner:'Joint',timeline:'Ongoing'},{id:uid(),title:'Business',objective:'Profitable inventory business',kpis:'Monthly profit, margins, reorder',risks:'Supply chain disruption',nextDecision:'Q1 inventory order',owner:'Gray',timeline:'Q1 2026'}],
+goals:[],roadmap:[],todos:[],
+chores:[{id:uid(),name:'Vacuum & Mop',owner:'Gray',frequency:7,lastDone:null,category:'household'},{id:uid(),name:'Laundry',owner:'Michelle',frequency:3,lastDone:null,category:'household'},{id:uid(),name:'Dishes',owner:'Joint',frequency:1,lastDone:null,category:'household'},{id:uid(),name:'Grocery Shopping',owner:'Joint',frequency:7,lastDone:null,category:'household'},{id:uid(),name:'Trash & Recycling',owner:'Gray',frequency:7,lastDone:null,category:'household'},{id:uid(),name:'Bathroom Deep Clean',owner:'Michelle',frequency:14,lastDone:null,category:'household'},{id:uid(),name:'Bill Pay Review',owner:'Michelle',frequency:30,lastDone:null,category:'financial'},{id:uid(),name:'Budget Check-in',owner:'Joint',frequency:14,lastDone:null,category:'financial'}],
+texts:[],birthdays:[],weekendPlans:[],
+travel:{points:[{program:'Amex MR',balance:0},{program:'Chase UR',balance:0},{program:'Airline Miles',balance:0},{program:'Hotel Points',balance:0}],trips:[]},
+finance:{income:0,burn:0,savings:0,contributions:0,businessProfit:0,severance:0,investments:0,savingsGrowth:0,margin:0},
+career:{applications:[],touchpoints:0,compTarget:0,energyLevel:7},
+business:{items:[],monthlyProfit:0},
+health:{cycleDay:1,cycleLength:28,dpo:0,sleep:7,stress:5,lastPeriod:null,regularCycle:true},
+pregnancy:{dueDate:null,obLogs:[],babyBudget:0,maternityLeaveWeeks:0,insuranceReviewed:false},
+home:[],
+seasonal:{q1:[{task:'Financial Review',done:false},{task:'Points Audit',done:false},{task:'Deep Clean',done:false},{task:'Subscription Audit',done:false},{task:'Relationship Reset',done:false}],q2:[{task:'Financial Review',done:false},{task:'Points Audit',done:false},{task:'Deep Clean',done:false},{task:'Subscription Audit',done:false},{task:'Relationship Reset',done:false}],q3:[{task:'Financial Review',done:false},{task:'Points Audit',done:false},{task:'Deep Clean',done:false},{task:'Subscription Audit',done:false},{task:'Relationship Reset',done:false}],q4:[{task:'Financial Review',done:false},{task:'Points Audit',done:false},{task:'Deep Clean',done:false},{task:'Subscription Audit',done:false},{task:'Relationship Reset',done:false}]},
+relationship:{dateNights:0,appreciations:0,conflictResolved:true,lastConflict:null,checkins:[]},
+sundayReports:[],kpiInputs:{runway:3,burnLessIncome:true,conflictFree:true,adminSplit:50}}}
+let D;
+function loadData(){try{const s=localStorage.getItem(STORE_KEY);D=s?JSON.parse(s):defaultData();if(!D.version||D.version<3){const dd=defaultData();Object.keys(dd).forEach(k=>{if(!(k in D))D[k]=dd[k]});D.version=3}}catch(e){D=defaultData()}}
+function saveData(){try{localStorage.setItem(STORE_KEY,JSON.stringify(D))}catch(e){}}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function gv(id){return document.getElementById(id)?.value||''}
+function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function daysSince(d){return Math.floor((new Date()-new Date(d))/86400000)}
+function daysUntil(d){return Math.ceil((new Date(d)-new Date())/86400000)}
+function fmt(n){return Math.round(n).toLocaleString()}
+function scoreColor(v){return v>=70?'var(--success)':v>=40?'var(--caution)':'var(--warn)'}
+
+// SECTION TOGGLE
+function toggleSection(id){const h=document.querySelector('#sec-'+id+' .section-header');const b=document.getElementById('body-'+id);if(!h||!b)return;h.classList.toggle('collapsed');b.classList.toggle('collapsed');D.collapsedSections[id]=b.classList.contains('collapsed');saveData()}
+function restoreCollapsed(){Object.keys(D.collapsedSections||{}).forEach(id=>{if(D.collapsedSections[id]){const h=document.querySelector('#sec-'+id+' .section-header');const b=document.getElementById('body-'+id);if(h&&b){h.classList.add('collapsed');b.classList.add('collapsed')}}})}
+
+// MODE
+function setMode(mode,btn){D.currentMode=mode;saveData();document.querySelectorAll('#mode-toggle button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');if(mode==='sunday'){generateSundayReport();document.getElementById('sec-sunday').scrollIntoView({behavior:'smooth'})}}
+
+// MODAL
+function openModal(html){document.getElementById('modal-content').innerHTML=html;document.getElementById('modal-overlay').classList.add('active')}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('active')}
+
+// KPI ENGINE
+function calcAdminSplit(){const tasks=D.todos.filter(t=>!t.completed);const all=[...tasks,...D.chores];let m=0,total=0;all.forEach(x=>{total++;if(x.owner==='Michelle')m++});return total?Math.round((m/total)*100):50}
+function calcCareerScore(){const c=D.career;return Math.min(Math.round(Math.min((c.touchpoints/3)*25,25)+Math.min((c.applications.length/2)*20,20)+Math.min(c.applications.filter(x=>x.stage==='interview'||x.stage==='offer').length*10,20)+(c.compTarget>150000?15:5)+(c.energyLevel/10)*20),100)}
+function calcFinanceScore(){const f=D.finance;const runway=f.burn>0?f.savings/f.burn:0;return Math.min(Math.round(Math.min((runway/6)*40,40)+(f.burn<=f.income?20:5)+Math.min(f.savingsGrowth*2,20)+Math.min(f.margin*0.5,20)),100)}
+function calcHealthScore(){const h=D.health;return Math.min(Math.round(Math.min((h.sleep/8)*30,30)+(10-h.stress)*4+(D.kpiInputs.conflictFree?20:5)+(h.regularCycle?20:10)),100)}
+function calcRelationshipScore(){const s=calcAdminSplit();return Math.min(Math.round((s>=45&&s<=55?30:15)+Math.min(D.relationship.dateNights*15,30)+Math.min(D.relationship.appreciations*5,20)+(D.relationship.conflictResolved?20:10)),100)}
+
+function renderScoreRing(value,label,color){const r=34,c=2*Math.PI*r,o=c-(value/100)*c;return'<div class="card" style="text-align:center;padding:16px"><div class="score-ring" style="margin:0 auto"><svg width="80" height="80"><circle cx="40" cy="40" r="'+r+'" fill="none" stroke="#333" stroke-width="6"/><circle cx="40" cy="40" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="6" stroke-dasharray="'+c+'" stroke-dashoffset="'+o+'" stroke-linecap="round"/></svg><div class="value" style="color:'+color+'">'+value+'</div></div><div style="margin-top:8px;font-size:.78rem;font-weight:600">'+label+'</div></div>'}
+function renderKPIs(){const cs=calcCareerScore(),fs=calcFinanceScore(),hs=calcHealthScore(),rs=calcRelationshipScore();document.getElementById('kpi-cards').innerHTML=renderScoreRing(cs,'Career Stability',scoreColor(cs))+renderScoreRing(fs,'Financial Stability',scoreColor(fs))+renderScoreRing(hs,'Health Stability',scoreColor(hs))+renderScoreRing(rs,'Relationship Balance',scoreColor(rs))}
+
+// PILLARS
+function renderPillars(){const g=document.getElementById('pillars-grid');if(!D.pillars.length){g.innerHTML='<div class="empty-state">No strategic pillars</div>';return}g.innerHTML=D.pillars.map(p=>'<div class="card owner-'+(p.owner==='Michelle'?'m':p.owner==='Gray'?'g':'j')+'"><div class="flex-b mb"><h3 style="font-size:.95rem">'+esc(p.title)+'</h3><div class="flex gap-sm"><button class="btn-d btn-sm" onclick="openPillarModal(\''+p.id+'\')">Edit</button><button class="btn-w btn-sm" onclick="deletePillar(\''+p.id+'\')">x</button></div></div><div class="tag">Objective</div><p style="font-size:.82rem;margin-bottom:8px">'+esc(p.objective)+'</p><div class="tag">KPIs</div><p style="font-size:.82rem;margin-bottom:8px">'+esc(p.kpis)+'</p><div class="tag">Risks</div><p style="font-size:.82rem;margin-bottom:8px">'+esc(p.risks)+'</p><div class="tag">Next Decision</div><p style="font-size:.82rem;margin-bottom:8px">'+esc(p.nextDecision)+'</p><div class="flex-b"><span class="badge badge-'+(p.owner==='Michelle'?'m':p.owner==='Gray'?'g':'j')+'">'+esc(p.owner)+'</span><span style="font-size:.72rem;color:var(--text2)">'+esc(p.timeline)+'</span></div></div>').join('')}
+function openPillarModal(id){const p=id?D.pillars.find(x=>x.id===id):{title:'',objective:'',kpis:'',risks:'',nextDecision:'',owner:'Joint',timeline:''};openModal('<h3>'+(id?'Edit':'Add')+' Strategic Pillar</h3><div class="form-row"><div><label>Title</label><input id="pf-title" value="'+esc(p.title)+'" style="width:100%"></div></div><div class="form-row"><div><label>Objective</label><textarea id="pf-obj">'+esc(p.objective)+'</textarea></div></div><div class="form-row"><div><label>KPIs</label><input id="pf-kpi" value="'+esc(p.kpis)+'" style="width:100%"></div></div><div class="form-row"><div><label>Risks</label><input id="pf-risk" value="'+esc(p.risks)+'" style="width:100%"></div></div><div class="form-row"><div><label>Next Decision</label><input id="pf-next" value="'+esc(p.nextDecision)+'" style="width:100%"></div></div><div class="form-row"><div><label>Owner</label><select id="pf-owner"><option '+(p.owner==='Michelle'?'selected':'')+'>Michelle</option><option '+(p.owner==='Gray'?'selected':'')+'>Gray</option><option '+(p.owner==='Joint'?'selected':'')+'>Joint</option></select></div><div><label>Timeline</label><input id="pf-time" value="'+esc(p.timeline)+'" style="width:100%"></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="savePillar(\''+( id||'')+'\')">Save</button></div>')}
+function savePillar(id){const obj={id:id||uid(),title:gv('pf-title'),objective:gv('pf-obj'),kpis:gv('pf-kpi'),risks:gv('pf-risk'),nextDecision:gv('pf-next'),owner:gv('pf-owner'),timeline:gv('pf-time')};if(id){const i=D.pillars.findIndex(x=>x.id===id);if(i>=0)D.pillars[i]=obj}else D.pillars.push(obj);saveData();closeModal();renderPillars()}
+function deletePillar(id){D.pillars=D.pillars.filter(x=>x.id!==id);saveData();renderPillars()}
+
+// GOALS
+function renderGoals(){const el=document.getElementById('goals-list');if(!D.goals.length){el.innerHTML='<div class="empty-state">No quarterly goals set</div>';return}const now=new Date();el.innerHTML='<table><thead><tr><th>Goal</th><th>Owner</th><th>Target</th><th>Progress</th><th>Status</th><th></th></tr></thead><tbody>'+D.goals.map(g=>{const behind=g.targetDate&&new Date(g.targetDate)<now&&g.progress<100;return'<tr style="'+(behind?'background:rgba(255,59,59,.06)':'')+'"><td>'+esc(g.name)+'</td><td><span class="badge badge-'+(g.owner==='Michelle'?'m':g.owner==='Gray'?'g':'j')+'">'+g.owner+'</span></td><td style="font-size:.78rem">'+(g.targetDate||'—')+'</td><td><div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:'+g.progress+'%;background:'+(g.progress>=100?'var(--success)':behind?'var(--warn)':'var(--joint)')+'"></div></div><span style="font-size:.72rem;margin-left:4px">'+g.progress+'%</span></td><td>'+(behind?'<span class="badge badge-w">Behind</span>':g.progress>=100?'<span class="badge badge-j">Done</span>':'<span class="badge" style="background:#333;color:var(--text2)">Active</span>')+'</td><td><div class="flex gap-sm"><input type="range" min="0" max="100" value="'+g.progress+'" style="width:60px" oninput="updateGoalProgress(\''+g.id+'\',this.value)"><button class="btn-w btn-sm" onclick="deleteGoal(\''+g.id+'\')">x</button></div></td></tr>'}).join('')+'</tbody></table>'}
+function openGoalModal(){openModal('<h3>Add Quarterly Goal</h3><div class="form-row"><div><label>Goal</label><input id="gf-name" style="width:100%"></div></div><div class="form-row"><div><label>Owner</label><select id="gf-owner"><option>Michelle</option><option>Gray</option><option>Joint</option></select></div><div><label>Target Date</label><input type="date" id="gf-date"></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="saveGoal()">Save</button></div>')}
+function saveGoal(){D.goals.push({id:uid(),name:gv('gf-name'),owner:gv('gf-owner'),targetDate:gv('gf-date'),progress:0});saveData();closeModal();renderGoals()}
+function updateGoalProgress(id,v){const g=D.goals.find(x=>x.id===id);if(g){g.progress=parseInt(v);saveData();renderGoals()}}
+function deleteGoal(id){D.goals=D.goals.filter(x=>x.id!==id);saveData();renderGoals()}
+
+// ROADMAP
+function renderRoadmap(){const el=document.getElementById('roadmap-list');if(!D.roadmap.length){el.innerHTML='<div class="empty-state">No milestones</div>';return}const now=new Date();el.innerHTML=D.roadmap.sort((a,b)=>new Date(a.date)-new Date(b.date)).map(m=>{const d=new Date(m.date);const diff=Math.ceil((d-now)/86400000);const isPast=diff<0&&!m.done;return'<div class="card2 mb flex-b" style="border-left:3px solid '+(isPast?'var(--warn)':m.done?'var(--success)':'var(--joint)')+'"><div><strong style="font-size:.85rem">'+esc(m.name)+'</strong><div style="font-size:.72rem;color:var(--text2)">'+m.date+' <span class="badge badge-'+(m.owner==='Michelle'?'m':m.owner==='Gray'?'g':'j')+'">'+m.owner+'</span> '+(isPast?'<span class="badge badge-w">Overdue</span>':m.done?'<span class="badge badge-j">Done</span>':diff+'d away')+'</div></div><div class="flex gap-sm"><label style="font-size:.72rem;cursor:pointer"><input type="checkbox" '+(m.done?'checked':'')+' onchange="toggleRoadmap(\''+m.id+'\',this.checked)"> Done</label><button class="btn-w btn-sm" onclick="deleteRoadmap(\''+m.id+'\')">x</button></div></div>'}).join('')}
+function openRoadmapModal(){openModal('<h3>Add 90-Day Milestone</h3><div class="form-row"><div><label>Milestone</label><input id="rf-name" style="width:100%"></div></div><div class="form-row"><div><label>Date</label><input type="date" id="rf-date"></div><div><label>Owner</label><select id="rf-owner"><option>Michelle</option><option>Gray</option><option>Joint</option></select></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="saveRoadmap()">Save</button></div>')}
+function saveRoadmap(){D.roadmap.push({id:uid(),name:gv('rf-name'),date:gv('rf-date'),owner:gv('rf-owner'),done:false});saveData();closeModal();renderRoadmap()}
+function toggleRoadmap(id,v){const m=D.roadmap.find(x=>x.id===id);if(m){m.done=v;saveData();renderRoadmap()}}
+function deleteRoadmap(id){D.roadmap=D.roadmap.filter(x=>x.id!==id);saveData();renderRoadmap()}
+
+// WEEKLY ENGINE
+function renderWeekly(){const el=document.getElementById('weekly-panels');const now=new Date();const overdue=D.todos.filter(t=>!t.completed&&t.dueDate&&new Date(t.dueDate)<now);const top3=D.todos.filter(t=>!t.completed&&t.priority==='high').slice(0,3);const upcoming14=D.birthdays.filter(b=>{const d=daysUntilBday(b.date);return d>=0&&d<=14});const textsDue=D.texts.filter(t=>!t.lastContact||daysSince(t.lastContact)>=t.frequency);const finDue=D.chores.filter(c=>c.category==='financial'&&isChoreOverdue(c));
+el.innerHTML='<div class="card"><h4 style="font-size:.85rem;margin-bottom:8px;color:var(--joint)">Top 3 Priorities</h4>'+(top3.length?top3.map(t=>'<div class="card2 mb" style="font-size:.82rem">'+esc(t.text)+' <span class="badge badge-'+(t.owner==='Michelle'?'m':t.owner==='Gray'?'g':'j')+'">'+t.owner+'</span></div>').join(''):'<div style="color:var(--text2);font-size:.8rem">No high priority items</div>')+'</div><div class="card"><h4 style="font-size:.85rem;margin-bottom:8px;color:var(--warn)">Overdue ('+overdue.length+')</h4>'+(overdue.slice(0,5).map(t=>'<div class="card2 mb" style="font-size:.82rem;border-left:2px solid var(--warn)">'+esc(t.text)+'<div style="font-size:.7rem;color:var(--warn)">Due: '+t.dueDate+'</div></div>').join('')||'<div style="color:var(--text2);font-size:.8rem">All clear</div>')+'</div><div class="card"><h4 style="font-size:.85rem;margin-bottom:8px;color:var(--michelle)">Upcoming</h4>'+(upcoming14.map(b=>'<div class="card2 mb" style="font-size:.82rem">'+esc(b.name)+' <span class="countdown '+(daysUntilBday(b.date)<=7?'urgent':'soon')+'">'+daysUntilBday(b.date)+'d</span></div>').join('')+(textsDue.length?'<div style="font-size:.78rem;color:var(--caution);margin-top:4px">'+textsDue.length+' texts due</div>':'')+(finDue.length?'<div style="font-size:.78rem;color:var(--warn);margin-top:4px">'+finDue.length+' financial tasks overdue</div>':''))+'</div>'}
+
+// TODOS
+let todoFilter='all';
+function renderTodos(){const el=document.getElementById('todo-list');const now=new Date();let items=D.todos;if(todoFilter==='active')items=items.filter(t=>!t.completed);else if(todoFilter==='completed')items=items.filter(t=>t.completed);else if(todoFilter==='overdue')items=items.filter(t=>!t.completed&&t.dueDate&&new Date(t.dueDate)<now);if(!items.length){el.innerHTML='<div class="empty-state">No tasks</div>';renderTodoAnalytics();return}el.innerHTML=items.map(t=>{const od=!t.completed&&t.dueDate&&new Date(t.dueDate)<now;const pc=t.priority==='high'?'var(--warn)':t.priority==='medium'?'var(--caution)':'var(--text2)';return'<div class="card2 mb flex-b" draggable="true" ondragstart="dragTodo(event,\''+t.id+'\')" ondrop="dropTodo(event,\''+t.id+'\')" ondragover="event.preventDefault()" style="opacity:'+(t.completed?'.5':'1')+';border-left:3px solid '+pc+'"><div class="flex" style="flex:1"><span class="drag-handle">&#x2807;</span><input type="checkbox" '+(t.completed?'checked':'')+' onchange="toggleTodo(\''+t.id+'\',this.checked)"><div><span style="font-size:.82rem;'+(t.completed?'text-decoration:line-through':'')+'">'+esc(t.text)+'</span><div style="font-size:.7rem;color:var(--text2)">'+t.category+(t.dueDate?' | Due: '+t.dueDate:'')+(od?' <span style="color:var(--warn)">OVERDUE</span>':'')+'</div></div></div><div class="flex gap-sm"><span class="badge badge-'+(t.owner==='Michelle'?'m':t.owner==='Gray'?'g':'j')+'">'+t.owner+'</span><button class="btn-w btn-sm" onclick="deleteTodo(\''+t.id+'\')">x</button></div></div>'}).join('');renderTodoAnalytics()}
+function addTodo(){const text=gv('todo-input');if(!text)return;D.todos.push({id:uid(),text:text,owner:gv('todo-owner-sel'),priority:gv('todo-priority-sel'),category:gv('todo-cat-sel'),completed:false,dueDate:'',createdAt:new Date().toISOString()});document.getElementById('todo-input').value='';saveData();renderTodos();renderWeekly();renderAdminBalancer();renderKPIs()}
+function toggleTodo(id,v){const t=D.todos.find(x=>x.id===id);if(t){t.completed=v;if(v)t.completedAt=new Date().toISOString();saveData();renderTodos();renderAdminBalancer();renderKPIs()}}
+function deleteTodo(id){D.todos=D.todos.filter(x=>x.id!==id);saveData();renderTodos();renderAdminBalancer();renderKPIs()}
+function filterTodos(f,btn){todoFilter=f;document.querySelectorAll('#body-todo .tab-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderTodos()}
+let dragId=null;function dragTodo(e,id){dragId=id;e.dataTransfer.effectAllowed='move'}
+function dropTodo(e,tid){e.preventDefault();if(!dragId||dragId===tid)return;const from=D.todos.findIndex(x=>x.id===dragId);const to=D.todos.findIndex(x=>x.id===tid);const item=D.todos.splice(from,1)[0];D.todos.splice(to,0,item);dragId=null;saveData();renderTodos()}
+function renderTodoAnalytics(){const total=D.todos.length,done=D.todos.filter(t=>t.completed).length;const mT=D.todos.filter(t=>!t.completed&&t.owner==='Michelle').length;const gT=D.todos.filter(t=>!t.completed&&t.owner==='Gray').length;document.getElementById('todo-analytics').innerHTML='<div class="flex-b"><span>Total: '+total+' | Active: '+(total-done)+' | Done: '+done+'</span><span><span style="color:var(--michelle)">M: '+mT+'</span> | <span style="color:var(--gray)">G: '+gT+'</span></span></div>'}
+
+// CHORES
+function isChoreOverdue(c){if(!c.lastDone)return true;return daysSince(c.lastDone)>=c.frequency}
+function nextDue(c){if(!c.lastDone)return'Now';const d=new Date(c.lastDone);d.setDate(d.getDate()+c.frequency);return d.toISOString().split('T')[0]}
+function renderChores(){const el=document.getElementById('chores-list');const sorted=[...D.chores].sort((a,b)=>isChoreOverdue(b)-isChoreOverdue(a));el.innerHTML='<table><thead><tr><th>Chore</th><th>Owner</th><th>Freq</th><th>Last Done</th><th>Next Due</th><th></th></tr></thead><tbody>'+sorted.map(c=>{const od=isChoreOverdue(c);return'<tr style="'+(od?'background:rgba(255,59,59,.06)':'')+'"><td>'+esc(c.name)+'</td><td><span class="badge badge-'+(c.owner==='Michelle'?'m':c.owner==='Gray'?'g':'j')+'">'+c.owner+'</span></td><td>'+c.frequency+'d</td><td style="font-size:.78rem">'+(c.lastDone||'Never')+'</td><td>'+(od?'<span style="color:var(--warn)">Overdue</span>':nextDue(c))+'</td><td><div class="flex gap-sm"><button class="btn-j btn-sm" onclick="markChoreDone(\''+c.id+'\')">Done</button><button class="btn-d btn-sm" onclick="openChoreModal(\''+c.id+'\')">Edit</button><button class="btn-w btn-sm" onclick="deleteChore(\''+c.id+'\')">x</button></div></td></tr>'}).join('')+'</tbody></table>'}
+function markChoreDone(id){const c=D.chores.find(x=>x.id===id);if(c){c.lastDone=new Date().toISOString().split('T')[0];saveData();renderChores();renderKPIs();renderAlerts()}}
+function openChoreModal(id){const c=id?D.chores.find(x=>x.id===id):{name:'',owner:'Joint',frequency:7,category:'household'};openModal('<h3>'+(id?'Edit':'Add')+' Chore</h3><div class="form-row"><div><label>Name</label><input id="cf-name" value="'+esc(c.name)+'" style="width:100%"></div></div><div class="form-row"><div><label>Owner</label><select id="cf-owner"><option '+(c.owner==='Michelle'?'selected':'')+'>Michelle</option><option '+(c.owner==='Gray'?'selected':'')+'>Gray</option><option '+(c.owner==='Joint'?'selected':'')+'>Joint</option></select></div><div><label>Frequency (days)</label><input type="number" id="cf-freq" value="'+c.frequency+'"></div><div><label>Category</label><select id="cf-cat"><option '+(c.category==='household'?'selected':'')+' value="household">Household</option><option '+(c.category==='financial'?'selected':'')+' value="financial">Financial</option><option '+(c.category==='social'?'selected':'')+' value="social">Social</option></select></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="saveChore(\''+(id||'')+'\')">Save</button></div>')}
+function saveChore(id){const obj={id:id||uid(),name:gv('cf-name'),owner:gv('cf-owner'),frequency:parseInt(gv('cf-freq'))||7,category:gv('cf-cat'),lastDone:id?(D.chores.find(x=>x.id===id)||{}).lastDone:null};if(id){const i=D.chores.findIndex(x=>x.id===id);if(i>=0)D.chores[i]=obj}else D.chores.push(obj);saveData();closeModal();renderChores();renderAdminBalancer()}
+function deleteChore(id){D.chores=D.chores.filter(x=>x.id!==id);saveData();renderChores();renderAdminBalancer()}
+
+// ADMIN BALANCER
+function renderAdminBalancer(){const el=document.getElementById('admin-balancer');const tasks=D.todos.filter(t=>!t.completed);const all=[...tasks,...D.chores];const mT=all.filter(x=>x.owner==='Michelle').length;const gT=all.filter(x=>x.owner==='Gray').length;const jT=all.filter(x=>x.owner==='Joint').length;const total=mT+gT+jT;const mP=total?Math.round(mT/total*100):0;const gP=total?Math.round(gT/total*100):0;const cats=['social','financial','household','career','health','business','general'];const catB=cats.map(cat=>{const ci=all.filter(x=>x.category===cat);return{cat:cat,m:ci.filter(x=>x.owner==='Michelle').length,g:ci.filter(x=>x.owner==='Gray').length,t:ci.length}}).filter(x=>x.t>0);const imb=Math.abs(mP-gP)>20;
+el.innerHTML='<div class="grid g2"><div class="card"><h4 style="font-size:.85rem;margin-bottom:12px">Overall Split</h4><div class="flex-b mb"><span style="color:var(--michelle)">Michelle: '+mP+'%</span><span style="color:var(--gray)">Gray: '+gP+'%</span></div><div class="progress-bar" style="height:10px;display:flex;overflow:hidden;border-radius:5px"><div style="width:'+mP+'%;background:var(--michelle);height:100%"></div><div style="width:'+gP+'%;background:var(--gray);height:100%"></div><div style="flex:1;background:var(--joint);height:100%"></div></div>'+(imb?'<div class="mt" style="font-size:.78rem;color:var(--warn)">Admin load imbalance ('+Math.abs(mP-gP)+'% gap) — affects Relationship Score</div>':'<div class="mt" style="font-size:.78rem;color:var(--success)">Balanced workload</div>')+'</div><div class="card"><h4 style="font-size:.85rem;margin-bottom:12px">Category Breakdown</h4>'+catB.map(c=>'<div class="flex-b" style="font-size:.78rem;margin-bottom:4px"><span style="text-transform:capitalize">'+c.cat+'</span><span><span style="color:var(--michelle)">M:'+c.m+'</span> <span style="color:var(--gray)">G:'+c.g+'</span></span></div>').join('')+'</div></div>'}
+
+// TEXTS
+function renderTexts(){const el=document.getElementById('texts-list');if(!D.texts.length){el.innerHTML='<div class="empty-state">No contacts tracked</div>';return}const sorted=[...D.texts].sort((a,b)=>{const ao=!a.lastContact||daysSince(a.lastContact)>=a.frequency;const bo=!b.lastContact||daysSince(b.lastContact)>=b.frequency;return bo-ao});el.innerHTML='<table><thead><tr><th>Contact</th><th>Owner</th><th>Freq</th><th>Last</th><th>Status</th><th></th></tr></thead><tbody>'+sorted.map(t=>{const od=!t.lastContact||daysSince(t.lastContact)>=t.frequency;const ds=t.lastContact&&daysSince(t.lastContact)>=t.frequency-3&&!od;return'<tr><td>'+esc(t.name)+'</td><td><span class="badge badge-'+(t.owner==='Michelle'?'m':t.owner==='Gray'?'g':'j')+'">'+t.owner+'</span></td><td>'+t.frequency+'d</td><td style="font-size:.78rem">'+(t.lastContact||'Never')+'</td><td>'+(od?'<span class="badge badge-w">Overdue</span>':ds?'<span class="badge" style="background:rgba(255,216,59,.15);color:var(--caution)">Due Soon</span>':'<span class="badge badge-j">OK</span>')+'</td><td><div class="flex gap-sm"><button class="btn-j btn-sm" onclick="markTexted(\''+t.id+'\')">Texted</button><button class="btn-w btn-sm" onclick="deleteText(\''+t.id+'\')">x</button></div></td></tr>'}).join('')+'</tbody></table>'}
+function openTextModal(){openModal('<h3>Add Contact</h3><div class="form-row"><div><label>Name</label><input id="tf-name" style="width:100%"></div></div><div class="form-row"><div><label>Owner</label><select id="tf-owner"><option>Michelle</option><option>Gray</option><option>Joint</option></select></div><div><label>Check-in Frequency (days)</label><input type="number" id="tf-freq" value="14"></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="saveText()">Save</button></div>')}
+function saveText(){D.texts.push({id:uid(),name:gv('tf-name'),owner:gv('tf-owner'),frequency:parseInt(gv('tf-freq'))||14,lastContact:null});saveData();closeModal();renderTexts()}
+function markTexted(id){const t=D.texts.find(x=>x.id===id);if(t){t.lastContact=new Date().toISOString().split('T')[0];saveData();renderTexts()}}
+function deleteText(id){D.texts=D.texts.filter(x=>x.id!==id);saveData();renderTexts()}
+
+// BIRTHDAYS
+function daysUntilBday(ds){if(!ds)return 999;const now=new Date();const p=ds.split('-');let next=new Date(now.getFullYear(),parseInt(p[1])-1,parseInt(p[2]));if(next<now)next.setFullYear(next.getFullYear()+1);return Math.ceil((next-now)/86400000)}
+function renderBirthdays(){const el=document.getElementById('birthdays-list');if(!D.birthdays.length){el.innerHTML='<div class="empty-state">No entries</div>';return}const sorted=[...D.birthdays].sort((a,b)=>daysUntilBday(a.date)-daysUntilBday(b.date));el.innerHTML='<table><thead><tr><th>Name/Event</th><th>Date</th><th>Type</th><th>Days</th><th>Gift</th><th>Budget</th><th></th></tr></thead><tbody>'+sorted.map(b=>{const d=daysUntilBday(b.date);return'<tr><td>'+esc(b.name)+'</td><td style="font-size:.78rem">'+b.date+'</td><td>'+( b.type||'Birthday')+'</td><td><span class="countdown '+(d<=7?'urgent':d<=14?'soon':'ok')+'">'+d+'d</span></td><td>'+(b.giftStatus||'—')+'</td><td>'+(b.budget?'$'+b.budget:'—')+'</td><td><div class="flex gap-sm"><button class="btn-d btn-sm" onclick="openBirthdayModal(\''+b.id+'\')">Edit</button><button class="btn-w btn-sm" onclick="deleteBirthday(\''+b.id+'\')">x</button></div></td></tr>'}).join('')+'</tbody></table>'}
+function openBirthdayModal(id){const b=id?D.birthdays.find(x=>x.id===id):{name:'',date:'',type:'Birthday',giftStatus:'Not Started',budget:''};openModal('<h3>'+(id?'Edit':'Add')+' Entry</h3><div class="form-row"><div><label>Name</label><input id="bf-name" value="'+esc(b.name)+'" style="width:100%"></div></div><div class="form-row"><div><label>Date</label><input type="date" id="bf-date" value="'+b.date+'"></div><div><label>Type</label><select id="bf-type"><option '+(b.type==='Birthday'?'selected':'')+'>Birthday</option><option '+(b.type==='Anniversary'?'selected':'')+'>Anniversary</option><option '+(b.type==='Holiday'?'selected':'')+'>Holiday</option></select></div></div><div class="form-row"><div><label>Gift Status</label><select id="bf-gift"><option '+(b.giftStatus==='Not Started'?'selected':'')+'>Not Started</option><option '+(b.giftStatus==='Idea'?'selected':'')+'>Idea</option><option '+(b.giftStatus==='Purchased'?'selected':'')+'>Purchased</option><option '+(b.giftStatus==='Wrapped'?'selected':'')+'>Wrapped</option><option '+(b.giftStatus==='Sent'?'selected':'')+'>Sent</option></select></div><div><label>Budget ($)</label><input type="number" id="bf-budget" value="'+b.budget+'"></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="saveBirthday(\''+(id||'')+'\')">Save</button></div>')}
+function saveBirthday(id){const obj={id:id||uid(),name:gv('bf-name'),date:gv('bf-date'),type:gv('bf-type'),giftStatus:gv('bf-gift'),budget:gv('bf-budget')};if(id){const i=D.birthdays.findIndex(x=>x.id===id);if(i>=0)D.birthdays[i]=obj}else D.birthdays.push(obj);saveData();closeModal();renderBirthdays();renderWeekly()}
+function deleteBirthday(id){D.birthdays=D.birthdays.filter(x=>x.id!==id);saveData();renderBirthdays()}
+
+// WEEKEND PLANNER
+function renderWeekend(){const el=document.getElementById('weekend-grid');if(!D.weekendPlans.length){el.innerHTML='<div class="empty-state">No weekend plans</div>';return}el.innerHTML=D.weekendPlans.map(p=>{const d=daysUntil(p.date);return'<div class="card"><div class="flex-b mb"><strong style="font-size:.85rem">'+esc(p.title)+'</strong><span class="countdown '+(d<=3?'urgent':d<=7?'soon':'ok')+'">'+(d>=0?d+'d':'Past')+'</span></div><div class="tag">Date</div><p style="font-size:.8rem">'+p.date+'</p><div class="tag mt">Must-do</div><p style="font-size:.8rem">'+esc(p.mustDo||'—')+'</p><div class="tag mt">Fun Plan</div><p style="font-size:.8rem">'+esc(p.funPlan||'—')+'</p><div class="flex-b mt"><span class="badge badge-'+(p.owner==='Michelle'?'m':p.owner==='Gray'?'g':'j')+'">'+p.owner+'</span><span style="font-size:.72rem">'+(p.budget?'$'+p.budget:'')+' | '+(p.booked?'Booked':'Not Booked')+'</span></div><div class="mt flex gap-sm"><button class="btn-d btn-sm" onclick="openWeekendModal(\''+p.id+'\')">Edit</button><button class="btn-w btn-sm" onclick="deleteWeekend(\''+p.id+'\')">x</button></div></div>'}).join('')}
+function openWeekendModal(id){const p=id?D.weekendPlans.find(x=>x.id===id):{title:'',date:'',mustDo:'',funPlan:'',owner:'Joint',budget:'',booked:false};openModal('<h3>'+(id?'Edit':'Add')+' Weekend Plan</h3><div class="form-row"><div><label>Title</label><input id="wf-title" value="'+esc(p.title)+'" style="width:100%"></div></div><div class="form-row"><div><label>Date</label><input type="date" id="wf-date" value="'+p.date+'"></div><div><label>Owner</label><select id="wf-owner"><option '+(p.owner==='Michelle'?'selected':'')+'>Michelle</option><option '+(p.owner==='Gray'?'selected':'')+'>Gray</option><option '+(p.owner==='Joint'?'selected':'')+'>Joint</option></select></div></div><div class="form-row"><div><label>Must-Do</label><textarea id="wf-must">'+esc(p.mustDo||'')+'</textarea></div></div><div class="form-row"><div><label>Fun Plan</label><textarea id="wf-fun">'+esc(p.funPlan||'')+'</textarea></div></div><div class="form-row"><div><label>Budget ($)</label><input type="number" id="wf-budget" value="'+p.budget+'"></div><div><label>Booked?</label><select id="wf-booked"><option value="false" '+(!p.booked?'selected':'')+'>No</option><option value="true" '+(p.booked?'selected':'')+'>Yes</option></select></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="saveWeekend(\''+(id||'')+'\')">Save</button></div>')}
+function saveWeekend(id){const obj={id:id||uid(),title:gv('wf-title'),date:gv('wf-date'),mustDo:gv('wf-must'),funPlan:gv('wf-fun'),owner:gv('wf-owner'),budget:gv('wf-budget'),booked:gv('wf-booked')==='true'};if(id){const i=D.weekendPlans.findIndex(x=>x.id===id);if(i>=0)D.weekendPlans[i]=obj}else D.weekendPlans.push(obj);saveData();closeModal();renderWeekend()}
+function deleteWeekend(id){D.weekendPlans=D.weekendPlans.filter(x=>x.id!==id);saveData();renderWeekend()}
+
+// TRAVEL
+function renderTravel(){const pts=document.getElementById('travel-points');pts.innerHTML='<h4 style="font-size:.85rem;margin-bottom:8px">Points Balances</h4><div class="grid g4">'+D.travel.points.map((p,i)=>'<div class="card2"><div class="tag">'+esc(p.program)+'</div><input type="number" class="inline-edit" value="'+p.balance+'" onchange="D.travel.points['+i+'].balance=parseInt(this.value)||0;saveData()" style="font-size:1.1rem;font-weight:700"></div>').join('')+'</div>';const el=document.getElementById('travel-list');if(!D.travel.trips.length){el.innerHTML='<div class="empty-state">No trips</div>';return}el.innerHTML='<table><thead><tr><th>Trip</th><th>Dates</th><th>Flights</th><th>Hotel</th><th>Points</th><th>Budget</th><th>Actual</th><th></th></tr></thead><tbody>'+D.travel.trips.map(t=>'<tr><td>'+esc(t.name)+'</td><td style="font-size:.78rem">'+t.startDate+' - '+t.endDate+'</td><td style="font-size:.78rem">'+esc(t.flights||'—')+'</td><td style="font-size:.78rem">'+esc(t.hotel||'—')+'</td><td>'+(t.pointsUsed||0)+'</td><td>$'+(t.budget||0)+'</td><td>$'+(t.actual||0)+'</td><td><div class="flex gap-sm"><button class="btn-d btn-sm" onclick="openTravelModal(\''+t.id+'\')">Edit</button><button class="btn-w btn-sm" onclick="deleteTrip(\''+t.id+'\')">x</button></div></td></tr>').join('')+'</tbody></table>'}
+function openTravelModal(id){const t=id?D.travel.trips.find(x=>x.id===id):{name:'',startDate:'',endDate:'',flights:'',hotel:'',pointsUsed:0,budget:0,actual:0,perks:''};openModal('<h3>'+(id?'Edit':'Add')+' Trip</h3><div class="form-row"><div><label>Trip Name</label><input id="tv-name" value="'+esc(t.name)+'" style="width:100%"></div></div><div class="form-row"><div><label>Start</label><input type="date" id="tv-start" value="'+t.startDate+'"></div><div><label>End</label><input type="date" id="tv-end" value="'+t.endDate+'"></div></div><div class="form-row"><div><label>Flights</label><input id="tv-flights" value="'+esc(t.flights||'')+'" style="width:100%"></div></div><div class="form-row"><div><label>Hotel</label><input id="tv-hotel" value="'+esc(t.hotel||'')+'" style="width:100%"></div></div><div class="form-row"><div><label>Points Used</label><input type="number" id="tv-pts" value="'+t.pointsUsed+'"></div><div><label>Budget ($)</label><input type="number" id="tv-budget" value="'+t.budget+'"></div><div><label>Actual ($)</label><input type="number" id="tv-actual" value="'+t.actual+'"></div></div><div class="form-row"><div><label>Elite Perks</label><input id="tv-perks" value="'+esc(t.perks||'')+'" style="width:100%"></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="saveTrip(\''+(id||'')+'\')">Save</button></div>')}
+function saveTrip(id){const obj={id:id||uid(),name:gv('tv-name'),startDate:gv('tv-start'),endDate:gv('tv-end'),flights:gv('tv-flights'),hotel:gv('tv-hotel'),pointsUsed:parseInt(gv('tv-pts'))||0,budget:parseInt(gv('tv-budget'))||0,actual:parseInt(gv('tv-actual'))||0,perks:gv('tv-perks')};if(id){const i=D.travel.trips.findIndex(x=>x.id===id);if(i>=0)D.travel.trips[i]=obj}else D.travel.trips.push(obj);saveData();closeModal();renderTravel()}
+function deleteTrip(id){D.travel.trips=D.travel.trips.filter(x=>x.id!==id);saveData();renderTravel()}
+
+// FINANCE
+function renderFinance(){const f=D.finance;const el=document.getElementById('finance-dashboard');const runway=f.burn>0?Math.round(f.savings/f.burn*10)/10:0;const f3=f.savings+(f.income-f.burn)*3;const f6=f.savings+(f.income-f.burn)*6;const f12=f.savings+(f.income-f.burn)*12;
+el.innerHTML='<div class="grid g2"><div class="card"><h4 style="font-size:.85rem;margin-bottom:12px">Income & Expenses</h4>'+finF('Monthly Income','fin-income',f.income)+finF('Monthly Burn','fin-burn',f.burn)+finF('Savings','fin-savings',f.savings)+finF('Monthly Contributions','fin-contrib',f.contributions)+finF('Business Profit','fin-bizprofit',f.businessProfit)+finF('Severance Remaining','fin-sev',f.severance)+finF('Investment Balances','fin-inv',f.investments)+finF('Savings Growth %','fin-sg',f.savingsGrowth)+finF('Margin %','fin-margin',f.margin)+'<button class="btn-j btn-sm mt" onclick="saveFinance()">Update</button></div><div class="card"><h4 style="font-size:.85rem;margin-bottom:12px">Forecasts</h4><div class="card2 mb"><div class="tag">Runway</div><div style="font-size:1.3rem;font-weight:700;color:'+(runway<3?'var(--warn)':runway<6?'var(--caution)':'var(--success)')+'">'+runway+' months</div></div><div class="card2 mb"><div class="tag">3-Month Forecast</div><div style="font-size:1rem;font-weight:600;color:'+(f3<0?'var(--warn)':'var(--success)')+'">$'+fmt(f3)+'</div></div><div class="card2 mb"><div class="tag">6-Month Forecast</div><div style="font-size:1rem;font-weight:600;color:'+(f6<0?'var(--warn)':'var(--success)')+'">$'+fmt(f6)+'</div></div><div class="card2 mb"><div class="tag">12-Month Forecast</div><div style="font-size:1rem;font-weight:600;color:'+(f12<0?'var(--warn)':'var(--success)')+'">$'+fmt(f12)+'</div></div>'+(runway<3?'<div style="color:var(--warn);font-size:.8rem;margin-top:8px">Runway below 3 months</div>':'')+(f.burn>f.income?'<div style="color:var(--warn);font-size:.8rem">Burn exceeds income</div>':'')+'</div></div>'}
+function finF(l,id,v){return'<div class="flex-b" style="margin-bottom:6px"><label style="font-size:.78rem">'+l+'</label><input type="number" id="'+id+'" value="'+v+'" class="inline-edit" style="width:120px;text-align:right"></div>'}
+function saveFinance(){['income','burn','savings','contributions','businessProfit','severance','investments','savingsGrowth','margin'].forEach((k,i)=>{const ids=['fin-income','fin-burn','fin-savings','fin-contrib','fin-bizprofit','fin-sev','fin-inv','fin-sg','fin-margin'];D.finance[k]=parseFloat(gv(ids[i]))||0});saveData();renderFinance();renderKPIs();renderAlerts()}
+
+// CAREER
+function renderCareer(){const el=document.getElementById('career-list');const c=D.career;el.innerHTML='<div class="grid g3 mb"><div class="card2"><div class="tag">Touchpoints This Week</div><input type="number" class="inline-edit" value="'+c.touchpoints+'" style="font-size:1.1rem;font-weight:700" onchange="D.career.touchpoints=parseInt(this.value)||0;saveData();renderKPIs()"></div><div class="card2"><div class="tag">Comp Target ($)</div><input type="number" class="inline-edit" value="'+c.compTarget+'" style="font-size:1.1rem;font-weight:700" onchange="D.career.compTarget=parseInt(this.value)||0;saveData();renderKPIs()"></div><div class="card2"><div class="tag">Energy Level (1-10)</div><input type="range" min="1" max="10" value="'+c.energyLevel+'" style="width:100%" oninput="D.career.energyLevel=parseInt(this.value);saveData();renderKPIs();this.nextElementSibling.textContent=this.value"><span>'+c.energyLevel+'</span></div></div>'+(c.applications.length?'<table><thead><tr><th>Company</th><th>Role</th><th>Stage</th><th>Comp</th><th>Follow-up</th><th></th></tr></thead><tbody>'+c.applications.map(a=>{const fu=a.followUp&&daysUntil(a.followUp)<=0;return'<tr><td>'+esc(a.company)+'</td><td style="font-size:.78rem">'+esc(a.role)+'</td><td><select class="inline-edit" style="width:auto" onchange="updateAppStage(\''+a.id+'\',this.value)"><option '+(a.stage==='applied'?'selected':'')+' value="applied">Applied</option><option '+(a.stage==='screening'?'selected':'')+' value="screening">Screening</option><option '+(a.stage==='interview'?'selected':'')+' value="interview">Interview</option><option '+(a.stage==='offer'?'selected':'')+' value="offer">Offer</option><option '+(a.stage==='rejected'?'selected':'')+' value="rejected">Rejected</option></select></td><td style="font-size:.78rem">'+(a.comp?'$'+fmt(a.comp):'—')+'</td><td>'+(a.followUp?'<span style="color:'+(fu?'var(--warn)':'var(--text2)')+';font-size:.78rem">'+a.followUp+(fu?' !!':'')+'</span>':'—')+'</td><td><button class="btn-w btn-sm" onclick="deleteApp(\''+a.id+'\')">x</button></td></tr>'}).join('')+'</tbody></table>':'<div class="empty-state">No applications</div>')}
+function openCareerModal(){openModal('<h3>Add Application</h3><div class="form-row"><div><label>Company</label><input id="ca-comp" style="width:100%"></div></div><div class="form-row"><div><label>Role</label><input id="ca-role" style="width:100%"></div></div><div class="form-row"><div><label>Stage</label><select id="ca-stage"><option value="applied">Applied</option><option value="screening">Screening</option><option value="interview">Interview</option></select></div><div><label>Comp ($)</label><input type="number" id="ca-pay"></div><div><label>Follow-up</label><input type="date" id="ca-fu"></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="saveApp()">Save</button></div>')}
+function saveApp(){D.career.applications.push({id:uid(),company:gv('ca-comp'),role:gv('ca-role'),stage:gv('ca-stage'),comp:parseInt(gv('ca-pay'))||0,followUp:gv('ca-fu')});saveData();closeModal();renderCareer();renderKPIs()}
+function updateAppStage(id,v){const a=D.career.applications.find(x=>x.id===id);if(a){a.stage=v;saveData();renderCareer();renderKPIs()}}
+function deleteApp(id){D.career.applications=D.career.applications.filter(x=>x.id!==id);saveData();renderCareer();renderKPIs()}
+
+// BUSINESS
+function renderBusiness(){const el=document.getElementById('business-dashboard');const b=D.business;el.innerHTML='<div class="card2 mb"><div class="tag">Monthly Profit ($)</div><input type="number" class="inline-edit" value="'+b.monthlyProfit+'" style="font-size:1.1rem;font-weight:700" onchange="D.business.monthlyProfit=parseInt(this.value)||0;saveData()"></div>'+(b.items.length?'<table><thead><tr><th>SKU</th><th>Inventory</th><th>Margin %</th><th>Reorder At</th><th>Lead Time</th><th>Status</th><th></th></tr></thead><tbody>'+b.items.map(it=>{const low=it.inventory<=it.reorderAt;return'<tr style="'+(low?'background:rgba(255,216,59,.06)':'')+'"><td>'+esc(it.sku)+'</td><td>'+it.inventory+'</td><td>'+it.margin+'%</td><td>'+it.reorderAt+'</td><td>'+it.leadTime+'d</td><td>'+(low?'<span class="badge badge-w">Reorder</span>':'<span class="badge badge-j">OK</span>')+'</td><td><div class="flex gap-sm"><button class="btn-d btn-sm" onclick="openBusinessModal(\''+it.id+'\')">Edit</button><button class="btn-w btn-sm" onclick="deleteBizItem(\''+it.id+'\')">x</button></div></td></tr>'}).join('')+'</tbody></table>':'<div class="empty-state">No inventory</div>')}
+function openBusinessModal(id){const it=id?D.business.items.find(x=>x.id===id):{sku:'',inventory:0,margin:0,reorderAt:0,leadTime:0};openModal('<h3>'+(id?'Edit':'Add')+' Inventory Item</h3><div class="form-row"><div><label>SKU</label><input id="bi-sku" value="'+esc(it.sku)+'" style="width:100%"></div></div><div class="form-row"><div><label>Inventory</label><input type="number" id="bi-inv" value="'+it.inventory+'"></div><div><label>Margin %</label><input type="number" id="bi-margin" value="'+it.margin+'"></div></div><div class="form-row"><div><label>Reorder At</label><input type="number" id="bi-reorder" value="'+it.reorderAt+'"></div><div><label>Lead Time (days)</label><input type="number" id="bi-lead" value="'+it.leadTime+'"></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="saveBizItem(\''+(id||'')+'\')">Save</button></div>')}
+function saveBizItem(id){const obj={id:id||uid(),sku:gv('bi-sku'),inventory:parseInt(gv('bi-inv'))||0,margin:parseInt(gv('bi-margin'))||0,reorderAt:parseInt(gv('bi-reorder'))||0,leadTime:parseInt(gv('bi-lead'))||0};if(id){const i=D.business.items.findIndex(x=>x.id===id);if(i>=0)D.business.items[i]=obj}else D.business.items.push(obj);saveData();closeModal();renderBusiness()}
+function deleteBizItem(id){D.business.items=D.business.items.filter(x=>x.id!==id);saveData();renderBusiness()}
+
+// HEALTH & TTC
+function renderHealth(){const h=D.health;const el=document.getElementById('health-dashboard');const cd=h.lastPeriod?daysSince(h.lastPeriod)+1:h.cycleDay;const ov=h.cycleLength-14;const implant=cd>=ov+6&&cd<=ov+12;const testW=cd>=ov+14;
+el.innerHTML='<div class="grid g2"><div class="card"><h4 style="font-size:.85rem;margin-bottom:12px">Cycle & TTC</h4><div class="form-row"><div><label>Last Period</label><input type="date" id="ht-lp" value="'+(h.lastPeriod||'')+'" onchange="D.health.lastPeriod=this.value;saveData();renderHealth()"></div></div><div class="form-row"><div><label>Cycle Length</label><input type="number" id="ht-cl" value="'+h.cycleLength+'" onchange="D.health.cycleLength=parseInt(this.value)||28;saveData();renderHealth()"></div><div><label>Regular?</label><select onchange="D.health.regularCycle=this.value===\'true\';saveData();renderKPIs()"><option value="true" '+(h.regularCycle?'selected':'')+'>Yes</option><option value="false" '+(!h.regularCycle?'selected':'')+'>No</option></select></div></div><div class="grid g3 mt"><div class="card2"><div class="tag">Cycle Day</div><div style="font-size:1.3rem;font-weight:700;color:var(--michelle)">'+cd+'</div></div><div class="card2"><div class="tag">DPO</div><div style="font-size:1.3rem;font-weight:700">'+Math.max(0,cd-ov)+'</div></div><div class="card2"><div class="tag">Ovulation</div><div style="font-size:1rem;font-weight:600">~Day '+ov+'</div></div></div>'+(implant?'<div class="mt" style="color:var(--michelle);font-size:.82rem">Implantation Window</div>':'')+(testW?'<div class="mt" style="color:var(--joint);font-size:.82rem">Test Window Open</div>':'')+'</div><div class="card"><h4 style="font-size:.85rem;margin-bottom:12px">Wellness</h4><div class="form-row"><div><label>Sleep (hrs)</label><input type="number" step="0.5" value="'+h.sleep+'" onchange="D.health.sleep=parseFloat(this.value)||0;saveData();renderKPIs()"></div><div><label>Stress (1-10)</label><input type="range" min="1" max="10" value="'+h.stress+'" oninput="D.health.stress=parseInt(this.value);saveData();renderKPIs();this.nextElementSibling.textContent=this.value"><span>'+h.stress+'</span></div></div><div class="form-row"><div><label>Conflict-Free?</label><select onchange="D.kpiInputs.conflictFree=this.value===\'true\';saveData();renderKPIs()"><option value="true" '+(D.kpiInputs.conflictFree?'selected':'')+'>Yes</option><option value="false" '+(!D.kpiInputs.conflictFree?'selected':'')+'>No</option></select></div></div></div></div>'}
+
+// PREGNANCY MODE
+function togglePregnancyMode(on){D.pregnancyMode=on;saveData();document.getElementById('sec-pregnancy').style.display=on?'':'none';document.getElementById('health-title').innerHTML=(on?'Health':'Health &amp; TTC')+' <span class="chevron">&#9660;</span>';renderHealth();if(on)renderPregnancy();renderKPIs()}
+function renderPregnancy(){const p=D.pregnancy;const el=document.getElementById('pregnancy-dashboard');let wk=0,tri='';if(p.dueDate){const due=new Date(p.dueDate);const now=new Date();wk=Math.max(0,Math.round((280-((due-now)/86400000))/7));tri=wk<=13?'1st':wk<=26?'2nd':'3rd'}
+el.innerHTML='<div class="grid g2"><div class="card"><h4 style="font-size:.85rem;margin-bottom:12px">Pregnancy Tracker</h4><div class="form-row"><div><label>Due Date</label><input type="date" id="pg-due" value="'+(p.dueDate||'')+'" onchange="D.pregnancy.dueDate=this.value;saveData();renderPregnancy()"></div></div>'+(p.dueDate?'<div class="grid g3 mt"><div class="card2"><div class="tag">Weeks</div><div style="font-size:1.3rem;font-weight:700;color:var(--michelle)">'+wk+'</div></div><div class="card2"><div class="tag">Trimester</div><div style="font-size:1rem;font-weight:700">'+tri+'</div></div><div class="card2"><div class="tag">Days to Due</div><div style="font-size:1rem;font-weight:700">'+daysUntil(p.dueDate)+'</div></div></div>':'<div style="color:var(--text2);font-size:.8rem">Set due date</div>')+'</div><div class="card"><h4 style="font-size:.85rem;margin-bottom:12px">Planning</h4><div class="form-row"><div><label>Baby Budget ($)</label><input type="number" class="inline-edit" value="'+p.babyBudget+'" onchange="D.pregnancy.babyBudget=parseInt(this.value)||0;saveData()"></div></div><div class="form-row"><div><label>Maternity Leave (wks)</label><input type="number" class="inline-edit" value="'+p.maternityLeaveWeeks+'" onchange="D.pregnancy.maternityLeaveWeeks=parseInt(this.value)||0;saveData()"></div></div><div class="form-row"><div><label>Insurance Reviewed?</label><select onchange="D.pregnancy.insuranceReviewed=this.value===\'true\';saveData()"><option value="false" '+(!p.insuranceReviewed?'selected':'')+'>No</option><option value="true" '+(p.insuranceReviewed?'selected':'')+'>Yes</option></select></div></div><div class="tag mt">OB Visits</div><button class="btn-d btn-sm mt" onclick="addOBLog()">+ Log Visit</button>'+p.obLogs.map((l,i)=>'<div class="card2 mt" style="font-size:.8rem"><strong>'+l.date+'</strong>: '+esc(l.notes)+' <button class="btn-w btn-sm" onclick="D.pregnancy.obLogs.splice('+i+',1);saveData();renderPregnancy()">x</button></div>').join('')+'</div></div>'}
+function addOBLog(){openModal('<h3>Add OB Visit</h3><div class="form-row"><div><label>Date</label><input type="date" id="ob-date"></div></div><div class="form-row"><div><label>Notes</label><textarea id="ob-notes"></textarea></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="D.pregnancy.obLogs.push({date:gv(\'ob-date\'),notes:gv(\'ob-notes\')});saveData();closeModal();renderPregnancy()">Save</button></div>')}
+
+// HOME MAINTENANCE
+function renderHome(){const el=document.getElementById('home-list');if(!D.home.length){el.innerHTML='<div class="empty-state">No home assets</div>';return}el.innerHTML='<table><thead><tr><th>Asset</th><th>Last Service</th><th>Next Service</th><th>Warranty</th><th>Status</th><th></th></tr></thead><tbody>'+D.home.map(h=>{const od=h.nextService&&new Date(h.nextService)<new Date();const we=h.warrantyExp&&new Date(h.warrantyExp)<new Date();return'<tr><td>'+esc(h.name)+'</td><td style="font-size:.78rem">'+(h.lastService||'—')+'</td><td style="font-size:.78rem;color:'+(od?'var(--warn)':'inherit')+'">'+(h.nextService||'—')+(od?' !!':'')+'</td><td style="font-size:.78rem;color:'+(we?'var(--warn)':'inherit')+'">'+(h.warrantyExp||'—')+(we?' Exp':'')+'</td><td>'+(od?'<span class="badge badge-w">Due</span>':'<span class="badge badge-j">OK</span>')+'</td><td><div class="flex gap-sm"><button class="btn-d btn-sm" onclick="openHomeModal(\''+h.id+'\')">Edit</button><button class="btn-w btn-sm" onclick="deleteHomeAsset(\''+h.id+'\')">x</button></div></td></tr>'}).join('')+'</tbody></table>'}
+function openHomeModal(id){const h=id?D.home.find(x=>x.id===id):{name:'',lastService:'',nextService:'',warrantyExp:''};openModal('<h3>'+(id?'Edit':'Add')+' Home Asset</h3><div class="form-row"><div><label>Asset</label><input id="hm-name" value="'+esc(h.name)+'" style="width:100%"></div></div><div class="form-row"><div><label>Last Service</label><input type="date" id="hm-last" value="'+h.lastService+'"></div><div><label>Next Service</label><input type="date" id="hm-next" value="'+h.nextService+'"></div><div><label>Warranty Exp</label><input type="date" id="hm-warranty" value="'+h.warrantyExp+'"></div></div><div class="mt flex" style="justify-content:flex-end"><button class="btn-j" onclick="saveHomeAsset(\''+(id||'')+'\')">Save</button></div>')}
+function saveHomeAsset(id){const obj={id:id||uid(),name:gv('hm-name'),lastService:gv('hm-last'),nextService:gv('hm-next'),warrantyExp:gv('hm-warranty')};if(id){const i=D.home.findIndex(x=>x.id===id);if(i>=0)D.home[i]=obj}else D.home.push(obj);saveData();closeModal();renderHome()}
+function deleteHomeAsset(id){D.home=D.home.filter(x=>x.id!==id);saveData();renderHome()}
+
+// SEASONAL RESET
+function currentQuarter(){const m=new Date().getMonth();return m<3?1:m<6?2:m<9?3:4}
+function renderSeasonal(){const el=document.getElementById('seasonal-checklist');const q=currentQuarter();el.innerHTML='<div class="flex mb"><span class="tag">Current Quarter: Q'+q+'</span></div><div class="grid g4">'+['q1','q2','q3','q4'].map((qk,qi)=>'<div class="card"><h4 style="font-size:.85rem;margin-bottom:8px;color:'+(qk==='q'+q?'var(--joint)':'var(--text2)')+'">Q'+(qi+1)+(qk==='q'+q?' (Current)':'')+'</h4>'+D.seasonal[qk].map((t,ti)=>'<label class="flex gap-sm" style="font-size:.8rem;margin-bottom:4px;cursor:pointer"><input type="checkbox" '+(t.done?'checked':'')+' onchange="D.seasonal[\''+qk+'\']['+ti+'].done=this.checked;saveData()"> '+t.task+'</label>').join('')+'</div>').join('')+'</div>'}
+
+// RELATIONSHIP
+function renderRelationship(){const r=D.relationship;const el=document.getElementById('relationship-dashboard');el.innerHTML='<div class="grid g2"><div class="card"><h4 style="font-size:.85rem;margin-bottom:12px">Metrics</h4><div class="form-row"><div><label>Date Nights (month)</label><input type="number" class="inline-edit" value="'+r.dateNights+'" onchange="D.relationship.dateNights=parseInt(this.value)||0;saveData();renderKPIs()"></div></div><div class="form-row"><div><label>Appreciations</label><input type="number" class="inline-edit" value="'+r.appreciations+'" onchange="D.relationship.appreciations=parseInt(this.value)||0;saveData();renderKPIs()"></div></div><div class="form-row"><div><label>Conflict Resolved &lt;48hrs?</label><select onchange="D.relationship.conflictResolved=this.value===\'true\';saveData();renderKPIs()"><option value="true" '+(r.conflictResolved?'selected':'')+'>Yes</option><option value="false" '+(!r.conflictResolved?'selected':'')+'>No</option></select></div></div></div><div class="card"><h4 style="font-size:.85rem;margin-bottom:12px">Emotional Check-ins</h4><div class="flex mb"><input type="text" id="checkin-input" placeholder="How are we doing?" style="flex:1"><button class="btn-j btn-sm" onclick="addCheckin()">Log</button></div>'+r.checkins.slice(-5).reverse().map(c=>'<div class="card2 mb" style="font-size:.8rem"><span style="color:var(--text2)">'+c.date+'</span> — '+esc(c.note)+'</div>').join('')+'</div></div>'}
+function addCheckin(){const note=gv('checkin-input');if(!note)return;D.relationship.checkins.push({date:new Date().toISOString().split('T')[0],note:note});document.getElementById('checkin-input').value='';saveData();renderRelationship()}
+
+// SUNDAY CEO
+function generateSundayReport(){const el=document.getElementById('sunday-report');const cs=calcCareerScore(),fs=calcFinanceScore(),hs=calcHealthScore(),rs=calcRelationshipScore();const split=calcAdminSplit();const odT=D.todos.filter(t=>!t.completed&&t.dueDate&&new Date(t.dueDate)<new Date()).length;const odC=D.chores.filter(c=>isChoreOverdue(c)).length;const f=D.finance;const runway=f.burn>0?Math.round(f.savings/f.burn*10)/10:0;
+const prompts=['What made us feel most connected this week?','Where did we feel tension, and how can we address it?','What is one thing we can each let go of?','What are we most looking forward to together?','Is there anything unsaid that needs to be heard?'];const prompt=prompts[Math.floor(Math.random()*prompts.length)];
+D.sundayReports.push({date:new Date().toISOString().split('T')[0],career:cs,finance:fs,health:hs,relationship:rs});saveData();
+el.innerHTML='<div class="card"><h3 style="margin-bottom:16px;color:var(--joint)">Sunday CEO Meeting — '+new Date().toISOString().split('T')[0]+'</h3><div class="card2 mb" style="border-left:3px solid var(--michelle)"><div class="tag">Emotional Prompt</div><p style="font-size:.9rem;font-style:italic;margin-top:4px">'+prompt+'</p></div><div class="grid g4 mb"><div class="card2"><div class="tag">Career</div><div style="font-size:1.2rem;font-weight:700;color:'+scoreColor(cs)+'">'+cs+'</div></div><div class="card2"><div class="tag">Finance</div><div style="font-size:1.2rem;font-weight:700;color:'+scoreColor(fs)+'">'+fs+'</div></div><div class="card2"><div class="tag">Health</div><div style="font-size:1.2rem;font-weight:700;color:'+scoreColor(hs)+'">'+hs+'</div></div><div class="card2"><div class="tag">Relationship</div><div style="font-size:1.2rem;font-weight:700;color:'+scoreColor(rs)+'">'+rs+'</div></div></div><div class="grid g2"><div class="card2"><div class="tag">Financial</div><p style="font-size:.82rem">Runway: '+runway+'mo | Burn: $'+fmt(f.burn)+'/mo | Savings: $'+fmt(f.savings)+'</p></div><div class="card2"><div class="tag">Admin Balance</div><p style="font-size:.82rem">Michelle: '+split+'% | Gray: '+(100-split)+'%'+(Math.abs(split-50)>10?' — Imbalanced':'')+'</p></div></div><div class="card2 mt"><div class="tag">Action Items</div><p style="font-size:.82rem">'+odT+' overdue tasks | '+odC+' overdue chores | '+D.career.applications.filter(a=>a.followUp&&daysUntil(a.followUp)<=0).length+' follow-ups due</p></div><div class="card2 mt"><div class="tag">Top 3 Decisions</div><ol style="font-size:.82rem;padding-left:20px;margin-top:4px"><li contenteditable="true" style="outline:none;border-bottom:1px dashed #333;padding:2px 0">Decision 1...</li><li contenteditable="true" style="outline:none;border-bottom:1px dashed #333;padding:2px 0">Decision 2...</li><li contenteditable="true" style="outline:none;border-bottom:1px dashed #333;padding:2px 0">Decision 3...</li></ol></div></div>'}
+
+// ALERTS
+function renderAlerts(){const alerts=[];D.chores.filter(c=>isChoreOverdue(c)).forEach(c=>alerts.push({text:c.name+' overdue',type:'warn'}));const f=D.finance;if(f.burn>0&&f.savings/f.burn<3)alerts.push({text:'Runway < 3 months',type:'warn'});if(f.burn>f.income)alerts.push({text:'Burn > Income',type:'warn'});D.birthdays.forEach(b=>{const d=daysUntilBday(b.date);if(d<=14)alerts.push({text:b.name+' in '+d+'d',type:d<=7?'warn':'caution'})});D.career.applications.filter(a=>a.followUp&&daysUntil(a.followUp)<=0).forEach(a=>alerts.push({text:'Follow up: '+a.company,type:'caution'}));const split=calcAdminSplit();if(Math.abs(split-50)>20)alerts.push({text:'Admin imbalanced',type:'warn'});if(!D.pregnancyMode&&D.health.lastPeriod){const cd=daysSince(D.health.lastPeriod)+1;const ov=D.health.cycleLength-14;if(cd>=ov+6&&cd<=ov+12)alerts.push({text:'Implantation window',type:'michelle'})}
+document.getElementById('alert-bar').innerHTML=alerts.slice(0,8).map(a=>{const bg=a.type==='warn'?'rgba(255,59,59,.2)':a.type==='caution'?'rgba(255,216,59,.2)':'rgba(255,46,136,.2)';const cl=a.type==='warn'?'var(--warn)':a.type==='caution'?'var(--caution)':'var(--michelle)';return'<div class="alert-pill" style="background:'+bg+';color:'+cl+'">'+a.text+'</div>'}).join('')}
+
+// DATA
+function exportData(){const blob=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mg-life-os-'+new Date().toISOString().split('T')[0]+'.json';a.click()}
+function importData(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(ev){try{D=JSON.parse(ev.target.result);saveData();location.reload()}catch(err){alert('Invalid file')}};reader.readAsText(file)}
+function createSnapshot(){const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||'[]');snaps.push({date:new Date().toISOString(),data:JSON.parse(JSON.stringify(D))});if(snaps.length>20)snaps.shift();localStorage.setItem(SNAP_KEY,JSON.stringify(snaps));renderSnapshots();alert('Snapshot created')}
+function renderSnapshots(){const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||'[]');document.getElementById('snapshots-list').innerHTML='<h4 style="font-size:.85rem;margin-bottom:8px">Snapshots ('+snaps.length+')</h4>'+(snaps.length?snaps.map((s,i)=>'<div class="card2 mb flex-b"><span style="font-size:.78rem">'+new Date(s.date).toLocaleString()+'</span><button class="btn-d btn-sm" onclick="restoreSnapshot('+i+')">Restore</button></div>').join(''):'<div style="color:var(--text2);font-size:.8rem">No snapshots</div>')}
+function restoreSnapshot(i){const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||'[]');if(snaps[i]&&confirm('Restore this snapshot?')){D=snaps[i].data;saveData();location.reload()}}
+function clearAllData(){if(confirm('Delete ALL data?')){if(confirm('This cannot be undone. Confirm?')){localStorage.removeItem(STORE_KEY);location.reload()}}}
+
+// INIT
+function renderAll(){renderKPIs();renderPillars();renderGoals();renderRoadmap();renderWeekly();renderTodos();renderChores();renderAdminBalancer();renderTexts();renderBirthdays();renderWeekend();renderTravel();renderFinance();renderCareer();renderBusiness();renderHealth();renderHome();renderSeasonal();renderRelationship();renderSnapshots();renderAlerts();if(D.pregnancyMode){document.getElementById('pregnancy-mode-cb').checked=true;togglePregnancyMode(true)}restoreCollapsed()}
+loadData();renderAll();
+setInterval(function(){saveData();renderAlerts()},30000);
+</script>
 </body>
 </html>
