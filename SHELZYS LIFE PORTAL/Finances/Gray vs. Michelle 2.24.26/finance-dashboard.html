@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gray & Michelle Finance Dashboard</title>
+<style>
+:root{--bg:#0f1117;--card:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--dim:#9ca3af;--accent:#6366f1;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;--blue:#3b82f6;--purple:#a855f7;--pink:#ec4899;--cyan:#06b6d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,#1e1b4b,#312e81);padding:24px 32px;border-bottom:1px solid var(--border)}
+.header h1{font-size:24px;margin-bottom:4px}
+.header p{color:var(--dim);font-size:14px}
+.tabs{display:flex;gap:2px;background:var(--card);padding:8px;border-bottom:1px solid var(--border);overflow-x:auto;flex-wrap:wrap}
+.tab{padding:10px 18px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--dim);border:none;background:none;white-space:nowrap;transition:.2s}
+.tab:hover{color:var(--text);background:#ffffff10}
+.tab.active{background:var(--accent);color:#fff}
+.content{padding:24px 32px;max-width:1400px;margin:0 auto}
+.panel{display:none}.panel.active{display:block}
+.grid{display:grid;gap:16px}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.card h3{font-size:14px;color:var(--dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.card .val{font-size:28px;font-weight:700}
+.card .sub{font-size:12px;color:var(--dim);margin-top:4px}
+.green{color:var(--green)}.red{color:var(--red)}.amber{color:var(--amber)}.blue{color:var(--blue)}.purple{color:var(--purple)}.pink{color:var(--pink)}.cyan{color:var(--cyan)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;border-bottom:2px solid var(--border);color:var(--dim);font-size:12px;text-transform:uppercase;cursor:pointer;user-select:none;white-space:nowrap}
+th:hover{color:var(--accent)}
+th.sorted-asc::after{content:' \u25B2';color:var(--accent)}
+th.sorted-desc::after{content:' \u25BC';color:var(--accent)}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}
+tr:hover{background:#ffffff06}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-shared{background:#6366f120;color:#818cf8}
+.badge-personal{background:#22c55e20;color:#4ade80}
+.badge-business{background:#f59e0b20;color:#fbbf24}
+.badge-investment{background:#a855f720;color:#c084fc}
+.badge-transfer{background:#64748b20;color:#94a3b8}
+.filters{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filters input,.filters select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:13px}
+.filters input{min-width:200px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:.2s}
+.btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{opacity:.8}
+.btn-outline{background:none;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--accent)}
+.slider-wrap{margin:20px 0}
+.slider-wrap input[type=range]{width:100%;height:6px;-webkit-appearance:none;background:var(--border);border-radius:3px;outline:none}
+.slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer}
+.flow-box{background:var(--bg);border:2px solid var(--border);border-radius:12px;padding:16px;text-align:center;min-width:160px}
+.flow-box h4{font-size:13px;margin-bottom:4px}
+.flow-box .amt{font-size:18px;font-weight:700}
+.flow-arrow{font-size:24px;color:var(--accent);display:flex;align-items:center;justify-content:center;min-width:40px}
+.flow-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0}
+.decision-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;margin:8px 0}
+.decision-card h4{color:var(--accent);margin-bottom:8px;font-size:15px}
+.decision-card ul{list-style:none;padding:0}
+.decision-card li{padding:4px 0;font-size:13px;color:var(--dim)}
+.decision-card li::before{content:'\2192  ';color:var(--accent)}
+.section-title{font-size:18px;font-weight:700;margin:24px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.editable{cursor:pointer;border-bottom:1px dashed var(--dim)}
+.editable:hover{color:var(--accent);border-color:var(--accent)}
+.tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;margin-left:4px}
+.tag-m{background:#ec489920;color:#f472b6}
+.tag-g{background:#3b82f620;color:#60a5fa}
+.tag-s{background:#6366f120;color:#818cf8}
+@media print{body{background:#fff;color:#000}.card,.flow-box{border:1px solid #ccc;background:#f9f9f9}.header{background:#333;color:#fff}}
+@media(max-width:768px){.content{padding:16px}.filters{flex-direction:column}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>Gray & Michelle Finance Dashboard</h1>
+<p>$200K/year each | $400K combined | Updated Feb 24, 2026</p>
+</div>
+<div class="tabs" id="tabs">
+<button class="tab active" data-tab="overview">Overview</button>
+<button class="tab" data-tab="cards">Card Plan</button>
+<button class="tab" data-tab="budget">Shared Budget</button>
+<button class="tab" data-tab="split">Split Calculator</button>
+<button class="tab" data-tab="flow">Money Flow</button>
+<button class="tab" data-tab="michelle">Michelle Txns</button>
+<button class="tab" data-tab="gray">Gray Txns</button>
+<button class="tab" data-tab="rules">Decision Rules</button>
+</div>
+<div class="content">
+
+<!-- OVERVIEW -->
+<div class="panel active" id="overview">
+<div class="grid grid-4" style="margin-bottom:20px">
+<div class="card"><h3>Combined Gross</h3><div class="val green">$33,333</div><div class="sub">$16,667 each/month</div></div>
+<div class="card"><h3>Combined Net (est)</h3><div class="val green">$23,000</div><div class="sub">~$11,500 each after tax</div></div>
+<div class="card"><h3>Total Shared Expenses</h3><div class="val amber" id="totalSharedDisplay">$11,533</div><div class="sub">Monthly recurring</div></div>
+<div class="card"><h3>Personal Budget Each</h3><div class="val cyan" id="personalBudgetDisplay">$5,734</div><div class="sub">After shared contribution</div></div>
+</div>
+<div class="grid grid-2">
+<div class="card">
+<h3>Michelle's Accounts</h3>
+<table>
+<tr><td>PNC Bugs Checking</td><td class="dim">...3045</td><td><span class="badge badge-personal">Primary</span></td></tr>
+<tr><td>Chase Ultimate Rewards</td><td class="dim">...9759</td><td><span class="badge badge-personal">Personal</span></td></tr>
+<tr><td>Chase Ultimate Rewards</td><td class="dim">...1041</td><td><span class="badge badge-shared">Shared Other</span></td></tr>
+<tr><td>Prime Visa</td><td class="dim">...5990</td><td><span class="badge badge-business">Amazon/Biz</span></td></tr>
+<tr><td>Marriott Bonvoy Amex</td><td class="dim">...5005</td><td><span class="badge badge-personal">Subs</span></td></tr>
+<tr><td>Credit Card (USAA)</td><td class="dim">...443</td><td><span class="badge badge-transfer">Close</span></td></tr>
+<tr><td>Shelzys Designs Bluevine</td><td class="dim">...5301</td><td><span class="badge badge-business">Business</span></td></tr>
+<tr><td>Interest Checking</td><td class="dim">...1583</td><td><span class="badge badge-investment">Savings</span></td></tr>
+</table>
+</div>
+<div class="card">
+<h3>Gray's Accounts</h3>
+<table>
+<tr><td>WF Checking</td><td class="dim">...4688</td><td><span class="badge badge-personal">Primary</span></td></tr>
+<tr><td>Capital One Venture</td><td class="dim">...4522</td><td><span class="badge badge-shared">Shared Bills</span></td></tr>
+<tr><td>Amex Gold</td><td class="dim">...2003</td><td><span class="badge badge-shared">Shared Dining</span></td></tr>
+<tr><td>Amex Platinum</td><td class="dim">...1007</td><td><span class="badge badge-personal">Personal</span></td></tr>
+<tr><td>Delta SkyMiles Gold</td><td class="dim">...1003</td><td><span class="badge badge-transfer">Close/Freeze</span></td></tr>
+<tr><td>WF Credit Card</td><td class="dim">...3022</td><td><span class="badge badge-transfer">Close</span></td></tr>
+<tr><td>Grays Venmo</td><td class="dim"></td><td><span class="badge badge-personal">Rent/P2P</span></td></tr>
+<tr><td>BMW X3 Loan</td><td class="dim"></td><td><span class="badge badge-shared">Shared</span></td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<!-- CARD PLAN -->
+<div class="panel" id="cards">
+<h2 class="section-title green">Keep Active - 5 Card System</h2>
+<div class="grid grid-3">
+<div class="card" style="border-left:3px solid var(--accent)">
+<h3>Shared Dining & Groceries</h3>
+<div class="val" style="font-size:18px">Amex Gold <span class="tag tag-g">Gray's ...2003</span></div>
+<div class="sub" style="margin-top:8px">4X on restaurants & groceries worldwide<br>Use for: all shared meals, grocery runs, Uber Eats, Costco food</div>
+</div>
+<div class="card" style="border-left:3px solid var(--cyan)">
+<h3>Shared Bills & Travel</h3>
+<div class="val" style="font-size:18px">Venture <span class="tag tag-g">Gray's ...4522</span></div>
+<div class="sub" style="margin-top:8px">2X on everything, travel eraser<br>Use for: Optimum, PSEG, Maggio, Storage, Geico, gas, travel</div>
+</div>
+<div class="card" style="border-left:3px solid var(--purple)">
+<h3>Shared - Everything Else</h3>
+<div class="val" style="font-size:18px">Chase UR <span class="tag tag-m">Michelle's ...1041</span></div>
+<div class="sub" style="margin-top:8px">1.5X on all purchases<br>Use for: Target, Amazon shared, home goods, shared shopping</div>
+</div>
+<div class="card" style="border-left:3px solid var(--pink)">
+<h3>Michelle Personal</h3>
+<div class="val" style="font-size:18px">Chase UR <span class="tag tag-m">...9759</span></div>
+<div class="sub" style="margin-top:8px">1.5X on all purchases<br>Use for: clothing, beauty, AI subs, personal shopping, Nuuly, Sephora</div>
+</div>
+<div class="card" style="border-left:3px solid var(--blue)">
+<h3>Gray Personal</h3>
+<div class="val" style="font-size:18px">Amex Platinum <span class="tag tag-g">...1007</span></div>
+<div class="sub" style="margin-top:8px">5X flights, hotel credits, lounge access<br>Use for: personal travel, Club Macanudo, personal dining, Uber rides</div>
+</div>
+</div>
+<h2 class="section-title red">Close or Freeze</h2>
+<div class="grid grid-3">
+<div class="card" style="opacity:.7"><h3>Close</h3><div>USAA Credit Card (...443) <span class="dim">- Low use, no great rewards</span></div></div>
+<div class="card" style="opacity:.7"><h3>Close</h3><div>WF Credit Card (...3022) <span class="dim">- Minimal use, no rewards</span></div></div>
+<div class="card" style="opacity:.7"><h3>Freeze/Downgrade</h3><div>Delta SkyMiles Gold (...1003) <span class="dim">- Keep if no annual fee, else close</span></div></div>
+</div>
+<h2 class="section-title amber">Keep Separate - Special Purpose</h2>
+<div class="grid grid-3">
+<div class="card"><h3>Shelzy's Designs Business</h3><div>Prime Visa (...5990) + Bluevine (...5301) <span class="tag tag-m">Michelle</span></div><div class="sub">Amazon seller payouts, business supplies, 5% Amazon cashback</div></div>
+<div class="card"><h3>Marriott Bonvoy Brilliant</h3><div>Amex (...5005) <span class="tag tag-m">Michelle</span></div><div class="sub">Keep for $25/mo dining credit + hotel perks. Use for subscriptions.</div></div>
+</div>
+</div>
+
+<!-- SHARED BUDGET -->
+<div class="panel" id="budget">
+<p style="color:var(--dim);margin-bottom:16px">Double-click any amount to edit. Totals recalculate automatically.</p>
+<div class="grid grid-2">
+<div class="card">
+<h3>Fixed Shared Expenses</h3>
+<table id="budgetTable">
+<thead><tr><th>Expense</th><th>Monthly</th><th>Card/Account</th><th>Who Pays Now</th></tr></thead>
+<tbody>
+<tr><td>Rent (12 Harbor St)</td><td class="editable budget-amt" data-cat="fixed">7500</td><td>Venmo/Zelle to Alexis</td><td>Both ($3,750 each)</td></tr>
+<tr><td>BMW X3 Payment</td><td class="editable budget-amt" data-cat="fixed">751</td><td>Auto-debit checking</td><td><span class="tag tag-g">Gray</span></td></tr>
+<tr><td>Car Insurance (Geico)</td><td class="editable budget-amt" data-cat="fixed">153</td><td>Venture</td><td><span class="tag tag-g">Gray</span></td></tr>
+<tr><td>Electricity (PSEG)</td><td class="editable budget-amt" data-cat="fixed">235</td><td>Venture</td><td><span class="tag tag-g">Gray</span></td></tr>
+<tr><td>Internet (Optimum)</td><td class="editable budget-amt" data-cat="fixed">100</td><td>Venture</td><td><span class="tag tag-g">Gray</span></td></tr>
+<tr><td>Garbage (Maggio)</td><td class="editable budget-amt" data-cat="fixed">75</td><td>Venture</td><td><span class="tag tag-g">Gray</span></td></tr>
+<tr><td>Heating Oil (seasonal avg)</td><td class="editable budget-amt" data-cat="fixed">200</td><td>Venture</td><td><span class="tag tag-g">Gray</span></td></tr>
+<tr><td>Storage (Goodfriend)</td><td class="editable budget-amt" data-cat="fixed">211</td><td>Venture</td><td><span class="tag tag-g">Gray</span></td></tr>
+<tr><td>Ring/Lemonade Insurance</td><td class="editable budget-amt" data-cat="fixed">51</td><td>Venture</td><td><span class="tag tag-g">Gray</span></td></tr>
+</tbody>
+</table>
+<div style="text-align:right;padding:12px;font-size:16px;font-weight:700">Fixed Total: $<span id="fixedTotal">9276</span>/mo</div>
+</div>
+<div class="card">
+<h3>Variable Shared Expenses (estimated)</h3>
+<table id="varBudgetTable">
+<thead><tr><th>Category</th><th>Monthly Est</th><th>Card to Use</th></tr></thead>
+<tbody>
+<tr><td>Shared Groceries</td><td class="editable budget-var" data-cat="variable">700</td><td>Amex Gold (4X)</td></tr>
+<tr><td>Shared Dining Out</td><td class="editable budget-var" data-cat="variable">600</td><td>Amex Gold (4X)</td></tr>
+<tr><td>Shared Delivery/Uber Eats</td><td class="editable budget-var" data-cat="variable">300</td><td>Amex Gold (4X)</td></tr>
+<tr><td>Gas / Car Wash</td><td class="editable budget-var" data-cat="variable">150</td><td>Venture (2X)</td></tr>
+<tr><td>Tolls / E-ZPass</td><td class="editable budget-var" data-cat="variable">75</td><td>Venture (2X)</td></tr>
+<tr><td>Shared Home / Target</td><td class="editable budget-var" data-cat="variable">200</td><td>Chase UR ...1041</td></tr>
+<tr><td>Shared Travel (avg)</td><td class="editable budget-var" data-cat="variable">232</td><td>Venture (2X)</td></tr>
+</tbody>
+</table>
+<div style="text-align:right;padding:12px;font-size:16px;font-weight:700">Variable Total: $<span id="varTotal">2257</span>/mo</div>
+</div>
+</div>
+<div class="card" style="margin-top:16px;text-align:center">
+<h3>Grand Total Shared</h3>
+<div class="val amber" style="font-size:36px">$<span id="grandTotal">11533</span>/mo</div>
+<div class="sub">At 50/50 split = <strong class="green">$<span id="eachShare">5767</span>/person</strong> | Leaves ~$<span id="leftover">5733</span>/person for personal</div>
+</div>
+</div>
+
+<!-- SPLIT CALCULATOR -->
+<div class="panel" id="split">
+<div class="card">
+<h3>Contribution Split Calculator</h3>
+<p class="dim" style="margin-bottom:16px">Both earn $200K/year (~$11,500/mo net each). Adjust the slider or click a preset.</p>
+<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+<button class="btn btn-accent" onclick="setSplit(50)">50/50 (Recommended)</button>
+<button class="btn btn-outline" onclick="setSplit(55)">55/45</button>
+<button class="btn btn-outline" onclick="setSplit(60)">60/40</button>
+<button class="btn btn-outline" onclick="setSplit(45)">45/55</button>
+</div>
+<div class="slider-wrap">
+<div style="display:flex;justify-content:space-between;margin-bottom:4px">
+<span class="pink">Michelle: <strong id="mPct">50%</strong></span>
+<span class="blue">Gray: <strong id="gPct">50%</strong></span>
+</div>
+<input type="range" id="splitSlider" min="30" max="70" value="50" oninput="updateSplit(this.value)">
+</div>
+<div class="grid grid-2" style="margin-top:20px">
+<div class="card" style="border-left:3px solid var(--pink);text-align:center">
+<h3>Michelle Contributes</h3>
+<div class="val pink" id="mContrib">$5,767</div>
+<div class="sub">to shared account monthly</div>
+<div style="margin-top:12px;font-size:14px">Keeps <strong class="green" id="mKeep">$5,733</strong>/mo personal</div>
+</div>
+<div class="card" style="border-left:3px solid var(--blue);text-align:center">
+<h3>Gray Contributes</h3>
+<div class="val blue" id="gContrib">$5,767</div>
+<div class="sub">to shared account monthly</div>
+<div style="margin-top:12px;font-size:14px">Keeps <strong class="green" id="gKeep">$5,733</strong>/mo personal</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- MONEY FLOW -->
+<div class="panel" id="flow">
+<h2 class="section-title">Monthly Money Flow</h2>
+<div class="flow-row">
+<div class="flow-box" style="border-color:var(--pink)"><h4 class="pink">Michelle's Employer</h4><div class="amt">$16,667/mo gross</div></div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-box" style="border-color:var(--pink)"><h4 class="pink">Michelle's PNC Checking</h4><div class="amt">~$11,500/mo net</div><div class="sub">...3045</div></div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-box" style="border-color:var(--accent)"><h4 class="purple">Shared Checking</h4><div class="amt" id="flowShared">$11,533/mo</div><div class="sub">New joint account (or Gray's WF)</div></div>
+<div class="flow-arrow">&larr;</div>
+<div class="flow-box" style="border-color:var(--blue)"><h4 class="blue">Gray's WF Checking</h4><div class="amt">~$11,500/mo net</div><div class="sub">...4688</div></div>
+<div class="flow-arrow">&larr;</div>
+<div class="flow-box" style="border-color:var(--blue)"><h4 class="blue">Addepar Payroll</h4><div class="amt">$16,667/mo gross</div></div>
+</div>
+<h2 class="section-title" style="margin-top:32px">Shared Account Pays</h2>
+<div class="grid grid-4">
+<div class="flow-box" style="border-color:var(--amber)"><h4>Rent</h4><div class="amt amber">$7,500</div><div class="sub">Venmo/Zelle to Alexis</div></div>
+<div class="flow-box" style="border-color:var(--amber)"><h4>BMW Payment</h4><div class="amt amber">$751</div><div class="sub">Auto-debit</div></div>
+<div class="flow-box" style="border-color:var(--amber)"><h4>Amex Gold Bill</h4><div class="amt amber">~$1,600</div><div class="sub">Shared dining/groceries</div></div>
+<div class="flow-box" style="border-color:var(--amber)"><h4>Venture Bill</h4><div class="amt amber">~$1,100</div><div class="sub">Bills, gas, travel</div></div>
+<div class="flow-box" style="border-color:var(--amber)"><h4>Chase 1041 Bill</h4><div class="amt amber">~$200</div><div class="sub">Shared other</div></div>
+<div class="flow-box" style="border-color:var(--amber)"><h4>Utilities Bundle</h4><div class="amt amber">~$530</div><div class="sub">PSEG + Optimum + Maggio + Oil</div></div>
+</div>
+<h2 class="section-title" style="margin-top:32px">Personal Accounts Pay</h2>
+<div class="grid grid-2">
+<div class="card" style="border-left:3px solid var(--pink)">
+<h3>Michelle's Personal (~$5,733/mo)</h3>
+<ul style="list-style:none;padding:0;font-size:13px">
+<li style="padding:4px 0">Chase UR ...9759 bill (personal shopping, AI subs, clothing)</li>
+<li style="padding:4px 0">Marriott Amex ...5005 bill (subscriptions, Apple)</li>
+<li style="padding:4px 0">Robinhood / Fundrise / Coinbase investments</li>
+<li style="padding:4px 0">Shelzy's Designs expenses (self-funded from biz revenue)</li>
+<li style="padding:4px 0">Claude AI, ChatGPT, Perplexity, Coursera subs</li>
+</ul>
+</div>
+<div class="card" style="border-left:3px solid var(--blue)">
+<h3>Gray's Personal (~$5,733/mo)</h3>
+<ul style="list-style:none;padding:0;font-size:13px">
+<li style="padding:4px 0">Amex Platinum ...1007 bill (personal dining, travel, Uber)</li>
+<li style="padding:4px 0">YouTube TV ($83/mo)</li>
+<li style="padding:4px 0">YMCA Membership ($64/mo)</li>
+<li style="padding:4px 0">Morgan Stanley investment transfers ($1K-$3K/mo)</li>
+<li style="padding:4px 0">Spotify subscription</li>
+<li style="padding:4px 0">Personal Uber/taxi rides</li>
+<li style="padding:4px 0">Lululemon, personal shopping</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- MICHELLE TRANSACTIONS -->
+<div class="panel" id="michelle">
+<div class="filters">
+<input type="text" id="mSearch" placeholder="Search transactions..." oninput="filterTable('m')">
+<select id="mCat" onchange="filterTable('m')"><option value="">All Categories</option></select>
+<select id="mAcct" onchange="filterTable('m')"><option value="">All Accounts</option></select>
+<select id="mType" onchange="filterTable('m')">
+<option value="">All Types</option><option value="shared">Shared</option><option value="personal">Personal</option><option value="business">Business</option><option value="investment">Investment</option><option value="transfer">Transfer</option>
+</select>
+<button class="btn btn-outline" onclick="exportCSV('m')">Export CSV</button>
+</div>
+<div class="card" style="overflow-x:auto">
+<table id="mTable">
+<thead><tr><th data-col="0">Date</th><th data-col="1">Name</th><th data-col="2">Amount</th><th data-col="3">Category</th><th data-col="4">Account</th><th data-col="5">Type</th><th data-col="6">Classification</th></tr></thead>
+<tbody id="mBody"></tbody>
+</table>
+</div>
+</div>
+
+<!-- GRAY TRANSACTIONS -->
+<div class="panel" id="gray">
+<div class="filters">
+<input type="text" id="gSearch" placeholder="Search transactions..." oninput="filterTable('g')">
+<select id="gCat" onchange="filterTable('g')"><option value="">All Categories</option></select>
+<select id="gAcct" onchange="filterTable('g')"><option value="">All Accounts</option></select>
+<select id="gType" onchange="filterTable('g')">
+<option value="">All Types</option><option value="shared">Shared</option><option value="personal">Personal</option><option value="business">Business</option><option value="investment">Investment</option><option value="transfer">Transfer</option>
+</select>
+<button class="btn btn-outline" onclick="exportCSV('g')">Export CSV</button>
+</div>
+<div class="card" style="overflow-x:auto">
+<table id="gTable">
+<thead><tr><th data-col="0">Date</th><th data-col="1">Merchant</th><th data-col="2">Amount</th><th data-col="3">Category</th><th data-col="4">Account</th><th data-col="5">Owner</th><th data-col="6">Classification</th></tr></thead>
+<tbody id="gBody"></tbody>
+</table>
+</div>
+</div>
+
+<!-- DECISION RULES -->
+<div class="panel" id="rules">
+<h2 class="section-title">Quick Decision: Which Card For Every Purchase</h2>
+<div class="grid grid-2">
+<div class="decision-card">
+<h4>Shared Dining & Food</h4>
+<ul>
+<li>Restaurant together &rarr; <strong>Amex Gold</strong> (4X)</li>
+<li>Grocery run (Stop&Shop, Citarella, Costco food) &rarr; <strong>Amex Gold</strong> (4X)</li>
+<li>Uber Eats / DoorDash for both &rarr; <strong>Amex Gold</strong> (4X)</li>
+<li>Coffee together &rarr; <strong>Amex Gold</strong> (4X)</li>
+</ul>
+</div>
+<div class="decision-card">
+<h4>Shared Bills & Auto</h4>
+<ul>
+<li>PSEG, Optimum, Maggio &rarr; <strong>Venture</strong> (auto-pay)</li>
+<li>Gas station &rarr; <strong>Venture</strong> (2X)</li>
+<li>E-ZPass / tolls &rarr; <strong>Venture</strong> (2X)</li>
+<li>Car wash &rarr; <strong>Venture</strong> (2X)</li>
+<li>Geico, Lemonade &rarr; <strong>Venture</strong> (auto-pay)</li>
+</ul>
+</div>
+<div class="decision-card">
+<h4>Shared Travel</h4>
+<ul>
+<li>Hotels together &rarr; <strong>Venture</strong> (2X + travel eraser)</li>
+<li>Flights together &rarr; <strong>Venture</strong> (2X)</li>
+<li>Hampton Jitney &rarr; <strong>Venture</strong> (2X)</li>
+<li>Cross Sound Ferry &rarr; <strong>Venture</strong> (2X)</li>
+</ul>
+</div>
+<div class="decision-card">
+<h4>Shared Other</h4>
+<ul>
+<li>Target / Walmart shared items &rarr; <strong>Chase UR ...1041</strong></li>
+<li>Amazon household items &rarr; <strong>Chase UR ...1041</strong></li>
+<li>Home goods, furniture &rarr; <strong>Chase UR ...1041</strong></li>
+<li>Shared subscriptions &rarr; <strong>Chase UR ...1041</strong></li>
+</ul>
+</div>
+<div class="decision-card" style="border-left:3px solid var(--pink)">
+<h4>Michelle Personal</h4>
+<ul>
+<li>Clothing (TJ Maxx, Anthropologie, Nuuly) &rarr; <strong>Chase UR ...9759</strong></li>
+<li>Beauty (Sephora, Madison Reed) &rarr; <strong>Chase UR ...9759</strong></li>
+<li>AI subs (Claude, ChatGPT, Perplexity) &rarr; <strong>Chase UR ...9759</strong></li>
+<li>Shelzy's Designs supplies &rarr; <strong>Prime Visa ...5990</strong></li>
+<li>Apple subscriptions &rarr; <strong>Marriott Amex ...5005</strong> ($25 dining credit)</li>
+<li>Investments (Robinhood, Fundrise) &rarr; <strong>PNC Checking direct</strong></li>
+</ul>
+</div>
+<div class="decision-card" style="border-left:3px solid var(--blue)">
+<h4>Gray Personal</h4>
+<ul>
+<li>Personal dining (Club Macanudo, solo meals) &rarr; <strong>Amex Platinum</strong></li>
+<li>Personal travel / flights &rarr; <strong>Amex Platinum</strong> (5X flights)</li>
+<li>Uber rides (solo) &rarr; <strong>Amex Platinum</strong></li>
+<li>YouTube TV ($83/mo) &rarr; <strong>Amex Platinum</strong></li>
+<li>YMCA Membership ($64/mo) &rarr; <strong>Amex Platinum</strong></li>
+<li>Spotify &rarr; <strong>Amex Platinum</strong></li>
+<li>Lululemon, personal shopping &rarr; <strong>Amex Platinum</strong></li>
+<li>Morgan Stanley investments &rarr; <strong>WF Checking direct</strong></li>
+</ul>
+</div>
+</div>
+<div class="card" style="margin-top:20px">
+<h3>The Simple Rule</h3>
+<div style="font-size:16px;line-height:2;padding:12px">
+<strong>Ask yourself:</strong> Is this for both of us or the household?<br>
+<span class="green">&bull; YES, food/groceries</span> &rarr; Amex Gold<br>
+<span class="cyan">&bull; YES, bill/travel/auto</span> &rarr; Venture<br>
+<span class="purple">&bull; YES, other shared</span> &rarr; Chase ...1041<br>
+<span class="pink">&bull; NO, it's Michelle's</span> &rarr; Chase ...9759 (or Prime Visa for biz)<br>
+<span class="blue">&bull; NO, it's Gray's</span> &rarr; Amex Platinum
+</div>
+</div>
+</div>
+
+</div><!-- end content -->
+
+<script>
+// === TAB NAVIGATION ===
+document.querySelectorAll('.tab').forEach(t=>{
+t.addEventListener('click',()=>{
+document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+t.classList.add('active');
+document.getElementById(t.dataset.tab).classList.add('active');
+});
+});
+
+// === MICHELLE'S TRANSACTIONS ===
+const mTxns=[
+["2/23/26","Autopay Payment - Thank You",-469.34,"Internal Transfer","Marriott Amex 5005","internal transfer","transfer"],
+["2/23/26","Etsy Inc Payout",-673.71,"Shops","Shelzys Designs 5301","regular","business"],
+["2/23/26","American Express ACH",469.34,"Internal Transfer","Bugs Checking 3045","internal transfer","transfer"],
+["2/23/26","Disney Plus",12.99,"Subscriptions","Credit Card 443","regular","shared"],
+["2/23/26","Disney Plus",7,"Subscriptions","Credit Card 443","regular","shared"],
+["2/23/26","Apple.com-bill",4.34,"Business","Ultimate Rewards 9759","regular","business"],
+["2/23/26","Apple.com-bill",107.78,"Entertainment","Marriott Amex 5005","regular","personal"],
+["2/22/26","Target",33.97,"Shopping","Ultimate Rewards 9759","regular","shared"],
+["2/22/26","Target",37,"Shopping","Ultimate Rewards 9759","regular","shared"],
+["2/22/26","Stop & Shop",121.5,"Groceries","Ultimate Rewards 9759","regular","shared"],
+["2/22/26","Nations Photo Lab",42.35,"Other","Ultimate Rewards 9759","regular","business"],
+["2/22/26","CVS",16.31,"Pharmacy","Ultimate Rewards 9759","regular","personal"],
+["2/21/26","Robinhood",500,"Investment","Bugs Checking 3045","internal transfer","investment"],
+["2/21/26","Robinhood",500,"Investment","Bugs Checking 3045","internal transfer","investment"],
+["2/21/26","Weill Cornell Medicine",559.77,"Medical","Shelzys Designs 5301","regular","personal"],
+["2/21/26","NYS Unemployment",-869,"Income","Bugs Checking 3045","income","transfer"],
+["2/21/26","NYS Unemployment",-869,"Income","Bugs Checking 3045","income","transfer"],
+["2/20/26","Temu.com",-22.93,"Shopping","Marriott Amex 5005","regular","personal"],
+["2/20/26","Upwork",21.74,"Other","Credit Card 443","regular","business"],
+["2/20/26","The Clubhouse",20.7,"Restaurants","Ultimate Rewards 9759","regular","shared"],
+["2/20/26","The Clubhouse",20.7,"Restaurants","Ultimate Rewards 9759","regular","shared"],
+["2/20/26","PNC Transfer",2000,"Transfer","Bugs Checking 3045","internal transfer","transfer"],
+["2/20/26","Goldbergs Bagels",6.19,"Restaurants","Ultimate Rewards 1041","regular","shared"],
+["2/19/26","Perplexity.ai",43.5,"AI Subscription","Ultimate Rewards 9759","regular","personal"],
+["2/19/26","Temu.com returns",-38.46,"Shopping","Prime Visa 5990","regular","personal"],
+["2/19/26","T.J.Maxx return",-259.58,"Clothing","Ultimate Rewards 1041","regular","personal"],
+["2/19/26","Fundrise",500,"Investment","Bugs Checking 3045","regular","investment"],
+["2/19/26","Anthropic",49.81,"AI Subscription","Ultimate Rewards 9759","regular","personal"],
+["2/19/26","Amazon Mktpl",-52.5,"Business","Prime Visa 5990","regular","business"],
+["2/18/26","Robinhood",1000,"Investment","Bugs Checking 3045","internal transfer","investment"],
+["2/18/26","ProfilePhoto App",6.98,"Other","Ultimate Rewards 9759","regular","personal"],
+["2/18/26","Oura Ring",76.11,"Health","Ultimate Rewards 9759","regular","personal"],
+["2/18/26","PNC Transfer",1000,"Transfer","Bugs Checking 3045","internal transfer","transfer"],
+["2/18/26","InVideo",38.06,"Business","Ultimate Rewards 9759","regular","business"],
+["2/17/26","The Clubhouse",145.95,"Restaurants","Ultimate Rewards 9759","regular","shared"],
+["2/17/26","T.J.Maxx",314.83,"Clothing","Ultimate Rewards 1041","regular","personal"],
+["2/17/26","Ro Health",299,"Health","Ultimate Rewards 9759","regular","personal"],
+["2/17/26","Fidelity Transfer",19000,"Transfer","Bugs Checking 3045","internal transfer","transfer"],
+["2/17/26","Amazon Prime",151.34,"Shopping","Prime Visa 5990","regular","shared"],
+["2/17/26","Wine Cellar",50.03,"Groceries","Ultimate Rewards 1041","regular","shared"],
+["2/17/26","Amazon Mktpl",96.2,"Business","Prime Visa 5990","regular","business"],
+["2/16/26","Pinterest Ads",104.39,"Business","Shelzys Designs 5301","regular","business"],
+["2/16/26","Blueland",91.03,"Shopping","Ultimate Rewards 1041","regular","personal"],
+["2/16/26","Ro Health",45,"Health","Ultimate Rewards 9759","regular","personal"],
+["2/16/26","GitHub",10.88,"Other","Credit Card 443","regular","personal"],
+["2/15/26","Cross Sound Ferry",113.53,"Transportation","Ultimate Rewards 1041","regular","shared"],
+["2/15/26","Cross Sound WiFi",2.99,"Other","Ultimate Rewards 9759","regular","shared"],
+["2/15/26","Amazon Payments",167.6,"Shopping","Prime Visa 5990","regular","personal"],
+["2/15/26","Apple.com-bill",8.68,"Subscriptions","Marriott Amex 5005","regular","personal"],
+["2/14/26","Zelle from Terri",-100,"Transfer","Bugs Checking 3045","internal transfer","transfer"],
+["2/14/26","Claude.ai",217.5,"AI Subscription","Ultimate Rewards 9759","regular","personal"],
+["2/13/26","IPG Payroll",-13686.68,"Income","Bugs Checking 3045","income","transfer"],
+["2/13/26","Temu.com",43.65,"Shopping","Credit Card 443","regular","personal"],
+["2/13/26","Notion",26.1,"Business","Ultimate Rewards 9759","regular","business"],
+["2/13/26","F.H. Gillingham",58.68,"Restaurants","Ultimate Rewards 1041","regular","shared"],
+["2/13/26","Dropbox",11.99,"Business","Credit Card 443","regular","business"],
+["2/13/26","Cumberland Farms",31.05,"Groceries","Ultimate Rewards 9759","regular","shared"],
+["2/13/26","Coursera",49,"Education","Ultimate Rewards 9759","regular","personal"],
+["2/12/26","Springs Pizza",38.34,"Restaurants","Ultimate Rewards 1041","regular","shared"],
+["2/11/26","Promethease DNA",30,"Health","Ultimate Rewards 9759","regular","personal"],
+["2/11/26","Pirate Ship",11.56,"Business","Credit Card 443","regular","business"],
+["2/11/26","Instacart",107.79,"Groceries","Ultimate Rewards 1041","regular","shared"],
+["2/11/26","Facebook Ads",18.54,"Business","Ultimate Rewards 1041","regular","business"],
+["2/11/26","Fundrise",500,"Investment","Bugs Checking 3045","regular","investment"],
+["2/11/26","Splash Car Wash",47.85,"Auto","Marriott Amex 5005","regular","shared"],
+["2/10/26","OpenAI ChatGPT",217.75,"AI Subscription","Ultimate Rewards 9759","regular","personal"],
+["2/10/26","Nuuly",102.66,"Clothing","Ultimate Rewards 1041","regular","personal"],
+["2/10/26","Hyatt Standard",21.15,"Travel","Ultimate Rewards 1041","regular","shared"],
+["2/10/26","McDonalds",15.15,"Restaurants","Ultimate Rewards 9759","regular","shared"],
+["2/10/26","ExxonMobil",63.21,"Gas","Ultimate Rewards 9759","regular","shared"],
+["2/10/26","ElevenLabs",11.96,"AI Subscription","Ultimate Rewards 9759","regular","personal"],
+["2/10/26","GoDaddy",30.38,"Business","Ultimate Rewards 9759","regular","business"],
+["2/10/26","Amazon",9.58,"Shopping","Prime Visa 5990","regular","shared"],
+["2/10/26","MNR Station Tix",15,"Transportation","Marriott Amex 5005","regular","shared"],
+["2/9/26","Temu.com",76.16,"Shopping","Prime Visa 5990","regular","personal"],
+["2/9/26","Sephora",99.08,"Beauty","Ultimate Rewards 1041","regular","personal"],
+["2/9/26","NYC ParkNYC",75.1,"Parking","Ultimate Rewards 9759","regular","shared"],
+["2/9/26","BMW Payment",751,"Auto","Bugs Checking 3045","regular","shared"],
+["2/9/26","CVS",15.19,"Pharmacy","Marriott Amex 5005","regular","personal"],
+["2/9/26","Cava",16.42,"Restaurants","Marriott Amex 5005","regular","shared"],
+["2/8/26","Lyft",7.8,"Transportation","Ultimate Rewards 1041","regular","shared"],
+["2/8/26","Grubhub",47.67,"Delivery","Ultimate Rewards 9759","regular","shared"],
+["2/8/26","Cottage Deli",34.62,"Restaurants","Ultimate Rewards 9759","regular","shared"],
+["2/8/26","CVS",93.81,"Pharmacy","Ultimate Rewards 1041","regular","personal"],
+["2/8/26","Anthropologie",182.49,"Clothing","Ultimate Rewards 9759","regular","personal"],
+["2/8/26","Alibaba",1369.77,"Business","Ultimate Rewards 9759","regular","business"],
+["2/8/26","86th St Photo",91.46,"Other","Marriott Amex 5005","regular","personal"],
+["2/7/26","Apple.com-bill",141.51,"Subscriptions","Marriott Amex 5005","regular","personal"],
+["2/6/26","Chase Travel",43.16,"Travel","Ultimate Rewards 1041","regular","shared"],
+["2/6/26","Solimans Grocery",16.98,"Groceries","Marriott Amex 5005","regular","shared"],
+["2/6/26","Melangerie",21.24,"Restaurants","Marriott Amex 5005","regular","shared"],
+["2/5/26","eBay",168.56,"Business","Ultimate Rewards 1041","regular","business"],
+["2/5/26","Temu.com",104.54,"Shopping","Prime Visa 5990","regular","personal"],
+["2/5/26","Netflix",8.7,"Subscriptions","Ultimate Rewards 9759","regular","shared"],
+["2/4/26","Madison Reed",32.08,"Beauty","Credit Card 443","regular","personal"],
+["2/4/26","LinkedIn",43.54,"Business","Ultimate Rewards 9759","regular","business"],
+["2/4/26","1-800-Flowers",62.95,"Home","Marriott Amex 5005","regular","personal"],
+["2/3/26","Walmart",14.1,"Shopping","Credit Card 443","regular","shared"],
+["2/3/26","TJX Companies",83.79,"Shopping","Ultimate Rewards 9759","regular","personal"],
+["2/3/26","Fundrise",500,"Investment","Bugs Checking 3045","regular","investment"],
+["2/2/26","Google Workspace",20.49,"Business","Ultimate Rewards 9759","regular","business"],
+["2/2/26","Mr Deli",32.59,"Groceries","Prime Visa 5990","regular","shared"],
+["2/2/26","Pinterest Ads",75.73,"Business","Shelzys Designs 5301","regular","business"],
+["2/2/26","Google One",2.17,"AI Subscription","Ultimate Rewards 1041","regular","personal"],
+["2/2/26","Uber Eats",45.83,"Delivery","Marriott Amex 5005","regular","shared"],
+["2/1/26","TJX Companies",27.29,"Shopping","Ultimate Rewards 9759","regular","personal"],
+["2/1/26","Costco return",-630.74,"Groceries","Ultimate Rewards 1041","regular","shared"],
+["1/31/26","Uber Eats",69.37,"Delivery","Marriott Amex 5005","regular","shared"],
+["1/31/26","Rent to Alexis",3750,"Rent","Venmo","regular","shared"]
+];
+
+// === GRAY'S TRANSACTIONS ===
+const gTxns=[
+["2026-02-23","Montauket Hotel",-63,"Restaurants & Bars","Venture 4522","Gray Perkins","shared"],
+["2026-02-23","Standard Transfer",-332.7,"Transfer","Grays Venmo","Gray Perkins","transfer"],
+["2026-02-23","NYC Parking Ticket",-117.3,"Tolls","Grays Venmo","Gray Perkins","personal"],
+["2026-02-21","Alimentari",-66.62,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-21","Uber Eats",-10.7,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-21","E Hampton",-127.24,"Restaurants & Bars","Amex Platinum 1007","Gray Perkins","shared"],
+["2026-02-20","The Clubhouse",-180.42,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-20","Rosies",-100.82,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-20","Apple",-9.99,"Subscriptions","Venture 4522","Gray Perkins","personal"],
+["2026-02-19","Capital One Fee",-59,"Financial Fees","Venture 4522","Gray Perkins","personal"],
+["2026-02-19","Morgan Stanley Transfer",-2000,"Transfer","Checking 4688","Gray Perkins","investment"],
+["2026-02-19","Hampton Chutney",-35.35,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-18","Stop & Shop",-23.16,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-18","Citarella",-19.52,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-18","Nayvax Vending",-3,"Delivery","Venture 4522","Gray Perkins","personal"],
+["2026-02-18","Uber Eats",-62.38,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-18","Amex Plat Autopay",686.16,"Payment","Amex Platinum 1007","Gray Perkins","transfer"],
+["2026-02-18","Morgan Stanley",-3000,"Transfer","Checking 4688","Gray Perkins","investment"],
+["2026-02-17","YMCA",-64,"Gym","Venture 4522","Gray Perkins","personal"],
+["2026-02-17","Shell",-64.45,"Gas","Venture 4522","Gray Perkins","shared"],
+["2026-02-17","Optimum",-100.23,"Internet","Venture 4522","Gray Perkins","shared"],
+["2026-02-17","Maggio Environmental",-74.48,"Garbage","Venture 4522","Gray Perkins","shared"],
+["2026-02-16","Uber Eats",-29.76,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-16","Goldbergs Bagels",-22.83,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-16","Stop & Shop",-58.57,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-16","Woodstock Inn",-139.1,"Restaurants & Bars","Venture 4522","Gray Perkins","shared"],
+["2026-02-16","Woodstock Inn",-3,"Restaurants & Bars","Venture 4522","Gray Perkins","shared"],
+["2026-02-16","Sugarbush Farm",-56.9,"Delivery","Venture 4522","Gray Perkins","shared"],
+["2026-02-16","Amazon",-54.36,"Shopping","Venture 4522","Gray Perkins","shared"],
+["2026-02-15","Woodstock Inn",-616.32,"Travel","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-15","Cross Sound Ferry",-26.5,"Transportation","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-15","YouTube TV (Michelle)",-14.5,"Subscriptions","Amex Platinum 1007","Michelle Humes","personal"],
+["2026-02-15","Little Creek Oyster",-71.77,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-15","Mon Vert Cafe",-53.35,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-14","Woodstock Village Mkt",-16.04,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-14","Dreamscape Coffee",-18.76,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-14","BMW Payment",528.96,"Auto","Car Loan","Shared","shared"],
+["2026-02-13","The Village Inn",-166.32,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-13","Addepar Payroll",4846.96,"Income","Checking 4688","Gray Perkins","transfer"],
+["2026-02-12","Woodstock Inn",-75.67,"Experience","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-12","Simon Pearce",-157.28,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-12","Dreamscape Coffee",-18.76,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-12","Starbucks",-20,"Delivery","Venture 4522","Gray Perkins","personal"],
+["2026-02-12","ParkMobile",-7.45,"Tolls","Venture 4522","Gray Perkins","shared"],
+["2026-02-12","MTA MNR",-15,"Tolls","Venture 4522","Gray Perkins","shared"],
+["2026-02-12","E-ZPass",-25,"Tolls","Venture 4522","Gray Perkins","shared"],
+["2026-02-11","Five Guys",-36.34,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-11","Cumberland Farms",-3.09,"Delivery","Amex Gold 2003","Gray Perkins","personal"],
+["2026-02-11","Woodstock Inn Resort",-867.91,"Travel","Venture 4522","Gray Perkins","shared"],
+["2026-02-10","Uber Eats",-38.94,"Delivery","Venture 4522","Gray Perkins","shared"],
+["2026-02-10","E-ZPass",-25,"Tolls","Venture 4522","Gray Perkins","shared"],
+["2026-02-10","Grand Central",-10.89,"Restaurants & Bars","Venture 4522","Gray Perkins","personal"],
+["2026-02-09","Uber Eats",-91.57,"Delivery","Venture 4522","Gray Perkins","shared"],
+["2026-02-09","Uber Trips",-122.45,"Taxi","Venture 4522","Gray Perkins","personal"],
+["2026-02-09","Spotify",-11.99,"Music","Venture 4522","Gray Perkins","personal"],
+["2026-02-09","Curb Taxi",-16.38,"Taxi","Venture 4522","Gray Perkins","personal"],
+["2026-02-09","Little West Wine",-104.5,"Restaurants & Bars","Venture 4522","Gray Perkins","shared"],
+["2026-02-09","Geico",-152.51,"Car Insurance","Venture 4522","Gray Perkins","shared"],
+["2026-02-09","E-ZPass",-25,"Tolls","Venture 4522","Gray Perkins","shared"],
+["2026-02-09","Morgan Stanley",-1000,"Transfer","Checking 4688","Gray Perkins","investment"],
+["2026-02-08","BMW Payment",528.96,"Auto","BMW Loan","Shared","shared"],
+["2026-02-08","Citarella",-64.75,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-07","Uber",-25.96,"Taxi","Venture 4522","Gray Perkins","personal"],
+["2026-02-07","Starbucks",-10,"Delivery","Venture 4522","Gray Perkins","personal"],
+["2026-02-07","Hotel.com",-178.15,"Travel","Venture 4522","Gray Perkins","shared"],
+["2026-02-07","Club Macanudo",-251.58,"Restaurants & Bars","Amex Platinum 1007","Gray Perkins","personal"],
+["2026-02-06","PSEG Electric",-205.81,"Electric","Venture 4522","Gray Perkins","shared"],
+["2026-02-06","Old Navy",-66.98,"Shopping","Venture 4522","Gray Perkins","personal"],
+["2026-02-06","Hampton Jitney",-74,"Taxi","Venture 4522","Gray Perkins","shared"],
+["2026-02-06","Zuma NY",-178.55,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-06","Alberts",-53.69,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-06","Uber Eats",-6.13,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-06","Morgan Stanley",-2000,"Transfer","Checking 4688","Gray Perkins","investment"],
+["2026-02-05","Apple",-2.99,"Subscriptions","Venture 4522","Gray Perkins","personal"],
+["2026-02-03","Lululemon",-50.28,"Shopping","Amex Platinum 1007","Gray Perkins","personal"],
+["2026-02-02","YouTube TV",-82.99,"Subscriptions","Amex Platinum 1007","Gray Perkins","personal"],
+["2026-02-02","Citarella",-39.69,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-02","Goodfriend Storage",-211,"Storage","Venture 4522","Gray Perkins","shared"],
+["2026-02-02","OpenAI (Michelle)",-21.78,"Subscriptions","Venture 4522","Michelle Humes","personal"],
+["2026-02-02","Goldbergs Bagels",-3.95,"Delivery","Venture 4522","Gray Perkins","shared"],
+["2026-02-02","Costco Gas",-49.48,"Gas","Venture 4522","Gray Perkins","shared"],
+["2026-02-02","Costco Groceries",-393.44,"Groceries","Venture 4522","Gray Perkins","shared"],
+["2026-02-01","Carissas Bakery",-20.44,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-01","Uber Eats",-10.7,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-02-01","Blue Light McCoy (Oil)",-350,"Heating Oil","Venture 4522","Gray Perkins","shared"],
+["2026-02-01","Woodstock Inn",-867.91,"Travel","Venture 4522","Gray Perkins","shared"],
+["2026-02-01","Rent to Alexis",-3750,"Rent","Grays Venmo","Gray Perkins","shared"],
+["2026-01-31","Speedway",-7.75,"Gas","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-31","Stop & Shop",-58.69,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-31","Uber Eats",-15.56,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-30","Addepar Payroll",4577.53,"Income","Checking 4688","Gray Perkins","transfer"],
+["2026-01-30","Venmo Rent",-3750,"Rent","Checking 4688","Gray Perkins","shared"],
+["2026-01-30","Uber Eats",-30.44,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-29","Costco Instacart",-668.37,"Shopping","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-29","Clear",-169,"Subscriptions","Amex Platinum 1007","Gray Perkins","personal"],
+["2026-01-27","Uber Eats",-20.27,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-27","Starbucks",-10,"Delivery","Venture 4522","Gray Perkins","personal"],
+["2026-01-27","Race Lane Liquors",-9.78,"Groceries","Venture 4522","Gray Perkins","shared"],
+["2026-01-27","JetBlue",-10,"Airline","Venture 4522","Gray Perkins","personal"],
+["2026-01-26","Uber Eats",-10.7,"Delivery","Venture 4522","Gray Perkins","shared"],
+["2026-01-26","Lemonade Insurance",-50.92,"Insurance","Venture 4522","Gray Perkins","shared"],
+["2026-01-25","Stop & Shop",-44.76,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-24","Stop & Shop",-35.85,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-24","Uber Eats",-45.31,"Delivery","Venture 4522","Gray Perkins","shared"],
+["2026-01-21","Citarella",-14.91,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-21","The Clubhouse",-156.4,"Restaurants & Bars","Venture 4522","Gray Perkins","shared"],
+["2026-01-20","YMCA",-35,"Gym","Venture 4522","Gray Perkins","personal"],
+["2026-01-20","Panera Bread",-24.12,"Restaurants & Bars","Venture 4522","Gray Perkins","shared"],
+["2026-01-19","Citarella",-55.28,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-19","Uber Eats",-48.37,"Delivery","Venture 4522","Gray Perkins","shared"],
+["2026-01-19","Starbucks",-10,"Delivery","Venture 4522","Gray Perkins","personal"],
+["2026-01-19","Maggio Environmental",-74.48,"Garbage","Venture 4522","Gray Perkins","shared"],
+["2026-01-18","LT Burger",-78.26,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-17","Optimum",-100.23,"Internet","Venture 4522","Gray Perkins","shared"],
+["2026-01-17","Stop & Shop",-29.33,"Groceries","Venture 4522","Gray Perkins","shared"],
+["2026-01-16","Wolffer Estate",-185.78,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-15","Highway Restaurant",-142.55,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-15","Citarella",-12.27,"Groceries","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-15","YouTube TV (Michelle)",-14.5,"Subscriptions","Amex Platinum 1007","Michelle Humes","personal"],
+["2026-01-15","Addepar Payroll",4577.53,"Income","Checking 4688","Gray Perkins","transfer"],
+["2026-01-14","Long Wharf Wines",-28.26,"Restaurants & Bars","Amex Platinum 1007","Gray Perkins","personal"],
+["2026-01-14","Hampton Jitney",-65,"Taxi","Venture 4522","Gray Perkins","shared"],
+["2026-01-13","Uber Eats",-44.13,"Delivery","Venture 4522","Gray Perkins","shared"],
+["2026-01-12","Uber Trips",-62.71,"Taxi","Venture 4522","Gray Perkins","personal"],
+["2026-01-12","E-ZPass",-25,"Tolls","Venture 4522","Gray Perkins","shared"],
+["2026-01-12","Cumberland Farms Gas",-55.6,"Gas","Venture 4522","Gray Perkins","shared"],
+["2026-01-09","Riverhead Brewery",-147.11,"Restaurants & Bars","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-09","Spotify",-11.99,"Music","Venture 4522","Gray Perkins","personal"],
+["2026-01-09","Geico",-152.51,"Car Insurance","Venture 4522","Gray Perkins","shared"],
+["2026-01-09","BMW Payment",-751,"Auto","Checking 4688","Gray Perkins","shared"],
+["2026-01-08","E Hampton Grill",-183.65,"Restaurants & Bars","Amex Platinum 1007","Gray Perkins","personal"],
+["2026-01-08","Sagtown Coffee",-26.14,"Delivery","Amex Gold 2003","Gray Perkins","shared"],
+["2026-01-05","Costco Gas",-25.63,"Gas","Venture 4522","Gray Perkins","shared"],
+["2026-01-05","Goodfriend Storage",-211,"Storage","Venture 4522","Gray Perkins","shared"],
+["2026-01-05","Airport Parking",-257.92,"Travel","Venture 4522","Gray Perkins","shared"],
+["2026-01-05","Breeze Airways",-9,"Airline","Venture 4522","Gray Perkins","personal"],
+["2026-01-03","PSEG Electric",-264.97,"Electric","Venture 4522","Gray Perkins","shared"],
+["2026-01-02","YouTube TV",-82.99,"Subscriptions","Amex Platinum 1007","Gray Perkins","personal"],
+["2026-01-02","OpenAI (Michelle)",-21.78,"Subscriptions","Venture 4522","Michelle Humes","personal"],
+["2026-01-02","Amex Plat Fee",-195,"Financial Fees","Amex Platinum 1007","Gray Perkins","personal"],
+["2026-01-01","Rent (Zelle+Venmo)",-7500,"Rent","Multiple","Gray Perkins","shared"],
+["2026-01-02","Breeze Airways",-1504.34,"Airline","Amex Platinum 1007","Gray Perkins","shared"],
+["2026-01-01","American Airlines",-630.96,"Airline","Amex Platinum 1007","Gray Perkins","shared"]
+];
+
+// === TABLE RENDERING ===
+function classify(c){const m={'shared':'badge-shared','personal':'badge-personal','business':'badge-business','investment':'badge-investment','transfer':'badge-transfer'};return `<span class="badge ${m[c]||'badge-transfer'}">${c}</span>`}
+function fmt(n){return typeof n==='number'?'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):n}
+
+function renderTable(prefix,data){
+const body=document.getElementById(prefix+'Body');
+const cats=new Set(),accts=new Set();
+body.innerHTML='';
+data.forEach(r=>{
+cats.add(r[3]);accts.add(r[4]);
+const tr=document.createElement('tr');
+tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td><td style="text-align:right;${r[2]<0?'color:var(--red)':'color:var(--green)'}">${fmt(r[2])}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${classify(r[6])}</td>`;
+tr.dataset.raw=JSON.stringify(r);
+body.appendChild(tr);
+});
+const catSel=document.getElementById(prefix+'Cat');
+const acctSel=document.getElementById(prefix+'Acct');
+[...cats].sort().forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;catSel.appendChild(o)});
+[...accts].sort().forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;acctSel.appendChild(o)});
+}
+
+function filterTable(prefix){
+const search=document.getElementById(prefix+'Search').value.toLowerCase();
+const cat=document.getElementById(prefix+'Cat').value;
+const acct=document.getElementById(prefix+'Acct').value;
+const type=document.getElementById(prefix+'Type').value;
+const rows=document.getElementById(prefix+'Body').rows;
+for(let r of rows){
+const d=JSON.parse(r.dataset.raw);
+const show=(!search||d[1].toLowerCase().includes(search)||d[3].toLowerCase().includes(search))&&(!cat||d[3]===cat)&&(!acct||d[4]===acct)&&(!type||d[6]===type);
+r.style.display=show?'':'none';
+}
+}
+
+// === SORTING ===
+document.querySelectorAll('th[data-col]').forEach(th=>{
+th.addEventListener('click',()=>{
+const table=th.closest('table');
+const tbody=table.querySelector('tbody');
+const col=parseInt(th.dataset.col);
+const rows=[...tbody.rows];
+const asc=!th.classList.contains('sorted-asc');
+table.querySelectorAll('th').forEach(h=>{h.classList.remove('sorted-asc','sorted-desc')});
+th.classList.add(asc?'sorted-asc':'sorted-desc');
+rows.sort((a,b)=>{
+const av=JSON.parse(a.dataset.raw)[col],bv=JSON.parse(b.dataset.raw)[col];
+if(typeof av==='number')return asc?av-bv:bv-av;
+return asc?String(av).localeCompare(String(bv)):String(bv).localeCompare(String(av));
+});
+rows.forEach(r=>tbody.appendChild(r));
+});
+});
+
+// === EDITABLE BUDGET ===
+document.querySelectorAll('.editable').forEach(cell=>{
+cell.addEventListener('dblclick',()=>{
+const val=cell.textContent;
+const input=document.createElement('input');
+input.type='number';input.value=val;input.style.cssText='width:80px;background:var(--bg);color:var(--text);border:1px solid var(--accent);padding:4px;border-radius:4px;text-align:right';
+cell.textContent='';cell.appendChild(input);input.focus();
+const save=()=>{cell.textContent=input.value||val;recalcBudget()};
+input.addEventListener('blur',save);
+input.addEventListener('keydown',e=>{if(e.key==='Enter')save()});
+});
+});
+
+function recalcBudget(){
+let fixed=0,variable=0;
+document.querySelectorAll('.budget-amt').forEach(c=>fixed+=parseFloat(c.textContent)||0);
+document.querySelectorAll('.budget-var').forEach(c=>variable+=parseFloat(c.textContent)||0);
+document.getElementById('fixedTotal').textContent=fixed.toLocaleString();
+document.getElementById('varTotal').textContent=variable.toLocaleString();
+const total=fixed+variable;
+document.getElementById('grandTotal').textContent=total.toLocaleString();
+document.getElementById('totalSharedDisplay').textContent='$'+total.toLocaleString();
+updateSplit(document.getElementById('splitSlider').value);
+}
+
+// === SPLIT CALCULATOR ===
+function setSplit(v){document.getElementById('splitSlider').value=v;updateSplit(v)}
+function updateSplit(v){
+const total=parseInt(document.getElementById('grandTotal').textContent.replace(/,/g,''));
+const mNet=11500,gNet=11500;
+const mShare=Math.round(total*v/100);
+const gShare=total-mShare;
+document.getElementById('mPct').textContent=v+'%';
+document.getElementById('gPct').textContent=(100-v)+'%';
+document.getElementById('mContrib').textContent='$'+mShare.toLocaleString();
+document.getElementById('gContrib').textContent='$'+gShare.toLocaleString();
+document.getElementById('eachShare').textContent=Math.round(total/2).toLocaleString();
+const mLeft=mNet-mShare,gLeft=gNet-gShare;
+document.getElementById('mKeep').textContent='$'+mLeft.toLocaleString();
+document.getElementById('gKeep').textContent='$'+gLeft.toLocaleString();
+document.getElementById('personalBudgetDisplay').textContent='$'+Math.round((mLeft+gLeft)/2).toLocaleString();
+document.getElementById('leftover').textContent=Math.round((mLeft+gLeft)/2).toLocaleString();
+document.getElementById('flowShared').textContent='$'+total.toLocaleString()+'/mo';
+}
+
+// === CSV EXPORT ===
+function exportCSV(prefix){
+const data=prefix==='m'?mTxns:gTxns;
+const headers=prefix==='m'?'Date,Name,Amount,Category,Account,Type,Classification':'Date,Merchant,Amount,Category,Account,Owner,Classification';
+const csv=headers+'\n'+data.map(r=>r.map(c=>typeof c==='string'&&c.includes(',')?'"'+c+'"':c).join(',')).join('\n');
+const blob=new Blob([csv],{type:'text/csv'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(prefix==='m'?'michelle':'gray')+'_transactions.csv';a.click();
+}
+
+// === INIT ===
+renderTable('m',mTxns);
+renderTable('g',gTxns);
+updateSplit(50);
+</script>
+</body>
+</html>
