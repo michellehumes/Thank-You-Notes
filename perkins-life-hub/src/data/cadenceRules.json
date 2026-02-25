@@ -1,0 +1,24 @@
+{
+  "health": {
+    "dentist": { "cadenceMonths": 6, "label": "Dental Checkup", "category": "health", "appliesTo": ["michelle", "gray"] },
+    "physical": { "cadenceMonths": 12, "label": "Annual Physical", "category": "health", "appliesTo": ["michelle", "gray"] },
+    "gyno": { "cadenceMonths": 12, "label": "OB/GYN", "category": "health", "appliesTo": ["michelle"] },
+    "botox": { "cadenceMonths": 5, "label": "Botox Appointment", "category": "health", "appliesTo": ["michelle"] },
+    "dermatology": { "cadenceMonths": 12, "label": "Dermatology Check", "category": "health", "appliesTo": ["michelle", "gray"] },
+    "eyeExam": { "cadenceMonths": 12, "label": "Eye Exam", "category": "health", "appliesTo": ["michelle", "gray"] }
+  },
+  "maintenance": {
+    "hvacService": { "cadenceMonths": 6, "label": "HVAC Service", "category": "home" },
+    "hvacFilter": { "cadenceMonths": 3, "label": "HVAC Filter Change", "category": "home" },
+    "gutterCleaning": { "cadenceMonths": 6, "label": "Gutter Cleaning", "category": "home" },
+    "oilChange_michelle": { "cadenceMonths": 6, "label": "Oil Change - Michelle", "category": "vehicle" },
+    "oilChange_gray": { "cadenceMonths": 6, "label": "Oil Change - Gray", "category": "vehicle" },
+    "tireRotation": { "cadenceMonths": 6, "label": "Tire Rotation", "category": "vehicle" },
+    "homeInsurance": { "cadenceMonths": 12, "label": "Home Insurance Renewal", "category": "insurance" },
+    "autoInsurance": { "cadenceMonths": 6, "label": "Auto Insurance Renewal", "category": "insurance" },
+    "lifeInsurance": { "cadenceMonths": 12, "label": "Life Insurance Review", "category": "insurance" },
+    "taxFiling": { "cadenceMonths": 12, "label": "Tax Filing Deadline", "category": "finance", "fixedDate": "04-15" },
+    "waterHeater": { "cadenceMonths": 12, "label": "Water Heater Flush", "category": "home" },
+    "pestControl": { "cadenceMonths": 3, "label": "Pest Control", "category": "home" }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "calendar": {
+    "health": { "label": "Health", "color": "#dc2626", "icon": "Heart" },
+    "travel": { "label": "Travel", "color": "#7c3aed", "icon": "Plane" },
+    "finance": { "label": "Finance", "color": "#059669", "icon": "DollarSign" },
+    "home": { "label": "Home", "color": "#d97706", "icon": "Home" },
+    "business": { "label": "Business", "color": "#2563eb", "icon": "Briefcase" },
+    "social": { "label": "Social", "color": "#ec4899", "icon": "Users" },
+    "personal": { "label": "Personal", "color": "#6b7280", "icon": "User" }
+  },
+  "financial": {
+    "housing": { "label": "Housing", "subcategories": ["Mortgage", "Rent", "Property Tax", "HOA"] },
+    "utilities": { "label": "Utilities", "subcategories": ["Electric", "Gas", "Water", "Internet", "Phone"] },
+    "insurance": { "label": "Insurance", "subcategories": ["Health", "Auto", "Home", "Life"] },
+    "food": { "label": "Food & Dining", "subcategories": ["Groceries", "Restaurants", "Coffee", "Delivery"] },
+    "transportation": { "label": "Transportation", "subcategories": ["Gas", "Maintenance", "Parking", "Tolls"] },
+    "health": { "label": "Health & Wellness", "subcategories": ["Medical", "Dental", "Pharmacy", "Fitness"] },
+    "personal": { "label": "Personal", "subcategories": ["Clothing", "Beauty", "Subscriptions"] },
+    "entertainment": { "label": "Entertainment", "subcategories": ["Streaming", "Events", "Hobbies"] },
+    "savings": { "label": "Savings & Investments", "subcategories": ["401k", "IRA", "Brokerage", "Emergency"] },
+    "business": { "label": "Business (Shelzys)", "subcategories": ["Materials", "Shipping", "Fees", "Marketing"] },
+    "debt": { "label": "Debt Payments", "subcategories": ["Credit Card", "Student Loan", "Auto Loan"] },
+    "giving": { "label": "Giving", "subcategories": ["Charity", "Gifts", "Tithe"] }
+  },
+  "documents": {
+    "insurance": { "label": "Insurance Documents" },
+    "tax": { "label": "Tax Documents" },
+    "legal": { "label": "Legal Documents" },
+    "medical": { "label": "Medical Records" },
+    "warranty": { "label": "Warranties" },
+    "financial": { "label": "Financial Documents" },
+    "property": { "label": "Property Documents" }
+  }
+}
