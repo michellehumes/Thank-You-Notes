@@ -1,0 +1,76 @@
+{
+  "events": [
+    { "id": "e1", "title": "Michelle - Dentist Checkup", "date": "2026-03-02T10:00:00", "category": "health", "person": "michelle", "type": "dentist" },
+    { "id": "e2", "title": "Gray - Annual Physical", "date": "2026-03-10T09:00:00", "category": "health", "person": "gray", "type": "physical" },
+    { "id": "e3", "title": "Home Insurance Renewal", "date": "2026-03-15T00:00:00", "category": "finance", "person": "household" },
+    { "id": "e4", "title": "Date Night", "date": "2026-02-28T19:00:00", "category": "social", "person": "household" },
+    { "id": "e5", "title": "HVAC Spring Service", "date": "2026-04-01T08:00:00", "category": "home", "person": "household", "type": "hvacService" },
+    { "id": "e6", "title": "Tax Filing Deadline", "date": "2026-04-15T00:00:00", "category": "finance", "person": "household" },
+    { "id": "e7", "title": "Gray - Oil Change", "date": "2026-03-20T11:00:00", "category": "home", "person": "gray", "type": "oilChange_gray" },
+    { "id": "e8", "title": "Michelle - OB/GYN Annual", "date": "2026-04-05T14:00:00", "category": "health", "person": "michelle", "type": "gyno" }
+  ],
+  "healthCompliance": {
+    "michelle": {
+      "dentist": { "lastVisit": "2025-09-15", "nextDue": "2026-03-15", "status": "upcoming" },
+      "physical": { "lastVisit": "2025-04-20", "nextDue": "2026-04-20", "status": "upcoming" },
+      "gyno": { "lastVisit": "2025-04-05", "nextDue": "2026-04-05", "status": "upcoming" },
+      "botox": { "lastVisit": "2025-11-01", "nextDue": "2026-04-01", "status": "upcoming" },
+      "eyeExam": { "lastVisit": "2025-06-10", "nextDue": "2026-06-10", "status": "ok" }
+    },
+    "gray": {
+      "dentist": { "lastVisit": "2025-07-22", "nextDue": "2026-01-22", "status": "overdue" },
+      "physical": { "lastVisit": "2025-03-10", "nextDue": "2026-03-10", "status": "upcoming" },
+      "eyeExam": { "lastVisit": "2025-01-15", "nextDue": "2026-01-15", "status": "overdue" }
+    }
+  },
+  "maintenance": {
+    "hvacService": { "lastCompleted": "2025-10-15", "nextDue": "2026-04-15", "vendor": "Comfort Air HVAC", "cost": 189 },
+    "hvacFilter": { "lastCompleted": "2026-01-05", "nextDue": "2026-04-05", "vendor": "Self", "cost": 25 },
+    "gutterCleaning": { "lastCompleted": "2025-11-20", "nextDue": "2026-05-20", "vendor": "Clean Gutters Pro", "cost": 250 },
+    "oilChange_michelle": { "lastCompleted": "2025-12-10", "nextDue": "2026-06-10", "vendor": "Take 5 Oil Change", "cost": 75 },
+    "oilChange_gray": { "lastCompleted": "2025-09-15", "nextDue": "2026-03-15", "vendor": "Take 5 Oil Change", "cost": 75 },
+    "pestControl": { "lastCompleted": "2025-12-01", "nextDue": "2026-03-01", "vendor": "Terminix", "cost": 120 },
+    "waterHeater": { "lastCompleted": "2025-06-01", "nextDue": "2026-06-01", "vendor": "Self", "cost": 0 }
+  },
+  "financialSummary": {
+    "accounts": [
+      { "id": "joint_checking", "name": "Joint Checking", "type": "checking", "balance": 8450.32, "institution": "Chase" },
+      { "id": "michelle_personal", "name": "Michelle Personal", "type": "checking", "balance": 3200.15, "institution": "Chase" },
+      { "id": "gray_personal", "name": "Gray Personal", "type": "checking", "balance": 2875.40, "institution": "Wells Fargo" },
+      { "id": "joint_savings", "name": "Emergency Fund", "type": "savings", "balance": 22500.00, "institution": "Marcus" },
+      { "id": "michelle_cc", "name": "Michelle Visa", "type": "credit", "balance": -1245.67, "institution": "Chase" },
+      { "id": "gray_cc", "name": "Gray Amex", "type": "credit", "balance": -890.23, "institution": "Amex" },
+      { "id": "michelle_401k", "name": "Michelle 401k", "type": "investment", "balance": 145200.00, "institution": "Fidelity" },
+      { "id": "gray_401k", "name": "Gray 401k", "type": "investment", "balance": 98500.00, "institution": "Vanguard" },
+      { "id": "joint_brokerage", "name": "Joint Brokerage", "type": "investment", "balance": 34750.00, "institution": "Schwab" }
+    ],
+    "monthlyIncome": 14500,
+    "monthlyExpenses": 9800,
+    "savingsRate": 32.4,
+    "netWorth": 313339.97,
+    "emergencyFundMonths": 2.3
+  },
+  "businessMetrics": {
+    "shopName": "Shelzy's Designs",
+    "platform": "Etsy",
+    "monthlyRevenue": 2840,
+    "monthlyOrders": 67,
+    "averageOrderValue": 42.39,
+    "refundRate": 2.1,
+    "fulfillmentAvgDays": 1.8,
+    "inventoryItems": 45,
+    "lowStockItems": 3
+  },
+  "bills": [
+    { "name": "Mortgage", "amount": 2450, "dueDate": 1, "category": "housing", "autopay": true },
+    { "name": "Electric", "amount": 180, "dueDate": 15, "category": "utilities", "autopay": true },
+    { "name": "Water", "amount": 65, "dueDate": 20, "category": "utilities", "autopay": false },
+    { "name": "Internet", "amount": 89, "dueDate": 5, "category": "utilities", "autopay": true },
+    { "name": "Auto Insurance", "amount": 285, "dueDate": 12, "category": "insurance", "autopay": true },
+    { "name": "Health Insurance", "amount": 450, "dueDate": 1, "category": "insurance", "autopay": true },
+    { "name": "Michelle Phone", "amount": 85, "dueDate": 22, "category": "utilities", "autopay": true },
+    { "name": "Gray Phone", "amount": 85, "dueDate": 22, "category": "utilities", "autopay": true },
+    { "name": "Netflix", "amount": 15.49, "dueDate": 8, "category": "entertainment", "autopay": true },
+    { "name": "Spotify", "amount": 16.99, "dueDate": 14, "category": "entertainment", "autopay": true }
+  ]
+}

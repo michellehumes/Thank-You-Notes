@@ -1,0 +1,18 @@
+{
+  "appName": "Perkins Life Hub",
+  "version": "1.0.0",
+  "household": {
+    "members": [
+      { "id": "michelle", "name": "Michelle Perkins", "role": "primary" },
+      { "id": "gray", "name": "Gray Perkins", "role": "primary" }
+    ]
+  },
+  "integrations": {
+    "googleCalendar": { "enabled": false, "scopes": ["https://www.googleapis.com/auth/calendar"] },
+    "googleDrive": { "enabled": false, "scopes": ["https://www.googleapis.com/auth/drive.readonly"] },
+    "gmail": { "enabled": false, "scopes": ["https://www.googleapis.com/auth/gmail.readonly"] },
+    "plaid": { "enabled": false },
+    "etsy": { "enabled": false }
+  },
+  "offlineMode": true
+}
