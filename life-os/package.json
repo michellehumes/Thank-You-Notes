@@ -5,9 +5,9 @@
   "description": "Executive Life Operating System — offline-first local intelligence platform",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "init-db": "node scripts/init-db.js",
+    "start": "bash start.sh start",
+    "dev": "bash start.sh start",
+    "init-db": "bash start.sh init-db",
     "import-transactions": "node scripts/import-transactions.js",
     "seed-budget": "node scripts/seed-budget.js",
     "backup": "node cron/backupJob.js",
