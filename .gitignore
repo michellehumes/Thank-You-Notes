@@ -4,3 +4,5 @@ shelzys-designs/App Data/
 images/
 templates/
 __pycache__/
+venv/
+etsy_master_listings.csv
