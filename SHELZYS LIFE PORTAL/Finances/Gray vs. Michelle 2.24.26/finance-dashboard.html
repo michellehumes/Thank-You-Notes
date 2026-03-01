@@ -76,6 +76,7 @@ tr:hover{background:#ffffff06}
 </div>
 <div class="tabs" id="tabs">
 <button class="tab active" data-tab="overview">Overview</button>
+<button class="tab" data-tab="transactions">All Transactions</button>
 <button class="tab" data-tab="cards">Card Plan</button>
 <button class="tab" data-tab="budget">Shared Budget</button>
 <button class="tab" data-tab="split">Split Calculator</button>
@@ -121,6 +122,47 @@ tr:hover{background:#ffffff06}
 <tr><td>BMW X3 Loan</td><td class="dim"></td><td><span class="badge badge-shared">Shared</span></td></tr>
 </table>
 </div>
+</div>
+</div>
+
+<!-- ALL TRANSACTIONS -->
+<div class="panel" id="transactions">
+<div class="grid grid-4" style="margin-bottom:20px" id="txnStats">
+<div class="card"><h3>Total Transactions</h3><div class="val cyan" id="statCount">0</div><div class="sub">Combined entries</div></div>
+<div class="card"><h3>Total Spending</h3><div class="val red" id="statSpending">$0</div><div class="sub">All outflows</div></div>
+<div class="card"><h3>Total Income</h3><div class="val green" id="statIncome">$0</div><div class="sub">All inflows</div></div>
+<div class="card"><h3>Net Cash Flow</h3><div class="val" id="statNet">$0</div><div class="sub">Income - spending</div></div>
+</div>
+<div class="grid grid-3" style="margin-bottom:20px">
+<div class="card"><h3>Michelle Spending</h3><div class="val pink" id="statMSpend">$0</div><div class="sub" id="statMCount">0 transactions</div></div>
+<div class="card"><h3>Gray Spending</h3><div class="val blue" id="statGSpend">$0</div><div class="sub" id="statGCount">0 transactions</div></div>
+<div class="card"><h3>Shared Expenses</h3><div class="val amber" id="statShared">$0</div><div class="sub" id="statSharedCount">0 shared transactions</div></div>
+</div>
+<div class="filters">
+<input type="text" id="allSearch" placeholder="Search all transactions..." oninput="filterAllTxns()">
+<select id="allOwner" onchange="filterAllTxns()"><option value="">All People</option><option value="Michelle">Michelle</option><option value="Gray">Gray</option></select>
+<select id="allCat" onchange="filterAllTxns()"><option value="">All Categories</option></select>
+<select id="allAcct" onchange="filterAllTxns()"><option value="">All Accounts</option></select>
+<select id="allType" onchange="filterAllTxns()">
+<option value="">All Types</option><option value="shared">Shared</option><option value="personal">Personal</option><option value="business">Business</option><option value="investment">Investment</option><option value="transfer">Transfer</option>
+</select>
+<select id="allMonth" onchange="filterAllTxns()"><option value="">All Months</option></select>
+<button class="btn btn-outline" onclick="exportAllCSV()">Export CSV</button>
+</div>
+<div class="card" style="overflow-x:auto">
+<table id="allTable">
+<thead><tr>
+<th data-col="0" data-table="all">Date</th>
+<th data-col="1" data-table="all">Name</th>
+<th data-col="2" data-table="all">Amount</th>
+<th data-col="3" data-table="all">Category</th>
+<th data-col="4" data-table="all">Account</th>
+<th data-col="5" data-table="all">Owner</th>
+<th data-col="6" data-table="all">Classification</th>
+</tr></thead>
+<tbody id="allBody"></tbody>
+</table>
+<div style="text-align:center;padding:12px;color:var(--dim);font-size:13px" id="allCount">Showing 0 transactions</div>
 </div>
 </div>
 
@@ -795,10 +837,158 @@ const blob=new Blob([csv],{type:'text/csv'});
 const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(prefix==='m'?'michelle':'gray')+'_transactions.csv';a.click();
 }
 
+// === ALL TRANSACTIONS (COMBINED) ===
+function normalizeDate(d){
+// Handle both "2/23/26" and "2026-02-23" formats -> return sortable "2026-02-23"
+if(d.includes('-')&&d.length===10)return d;
+const parts=d.split('/');
+const m=parts[0].padStart(2,'0'),day=parts[1].padStart(2,'0');
+let y=parts[2];if(y.length===2)y='20'+y;
+return y+'-'+m+'-'+day;
+}
+function displayDate(d){
+// Return "Feb 23, 2026" format
+const dt=new Date(d+'T12:00:00');
+return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+function getMonth(d){
+const dt=new Date(d+'T12:00:00');
+return dt.toLocaleDateString('en-US',{month:'short',year:'numeric'});
+}
+
+function buildAllTransactions(){
+const all=[];
+// Add Michelle's with normalized dates
+mTxns.forEach(r=>{
+const nd=normalizeDate(r[0]);
+all.push([nd,r[1],r[2],r[3],r[4],'Michelle',r[6]]);
+});
+// Add Gray's with normalized dates
+gTxns.forEach(r=>{
+const nd=normalizeDate(r[0]);
+all.push([nd,r[1],r[2],r[3],r[4],'Gray',r[6]]);
+});
+// Sort by date descending
+all.sort((a,b)=>b[0].localeCompare(a[0]));
+return all;
+}
+
+const allTxns=buildAllTransactions();
+
+function renderAllTable(){
+const body=document.getElementById('allBody');
+const cats=new Set(),accts=new Set(),months=new Set();
+body.innerHTML='';
+allTxns.forEach(r=>{
+cats.add(r[3]);accts.add(r[4]);months.add(getMonth(r[0]));
+const tr=document.createElement('tr');
+const ownerTag=r[5]==='Michelle'?'<span class="badge" style="background:#ec489920;color:#f472b6">Michelle</span>':'<span class="badge" style="background:#3b82f620;color:#60a5fa">Gray</span>';
+tr.innerHTML=`<td>${displayDate(r[0])}</td><td>${r[1]}</td><td style="text-align:right;${r[2]<0?'color:var(--red)':'color:var(--green)'}">${fmt(r[2])}</td><td>${r[3]}</td><td style="font-size:12px">${r[4]}</td><td>${ownerTag}</td><td>${classify(r[6])}</td>`;
+tr.dataset.raw=JSON.stringify(r);
+body.appendChild(tr);
+});
+// Populate filter dropdowns
+const catSel=document.getElementById('allCat');
+const acctSel=document.getElementById('allAcct');
+const monthSel=document.getElementById('allMonth');
+[...cats].sort().forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;catSel.appendChild(o)});
+[...accts].sort().forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;acctSel.appendChild(o)});
+// Sort months chronologically
+const monthArr=[...months];
+monthArr.sort((a,b)=>new Date(b)-new Date(a));
+monthArr.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;monthSel.appendChild(o)});
+updateAllStats();
+}
+
+function filterAllTxns(){
+const search=document.getElementById('allSearch').value.toLowerCase();
+const owner=document.getElementById('allOwner').value;
+const cat=document.getElementById('allCat').value;
+const acct=document.getElementById('allAcct').value;
+const type=document.getElementById('allType').value;
+const month=document.getElementById('allMonth').value;
+const rows=document.getElementById('allBody').rows;
+let shown=0,spending=0,income=0;
+for(let r of rows){
+const d=JSON.parse(r.dataset.raw);
+const dMonth=getMonth(d[0]);
+const show=(!search||d[1].toLowerCase().includes(search)||d[3].toLowerCase().includes(search)||d[4].toLowerCase().includes(search))
+&&(!owner||d[5]===owner)
+&&(!cat||d[3]===cat)
+&&(!acct||d[4]===acct)
+&&(!type||d[6]===type)
+&&(!month||dMonth===month);
+r.style.display=show?'':'none';
+if(show){
+shown++;
+if(d[2]>0)spending+=d[2]; else income+=Math.abs(d[2]);
+}
+}
+document.getElementById('allCount').textContent='Showing '+shown+' of '+allTxns.length+' transactions';
+}
+
+function updateAllStats(){
+let totalSpend=0,totalIncome=0,mSpend=0,gSpend=0,sharedTotal=0,sharedCount=0,mCount=0,gCount=0;
+allTxns.forEach(r=>{
+const amt=r[2];
+if(r[6]==='transfer')return; // skip transfers for spending stats
+if(amt>0)totalSpend+=amt; else totalIncome+=Math.abs(amt);
+if(r[5]==='Michelle'){
+mCount++;
+if(amt>0&&r[6]!=='transfer')mSpend+=amt;
+}else{
+gCount++;
+if(amt<0&&r[6]!=='transfer')gSpend+=Math.abs(amt);
+else if(amt>0&&r[6]!=='transfer')gSpend+=amt;
+}
+if(r[6]==='shared'){sharedCount++;sharedTotal+=Math.abs(amt);}
+});
+document.getElementById('statCount').textContent=allTxns.length;
+document.getElementById('statSpending').textContent='$'+totalSpend.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('statIncome').textContent='$'+totalIncome.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+const net=totalIncome-totalSpend;
+const netEl=document.getElementById('statNet');
+netEl.textContent=(net>=0?'+':'-')+'$'+Math.abs(net).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+netEl.className='val '+(net>=0?'green':'red');
+document.getElementById('statMSpend').textContent='$'+mSpend.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('statMCount').textContent=mCount+' transactions';
+document.getElementById('statGSpend').textContent='$'+gSpend.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('statGCount').textContent=gCount+' transactions';
+document.getElementById('statShared').textContent='$'+sharedTotal.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+document.getElementById('statSharedCount').textContent=sharedCount+' shared transactions';
+document.getElementById('allCount').textContent='Showing '+allTxns.length+' of '+allTxns.length+' transactions';
+}
+
+function exportAllCSV(){
+const headers='Date,Name,Amount,Category,Account,Owner,Classification';
+const csv=headers+'\n'+allTxns.map(r=>r.map(c=>typeof c==='string'&&c.includes(',')?'"'+c+'"':c).join(',')).join('\n');
+const blob=new Blob([csv],{type:'text/csv'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='all_transactions.csv';a.click();
+}
+
 // === INIT ===
 renderTable('m',mTxns);
 renderTable('g',gTxns);
+renderAllTable();
 updateSplit(50);
+
+// === SORTING FOR ALL TABLE ===
+document.querySelectorAll('#allTable th[data-col]').forEach(th=>{
+th.addEventListener('click',()=>{
+const tbody=document.getElementById('allBody');
+const col=parseInt(th.dataset.col);
+const rows=[...tbody.rows];
+const asc=!th.classList.contains('sorted-asc');
+document.querySelectorAll('#allTable th').forEach(h=>{h.classList.remove('sorted-asc','sorted-desc')});
+th.classList.add(asc?'sorted-asc':'sorted-desc');
+rows.sort((a,b)=>{
+const av=JSON.parse(a.dataset.raw)[col],bv=JSON.parse(b.dataset.raw)[col];
+if(typeof av==='number')return asc?av-bv:bv-av;
+return asc?String(av).localeCompare(String(bv)):String(bv).localeCompare(String(av));
+});
+rows.forEach(r=>tbody.appendChild(r));
+});
+});
 </script>
 </body>
 </html>
