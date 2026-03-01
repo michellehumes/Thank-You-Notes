@@ -1,2 +1,6 @@
 .vercel
 shelzys-designs/App Data/
+.env
+images/
+templates/
+__pycache__/
