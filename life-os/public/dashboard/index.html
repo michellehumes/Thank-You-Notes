@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life OS — Executive Dashboard</title>
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+  <header class="executive-banner">
+    <div class="banner-left">
+      <h1>Life OS</h1>
+      <span class="version">v3.0</span>
+    </div>
+    <div class="banner-center">
+      <div class="score-display">
+        <span class="score-label">Executive Score</span>
+        <span class="score-value" id="exec-score">—</span>
+      </div>
+      <div class="runway-display">
+        <span class="runway-label">Runway</span>
+        <span class="runway-value" id="runway-months">—</span>
+      </div>
+    </div>
+    <div class="banner-right">
+      <div class="risk-flags" id="risk-flags"></div>
+    </div>
+  </header>
+
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="transactions">Transactions</button>
+    <button class="tab-btn" data-tab="budget">Budget</button>
+    <button class="tab-btn" data-tab="career">Career</button>
+    <button class="tab-btn" data-tab="health">Health</button>
+    <button class="tab-btn" data-tab="messages">Messages</button>
+    <button class="tab-btn" data-tab="todos">Todos</button>
+    <button class="tab-btn" data-tab="brief">Brief</button>
+    <button class="tab-btn" data-tab="sync">Sync</button>
+  </nav>
+
+  <main id="tab-content">
+    <!-- Overview Tab -->
+    <section class="tab-panel active" id="tab-overview">
+      <div class="card-grid">
+        <div class="card">
+          <h3>Burn Rate (30d)</h3>
+          <div class="card-value" id="burn-rate">—</div>
+          <div class="card-sub" id="burn-trend"></div>
+        </div>
+        <div class="card">
+          <h3>Runway</h3>
+          <div class="card-value" id="runway-card">—</div>
+          <div class="card-sub" id="runway-sub"></div>
+        </div>
+        <div class="card">
+          <h3>Pipeline (Tier 1)</h3>
+          <div class="card-value" id="tier1-count">—</div>
+          <div class="card-sub">Active roles</div>
+        </div>
+        <div class="card">
+          <h3>Anomalies</h3>
+          <div class="card-value" id="anomaly-count">—</div>
+          <div class="card-sub" id="anomaly-severity"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Drift Alerts</h2>
+        <div id="drift-alerts" class="alert-list"></div>
+      </div>
+
+      <div class="section">
+        <h2>Monthly Net Flow</h2>
+        <table class="data-table" id="flow-table">
+          <thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Transactions Tab -->
+    <section class="tab-panel" id="tab-transactions">
+      <div class="filters">
+        <select id="owner-filter"><option value="">All Owners</option><option value="michelle">Michelle</option><option value="gray">Gray</option></select>
+        <select id="class-filter"><option value="">All Types</option><option value="essential">Essential</option><option value="discretionary">Discretionary</option><option value="shared">Shared</option></select>
+        <input type="text" id="search-filter" placeholder="Search merchant...">
+      </div>
+      <table class="data-table" id="txn-table">
+        <thead><tr><th>Date</th><th>Merchant</th><th>Amount</th><th>Category</th><th>Account</th><th>Owner</th><th>Type</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="pagination" id="txn-pagination"></div>
+    </section>
+
+    <!-- Budget Tab -->
+    <section class="tab-panel" id="tab-budget">
+      <div class="card-grid">
+        <div class="card"><h3>Fixed Monthly</h3><div class="card-value" id="budget-fixed">—</div></div>
+        <div class="card"><h3>Variable Monthly</h3><div class="card-value" id="budget-variable">—</div></div>
+        <div class="card"><h3>Total Budget</h3><div class="card-value" id="budget-total">—</div></div>
+        <div class="card"><h3>Actual Spend</h3><div class="card-value" id="budget-actual">—</div></div>
+      </div>
+      <div class="section">
+        <h2>Budget Items</h2>
+        <table class="data-table" id="budget-table">
+          <thead><tr><th>Item</th><th>Amount</th><th>Category</th><th>Account</th><th>Who Pays</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="section">
+        <h2>Split Calculator</h2>
+        <div id="split-result"></div>
+      </div>
+    </section>
+
+    <!-- Career Tab -->
+    <section class="tab-panel" id="tab-career">
+      <div class="card-grid">
+        <div class="card"><h3>Total Roles</h3><div class="card-value" id="career-total">—</div></div>
+        <div class="card"><h3>Tier 1</h3><div class="card-value" id="career-t1">—</div></div>
+        <div class="card"><h3>Tier 2</h3><div class="card-value" id="career-t2">—</div></div>
+        <div class="card"><h3>Avg Score</h3><div class="card-value" id="career-avg">—</div></div>
+      </div>
+      <div class="section">
+        <h2>Pipeline</h2>
+        <table class="data-table" id="pipeline-table">
+          <thead><tr><th>Company</th><th>Title</th><th>Score</th><th>Tier</th><th>Resume</th><th>Status</th><th>Stage</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Health Tab -->
+    <section class="tab-panel" id="tab-health">
+      <div id="health-configured" style="display:none">
+        <div class="card-grid">
+          <div class="card"><h3>Sleep Score</h3><div class="card-value" id="health-sleep">—</div></div>
+          <div class="card"><h3>Readiness</h3><div class="card-value" id="health-readiness">—</div></div>
+          <div class="card"><h3>Activity</h3><div class="card-value" id="health-activity">—</div></div>
+          <div class="card"><h3>Steps</h3><div class="card-value" id="health-steps">—</div></div>
+        </div>
+        <div class="section">
+          <h2>14-Day Trend</h2>
+          <table class="data-table" id="health-trend-table">
+            <thead><tr><th>Date</th><th>Sleep</th><th>Readiness</th><th>Activity</th><th>Hours</th><th>HRV</th><th>RHR</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="health-unconfigured">
+        <p class="placeholder">Oura Ring integration — set OURA_TOKEN in .env to enable.</p>
+        <div style="text-align:center;margin-top:16px"><button class="action-btn" onclick="syncHealth()">Try Sync</button></div>
+      </div>
+    </section>
+
+    <!-- Messages Tab -->
+    <section class="tab-panel" id="tab-messages">
+      <div id="msg-configured" style="display:none">
+        <div class="card-grid">
+          <div class="card"><h3>Unanswered</h3><div class="card-value" id="msg-pending">—</div></div>
+          <div class="card"><h3>Overdue (24h+)</h3><div class="card-value" id="msg-overdue">—</div></div>
+          <div class="card"><h3>Score</h3><div class="card-value" id="msg-score">—</div><div class="card-sub">/ 10</div></div>
+        </div>
+        <div class="section">
+          <h2>Pending Replies</h2>
+          <table class="data-table" id="msg-table">
+            <thead><tr><th>Contact</th><th>Last Message</th><th>Received</th><th>Waiting</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="msg-unconfigured">
+        <p class="placeholder">iMessage integration — requires macOS Full Disk Access.</p>
+        <div style="text-align:center;margin-top:16px"><button class="action-btn" onclick="syncMessages()">Try Sync</button></div>
+      </div>
+    </section>
+
+    <!-- Todos Tab -->
+    <section class="tab-panel" id="tab-todos">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2>Action Items</h2>
+        <div style="display:flex;gap:8px">
+          <button class="action-btn" onclick="generateAutoTodos()">Auto-Generate</button>
+          <button class="action-btn" onclick="showAddTodo()">+ Add Todo</button>
+        </div>
+      </div>
+      <div id="add-todo-form" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border-color)">
+        <input type="text" id="todo-title" placeholder="What needs doing?" style="width:100%;padding:8px;margin-bottom:8px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius);color:var(--text-primary)">
+        <div style="display:flex;gap:8px">
+          <select id="todo-category" style="padding:6px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius);color:var(--text-primary)">
+            <option value="general">General</option><option value="finance">Finance</option><option value="career">Career</option><option value="health">Health</option><option value="relationships">Relationships</option>
+          </select>
+          <select id="todo-priority" style="padding:6px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius);color:var(--text-primary)">
+            <option value="1">P1 — Urgent</option><option value="2" selected>P2 — Normal</option><option value="3">P3 — Low</option>
+          </select>
+          <button class="action-btn" onclick="addTodo()">Save</button>
+        </div>
+      </div>
+      <table class="data-table" id="todo-table">
+        <thead><tr><th>Status</th><th>Priority</th><th>Task</th><th>Category</th><th>Source</th><th>Action</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Brief Tab -->
+    <section class="tab-panel" id="tab-brief">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2>Executive Brief</h2>
+        <button class="action-btn" onclick="generateBrief()">Generate Today's Brief</button>
+      </div>
+      <div id="brief-content"></div>
+    </section>
+
+    <!-- Sync Tab -->
+    <section class="tab-panel" id="tab-sync">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2>Integration Status</h2>
+        <button class="action-btn" onclick="runFullSync()">Sync All</button>
+      </div>
+      <div id="sync-status" class="card-grid"></div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
