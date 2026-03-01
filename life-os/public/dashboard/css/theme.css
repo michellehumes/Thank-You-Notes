@@ -170,3 +170,36 @@ main { padding: 24px; }
 .tier-2 { color: var(--accent-blue); font-weight: 600; }
 .tier-3 { color: var(--accent-yellow); }
 .tier-4 { color: var(--text-muted); }
+
+/* Action buttons */
+.action-btn {
+  padding: 8px 16px;
+  background: var(--accent-blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.action-btn:hover { opacity: 0.85; }
+
+.small-btn {
+  padding: 4px 10px;
+  background: transparent;
+  color: var(--accent-green);
+  border: 1px solid var(--accent-green);
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.small-btn:hover { background: rgba(74,222,128,0.1); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .executive-banner { flex-direction: column; gap: 12px; text-align: center; }
+  .banner-center { flex-direction: column; gap: 8px; }
+  .tab-nav { overflow-x: auto; flex-wrap: nowrap; }
+  .card-grid { grid-template-columns: 1fr 1fr; }
+}

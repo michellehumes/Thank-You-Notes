@@ -78,7 +78,7 @@ const server = app.listen(PORT, HOST, () => {
 
   // Start cron scheduler
   try {
-    require('./cron/scheduler').start();
+    require('./cron/scheduler').startScheduler();
     logger.info('Cron scheduler started', { service: 'server' });
   } catch (err) {
     logger.warn(`Cron scheduler not started: ${err.message}`, { service: 'server' });
