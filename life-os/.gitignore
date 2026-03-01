@@ -1,0 +1,9 @@
+node_modules/
+database/life.db
+database/life.db-wal
+database/life.db-shm
+.env
+backups/
+logs/
+public/data/*.json
+tokens.json
