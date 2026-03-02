@@ -1,93 +1,249 @@
 const logger = require('../config/logger');
 const { getDb } = require('../config/database');
 
-const OURA_BASE = 'https://api.ouraring.com/v2/usercollection';
+/**
+ * Oura Ring v2 API Integration Service
+ * Fetches daily sleep, readiness, and activity scores and stores in database
+ */
 
-const ouraService = {
-  async syncDaily(dateStr) {
-    const token = process.env.OURA_ACCESS_TOKEN;
-    if (!token) {
-      logger.warn('OURA_ACCESS_TOKEN not configured — skipping sync');
-      return { skipped: true, reason: 'no_token' };
+const OURA_API_BASE = 'https://api.ouraring.com/v2';
+
+/**
+ * Fetch data from Oura v2 API endpoint with error handling
+ */
+async function fetchOuraEndpoint(endpoint, accessToken) {
+  const url = `${OURA_API_BASE}/${endpoint}`;
+  const headers = {
+    'Authorization': `Bearer ${accessToken}`,
+    'Content-Type': 'application/json'
+  };
+
+  try {
+    const response = await fetch(url, { headers });
+    
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Oura authentication failed - invalid or expired token');
+      }
+      if (response.status === 429) {
+        throw new Error('Oura API rate limit exceeded');
+      }
+      throw new Error(`Oura API error ${response.status}: ${response.statusText}`);
     }
 
-    const date = dateStr || new Date().toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-    const startDate = dateStr || yesterday;
-
-    try {
-      const headers = { Authorization: `Bearer ${token}` };
-      const [sleepRes, readinessRes, activityRes] = await Promise.all([
-        fetch(`${OURA_BASE}/daily_sleep?start_date=${startDate}&end_date=${date}`, { headers }),
-        fetch(`${OURA_BASE}/daily_readiness?start_date=${startDate}&end_date=${date}`, { headers }),
-        fetch(`${OURA_BASE}/daily_activity?start_date=${startDate}&end_date=${date}`, { headers })
-      ]);
-
-      if (!sleepRes.ok) throw new Error(`Oura sleep API: ${sleepRes.status}`);
-      if (!readinessRes.ok) throw new Error(`Oura readiness API: ${readinessRes.status}`);
-      if (!activityRes.ok) throw new Error(`Oura activity API: ${activityRes.status}`);
-
-      const [sleep, readiness, activity] = await Promise.all([
-        sleepRes.json(), readinessRes.json(), activityRes.json()
-      ]);
-
-      const db = getDb();
-      const stmt = db.prepare(`
-        INSERT OR REPLACE INTO oura_daily (date, sleep_score, readiness_score, activity_score, hrv_avg, resting_hr, body_temperature_delta)
-        VALUES (@date, @sleep_score, @readiness_score, @activity_score, @hrv_avg, @resting_hr, @body_temperature_delta)
-      `);
-
-      // Merge by date
-      const dateMap = {};
-      for (const s of (sleep.data || [])) {
-        dateMap[s.day] = dateMap[s.day] || {};
-        dateMap[s.day].sleep_score = s.score;
-        dateMap[s.day].hrv_avg = s.contributors?.hrv_balance || null;
-        dateMap[s.day].resting_hr = s.contributors?.resting_heart_rate || null;
-      }
-      for (const r of (readiness.data || [])) {
-        dateMap[r.day] = dateMap[r.day] || {};
-        dateMap[r.day].readiness_score = r.score;
-        dateMap[r.day].body_temperature_delta = r.contributors?.body_temperature || null;
-      }
-      for (const a of (activity.data || [])) {
-        dateMap[a.day] = dateMap[a.day] || {};
-        dateMap[a.day].activity_score = a.score;
-      }
-
-      let upserted = 0;
-      const upsertAll = db.transaction(() => {
-        for (const [day, data] of Object.entries(dateMap)) {
-          stmt.run({
-            date: day,
-            sleep_score: data.sleep_score || null,
-            readiness_score: data.readiness_score || null,
-            activity_score: data.activity_score || null,
-            hrv_avg: data.hrv_avg || null,
-            resting_hr: data.resting_hr || null,
-            body_temperature_delta: data.body_temperature_delta || null
-          });
-          upserted++;
-        }
-      });
-      upsertAll();
-
-      // Update sync state
-      db.prepare(`UPDATE sync_state SET last_sync_at = datetime('now'), last_sync_status = 'success' WHERE service = 'oura'`).run();
-
-      logger.info(`Oura sync complete: ${upserted} days upserted`);
-      return { upserted, dates: Object.keys(dateMap) };
-    } catch (err) {
-      const db = getDb();
-      db.prepare(`UPDATE sync_state SET last_sync_at = datetime('now'), last_sync_status = 'error', error_message = @msg WHERE service = 'oura'`).run({ msg: err.message });
-      throw err;
-    }
-  },
-
-  getLatest(days = 7) {
-    const db = getDb();
-    return db.prepare('SELECT * FROM oura_daily ORDER BY date DESC LIMIT ?').all(days);
+    const data = await response.json();
+    return data.data || [];
+  } catch (error) {
+    logger.error(`Oura API fetch error for ${endpoint}:`, error.message);
+    throw error;
   }
-};
+}
 
-module.exports = ouraService;
+/**
+ * Fetch and merge all Oura data streams
+ */
+async function fetchAllOuraData(accessToken) {
+  if (!accessToken) {
+    logger.warn('OURA_ACCESS_TOKEN not configured');
+    return null;
+  }
+
+  try {
+    logger.info('Fetching Oura Ring data...');
+
+    // Fetch all endpoints in parallel
+    const [sleepData, readinessData, activityData] = await Promise.all([
+      fetchOuraEndpoint('usercollection/daily_sleep', accessToken),
+      fetchOuraEndpoint('usercollection/daily_readiness', accessToken),
+      fetchOuraEndpoint('usercollection/daily_activity', accessToken)
+    ]);
+
+    // Merge by date
+    const byDate = {};
+
+    // Process sleep data
+    sleepData.forEach(item => {
+      if (!byDate[item.day]) byDate[item.day] = {};
+      byDate[item.day].sleep_score = item.score || null;
+      byDate[item.day].day = item.day;
+    });
+
+    // Process readiness data
+    readinessData.forEach(item => {
+      if (!byDate[item.day]) byDate[item.day] = {};
+      byDate[item.day].readiness_score = item.score || null;
+      byDate[item.day].day = item.day;
+    });
+
+    // Process activity data
+    activityData.forEach(item => {
+      if (!byDate[item.day]) byDate[item.day] = {};
+      byDate[item.day].activity_score = item.score || null;
+      byDate[item.day].hrv_avg = item.contributors?.hrv_balance || null;
+      byDate[item.day].resting_hr = item.contributors?.resting_heart_rate || null;
+      byDate[item.day].body_temperature_delta = item.contributors?.body_temperature || null;
+      byDate[item.day].day = item.day;
+    });
+
+    logger.info(`Merged ${Object.keys(byDate).length} days of Oura data`);
+    return Object.values(byDate);
+  } catch (error) {
+    logger.error('Failed to fetch Oura data:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Upsert Oura data into database
+ */
+function upsertOuraData(data) {
+  const db = getDb();
+
+  try {
+    const stmt = db.prepare(`
+      INSERT INTO oura_daily (
+        day, sleep_score, readiness_score, activity_score,
+        hrv_avg, resting_hr, body_temperature_delta
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(day) DO UPDATE SET
+        sleep_score = COALESCE(excluded.sleep_score, sleep_score),
+        readiness_score = COALESCE(excluded.readiness_score, readiness_score),
+        activity_score = COALESCE(excluded.activity_score, activity_score),
+        hrv_avg = COALESCE(excluded.hrv_avg, hrv_avg),
+        resting_hr = COALESCE(excluded.resting_hr, resting_hr),
+        body_temperature_delta = COALESCE(excluded.body_temperature_delta, body_temperature_delta)
+    `);
+
+    const inserted = data.reduce((count, item) => {
+      stmt.run(
+        item.day,
+        item.sleep_score,
+        item.readiness_score,
+        item.activity_score,
+        item.hrv_avg,
+        item.resting_hr,
+        item.body_temperature_delta
+      );
+      return count + 1;
+    }, 0);
+
+    logger.info(`Upserted ${inserted} Oura daily records`);
+    return inserted;
+  } catch (error) {
+    logger.error('Failed to upsert Oura data:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Update sync state in database
+ */
+function updateSyncState(status, error = null) {
+  const db = getDb();
+
+  try {
+    const now = new Date().toISOString();
+    db.prepare(`
+      INSERT INTO sync_state (service, last_sync_at, last_sync_status, error_message)
+      VALUES (?, ?, ?, ?)
+      ON CONFLICT(service) DO UPDATE SET
+        last_sync_at = excluded.last_sync_at,
+        last_sync_status = excluded.last_sync_status,
+        error_message = excluded.error_message
+    `).run('oura', now, status, error);
+  } catch (err) {
+    logger.error('Failed to update sync state:', err.message);
+  }
+}
+
+/**
+ * Main sync function - orchestrates entire Oura data sync
+ */
+async function syncOuraData(accessToken) {
+  try {
+    const data = await fetchAllOuraData(accessToken);
+    
+    if (!data) {
+      updateSyncState('skipped');
+      return { success: false, reason: 'No token configured' };
+    }
+
+    const inserted = upsertOuraData(data);
+    updateSyncState('success');
+
+    logger.info('Oura data sync completed successfully');
+    return { success: true, recordsProcessed: inserted };
+  } catch (error) {
+    updateSyncState('error', error.message);
+    logger.error('Oura sync failed:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Get latest Oura scores for dashboard
+ */
+function getLatestScores() {
+  const db = getDb();
+
+  try {
+    const latest = db.prepare(`
+      SELECT
+        day,
+        sleep_score,
+        readiness_score,
+        activity_score,
+        hrv_avg,
+        resting_hr,
+        body_temperature_delta
+      FROM oura_daily
+      WHERE day IS NOT NULL
+      ORDER BY day DESC
+      LIMIT 1
+    `).get();
+
+    return latest || null;
+  } catch (error) {
+    logger.error('Failed to get latest Oura scores:', error.message);
+    return null;
+  }
+}
+
+/**
+ * Get Oura history for specified number of days
+ */
+function getOuraHistory(days = 30) {
+  const db = getDb();
+
+  try {
+    const threshold = new Date();
+    threshold.setDate(threshold.getDate() - days);
+    const thresholdStr = threshold.toISOString().split('T')[0];
+
+    return db.prepare(`
+      SELECT
+        day,
+        sleep_score,
+        readiness_score,
+        activity_score,
+        hrv_avg,
+        resting_hr,
+        body_temperature_delta
+      FROM oura_daily
+      WHERE day >= ?
+      ORDER BY day DESC
+    `).all(thresholdStr);
+  } catch (error) {
+    logger.error('Failed to get Oura history:', error.message);
+    return [];
+  }
+}
+
+module.exports = {
+  syncOuraData,
+  getLatestScores,
+  getOuraHistory,
+  fetchAllOuraData,
+  upsertOuraData,
+  updateSyncState
+};
