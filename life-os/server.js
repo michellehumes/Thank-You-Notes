@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('./config/logger');
 const { initializeDb, closeDb } = require('./config/database');
+const { rateLimiter } = require('./utils/rateLimiter');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,6 +49,9 @@ if (process.env.DASHBOARD_PASSWORD) {
 app.use('/dashboard', express.static(path.join(__dirname, 'public', 'dashboard')));
 app.use('/data', express.static(path.join(__dirname, 'public', 'data')));
 
+// Rate limiting for API routes
+app.use('/api', rateLimiter({ windowMs: 60000, max: 100 }));
+
 // API Routes
 app.use('/api/finance', require('./routes/finance'));
 app.use('/api/jobs', require('./routes/jobs'));
@@ -64,10 +68,22 @@ app.get('/api/health-check', (req, res) => {
 // Root redirect
 app.get('/', (req, res) => res.redirect('/dashboard/'));
 
-// Error handling middleware
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
+// Global error handler
 app.use((err, req, res, next) => {
-  logger.error('Unhandled error', { error: err.message, stack: err.stack, path: req.path });
-  res.status(500).json({ error: 'Internal server error' });
+  logger.error('Unhandled error', { 
+    method: req.method, 
+    path: req.path, 
+    error: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
+  res.status(err.status || 500).json({ 
+    error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
+  });
 });
 
 // Start server
