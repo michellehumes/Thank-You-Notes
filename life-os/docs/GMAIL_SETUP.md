@@ -1,134 +1,222 @@
-# Gmail Integration Setup
+# Gmail OAuth2 Setup Guide
 
-This guide walks through configuring Gmail API access for the Executive Life OS dashboard. Once set up, the system will sync your inbox to surface unread counts, recruiter emails, and messages needing a response.
+## Overview
+
+The Gmail integration enables the Executive Life OS to:
+- Fetch email threads and metadata
+- Identify recruiter emails
+- Track messages needing responses
+- Auto-generate todos for recruiter followups
+
+This is a **manual setup** process using Google Cloud Console. The setup is one-time and takes ~10 minutes.
 
 ---
 
 ## Prerequisites
 
-- A Google account (personal or Workspace)
-- Access to the [Google Cloud Console](https://console.cloud.google.com/)
+- Active Gmail account
+- Access to Google Cloud Console (https://console.cloud.google.com)
+- Localhost server running on `127.0.0.1:3000`
 
 ---
 
 ## Step 1: Create a Google Cloud Project
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Click the project dropdown at the top of the page and select **New Project**
-3. Name it something like `Life OS Dashboard`
-4. Click **Create**
-5. Make sure the new project is selected in the dropdown
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Click the project dropdown at the top
+3. Click **NEW PROJECT**
+4. Name it: `executive-life-os` (or similar)
+5. Click **CREATE**
+6. Wait for project creation to complete
 
-## Step 2: Enable the Gmail API
+---
 
-1. In the Cloud Console, go to **APIs & Services > Library**
-2. Search for **Gmail API**
-3. Click on it and press **Enable**
+## Step 2: Enable Gmail API
 
-## Step 3: Configure the OAuth Consent Screen
+1. In the Google Cloud Console, search for **Gmail API** in the search bar
+2. Click on the Gmail API result
+3. Click **ENABLE**
+4. Wait for it to finish enabling
 
-1. Go to **APIs & Services > OAuth consent screen**
-2. Select **External** as the user type (unless you have a Workspace org), then click **Create**
-3. Fill in the required fields:
-   - **App name**: Life OS Dashboard
-   - **User support email**: your email
-   - **Developer contact email**: your email
-4. Click **Save and Continue**
-5. On the **Scopes** page, click **Add or Remove Scopes** and add:
-   - `https://www.googleapis.com/auth/gmail.readonly`
-6. Click **Save and Continue**
-7. On the **Test users** page, click **Add Users** and enter your Gmail address
-8. Click **Save and Continue**, then **Back to Dashboard**
+---
 
-## Step 4: Create OAuth 2.0 Credentials
+## Step 3: Create OAuth 2.0 Credentials
 
-1. Go to **APIs & Services > Credentials**
-2. Click **Create Credentials > OAuth client ID**
-3. Set **Application type** to **Web application**
-4. Name it `Life OS Local`
-5. Under **Authorized redirect URIs**, add:
+1. In the left sidebar, click **Credentials**
+2. Click **+ CREATE CREDENTIALS** at the top
+3. Choose **OAuth client ID**
+4. If prompted about consent screen, click **CONFIGURE CONSENT SCREEN**
+
+### Configure Consent Screen (if needed):
+
+1. Choose **External** user type
+2. Click **CREATE**
+3. Fill in the form:
+   - **App name**: `Executive Life OS`
+   - **User support email**: Your Gmail address
+   - **Developer contact**: Your Gmail address
+4. Click **SAVE AND CONTINUE** on each page
+5. On the summary, click **BACK TO DASHBOARD**
+
+### Create OAuth Client ID:
+
+1. Back on **Credentials** page, click **+ CREATE CREDENTIALS** again
+2. Choose **OAuth client ID**
+3. Select **Desktop application** as the application type
+4. Name it: `life-os-desktop`
+5. Click **CREATE**
+6. In the dialog that appears, click **COPY** for both:
+   - **Client ID**
+   - **Client Secret**
+7. Save these somewhere safe (you'll paste them into `.env` next)
+
+---
+
+## Step 4: Get Refresh Token
+
+The refresh token requires a manual OAuth flow. Follow this process:
+
+1. In your `.env` file, add (using your copied values):
+   ```env
+   GMAIL_CLIENT_ID=<your-client-id>
+   GMAIL_CLIENT_SECRET=<your-client-secret>
+   GMAIL_REDIRECT_URI=http://localhost:3000/auth/gmail/callback
    ```
-   http://localhost:3000/auth/gmail/callback
+
+2. Restart the server:
+   ```bash
+   npm start
    ```
-6. Click **Create**
-7. Copy the **Client ID** and **Client Secret** — you will need both
 
-## Step 5: Obtain a Refresh Token
+3. Open a browser and navigate to:
+   ```
+   http://127.0.0.1:3000/auth/gmail
+   ```
 
-The easiest way to get an initial refresh token is via the Google OAuth Playground.
+4. You'll be redirected to Google's login. Sign in with your Gmail account.
 
-### Option A: OAuth Playground
+5. Grant permission when prompted ("Executive Life OS wants to access your Gmail")
 
-1. Go to [OAuth 2.0 Playground](https://developers.google.com/oauthplayground)
-2. Click the gear icon (top right) and check **Use your own OAuth credentials**
-3. Enter your **Client ID** and **Client Secret**
-4. In the left panel under **Step 1**, find **Gmail API v1** and select:
-   - `https://www.googleapis.com/auth/gmail.readonly`
-5. Click **Authorize APIs** and sign in with your Google account
-6. On the consent screen, click **Continue**
-7. In **Step 2**, click **Exchange authorization code for tokens**
-8. Copy the **Refresh token** from the response
+6. You'll be redirected back to `localhost:3000` with an authorization code
 
-### Option B: One-Time Script
+7. The server will exchange this for a refresh token and save it to `.env`
 
-If you prefer a local script, you can run a simple Node.js OAuth flow. The server already has a callback route stub at `/auth/gmail/callback` that will be implemented in a future phase.
+8. In your `.env`, you should now see:
+   ```env
+   GMAIL_REFRESH_TOKEN=<your-refresh-token>
+   ```
 
-## Step 6: Add Credentials to .env
+---
 
-Open your `.env` file in the `life-os` directory and add:
+## Step 5: Verify Configuration
 
-```env
-GMAIL_CLIENT_ID=your-client-id-here.apps.googleusercontent.com
-GMAIL_CLIENT_SECRET=your-client-secret-here
-GMAIL_REFRESH_TOKEN=your-refresh-token-here
-```
-
-Make sure `.env` is in your `.gitignore` (it should be already).
-
-## Step 7: Test the Integration
-
-Start the server and trigger a sync:
+Restart the server and check the logs:
 
 ```bash
-cd life-os
 npm start
 ```
 
-Then in another terminal:
+In the console output, you should see:
+```
+✓ Gmail service configured and ready
+```
+
+---
+
+## Testing Gmail Sync
+
+Once configured, Gmail data will sync automatically at 6:15 AM (via cron job).
+
+To manually trigger a sync:
 
 ```bash
-curl http://127.0.0.1:3000/api/sync
+curl http://127.0.0.1:3000/api/sync?service=gmail
 ```
 
-Or use the **Sync Now** button on the dashboard.
-
-You should see a log line like:
-
-```
-[INFO] Gmail sync: X threads updated
-```
-
-If credentials are missing, you will see:
-
-```
-[WARN] Gmail not configured — see docs/GMAIL_SETUP.md
+Expected response:
+```json
+{
+  "success": true,
+  "recordsProcessed": 42,
+  "note": "Gmail threads synced"
+}
 ```
 
 ---
 
 ## Troubleshooting
 
-| Issue | Fix |
-|-------|-----|
-| `Gmail not configured` warning | Ensure all three env vars are set in `.env` |
-| `invalid_grant` error | Your refresh token expired. Repeat Step 5 to get a new one |
-| `access_denied` error | Make sure your email is added as a test user in Step 3 |
-| No recruiter emails detected | The classifier looks for patterns like `@greenhouse.io`, `@lever.co`, `talent@`, `recruiting@`. More patterns will be added over time |
+### "Gmail service not configured"
+- Check that `GMAIL_REFRESH_TOKEN` is set in `.env`
+- Restart the server after adding it
+
+### "Invalid refresh token"
+- The token may have expired (after 6 months of non-use)
+- Delete `GMAIL_REFRESH_TOKEN` from `.env` and repeat Step 4
+
+### "Client authentication failed"
+- Verify `GMAIL_CLIENT_ID` and `GMAIL_CLIENT_SECRET` are correct
+- Check they have no extra spaces
+
+### Rate Limiting
+- Gmail API has a quota of 250 requests per minute
+- Daily limit: 10M requests per day
+- The service is designed to respect these limits
 
 ---
 
-## Security Notes
+## How It Works
 
-- The refresh token grants read-only access to your Gmail. It cannot send, delete, or modify emails.
-- Credentials are stored only in your local `.env` file and are never committed to version control.
-- The OAuth consent screen is in "Testing" mode, so only test users you explicitly add can authorize.
+Once configured:
+
+1. **Sync Job** (6:15 AM daily):
+   - Uses refresh token to get access token
+   - Fetches threads from Gmail API
+   - Parses sender email to identify recruiters
+   - Checks for unread/flagged status
+   - Stores in `gmail_threads` table
+
+2. **Auto-Todos**:
+   - Recruiter emails tagged as `needs_response=1` automatically create todos
+   - Todo priority: 2 (high)
+   - Source: `auto`
+
+3. **Dashboard Display**:
+   - Shows unread recruiter count
+   - Lists threads requiring response
+   - Contributes to "Inbox Load" score in executive scoring
+
+---
+
+## Revoking Access
+
+To remove Gmail access:
+
+1. Visit: https://myaccount.google.com/permissions
+2. Find "Executive Life OS"
+3. Click it and select **Remove Access**
+4. Delete `GMAIL_REFRESH_TOKEN` from your `.env`
+5. Restart the server
+
+---
+
+## Privacy Notes
+
+- Tokens are stored in `.env` (not in git — already in .gitignore)
+- Gmail data is stored locally in SQLite (not sent to any server)
+- Sync is read-only (Life OS doesn't send/compose emails)
+- You can revoke access anytime
+
+---
+
+## Implementation Status
+
+**Currently**: Stub implementation
+- ✓ Configuration checking
+- ✓ Sync state tracking
+- ⏳ Full OAuth flow (awaiting token setup)
+- ⏳ Thread fetching
+- ⏳ Recruiter identification
+- ⏳ Response tracking
+
+Once `GMAIL_REFRESH_TOKEN` is set, uncomment the fetch logic in `services/gmailService.js` to enable full functionality.
