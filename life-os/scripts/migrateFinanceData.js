@@ -1,232 +1,171 @@
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+#!/usr/bin/env node
+/**
+ * Finance Data Migration Script
+ * Extracts embedded transaction data from finance-dashboard.html
+ * and imports into SQLite database
+ */
+
 const fs = require('fs');
 const path = require('path');
-const { initializeDb, getDb, closeDb } = require('../config/database');
-const financeService = require('../services/financeService');
+const { getDb } = require('../config/database');
 const logger = require('../config/logger');
 
-const FINANCE_HTML_PATH = path.join(__dirname, '..', '..', 'SHELZYS LIFE PORTAL', 'Finances', 'Gray vs. Michelle 2.24.26', 'finance-dashboard.html');
+// Path to source HTML file
+const SOURCE_HTML = path.join(
+  process.env.HOME,
+  'SHELZYS LIFE PORTAL/Finances/Gray vs. Michelle 2.24.26/finance-dashboard.html'
+);
 
-// ---------------------------------------------------------------------------
-// Extract JS array from HTML source using JSON.parse after cleanup
-// ---------------------------------------------------------------------------
-function extractArrayFromHtml(html, varName) {
-  const regex = new RegExp(`const\\s+${varName}\\s*=\\s*(\\[[\\s\\S]*?\\]);`);
-  const match = html.match(regex);
-  if (!match) throw new Error(`Could not find ${varName} in HTML`);
-  // The arrays are already valid JSON (arrays of arrays with strings/numbers)
-  // Just need to ensure it parses correctly
-  try {
-    return JSON.parse(match[1]);
-  } catch (e) {
-    // If JSON.parse fails, try minor cleanup: replace single quotes if any
-    const cleaned = match[1].replace(/'/g, '"');
-    return JSON.parse(cleaned);
+/**
+ * Extract JavaScript arrays from HTML script tag
+ */
+function extractArrays(htmlContent) {
+  // Extract mTxns array
+  const mTxnsMatch = htmlContent.match(/const mTxns=\[([\s\S]*?)\];/);
+  if (!mTxnsMatch) {
+    throw new Error('Could not find mTxns array in HTML');
   }
-}
 
-// ---------------------------------------------------------------------------
-// Normalize Michelle transaction row
-// Columns: [date(M/D/YY), merchant, amount, category, account, type, classification]
-// ---------------------------------------------------------------------------
-function normalizeMichelleTxn(row) {
-  const [dateStr, merchant, amount, category, account, type, classification] = row;
-  // Parse M/D/YY -> YYYY-MM-DD
-  const parts = dateStr.split('/');
-  const year = parseInt(parts[2]) + 2000;
-  const month = parts[0].padStart(2, '0');
-  const day = parts[1].padStart(2, '0');
-  const date = `${year}-${month}-${day}`;
-  const mask = account.match(/\d{4}/)?.[0] || '';
+  // Extract gTxns array
+  const gTxnsMatch = htmlContent.match(/const gTxns=\[([\s\S]*?)\];/);
+  if (!gTxnsMatch) {
+    throw new Error('Could not find gTxns array in HTML');
+  }
+
   return {
-    date,
-    merchant,
-    amount,
-    category,
-    account,
-    account_mask: mask,
-    owner: 'michelle',
-    classification,
-    type: type || 'regular',
-    is_recurring: 0,
-    notes: null,
-    source: 'html_migration'
+    mTxnsStr: `[${mTxnsMatch[1]}]`,
+    gTxnsStr: `[${gTxnsMatch[1]}]`
   };
 }
 
-// ---------------------------------------------------------------------------
-// Normalize Gray transaction row
-// Columns: [date(YYYY-MM-DD), merchant, amount, category, account, owner_name, classification]
-// Note: owner_name field can be "Gray Perkins", "Michelle Humes", or "Shared"
-// ---------------------------------------------------------------------------
-function normalizeGrayTxn(row) {
-  const [date, merchant, amount, category, account, ownerName, classification] = row;
-  const mask = account.match(/\d{4}/)?.[0] || '';
-  // Some of Gray's transactions are actually Michelle's (e.g. "YouTube TV (Michelle)")
-  const actualOwner = (ownerName || '').toLowerCase().includes('michelle') ? 'michelle' : 'gray';
-  return {
-    date,
-    merchant,
-    amount,
-    category,
-    account,
-    account_mask: mask,
-    owner: actualOwner,
-    classification,
-    type: (amount > 0 && (category === 'Income' || category === 'Payment')) ? 'income' : 'regular',
-    is_recurring: 0,
-    notes: null,
-    source: 'html_migration'
-  };
+/**
+ * Parse transaction arrays from string
+ */
+function parseArrays(mTxnsStr, gTxnsStr) {
+  const mTxns = eval(mTxnsStr);
+  const gTxns = eval(gTxnsStr);
+  return { mTxns, gTxns };
 }
 
-// ---------------------------------------------------------------------------
-// Migrate budget items
-// ---------------------------------------------------------------------------
-function migrateBudgetItems() {
-  const db = getDb();
-  const budgetItems = [
-    { name: 'Rent (12 Harbor St)', amount: 7500, type: 'fixed', card_account: 'Venmo/Zelle', who_pays: 'Both ($3,750 each)', notes: null },
-    { name: 'BMW X3 Payment', amount: 751, type: 'fixed', card_account: 'Auto-debit checking', who_pays: 'Gray', notes: null },
-    { name: 'Car Insurance (Geico)', amount: 153, type: 'fixed', card_account: 'Venture', who_pays: 'Gray', notes: null },
-    { name: 'Electricity (PSEG)', amount: 235, type: 'fixed', card_account: 'Venture', who_pays: 'Gray', notes: null },
-    { name: 'Internet (Optimum)', amount: 100, type: 'fixed', card_account: 'Venture', who_pays: 'Gray', notes: null },
-    { name: 'Garbage (Maggio)', amount: 75, type: 'fixed', card_account: 'Venture', who_pays: 'Gray', notes: null },
-    { name: 'Heating Oil (seasonal avg)', amount: 200, type: 'fixed', card_account: 'Venture', who_pays: 'Gray', notes: null },
-    { name: 'Storage (Goodfriend)', amount: 211, type: 'fixed', card_account: 'Venture', who_pays: 'Gray', notes: null },
-    { name: 'Ring/Lemonade Insurance', amount: 51, type: 'fixed', card_account: 'Venture', who_pays: 'Gray', notes: null },
-    { name: 'Shared Groceries', amount: 700, type: 'variable', card_account: 'Amex Gold (4X)', who_pays: 'Shared', notes: null },
-    { name: 'Shared Dining Out', amount: 600, type: 'variable', card_account: 'Amex Gold (4X)', who_pays: 'Shared', notes: null },
-    { name: 'Shared Delivery/Uber Eats', amount: 300, type: 'variable', card_account: 'Amex Gold (4X)', who_pays: 'Shared', notes: null },
-    { name: 'Gas / Car Wash', amount: 150, type: 'variable', card_account: 'Venture (2X)', who_pays: 'Shared', notes: null },
-    { name: 'Tolls / E-ZPass', amount: 75, type: 'variable', card_account: 'Venture (2X)', who_pays: 'Shared', notes: null },
-    { name: 'Shared Home / Target', amount: 200, type: 'variable', card_account: 'Chase UR 1041', who_pays: 'Shared', notes: null },
-    { name: 'Shared Travel (avg)', amount: 232, type: 'variable', card_account: 'Venture (2X)', who_pays: 'Shared', notes: null }
-  ];
-
-  const stmt = db.prepare(`
-    INSERT OR REPLACE INTO budget_items (name, amount, type, card_account, who_pays, notes)
-    VALUES (@name, @amount, @type, @card_account, @who_pays, @notes)
-  `);
-
-  const insertAll = db.transaction(() => {
-    for (const item of budgetItems) {
-      stmt.run(item);
-    }
-  });
-  insertAll();
-
-  logger.info(`Migrated ${budgetItems.length} budget items`);
-  return budgetItems.length;
-}
-
-// ---------------------------------------------------------------------------
-// Migrate accounts
-// ---------------------------------------------------------------------------
-function migrateAccounts() {
-  const db = getDb();
-  const accounts = [
-    // Michelle's accounts
-    { name: 'PNC Bugs Checking', mask: '3045', owner: 'michelle', type: 'checking', purpose: 'Primary checking', balance: null, notes: null },
-    { name: 'Chase Ultimate Rewards', mask: '9759', owner: 'michelle', type: 'credit', purpose: 'Rewards card', balance: null, notes: null },
-    { name: 'Chase Ultimate Rewards', mask: '1041', owner: 'michelle', type: 'credit', purpose: 'Rewards card (shared)', balance: null, notes: null },
-    { name: 'Prime Visa', mask: '5990', owner: 'michelle', type: 'credit', purpose: 'Amazon purchases', balance: null, notes: null },
-    { name: 'Marriott Bonvoy Amex', mask: '5005', owner: 'michelle', type: 'credit', purpose: 'Travel rewards', balance: null, notes: null },
-    { name: 'USAA', mask: '443', owner: 'michelle', type: 'credit', purpose: 'General', balance: null, notes: null },
-    { name: 'Bluevine (Shelzys Designs)', mask: '5301', owner: 'michelle', type: 'business_checking', purpose: 'Business account', balance: null, notes: null },
-    { name: 'Interest Checking', mask: '1583', owner: 'michelle', type: 'checking', purpose: 'Savings/interest', balance: null, notes: null },
-
-    // Gray's accounts
-    { name: 'WF Checking', mask: '4688', owner: 'gray', type: 'checking', purpose: 'Primary checking', balance: null, notes: null },
-    { name: 'Capital One Venture', mask: '4522', owner: 'gray', type: 'credit', purpose: 'Travel rewards (2X)', balance: null, notes: null },
-    { name: 'Amex Gold', mask: '2003', owner: 'gray', type: 'credit', purpose: 'Dining/groceries (4X)', balance: null, notes: null },
-    { name: 'Amex Platinum', mask: '1007', owner: 'gray', type: 'credit', purpose: 'Travel/premium', balance: null, notes: null }
-  ];
-
-  const stmt = db.prepare(`
-    INSERT OR REPLACE INTO accounts (name, mask, owner, type, purpose, balance, last_updated, notes)
-    VALUES (@name, @mask, @owner, @type, @purpose, @balance, datetime('now'), @notes)
-  `);
-
-  const insertAll = db.transaction(() => {
-    for (const acct of accounts) {
-      stmt.run(acct);
-    }
-  });
-  insertAll();
-
-  logger.info(`Migrated ${accounts.length} accounts`);
-  return accounts.length;
-}
-
-// ---------------------------------------------------------------------------
-// Main migration orchestrator
-// ---------------------------------------------------------------------------
-async function main() {
-  console.log('=== Finance Data Migration ===\n');
-
-  // 1. Check source file exists
-  if (!fs.existsSync(FINANCE_HTML_PATH)) {
-    console.error(`Source HTML not found: ${FINANCE_HTML_PATH}`);
-    process.exit(1);
+/**
+ * Normalize date formats
+ * Michelle: M/D/YY -> YYYY-MM-DD
+ * Gray: YYYY-MM-DD (already correct)
+ */
+function normalizeDate(dateStr, owner) {
+  if (owner === 'michelle') {
+    // M/D/YY format
+    const [month, day, year] = dateStr.split('/');
+    const fullYear = parseInt(year) < 100 ? 2000 + parseInt(year) : parseInt(year);
+    return `${fullYear}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   }
-  console.log(`Source: ${FINANCE_HTML_PATH}`);
+  // Gray's format is already YYYY-MM-DD
+  return dateStr;
+}
 
-  // 2. Initialize DB
-  initializeDb();
-  console.log('Database initialized.\n');
+/**
+ * Insert transactions into database
+ */
+function insertTransactions(db, mTxns, gTxns) {
+  const stmt = db.prepare(`
+    INSERT INTO finance_transactions (
+      date, merchant, amount, category, account, owner, classification, type
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
 
+  let insertedCount = 0;
+
+  // Insert Michelle's transactions
+  for (const txn of mTxns) {
+    const [date, merchant, amount, category, account, classification, type] = txn;
+    try {
+      stmt.run(
+        normalizeDate(date, 'michelle'),
+        merchant,
+        amount,
+        category,
+        account,
+        'michelle',
+        classification,
+        type
+      );
+      insertedCount++;
+    } catch (err) {
+      logger.warn(`Failed to insert Michelle transaction: ${merchant}`, err.message);
+    }
+  }
+
+  logger.info(`Inserted ${insertedCount} Michelle transactions`);
+
+  let grayInserted = 0;
+
+  // Insert Gray's transactions
+  for (const txn of gTxns) {
+    const [date, merchant, amount, category, account, owner, type] = txn;
+    try {
+      stmt.run(
+        normalizeDate(date, 'gray'),
+        merchant,
+        amount,
+        category,
+        account,
+        'gray',
+        'regular', // Gray's data doesn't have explicit classification
+        type
+      );
+      grayInserted++;
+    } catch (err) {
+      logger.warn(`Failed to insert Gray transaction: ${merchant}`, err.message);
+    }
+  }
+
+  logger.info(`Inserted ${grayInserted} Gray transactions`);
+  return insertedCount + grayInserted;
+}
+
+/**
+ * Main migration function
+ */
+async function migrate() {
   try {
-    // 3. Read and parse HTML
-    const html = fs.readFileSync(FINANCE_HTML_PATH, 'utf8');
-    console.log('HTML file read successfully.');
+    logger.info('Starting finance data migration...');
 
-    const mTxns = extractArrayFromHtml(html, 'mTxns');
-    const gTxns = extractArrayFromHtml(html, 'gTxns');
-    console.log(`Extracted: ${mTxns.length} Michelle txns, ${gTxns.length} Gray txns\n`);
+    // Check if source file exists
+    if (!fs.existsSync(SOURCE_HTML)) {
+      throw new Error(`Source file not found: ${SOURCE_HTML}`);
+    }
 
-    // 4. Clear existing migration data to allow re-runs
+    // Read HTML file
+    logger.info(`Reading source file: ${SOURCE_HTML}`);
+    const htmlContent = fs.readFileSync(SOURCE_HTML, 'utf8');
+
+    // Extract arrays
+    logger.info('Extracting transaction arrays from HTML...');
+    const { mTxnsStr, gTxnsStr } = extractArrays(htmlContent);
+
+    // Parse arrays
+    logger.info('Parsing transaction arrays...');
+    const { mTxns, gTxns } = parseArrays(mTxnsStr, gTxnsStr);
+    logger.info(`Found ${mTxns.length} Michelle transactions and ${gTxns.length} Gray transactions`);
+
+    // Get database connection
     const db = getDb();
-    db.prepare("DELETE FROM finance_transactions WHERE source = 'html_migration'").run();
-    console.log('Cleared previous migration data (if any).');
 
-    // 5. Normalize and insert Michelle's transactions
-    const michelleNormalized = mTxns.map(normalizeMichelleTxn);
-    const mCount = financeService.insertMany(michelleNormalized);
-    console.log(`Inserted ${mCount} Michelle transactions.`);
+    // Insert transactions
+    logger.info('Inserting transactions into database...');
+    const totalInserted = insertTransactions(db, mTxns, gTxns);
 
-    // 6. Normalize and insert Gray's transactions
-    const grayNormalized = gTxns.map(normalizeGrayTxn);
-    const gCount = financeService.insertMany(grayNormalized);
-    console.log(`Inserted ${gCount} Gray transactions.`);
+    logger.info(`✓ Migration complete! Inserted ${totalInserted} transactions total`);
+    console.log(`\n✓ Successfully migrated ${totalInserted} transactions`);
+    console.log(`  - Michelle: ${mTxns.length} transactions`);
+    console.log(`  - Gray: ${gTxns.length} transactions`);
 
-    // 7. Migrate budget items
-    const bCount = migrateBudgetItems();
-    console.log(`Inserted ${bCount} budget items.`);
-
-    // 8. Migrate accounts
-    const aCount = migrateAccounts();
-    console.log(`Inserted ${aCount} accounts.`);
-
-    // 9. Update sync state
-    db.prepare(`UPDATE sync_state SET last_sync_at = datetime('now'), last_sync_status = 'success', records_synced = @count WHERE service = 'finance'`)
-      .run({ count: mCount + gCount });
-
-    // 10. Summary
-    console.log('\n=== Migration Summary ===');
-    console.log(`Michelle transactions: ${mCount}`);
-    console.log(`Gray transactions:     ${gCount}`);
-    console.log(`Total transactions:    ${mCount + gCount}`);
-    console.log(`Budget items:          ${bCount}`);
-    console.log(`Accounts:              ${aCount}`);
-    console.log('\nMigration complete!');
-  } catch (err) {
-    console.error('Migration failed:', err.message);
-    logger.error('Migration failed', { error: err.message, stack: err.stack });
+  } catch (error) {
+    logger.error('Migration failed:', error);
+    console.error('\n✗ Migration failed:', error.message);
     process.exit(1);
-  } finally {
-    closeDb();
   }
 }
 
-main();
+// Run migration
+migrate();
