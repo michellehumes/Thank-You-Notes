@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive Life OS</title>
+<style>
+/* ── Design Tokens (from finance dashboard) ── */
+:root {
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --card-hover: #1f2231;
+  --border: #2a2d3a;
+  --text: #e4e4e7;
+  --dim: #9ca3af;
+  --accent: #6366f1;
+  --accent-dim: #6366f140;
+  --green: #22c55e;
+  --green-dim: #22c55e20;
+  --red: #ef4444;
+  --red-dim: #ef444420;
+  --amber: #eab308;
+  --amber-dim: #eab30820;
+  --blue: #3b82f6;
+  --blue-dim: #3b82f620;
+  --purple: #a855f7;
+  --purple-dim: #a855f720;
+  --pink: #ec4899;
+  --pink-dim: #ec489920;
+  --cyan: #06b6d4;
+  --cyan-dim: #06b6d420;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Error Banner ── */
+.error-banner {
+  background: var(--red-dim);
+  border: 1px solid var(--red);
+  color: var(--red);
+  padding: 12px 24px;
+  font-size: 13px;
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+.error-banner.visible { display: flex; }
+.error-banner .dismiss {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--red);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* ── Executive Banner ── */
+.exec-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.exec-banner .brand {
+  flex-shrink: 0;
+}
+.exec-banner .brand h1 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.exec-banner .brand p {
+  color: var(--dim);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+/* Score Gauge */
+.score-gauge {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+}
+.score-gauge svg {
+  transform: rotate(-90deg);
+  width: 90px;
+  height: 90px;
+}
+.score-gauge .track {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 7;
+}
+.score-gauge .fill {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease, stroke 0.5s ease;
+}
+.score-gauge .label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+}
+.score-gauge .label small {
+  font-size: 10px;
+  color: var(--dim);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Banner Stats */
+.banner-stats {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+.banner-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.banner-stat .stat-label {
+  font-size: 11px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.banner-stat .stat-value {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.status-badge .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.status-GREEN { background: var(--green-dim); color: var(--green); }
+.status-GREEN .dot { background: var(--green); }
+.status-YELLOW { background: var(--amber-dim); color: var(--amber); }
+.status-YELLOW .dot { background: var(--amber); }
+.status-RED { background: var(--red-dim); color: var(--red); }
+.status-RED .dot { background: var(--red); }
+
+/* Banner Actions */
+.banner-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── Risk Flags ── */
+.risk-flags {
+  display: flex;
+  gap: 8px;
+  padding: 0 32px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  min-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.risk-flags.has-flags { padding: 10px 32px; }
+.risk-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--red-dim);
+  color: var(--red);
+  white-space: nowrap;
+}
+.risk-flag.warning {
+  background: var(--amber-dim);
+  color: var(--amber);
+}
+
+/* ── Main Tabs ── */
+.tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--card);
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--dim);
+  border: none;
+  background: none;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.tab:hover { color: var(--text); background: #ffffff10; }
+.tab.active { background: var(--accent); color: #fff; }
+
+/* Sub tabs */
+.sub-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+.sub-tab {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--dim);
+  border: none;
+  background: none;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.sub-tab:hover { color: var(--text); }
+.sub-tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+/* ── Content Area ── */
+.content {
+  padding: 24px 32px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.panel { display: none; }
+.panel.active { display: block; }
+.sub-panel { display: none; }
+.sub-panel.active { display: block; }
+
+/* ── Grid System ── */
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.grid-6 { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+
+/* ── Cards ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: #3a3d4a; }
+.card h3 {
+  font-size: 12px;
+  color: var(--dim);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.card .val {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.card .sub {
+  font-size: 12px;
+  color: var(--dim);
+  margin-top: 4px;
+}
+
+/* ── Tables ── */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  color: var(--dim);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+tr:hover { background: #ffffff06; }
+
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-green { background: var(--green-dim); color: var(--green); }
+.badge-red { background: var(--red-dim); color: var(--red); }
+.badge-amber { background: var(--amber-dim); color: var(--amber); }
+.badge-blue { background: var(--blue-dim); color: var(--blue); }
+.badge-purple { background: var(--purple-dim); color: var(--purple); }
+.badge-accent { background: var(--accent-dim); color: #818cf8; }
+.badge-dim { background: #ffffff10; color: var(--dim); }
+
+/* Priority badges */
+.priority-P0 { background: var(--red-dim); color: var(--red); }
+.priority-P1 { background: var(--amber-dim); color: var(--amber); }
+.priority-P2 { background: var(--blue-dim); color: var(--blue); }
+.priority-P3 { background: #ffffff10; color: var(--dim); }
+
+/* ── Buttons ── */
+.btn {
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-accent { background: var(--accent); color: #fff; }
+.btn-accent:hover { opacity: 0.85; }
+.btn-outline { background: none; border: 1px solid var(--border); color: var(--text); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-sm { padding: 4px 10px; font-size: 11px; border-radius: 6px; }
+.btn-green { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+.btn-green:hover { background: var(--green); color: #fff; }
+
+/* ── Domain Score Bars ── */
+.domain-bars { display: flex; flex-direction: column; gap: 10px; }
+.domain-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.domain-bar .label {
+  font-size: 12px;
+  color: var(--dim);
+  width: 80px;
+  flex-shrink: 0;
+  text-transform: capitalize;
+}
+.domain-bar .track {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.domain-bar .fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+.domain-bar .score {
+  font-size: 13px;
+  font-weight: 600;
+  width: 36px;
+  text-align: right;
+}
+
+/* ── Health Trend Bars ── */
+.trend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+.trend-row .day {
+  font-size: 11px;
+  color: var(--dim);
+  width: 32px;
+  flex-shrink: 0;
+}
+.trend-row .bar-bg {
+  flex: 1;
+  height: 18px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.trend-row .bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  min-width: 30px;
+}
+
+/* ── Todo Items ── */
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.todo-item:hover { background: #ffffff06; }
+.todo-item.done { opacity: 0.4; }
+.todo-item .todo-text {
+  flex: 1;
+  font-size: 14px;
+  min-width: 0;
+}
+.todo-item .todo-text.done-text { text-decoration: line-through; }
+.todo-item .todo-meta {
+  font-size: 11px;
+  color: var(--dim);
+}
+.todo-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  color: transparent;
+  font-size: 11px;
+}
+.todo-check:hover { border-color: var(--green); }
+.todo-check.checked {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+/* ── Section Titles ── */
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 24px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.section-title:first-child { margin-top: 0; }
+
+/* ── Loading / Empty States ── */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  color: var(--dim);
+  font-size: 14px;
+  gap: 10px;
+}
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--dim);
+  font-size: 14px;
+}
+
+/* ── Utility ── */
+.green { color: var(--green); }
+.red { color: var(--red); }
+.amber { color: var(--amber); }
+.blue { color: var(--blue); }
+.purple { color: var(--purple); }
+.dim { color: var(--dim); }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.gap-8 { gap: 8px; }
+.flex { display: flex; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-wrap { flex-wrap: wrap; }
+.nowrap { white-space: nowrap; }
+
+/* ── Filters ── */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.filters input, .filters select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: inherit;
+}
+.filters input { min-width: 200px; }
+
+/* ── Anomaly Row ── */
+.anomaly-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.anomaly-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.anomaly-row .detail { flex: 1; min-width: 0; }
+.anomaly-row .detail .title { font-size: 14px; font-weight: 500; }
+.anomaly-row .detail .desc { font-size: 12px; color: var(--dim); margin-top: 2px; }
+
+/* ── Budget Progress ── */
+.budget-bar-wrap {
+  margin: 4px 0 6px;
+}
+.budget-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.budget-bar .fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+.budget-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--dim);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .exec-banner { padding: 16px; gap: 16px; flex-direction: column; align-items: flex-start; }
+  .banner-actions { margin-left: 0; }
+  .content { padding: 16px; }
+  .grid-2, .grid-3, .grid-4, .grid-6 { grid-template-columns: 1fr; }
+  .filters { flex-direction: column; }
+  .filters input { min-width: 100%; }
+  .risk-flags { padding-left: 16px; padding-right: 16px; overflow-x: auto; }
+  .tabs { padding: 6px; }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3d4a; }
+</style>
+</head>
+<body>
+
+<!-- Error Banner -->
+<div class="error-banner" id="errorBanner">
+  <span id="errorText">Some data sources failed to load. Dashboard may show incomplete information.</span>
+  <button class="dismiss" id="dismissError">&times;</button>
+</div>
+
+<!-- Executive Banner -->
+<div class="exec-banner">
+  <div class="brand">
+    <h1>Executive Life OS</h1>
+    <p id="lastSync">Last sync: loading...</p>
+  </div>
+
+  <div class="score-gauge" id="scoreGauge">
+    <svg viewBox="0 0 90 90">
+      <circle class="track" cx="45" cy="45" r="38"/>
+      <circle class="fill" id="scoreFill" cx="45" cy="45" r="38"
+        stroke-dasharray="238.76"
+        stroke-dashoffset="238.76"/>
+    </svg>
+    <div class="label">
+      <span id="scoreValue">--</span>
+      <small>SCORE</small>
+    </div>
+  </div>
+
+  <div class="banner-stats">
+    <div class="banner-stat">
+      <span class="stat-label">Status</span>
+      <span id="statusBadge" class="status-badge status-GREEN">
+        <span class="dot"></span> <span id="statusText">...</span>
+      </span>
+    </div>
+    <div class="banner-stat">
+      <span class="stat-label">Runway</span>
+      <span class="stat-value" id="runwayValue">--</span>
+    </div>
+    <div class="banner-stat">
+      <span class="stat-label">Burn Rate</span>
+      <span class="stat-value" id="burnRateValue">--</span>
+    </div>
+    <div class="banner-stat">
+      <span class="stat-label">Pipeline</span>
+      <span class="stat-value" id="pipelineValue">--</span>
+    </div>
+  </div>
+
+  <div class="banner-actions">
+    <button class="btn btn-outline btn-sm" id="syncBtn">Sync All</button>
+    <button class="btn btn-outline btn-sm" id="refreshBtn">Refresh</button>
+  </div>
+</div>
+
+<!-- Risk Flags -->
+<div class="risk-flags" id="riskFlags"></div>
+
+<!-- Main Tabs -->
+<div class="tabs" id="mainTabs">
+  <button class="tab active" data-tab="brief">Executive Brief</button>
+  <button class="tab" data-tab="finance">Finances</button>
+  <button class="tab" data-tab="career">Career</button>
+  <button class="tab" data-tab="health">Health</button>
+  <button class="tab" data-tab="todos">Todos</button>
+</div>
+
+<!-- Content -->
+<div class="content">
+
+<!-- ═══════════════ EXECUTIVE BRIEF ═══════════════ -->
+<div class="panel active" id="panel-brief">
+  <div class="grid grid-2 mb-16">
+    <div class="card">
+      <h3>Executive Summary</h3>
+      <p id="briefSummary" class="dim" style="font-size:14px;line-height:1.7">Loading...</p>
+    </div>
+    <div class="card">
+      <h3>Domain Scores</h3>
+      <div class="domain-bars" id="domainBars">
+        <div class="loading"><div class="spinner"></div> Loading scores...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title flex-between">
+    Anomalies &amp; Alerts
+    <button class="btn btn-outline btn-sm" id="syncAnomaliesBtn">Refresh</button>
+  </div>
+  <div class="card">
+    <div id="anomaliesList">
+      <div class="loading"><div class="spinner"></div> Loading anomalies...</div>
+    </div>
+  </div>
+
+  <div class="section-title mt-24">Sync Status</div>
+  <div class="grid grid-3" id="syncStatusGrid">
+    <div class="loading"><div class="spinner"></div> Loading sync status...</div>
+  </div>
+</div>
+
+<!-- ═══════════════ FINANCES ═══════════════ -->
+<div class="panel" id="panel-finance">
+  <div class="sub-tabs" id="finSubTabs">
+    <button class="sub-tab active" data-sub="fin-overview">Overview</button>
+    <button class="sub-tab" data-sub="fin-budget">Budget</button>
+    <button class="sub-tab" data-sub="fin-transactions">Transactions</button>
+  </div>
+
+  <!-- Finance: Overview -->
+  <div class="sub-panel active" id="sub-fin-overview">
+    <div class="grid grid-4 mb-16" id="finCards">
+      <div class="card"><h3>Monthly Burn</h3><div class="val" id="finBurn">--</div><div class="sub" id="finBurnSub">Loading...</div></div>
+      <div class="card"><h3>Runway</h3><div class="val" id="finRunway">--</div><div class="sub" id="finRunwaySub">Based on current savings</div></div>
+      <div class="card"><h3>Income</h3><div class="val green" id="finIncome">--</div><div class="sub">Combined monthly</div></div>
+      <div class="card"><h3>Net Cash Flow</h3><div class="val" id="finCashFlow">--</div><div class="sub" id="finCashFlowSub">Income minus expenses</div></div>
+    </div>
+
+    <div class="section-title">Spending by Category</div>
+    <div class="card">
+      <div id="categoryBreakdown">
+        <div class="loading"><div class="spinner"></div> Loading categories...</div>
+      </div>
+    </div>
+
+    <div class="section-title mt-24">Accounts</div>
+    <div class="grid grid-2" id="accountsGrid">
+      <div class="loading"><div class="spinner"></div> Loading accounts...</div>
+    </div>
+  </div>
+
+  <!-- Finance: Budget -->
+  <div class="sub-panel" id="sub-fin-budget">
+    <div class="section-title" style="margin-top:0">Budget Tracker</div>
+    <div class="card" id="budgetCard">
+      <div class="loading"><div class="spinner"></div> Loading budget...</div>
+    </div>
+  </div>
+
+  <!-- Finance: Transactions -->
+  <div class="sub-panel" id="sub-fin-transactions">
+    <div class="filters">
+      <input type="text" id="txnSearch" placeholder="Search transactions...">
+      <select id="txnPerson">
+        <option value="all">All People</option>
+        <option value="michelle">Michelle</option>
+        <option value="gray">Gray</option>
+      </select>
+      <select id="txnCategory">
+        <option value="all">All Categories</option>
+      </select>
+    </div>
+    <div class="card" style="overflow-x:auto">
+      <table id="txnTable">
+        <thead>
+          <tr>
+            <th data-col="date">Date</th>
+            <th data-col="description">Description</th>
+            <th data-col="amount">Amount</th>
+            <th data-col="category">Category</th>
+            <th>Person</th>
+            <th>Account</th>
+          </tr>
+        </thead>
+        <tbody id="txnBody">
+          <tr><td colspan="6" class="loading"><div class="spinner"></div> Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CAREER ═══════════════ -->
+<div class="panel" id="panel-career">
+  <div class="grid grid-4 mb-16" id="careerCards">
+    <div class="card"><h3>Total Pipeline</h3><div class="val" id="careerTotal">--</div><div class="sub">Active opportunities</div></div>
+    <div class="card"><h3>Tier 1 (Dream)</h3><div class="val purple" id="careerT1">--</div><div class="sub">Top-tier targets</div></div>
+    <div class="card"><h3>Interviews</h3><div class="val blue" id="careerInterviews">--</div><div class="sub">Scheduled / pending</div></div>
+    <div class="card"><h3>Offers</h3><div class="val green" id="careerOffers">--</div><div class="sub">Received</div></div>
+  </div>
+
+  <div class="section-title">Pipeline by Tier</div>
+  <div class="grid grid-3 mb-16" id="pipelineTiers">
+    <div class="loading"><div class="spinner"></div> Loading pipeline...</div>
+  </div>
+
+  <div class="section-title">Top Opportunities</div>
+  <div class="card" style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Role</th>
+          <th>Tier</th>
+          <th>Stage</th>
+          <th>Comp Range</th>
+          <th>Next Step</th>
+        </tr>
+      </thead>
+      <tbody id="careerTableBody">
+        <tr><td colspan="6" class="loading"><div class="spinner"></div> Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title mt-24">Application Stats</div>
+  <div class="grid grid-4" id="careerStatsGrid">
+    <div class="loading"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ HEALTH ═══════════════ -->
+<div class="panel" id="panel-health">
+  <div class="grid grid-3 mb-16" id="healthCards">
+    <div class="card"><h3>Sleep Score</h3><div class="val blue" id="healthSleep">--</div><div class="sub">7-day average</div></div>
+    <div class="card"><h3>Readiness</h3><div class="val green" id="healthReadiness">--</div><div class="sub">7-day average</div></div>
+    <div class="card"><h3>Activity</h3><div class="val amber" id="healthActivity">--</div><div class="sub">7-day average</div></div>
+  </div>
+
+  <div class="grid grid-3">
+    <div class="card">
+      <h3>Sleep Trend (7 days)</h3>
+      <div id="sleepTrend">
+        <div class="loading"><div class="spinner"></div> Loading...</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Readiness Trend (7 days)</h3>
+      <div id="readinessTrend">
+        <div class="loading"><div class="spinner"></div> Loading...</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Activity Trend (7 days)</h3>
+      <div id="activityTrend">
+        <div class="loading"><div class="spinner"></div> Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title mt-24">Health Details</div>
+  <div class="grid grid-2" id="healthDetailsGrid">
+    <div class="loading"><div class="spinner"></div> Loading health details...</div>
+  </div>
+</div>
+
+<!-- ═══════════════ TODOS ═══════════════ -->
+<div class="panel" id="panel-todos">
+  <div class="flex-between mb-16">
+    <div class="filters" style="margin-bottom:0">
+      <select id="todoPriority">
+        <option value="all">All Priorities</option>
+        <option value="P0">P0 - Critical</option>
+        <option value="P1">P1 - High</option>
+        <option value="P2">P2 - Medium</option>
+        <option value="P3">P3 - Low</option>
+      </select>
+      <select id="todoStatus">
+        <option value="pending">Pending</option>
+        <option value="all">All</option>
+        <option value="done">Completed</option>
+      </select>
+    </div>
+    <button class="btn btn-outline btn-sm" id="syncTodosBtn">Sync Todos</button>
+  </div>
+  <div class="card" id="todosCard">
+    <div id="todosList">
+      <div class="loading"><div class="spinner"></div> Loading todos...</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   Executive Life OS  --  Dashboard Logic
+   ══════════════════════════════════════════════════════════════════ */
+
+// ── State ──
+var state = {
+  brief: null,
+  scores: null,
+  financeOverview: null,
+  transactionsMichelle: [],
+  transactionsGray: [],
+  allTransactions: [],
+  budget: null,
+  accounts: null,
+  career: null,
+  health: null,
+  todos: [],
+  anomalies: [],
+  syncStatus: null,
+  txnSort: { col: 'date', dir: 'desc' },
+  errors: []
+};
+
+// ── Constants ──
+var DATA_BASE = '/data';
+var API_BASE = '/api';
+var REFRESH_INTERVAL = 5 * 60 * 1000;
+var CIRCUMFERENCE = 2 * Math.PI * 38; // ~238.76
+
+// ── Helpers ──
+function qs(sel) { return document.querySelector(sel); }
+function qsa(sel) { return document.querySelectorAll(sel); }
+
+function esc(str) {
+  var d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function fmt(n) {
+  if (n == null || isNaN(n)) return '--';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
+}
+
+function fmtDec(n) {
+  if (n == null || isNaN(n)) return '--';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(n);
+}
+
+function fmtPct(n) {
+  if (n == null || isNaN(n)) return '--';
+  return Math.round(n) + '%';
+}
+
+function statusColor(score) {
+  if (score >= 70) return 'var(--green)';
+  if (score >= 40) return 'var(--amber)';
+  return 'var(--red)';
+}
+
+function statusClass(status) {
+  if (!status) return 'status-GREEN';
+  var s = status.toUpperCase();
+  if (s === 'GREEN' || s === 'GOOD') return 'status-GREEN';
+  if (s === 'YELLOW' || s === 'WARNING' || s === 'CAUTION') return 'status-YELLOW';
+  return 'status-RED';
+}
+
+function timeAgo(dateStr) {
+  if (!dateStr) return 'never';
+  var diff = Date.now() - new Date(dateStr).getTime();
+  var mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + 'm ago';
+  var hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  return Math.floor(hrs / 24) + 'd ago';
+}
+
+function dayLabel(dateStr) {
+  if (!dateStr) return '--';
+  var d = new Date(dateStr);
+  return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+}
+
+// ── Safe DOM helpers ──
+function setText(sel, text) {
+  var el = typeof sel === 'string' ? qs(sel) : sel;
+  if (el) el.textContent = text;
+}
+
+function setClass(sel, cls) {
+  var el = typeof sel === 'string' ? qs(sel) : sel;
+  if (el) el.className = cls;
+}
+
+function buildEl(tag, attrs, children) {
+  var el = document.createElement(tag);
+  if (attrs) {
+    Object.keys(attrs).forEach(function(k) {
+      if (k === 'className') el.className = attrs[k];
+      else if (k === 'style' && typeof attrs[k] === 'object') {
+        Object.keys(attrs[k]).forEach(function(s) { el.style[s] = attrs[k][s]; });
+      } else if (k.startsWith('on') && typeof attrs[k] === 'function') {
+        el.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+      } else {
+        el.setAttribute(k, attrs[k]);
+      }
+    });
+  }
+  if (children) {
+    if (typeof children === 'string') el.textContent = children;
+    else if (Array.isArray(children)) {
+      children.forEach(function(c) { if (c) el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    } else {
+      el.appendChild(children);
+    }
+  }
+  return el;
+}
+
+function clearAndAppend(sel, nodes) {
+  var el = typeof sel === 'string' ? qs(sel) : sel;
+  if (!el) return;
+  el.textContent = '';
+  if (Array.isArray(nodes)) nodes.forEach(function(n) { if (n) el.appendChild(n); });
+  else if (nodes) el.appendChild(nodes);
+}
+
+function showEmpty(container, msg) {
+  var el = typeof container === 'string' ? qs(container) : container;
+  if (!el) return;
+  el.textContent = '';
+  var div = document.createElement('div');
+  div.className = 'empty-state';
+  div.textContent = msg;
+  el.appendChild(div);
+}
+
+function showLoaderIn(container) {
+  var el = typeof container === 'string' ? qs(container) : container;
+  if (!el) return;
+  el.textContent = '';
+  var div = document.createElement('div');
+  div.className = 'loading';
+  var sp = document.createElement('div');
+  sp.className = 'spinner';
+  div.appendChild(sp);
+  div.appendChild(document.createTextNode(' Loading...'));
+  el.appendChild(div);
+}
+
+// ── Data Fetching ──
+function fetchJSON(path) {
+  return fetch(DATA_BASE + '/' + path)
+    .then(function(res) {
+      if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+      return res.json();
+    })
+    .catch(function(e) {
+      state.errors.push({ file: path, error: e.message });
+      return null;
+    });
+}
+
+function postAPI(path) {
+  return fetch(API_BASE + '/' + path, { method: 'POST' })
+    .then(function(res) {
+      if (!res.ok) throw new Error(String(res.status));
+      return res.json();
+    })
+    .catch(function(e) {
+      console.warn('API call failed:', path, e.message);
+      return null;
+    });
+}
+
+function loadAllData() {
+  state.errors = [];
+  showLoadingState(true);
+
+  return Promise.all([
+    fetchJSON('executive-brief.json'),
+    fetchJSON('executive-score.json'),
+    fetchJSON('finance-overview.json'),
+    fetchJSON('transactions-michelle.json'),
+    fetchJSON('transactions-gray.json'),
+    fetchJSON('budget.json'),
+    fetchJSON('accounts.json'),
+    fetchJSON('career.json'),
+    fetchJSON('health.json'),
+    fetchJSON('todos.json'),
+    fetchJSON('anomalies.json'),
+    fetchJSON('sync-status.json')
+  ]).then(function(results) {
+    var brief = results[0], scores = results[1], finOverview = results[2],
+        txnM = results[3], txnG = results[4], budget = results[5],
+        accounts = results[6], career = results[7], health = results[8],
+        todos = results[9], anomalies = results[10], syncStatus = results[11];
+
+    state.brief = brief;
+    state.scores = scores;
+    state.financeOverview = finOverview;
+    state.transactionsMichelle = Array.isArray(txnM) ? txnM : (txnM && txnM.transactions ? txnM.transactions : []);
+    state.transactionsGray = Array.isArray(txnG) ? txnG : (txnG && txnG.transactions ? txnG.transactions : []);
+    state.allTransactions = state.transactionsMichelle.map(function(t) {
+      return Object.assign({}, t, { person: 'Michelle' });
+    }).concat(state.transactionsGray.map(function(t) {
+      return Object.assign({}, t, { person: 'Gray' });
+    }));
+    state.budget = budget;
+    state.accounts = accounts;
+    state.career = career;
+    state.health = health;
+    state.todos = Array.isArray(todos) ? todos : (todos && todos.items ? todos.items : []);
+    state.anomalies = Array.isArray(anomalies) ? anomalies : (anomalies && (anomalies.items || anomalies.anomalies) ? (anomalies.items || anomalies.anomalies) : []);
+    state.syncStatus = syncStatus;
+
+    if (state.errors.length > 0) {
+      var missing = state.errors.map(function(e) { return e.file; }).join(', ');
+      setText('#errorText', 'Failed to load: ' + missing + '. Some panels may be incomplete.');
+      qs('#errorBanner').classList.add('visible');
+    } else {
+      qs('#errorBanner').classList.remove('visible');
+    }
+
+    renderAll();
+    showLoadingState(false);
+  });
+}
+
+function showLoadingState(on) {
+  var btn = qs('#syncBtn');
+  if (on) {
+    btn.disabled = true;
+    btn.textContent = 'Syncing...';
+  } else {
+    btn.disabled = false;
+    btn.textContent = 'Sync All';
+  }
+}
+
+// ── Render All ──
+function renderAll() {
+  renderBanner();
+  renderBrief();
+  renderFinanceOverview();
+  renderBudget();
+  renderTransactions();
+  renderCareer();
+  renderHealth();
+  renderTodos();
+  renderAnomalies();
+  renderSyncStatus();
+}
+
+// ══════════════════════════════════════════
+// RENDER: BANNER
+// ══════════════════════════════════════════
+function renderBanner() {
+  var b = state.brief;
+  var s = state.scores;
+  var f = state.financeOverview;
+
+  var score = (b && b.score != null) ? b.score : (s && s.overall != null ? s.overall : 0);
+  var offset = CIRCUMFERENCE - (score / 100) * CIRCUMFERENCE;
+  var fill = qs('#scoreFill');
+  fill.style.strokeDashoffset = offset;
+  fill.style.stroke = statusColor(score);
+  setText('#scoreValue', String(Math.round(score)));
+
+  var status = (b && b.status) ? b.status : (score >= 70 ? 'GREEN' : score >= 40 ? 'YELLOW' : 'RED');
+  var badge = qs('#statusBadge');
+  badge.className = 'status-badge ' + statusClass(status);
+  setText('#statusText', status.toUpperCase());
+
+  setText('#runwayValue', f && f.runway ? f.runway + ' mo' : (b && b.runway ? b.runway : '--'));
+  setText('#burnRateValue', f && f.burnRate ? fmt(f.burnRate) : (b && b.burnRate ? b.burnRate : '--'));
+  setText('#pipelineValue', String(
+    (state.career && state.career.pipeline && state.career.pipeline.total != null) ? state.career.pipeline.total :
+    (state.career && state.career.totalOpportunities != null ? state.career.totalOpportunities : '--')
+  ));
+
+  var syncTime = (state.syncStatus && (state.syncStatus.lastSync || state.syncStatus.timestamp)) ||
+                 (b && b.lastSync);
+  setText('#lastSync', 'Last sync: ' + (syncTime ? timeAgo(syncTime) : 'unknown'));
+
+  renderRiskFlags();
+}
+
+function renderRiskFlags() {
+  var container = qs('#riskFlags');
+  var flags = [];
+
+  if (state.brief && state.brief.risks) {
+    state.brief.risks.forEach(function(r) { flags.push({ text: r, severity: 'error' }); });
+  }
+  if (state.brief && state.brief.flags) {
+    state.brief.flags.forEach(function(r) {
+      if (typeof r === 'string') flags.push({ text: r, severity: 'warning' });
+      else flags.push({ text: r.text || r.message || '', severity: r.severity || 'warning' });
+    });
+  }
+  state.anomalies.forEach(function(a) {
+    if (a.severity === 'critical' || a.severity === 'high') {
+      flags.push({ text: a.title || a.description || a.message || '', severity: 'error' });
+    }
+  });
+
+  container.textContent = '';
+  if (flags.length === 0) {
+    container.classList.remove('has-flags');
+    return;
+  }
+
+  container.classList.add('has-flags');
+  flags.forEach(function(f) {
+    var span = document.createElement('span');
+    span.className = 'risk-flag' + (f.severity === 'warning' ? ' warning' : '');
+    span.textContent = f.text;
+    container.appendChild(span);
+  });
+}
+
+// ══════════════════════════════════════════
+// RENDER: EXECUTIVE BRIEF
+// ══════════════════════════════════════════
+function renderBrief() {
+  var b = state.brief;
+  var s = state.scores;
+
+  setText('#briefSummary', (b && (b.summary || b.executiveSummary)) || 'No executive brief data available.');
+
+  var domains = (s && s.domains) || (s && s.breakdown) || (b && b.breakdown) || {};
+  var barsEl = qs('#domainBars');
+
+  if (Object.keys(domains).length === 0) {
+    showEmpty(barsEl, 'No domain score data available.');
+    return;
+  }
+
+  barsEl.textContent = '';
+  Object.keys(domains).forEach(function(name) {
+    var val = domains[name];
+    var score = typeof val === 'number' ? val : ((val && val.score != null) ? val.score : 0);
+    var color = statusColor(score);
+
+    var row = buildEl('div', { className: 'domain-bar' });
+    var lbl = buildEl('span', { className: 'label' }, name);
+    var trackDiv = buildEl('div', { className: 'track' });
+    var fillDiv = buildEl('div', { className: 'fill' });
+    fillDiv.style.width = score + '%';
+    fillDiv.style.background = color;
+    trackDiv.appendChild(fillDiv);
+    var scoreSpan = buildEl('span', { className: 'score' }, String(Math.round(score)));
+    scoreSpan.style.color = color;
+
+    row.appendChild(lbl);
+    row.appendChild(trackDiv);
+    row.appendChild(scoreSpan);
+    barsEl.appendChild(row);
+  });
+}
+
+// ══════════════════════════════════════════
+// RENDER: ANOMALIES
+// ══════════════════════════════════════════
+function renderAnomalies() {
+  var list = state.anomalies;
+  var el = qs('#anomaliesList');
+
+  if (!list || list.length === 0) {
+    showEmpty(el, 'No anomalies detected. All clear.');
+    return;
+  }
+
+  el.textContent = '';
+  list.forEach(function(a) {
+    var sev = a.severity || 'info';
+    var isHigh = sev === 'critical' || sev === 'high';
+    var isMed = sev === 'medium';
+
+    var row = buildEl('div', { className: 'anomaly-row' });
+
+    var icon = buildEl('div', { className: 'anomaly-icon' });
+    icon.style.background = isHigh ? 'var(--red-dim)' : isMed ? 'var(--amber-dim)' : 'var(--blue-dim)';
+    icon.style.color = isHigh ? 'var(--red)' : isMed ? 'var(--amber)' : 'var(--blue)';
+    icon.textContent = isHigh ? '!' : isMed ? '~' : 'i';
+
+    var detail = buildEl('div', { className: 'detail' });
+    var title = buildEl('div', { className: 'title' }, a.title || a.message || 'Anomaly detected');
+    var desc = buildEl('div', { className: 'desc' });
+    desc.textContent = a.description || a.detail || '';
+    if (a.domain) {
+      var domBadge = buildEl('span', { className: 'badge badge-dim', style: { marginLeft: '4px' } }, a.domain);
+      desc.appendChild(document.createTextNode(' '));
+      desc.appendChild(domBadge);
+    }
+    detail.appendChild(title);
+    detail.appendChild(desc);
+
+    var sevBadge = buildEl('span', { className: 'badge' }, sev);
+    sevBadge.style.background = isHigh ? 'var(--red-dim)' : isMed ? 'var(--amber-dim)' : 'var(--blue-dim)';
+    sevBadge.style.color = isHigh ? 'var(--red)' : isMed ? 'var(--amber)' : 'var(--blue)';
+
+    row.appendChild(icon);
+    row.appendChild(detail);
+    row.appendChild(sevBadge);
+    el.appendChild(row);
+  });
+}
+
+// ══════════════════════════════════════════
+// RENDER: SYNC STATUS
+// ══════════════════════════════════════════
+function renderSyncStatus() {
+  var ss = state.syncStatus;
+  var grid = qs('#syncStatusGrid');
+
+  if (!ss) {
+    showEmpty(grid, 'No sync status data available.');
+    return;
+  }
+
+  var sources = ss.sources || ss.connectors || ss.services || {};
+  var keys = Object.keys(sources);
+
+  if (keys.length === 0) {
+    grid.textContent = '';
+    var card = buildEl('div', { className: 'card' });
+    card.appendChild(buildEl('h3', null, 'System'));
+    card.appendChild(buildEl('div', { className: 'sub' }, 'Sync status: ' + (ss.status || 'unknown')));
+    grid.appendChild(card);
+    return;
+  }
+
+  grid.textContent = '';
+  keys.forEach(function(name) {
+    var info = sources[name];
+    var lastSync = info.lastSync || info.timestamp || info.last;
+    var status = info.status || (info.ok ? 'ok' : 'unknown');
+    var isOk = status === 'ok' || status === 'active' || status === 'connected';
+
+    var card = buildEl('div', { className: 'card' });
+    card.appendChild(buildEl('h3', null, name));
+
+    var row = buildEl('div', { className: 'flex-between' });
+    row.appendChild(buildEl('span', { className: 'badge ' + (isOk ? 'badge-green' : 'badge-amber') }, status));
+    var ts = buildEl('span', { className: 'dim', style: { fontSize: '11px' } }, lastSync ? timeAgo(lastSync) : 'no data');
+    row.appendChild(ts);
+    card.appendChild(row);
+
+    var sub = buildEl('div', { className: 'sub mt-16' });
+    var btn = buildEl('button', { className: 'btn btn-outline btn-sm', onClick: function() { triggerSync(name.toLowerCase()); } }, 'Sync ' + name);
+    sub.appendChild(btn);
+    card.appendChild(sub);
+
+    grid.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════
+// RENDER: FINANCE OVERVIEW
+// ══════════════════════════════════════════
+function renderFinanceOverview() {
+  var f = state.financeOverview;
+
+  if (f) {
+    var burn = f.burnRate != null ? f.burnRate : (f.monthlyExpenses || 0);
+    var income = f.income != null ? f.income : (f.monthlyIncome || 0);
+    var cashFlow = income - burn;
+
+    setText('#finBurn', fmt(burn));
+    setClass('#finBurn', 'val amber');
+    setText('#finBurnSub', f.burnTrend || 'Monthly expenses');
+
+    setText('#finRunway', f.runway ? f.runway + ' mo' : '--');
+    setClass('#finRunway', 'val ' + (f.runway > 6 ? 'green' : f.runway > 3 ? 'amber' : 'red'));
+    setText('#finRunwaySub', f.savings ? 'Savings: ' + fmt(f.savings) : 'Based on current savings');
+
+    setText('#finIncome', fmt(income));
+
+    setText('#finCashFlow', fmt(cashFlow));
+    setClass('#finCashFlow', 'val ' + (cashFlow >= 0 ? 'green' : 'red'));
+    setText('#finCashFlowSub', cashFlow >= 0 ? 'Positive cash flow' : 'Negative cash flow');
+
+    renderCategoryBreakdown(f.categories || f.categoryBreakdown || {});
+  }
+
+  renderAccounts();
+}
+
+function renderCategoryBreakdown(categories) {
+  var el = qs('#categoryBreakdown');
+
+  if (!categories || Object.keys(categories).length === 0) {
+    var cats = {};
+    state.allTransactions.forEach(function(t) {
+      var cat = t.category || 'Uncategorized';
+      var amt = Math.abs(parseFloat(t.amount) || 0);
+      cats[cat] = (cats[cat] || 0) + amt;
+    });
+    if (Object.keys(cats).length === 0) {
+      showEmpty(el, 'No category data available.');
+      return;
+    }
+    categories = cats;
+  }
+
+  var sorted = Object.entries(categories).sort(function(a, b) { return b[1] - a[1]; });
+  var max = (sorted[0] && sorted[0][1]) || 1;
+  var colors = ['var(--accent)', 'var(--blue)', 'var(--purple)', 'var(--pink)', 'var(--cyan)', 'var(--amber)', 'var(--green)', 'var(--red)'];
+
+  el.textContent = '';
+  var table = document.createElement('table');
+  var thead = document.createElement('thead');
+  var headRow = document.createElement('tr');
+  ['Category', 'Amount', 'Share'].forEach(function(txt, idx) {
+    var th = document.createElement('th');
+    th.textContent = txt;
+    if (idx === 2) th.style.width = '50%';
+    headRow.appendChild(th);
+  });
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+
+  var tbody = document.createElement('tbody');
+  sorted.forEach(function(entry, i) {
+    var cat = entry[0], amt = entry[1];
+    var pct = (amt / max) * 100;
+    var color = colors[i % colors.length];
+
+    var tr = document.createElement('tr');
+
+    var td1 = document.createElement('td');
+    td1.textContent = cat;
+    tr.appendChild(td1);
+
+    var td2 = document.createElement('td');
+    td2.className = 'nowrap';
+    td2.textContent = fmt(amt);
+    tr.appendChild(td2);
+
+    var td3 = document.createElement('td');
+    var barOuter = document.createElement('div');
+    barOuter.style.cssText = 'background:var(--border);border-radius:3px;height:6px;overflow:hidden';
+    var barInner = document.createElement('div');
+    barInner.style.cssText = 'height:100%;border-radius:3px;width:' + pct + '%;background:' + color;
+    barOuter.appendChild(barInner);
+    td3.appendChild(barOuter);
+    tr.appendChild(td3);
+
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  el.appendChild(table);
+}
+
+function renderAccounts() {
+  var accts = state.accounts;
+  var grid = qs('#accountsGrid');
+
+  if (!accts) {
+    showEmpty(grid, 'No account data available.');
+    return;
+  }
+
+  var groups;
+  if (accts.groups) groups = accts.groups;
+  else if (accts.accountGroups) groups = accts.accountGroups;
+  else if (Array.isArray(accts)) groups = [{ name: 'Accounts', accounts: accts }];
+  else groups = [
+    { name: 'Michelle', accounts: accts.michelle || [] },
+    { name: 'Gray', accounts: accts.gray || [] }
+  ];
+
+  grid.textContent = '';
+  groups.forEach(function(group) {
+    if (!group.accounts || group.accounts.length === 0) return;
+
+    var card = buildEl('div', { className: 'card' });
+    card.appendChild(buildEl('h3', null, group.name || 'Accounts'));
+
+    var table = document.createElement('table');
+    var thead = document.createElement('thead');
+    var hr = document.createElement('tr');
+    ['Account', 'Last 4', 'Type'].forEach(function(t) {
+      var th = document.createElement('th');
+      th.textContent = t;
+      hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    group.accounts.forEach(function(a) {
+      var badgeClass = a.type === 'shared' ? 'badge-accent' :
+                       a.type === 'business' ? 'badge-amber' :
+                       a.type === 'investment' ? 'badge-purple' :
+                       a.type === 'close' ? 'badge-dim' : 'badge-green';
+      var tr = document.createElement('tr');
+
+      var td1 = document.createElement('td');
+      td1.textContent = a.name || a.institution || '--';
+      tr.appendChild(td1);
+
+      var td2 = document.createElement('td');
+      td2.className = 'dim';
+      td2.textContent = a.last4 ? '...' + a.last4 : (a.mask || '');
+      tr.appendChild(td2);
+
+      var td3 = document.createElement('td');
+      var badge = buildEl('span', { className: 'badge ' + badgeClass }, a.type || a.purpose || 'personal');
+      td3.appendChild(badge);
+      tr.appendChild(td3);
+
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    card.appendChild(table);
+    grid.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════
+// RENDER: BUDGET
+// ══════════════════════════════════════════
+function renderBudget() {
+  var b = state.budget;
+  var el = qs('#budgetCard');
+
+  if (!b) {
+    showEmpty(el, 'No budget data available.');
+    return;
+  }
+
+  var items = b.items || b.categories || b.lines || [];
+  if (items.length === 0 && typeof b === 'object') {
+    var entries = Object.entries(b).filter(function(kv) {
+      return typeof kv[1] === 'object' && kv[1] !== null && kv[1].budget != null;
+    });
+    if (entries.length > 0) {
+      items = entries.map(function(kv) {
+        return { name: kv[0], budget: kv[1].budget, spent: kv[1].spent || kv[1].actual || 0 };
+      });
+    }
+  }
+
+  if (items.length === 0) {
+    showEmpty(el, 'No budget line items found.');
+    return;
+  }
+
+  el.textContent = '';
+  items.forEach(function(item) {
+    var budg = item.budget || item.limit || item.allocated || 0;
+    var spent = item.spent || item.actual || item.used || 0;
+    var pct = budg > 0 ? Math.min((spent / budg) * 100, 100) : 0;
+    var over = spent > budg;
+    var color = over ? 'var(--red)' : pct > 80 ? 'var(--amber)' : 'var(--green)';
+    var remaining = budg - spent;
+
+    var wrapper = document.createElement('div');
+    wrapper.style.cssText = 'padding:12px 0;border-bottom:1px solid var(--border)';
+
+    var top = buildEl('div', { className: 'flex-between' });
+    top.appendChild(buildEl('span', { style: { fontSize: '14px', fontWeight: '500' } }, item.name || item.category));
+    var amtSpan = document.createElement('span');
+    amtSpan.style.cssText = 'font-size:14px;font-weight:600;color:' + color;
+    amtSpan.textContent = fmt(spent);
+    var dimSpan = buildEl('span', { className: 'dim' }, ' / ' + fmt(budg));
+    amtSpan.appendChild(dimSpan);
+    top.appendChild(amtSpan);
+    wrapper.appendChild(top);
+
+    var barWrap = buildEl('div', { className: 'budget-bar-wrap' });
+    var bar = buildEl('div', { className: 'budget-bar' });
+    var barFill = buildEl('div', { className: 'fill' });
+    barFill.style.width = pct + '%';
+    barFill.style.background = color;
+    bar.appendChild(barFill);
+    barWrap.appendChild(bar);
+    wrapper.appendChild(barWrap);
+
+    var meta = buildEl('div', { className: 'budget-meta' });
+    meta.appendChild(buildEl('span', null, fmtPct(pct) + ' used'));
+    var remSpan = document.createElement('span');
+    if (over) remSpan.style.color = 'var(--red)';
+    remSpan.textContent = over ? 'Over by ' + fmt(Math.abs(remaining)) : fmt(remaining) + ' remaining';
+    meta.appendChild(remSpan);
+    wrapper.appendChild(meta);
+
+    el.appendChild(wrapper);
+  });
+}
+
+// ══════════════════════════════════════════
+// RENDER: TRANSACTIONS
+// ══════════════════════════════════════════
+function renderTransactions() {
+  buildCategoryFilter();
+  filterTransactions();
+}
+
+function buildCategoryFilter() {
+  var cats = {};
+  state.allTransactions.forEach(function(t) {
+    if (t.category) cats[t.category] = true;
+  });
+  var sel = qs('#txnCategory');
+  sel.textContent = '';
+  var optAll = document.createElement('option');
+  optAll.value = 'all';
+  optAll.textContent = 'All Categories';
+  sel.appendChild(optAll);
+  Object.keys(cats).sort().forEach(function(c) {
+    var opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    sel.appendChild(opt);
+  });
+}
+
+function filterTransactions() {
+  var searchEl = qs('#txnSearch');
+  var search = (searchEl ? searchEl.value : '').toLowerCase();
+  var person = (qs('#txnPerson') ? qs('#txnPerson').value : 'all');
+  var category = (qs('#txnCategory') ? qs('#txnCategory').value : 'all');
+
+  var filtered = state.allTransactions.filter(function(t) {
+    if (search && (t.description || '').toLowerCase().indexOf(search) === -1 &&
+        (t.category || '').toLowerCase().indexOf(search) === -1 &&
+        (t.merchant || '').toLowerCase().indexOf(search) === -1) return false;
+    if (person !== 'all' && (t.person || '').toLowerCase() !== person) return false;
+    if (category !== 'all' && t.category !== category) return false;
+    return true;
+  });
+
+  sortTransactionsArray(filtered);
+  renderTransactionTable(filtered);
+}
+
+function sortTransactionsArray(arr) {
+  var col = state.txnSort.col;
+  var dir = state.txnSort.dir;
+  arr.sort(function(a, b) {
+    var va, vb;
+    if (col === 'amount') {
+      va = parseFloat(a[col]) || 0;
+      vb = parseFloat(b[col]) || 0;
+    } else if (col === 'date') {
+      va = new Date(a[col]).getTime() || 0;
+      vb = new Date(b[col]).getTime() || 0;
+    } else {
+      va = String(a[col] || '').toLowerCase();
+      vb = String(b[col] || '').toLowerCase();
+    }
+    if (va < vb) return dir === 'asc' ? -1 : 1;
+    if (va > vb) return dir === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
+function sortTransactions(col) {
+  if (state.txnSort.col === col) {
+    state.txnSort.dir = state.txnSort.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    state.txnSort.col = col;
+    state.txnSort.dir = col === 'date' ? 'desc' : 'asc';
+  }
+  filterTransactions();
+}
+
+function renderTransactionTable(rows) {
+  var body = qs('#txnBody');
+  body.textContent = '';
+
+  if (rows.length === 0) {
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    td.setAttribute('colspan', '6');
+    td.className = 'empty-state';
+    td.textContent = 'No transactions match your filters.';
+    tr.appendChild(td);
+    body.appendChild(tr);
+    return;
+  }
+
+  var limit = Math.min(rows.length, 200);
+  for (var i = 0; i < limit; i++) {
+    var t = rows[i];
+    var amt = parseFloat(t.amount) || 0;
+    var amtClass = amt < 0 ? 'red' : amt > 0 ? 'green' : '';
+
+    var tr = document.createElement('tr');
+
+    var tdDate = document.createElement('td');
+    tdDate.className = 'nowrap';
+    tdDate.textContent = t.date || '--';
+    tr.appendChild(tdDate);
+
+    var tdDesc = document.createElement('td');
+    tdDesc.textContent = t.description || t.merchant || t.name || '--';
+    tr.appendChild(tdDesc);
+
+    var tdAmt = document.createElement('td');
+    tdAmt.className = amtClass + ' nowrap';
+    tdAmt.textContent = fmtDec(amt);
+    tr.appendChild(tdAmt);
+
+    var tdCat = document.createElement('td');
+    var catBadge = buildEl('span', { className: 'badge badge-dim' }, t.category || '--');
+    tdCat.appendChild(catBadge);
+    tr.appendChild(tdCat);
+
+    var tdPerson = document.createElement('td');
+    tdPerson.textContent = t.person || '--';
+    tr.appendChild(tdPerson);
+
+    var tdAcct = document.createElement('td');
+    tdAcct.className = 'dim';
+    tdAcct.textContent = t.account || t.accountName || '--';
+    tr.appendChild(tdAcct);
+
+    body.appendChild(tr);
+  }
+
+  if (rows.length > 200) {
+    var overflowTr = document.createElement('tr');
+    var overflowTd = document.createElement('td');
+    overflowTd.setAttribute('colspan', '6');
+    overflowTd.className = 'dim text-center';
+    overflowTd.style.padding = '12px';
+    overflowTd.textContent = 'Showing 200 of ' + rows.length + ' transactions. Use filters to narrow results.';
+    overflowTr.appendChild(overflowTd);
+    body.appendChild(overflowTr);
+  }
+}
+
+// ══════════════════════════════════════════
+// RENDER: CAREER
+// ══════════════════════════════════════════
+function renderCareer() {
+  var c = state.career;
+
+  if (!c) {
+    showEmpty('#careerTableBody', 'No career data available.');
+    showEmpty('#pipelineTiers', 'No pipeline data.');
+    qs('#careerStatsGrid').textContent = '';
+    return;
+  }
+
+  var pipeline = c.pipeline || {};
+  var total = pipeline.total != null ? pipeline.total : (c.totalOpportunities != null ? c.totalOpportunities : (c.roles ? c.roles.length : 0));
+  var t1 = pipeline.tier1 != null ? pipeline.tier1 : (pipeline.dream || 0);
+  var interviews = pipeline.interviews != null ? pipeline.interviews : (c.interviews || 0);
+  var offers = pipeline.offers != null ? pipeline.offers : (c.offers || 0);
+
+  setText('#careerTotal', String(total));
+  setText('#careerT1', String(t1));
+  setText('#careerInterviews', String(interviews));
+  setText('#careerOffers', String(offers));
+
+  // Pipeline tiers
+  var tiers = c.tiers || pipeline.tiers || {};
+  var tierGrid = qs('#pipelineTiers');
+  var tierKeys = Object.keys(tiers);
+
+  if (tierKeys.length > 0) {
+    tierGrid.textContent = '';
+    tierKeys.forEach(function(name) {
+      var data = tiers[name];
+      var count = typeof data === 'number' ? data : ((data && data.count != null) ? data.count : 0);
+      var roles = (typeof data === 'object' && data && data.roles) ? data.roles : [];
+
+      var card = buildEl('div', { className: 'card' });
+      card.appendChild(buildEl('h3', null, name));
+      card.appendChild(buildEl('div', { className: 'val' }, String(count)));
+      if (roles.length > 0) {
+        var sub = buildEl('div', { className: 'sub mt-16' });
+        roles.slice(0, 3).forEach(function(r) {
+          var d = document.createElement('div');
+          d.style.padding = '2px 0';
+          d.textContent = r.company || r.name || String(r);
+          sub.appendChild(d);
+        });
+        card.appendChild(sub);
+      }
+      tierGrid.appendChild(card);
+    });
+  } else {
+    showEmpty(tierGrid, 'No tier breakdown available.');
+  }
+
+  // Top roles table
+  var roles = c.roles || c.opportunities || c.jobs || [];
+  var tbody = qs('#careerTableBody');
+  tbody.textContent = '';
+
+  if (roles.length === 0) {
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    td.setAttribute('colspan', '6');
+    td.className = 'empty-state';
+    td.textContent = 'No opportunities tracked yet.';
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  } else {
+    roles.slice(0, 20).forEach(function(r) {
+      var tierBadge = (r.tier === 1 || r.tier === 'T1') ? 'badge-purple' :
+                      (r.tier === 2 || r.tier === 'T2') ? 'badge-blue' : 'badge-dim';
+      var stageBadge = ((r.stage || '').toLowerCase().indexOf('offer') !== -1) ? 'badge-green' :
+                       ((r.stage || '').toLowerCase().indexOf('interview') !== -1) ? 'badge-blue' : 'badge-dim';
+
+      var tr = document.createElement('tr');
+
+      var td1 = document.createElement('td');
+      td1.style.fontWeight = '500';
+      td1.textContent = r.company || '--';
+      tr.appendChild(td1);
+
+      var td2 = document.createElement('td');
+      td2.textContent = r.role || r.title || '--';
+      tr.appendChild(td2);
+
+      var td3 = document.createElement('td');
+      td3.appendChild(buildEl('span', { className: 'badge ' + tierBadge }, 'T' + (r.tier || '?')));
+      tr.appendChild(td3);
+
+      var td4 = document.createElement('td');
+      td4.appendChild(buildEl('span', { className: 'badge ' + stageBadge }, r.stage || '--'));
+      tr.appendChild(td4);
+
+      var td5 = document.createElement('td');
+      td5.className = 'nowrap';
+      td5.textContent = r.compRange || r.compensation || r.salary || '--';
+      tr.appendChild(td5);
+
+      var td6 = document.createElement('td');
+      td6.className = 'dim';
+      td6.textContent = r.nextStep || r.next || '--';
+      tr.appendChild(td6);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Stats
+  var stats = c.stats || {};
+  var statsGrid = qs('#careerStatsGrid');
+  statsGrid.textContent = '';
+
+  if (Object.keys(stats).length > 0) {
+    Object.keys(stats).forEach(function(k) {
+      var card = buildEl('div', { className: 'card' });
+      card.appendChild(buildEl('h3', null, k.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ')));
+      card.appendChild(buildEl('div', { className: 'val' }, String(stats[k])));
+      statsGrid.appendChild(card);
+    });
+  } else {
+    var defaults = [
+      { label: 'Applied', val: String(c.applied != null ? c.applied : total) },
+      { label: 'Response Rate', val: c.responseRate || (total > 0 ? Math.round((interviews / total) * 100) + '%' : '--') },
+      { label: 'Active Interviews', val: String(interviews), cls: 'val blue' },
+      { label: 'Offers', val: String(offers), cls: 'val green' }
+    ];
+    defaults.forEach(function(d) {
+      var card = buildEl('div', { className: 'card' });
+      card.appendChild(buildEl('h3', null, d.label));
+      card.appendChild(buildEl('div', { className: d.cls || 'val' }, d.val));
+      statsGrid.appendChild(card);
+    });
+  }
+}
+
+// ══════════════════════════════════════════
+// RENDER: HEALTH
+// ══════════════════════════════════════════
+function renderHealth() {
+  var h = state.health;
+
+  if (!h) {
+    showEmpty('#sleepTrend', 'No sleep data.');
+    showEmpty('#readinessTrend', 'No readiness data.');
+    showEmpty('#activityTrend', 'No activity data.');
+    showEmpty('#healthDetailsGrid', 'Connect Oura ring to see health data.');
+    return;
+  }
+
+  var avg = h.averages || h.weekly || {};
+  var sleep = avg.sleep != null ? avg.sleep : (h.sleepScore != null ? h.sleepScore : '--');
+  var readiness = avg.readiness != null ? avg.readiness : (h.readinessScore != null ? h.readinessScore : '--');
+  var activity = avg.activity != null ? avg.activity : (h.activityScore != null ? h.activityScore : '--');
+
+  setText('#healthSleep', typeof sleep === 'number' ? String(Math.round(sleep)) : String(sleep));
+  setText('#healthReadiness', typeof readiness === 'number' ? String(Math.round(readiness)) : String(readiness));
+  setText('#healthActivity', typeof activity === 'number' ? String(Math.round(activity)) : String(activity));
+
+  var days = h.daily || h.days || h.trend || [];
+  renderHealthTrend('sleepTrend', days, 'sleep', 'var(--blue)');
+  renderHealthTrend('readinessTrend', days, 'readiness', 'var(--green)');
+  renderHealthTrend('activityTrend', days, 'activity', 'var(--amber)');
+
+  // Details
+  var details = h.details || h.metrics || {};
+  var detailGrid = qs('#healthDetailsGrid');
+  detailGrid.textContent = '';
+
+  if (Object.keys(details).length > 0) {
+    Object.keys(details).forEach(function(k) {
+      var v = details[k];
+      var val = (typeof v === 'object' && v !== null) ? (v.value != null ? v.value : (v.score != null ? v.score : JSON.stringify(v))) : v;
+      var unit = (typeof v === 'object' && v !== null) ? (v.unit || '') : '';
+      var card = buildEl('div', { className: 'card' });
+      card.appendChild(buildEl('h3', null, k.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ')));
+      var valDiv = buildEl('div', { className: 'val' }, String(val));
+      if (unit) {
+        var unitSpan = buildEl('span', { className: 'dim', style: { fontSize: '14px' } }, ' ' + unit);
+        valDiv.appendChild(unitSpan);
+      }
+      card.appendChild(valDiv);
+      detailGrid.appendChild(card);
+    });
+  } else {
+    var extras = [];
+    if (h.hrv) extras.push({ label: 'HRV', value: h.hrv, unit: 'ms' });
+    if (h.restingHR) extras.push({ label: 'Resting HR', value: h.restingHR, unit: 'bpm' });
+    if (h.steps) extras.push({ label: 'Daily Steps', value: h.steps.toLocaleString() });
+    if (h.calories) extras.push({ label: 'Calories', value: h.calories.toLocaleString(), unit: 'kcal' });
+
+    if (extras.length > 0) {
+      extras.forEach(function(e) {
+        var card = buildEl('div', { className: 'card' });
+        card.appendChild(buildEl('h3', null, e.label));
+        var valDiv = buildEl('div', { className: 'val' }, String(e.value));
+        if (e.unit) {
+          var unitSpan = buildEl('span', { className: 'dim', style: { fontSize: '14px' } }, ' ' + e.unit);
+          valDiv.appendChild(unitSpan);
+        }
+        card.appendChild(valDiv);
+        detailGrid.appendChild(card);
+      });
+    } else {
+      showEmpty(detailGrid, 'No detailed health metrics available.');
+    }
+  }
+}
+
+function renderHealthTrend(containerId, days, key, color) {
+  var el = document.getElementById(containerId);
+  if (!days || days.length === 0) {
+    showEmpty(el, 'No trend data available.');
+    return;
+  }
+
+  var last7 = days.slice(-7);
+  el.textContent = '';
+  last7.forEach(function(d) {
+    var score = d[key] != null ? d[key] : (d[key + 'Score'] || 0);
+    var date = d.date || d.day || '';
+
+    var row = buildEl('div', { className: 'trend-row' });
+    row.appendChild(buildEl('span', { className: 'day' }, dayLabel(date)));
+
+    var barBg = buildEl('div', { className: 'bar-bg' });
+    var barFill = buildEl('div', { className: 'bar-fill' }, String(Math.round(score)));
+    barFill.style.width = score + '%';
+    barFill.style.background = color;
+    barBg.appendChild(barFill);
+    row.appendChild(barBg);
+
+    el.appendChild(row);
+  });
+}
+
+// ══════════════════════════════════════════
+// RENDER: TODOS
+// ══════════════════════════════════════════
+function renderTodos() {
+  filterTodos();
+}
+
+function filterTodos() {
+  var priority = qs('#todoPriority') ? qs('#todoPriority').value : 'all';
+  var status = qs('#todoStatus') ? qs('#todoStatus').value : 'pending';
+
+  var items = state.todos.filter(function(t) {
+    if (priority !== 'all' && t.priority !== priority) return false;
+    if (status === 'pending' && (t.status === 'done' || t.status === 'completed')) return false;
+    if (status === 'done' && t.status !== 'done' && t.status !== 'completed') return false;
+    return true;
+  });
+
+  var prioOrder = { P0: 0, P1: 1, P2: 2, P3: 3 };
+  items.sort(function(a, b) {
+    return (prioOrder[a.priority] != null ? prioOrder[a.priority] : 9) -
+           (prioOrder[b.priority] != null ? prioOrder[b.priority] : 9);
+  });
+
+  var el = qs('#todosList');
+  el.textContent = '';
+
+  if (items.length === 0) {
+    showEmpty(el, 'No todos match your filters.');
+    return;
+  }
+
+  items.forEach(function(t) {
+    var isDone = t.status === 'done' || t.status === 'completed';
+
+    var row = buildEl('div', { className: 'todo-item' + (isDone ? ' done' : '') });
+
+    var checkBtn = buildEl('button', {
+      className: 'todo-check' + (isDone ? ' checked' : ''),
+      title: isDone ? 'Mark pending' : 'Mark done'
+    }, isDone ? '\u2713' : '');
+    checkBtn.addEventListener('click', function() { toggleTodo(t.id, !isDone); });
+    row.appendChild(checkBtn);
+
+    row.appendChild(buildEl('div', { className: 'todo-text' + (isDone ? ' done-text' : '') },
+      t.title || t.text || t.description || '--'));
+
+    if (t.priority) {
+      row.appendChild(buildEl('span', { className: 'badge priority-' + t.priority }, t.priority));
+    }
+    if (t.domain) {
+      row.appendChild(buildEl('span', { className: 'badge badge-dim' }, t.domain));
+    }
+    if (t.due) {
+      row.appendChild(buildEl('span', { className: 'todo-meta' }, t.due));
+    }
+
+    el.appendChild(row);
+  });
+}
+
+function toggleTodo(id, done) {
+  var newStatus = done ? 'done' : 'pending';
+  postAPI('todos/' + id + '/status');
+
+  var todo = state.todos.find(function(t) { return t.id === id || String(t.id) === String(id); });
+  if (todo) {
+    todo.status = newStatus;
+  }
+  filterTodos();
+}
+
+// ══════════════════════════════════════════
+// SYNC TRIGGER
+// ══════════════════════════════════════════
+function triggerSync(source) {
+  postAPI('sync/trigger');
+  setTimeout(loadAllData, 1500);
+}
+
+// ══════════════════════════════════════════
+// TAB SYSTEM
+// ══════════════════════════════════════════
+function initTabs() {
+  qsa('#mainTabs .tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      qsa('#mainTabs .tab').forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      qsa('.content > .panel').forEach(function(p) { p.classList.remove('active'); });
+      var target = document.getElementById('panel-' + tab.dataset.tab);
+      if (target) target.classList.add('active');
+    });
+  });
+
+  qsa('#finSubTabs .sub-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      qsa('#finSubTabs .sub-tab').forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      qsa('#panel-finance .sub-panel').forEach(function(p) { p.classList.remove('active'); });
+      var target = document.getElementById('sub-' + tab.dataset.sub);
+      if (target) target.classList.add('active');
+    });
+  });
+}
+
+// ══════════════════════════════════════════
+// EVENT BINDINGS
+// ══════════════════════════════════════════
+function initEvents() {
+  qs('#dismissError').addEventListener('click', function() {
+    qs('#errorBanner').classList.remove('visible');
+  });
+
+  qs('#syncBtn').addEventListener('click', function() { triggerSync('all'); });
+  qs('#refreshBtn').addEventListener('click', function() { loadAllData(); });
+  qs('#syncAnomaliesBtn').addEventListener('click', function() { triggerSync('anomalies'); });
+  qs('#syncTodosBtn').addEventListener('click', function() { triggerSync('todos'); });
+
+  qs('#txnSearch').addEventListener('input', filterTransactions);
+  qs('#txnPerson').addEventListener('change', filterTransactions);
+  qs('#txnCategory').addEventListener('change', filterTransactions);
+  qs('#todoPriority').addEventListener('change', filterTodos);
+  qs('#todoStatus').addEventListener('change', filterTodos);
+
+  // Transaction column sorting
+  qsa('#txnTable thead th[data-col]').forEach(function(th) {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', function() {
+      sortTransactions(th.dataset.col);
+    });
+  });
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  initTabs();
+  initEvents();
+  loadAllData();
+  setInterval(loadAllData, REFRESH_INTERVAL);
+});
+</script>
+</body>
+</html>
