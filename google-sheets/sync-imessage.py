@@ -41,11 +41,39 @@ SCRIPT_DIR = Path(__file__).parent
 CONFIG_FILE = SCRIPT_DIR / "config.json"
 TOKEN_FILE = SCRIPT_DIR / "token.json"
 IMESSAGE_DB = Path.home() / "Library" / "Messages" / "chat.db"
-DAYS_BACK = 7  # Look at messages from the last 7 days
+DAYS_BACK = 30  # Look at messages from the last 30 days (wider net)
 TAB_NAME = "Messages to Reply"
 
 
 # ─── iMessage Database ───────────────────────────────────────────────────────
+
+def check_db_access():
+    """
+    Diagnostic: verify we can actually read iMessage data.
+    Returns (total_count, most_recent_date_str) or raises.
+    macOS silently returns 0 rows if Full Disk Access is missing.
+    """
+    conn = sqlite3.connect(str(IMESSAGE_DB))
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM message")
+    total = cursor.fetchone()[0]
+
+    recent_date = None
+    if total > 0:
+        cursor.execute("SELECT MAX(date) FROM message WHERE date > 0")
+        max_ts = cursor.fetchone()[0]
+        if max_ts:
+            apple_epoch_offset = 978307200
+            if max_ts > 1_000_000_000_000:
+                unix_ts = (max_ts / 1_000_000_000) + apple_epoch_offset
+            else:
+                unix_ts = max_ts + apple_epoch_offset
+            recent_date = datetime.fromtimestamp(unix_ts).strftime('%m/%d/%Y %H:%M')
+
+    conn.close()
+    return total, recent_date
+
 
 def get_unreplied_messages():
     """
@@ -58,6 +86,18 @@ def get_unreplied_messages():
         return []
 
     try:
+        # ── Diagnostic: confirm DB access ───────────────────────────────────
+        total_msgs, most_recent = check_db_access()
+        if total_msgs == 0:
+            print("  ⚠️  iMessage database opened but contains 0 messages.")
+            print("  This almost always means Full Disk Access is not granted.")
+            print()
+            print("  Fix: System Settings > Privacy & Security > Full Disk Access")
+            print("       Click '+' and add your Terminal app (or iTerm2)")
+            print("       Then quit and reopen Terminal and re-run this script.")
+            return []
+        print(f"  ✓ DB accessible — {total_msgs:,} total messages, most recent: {most_recent}")
+
         conn = sqlite3.connect(str(IMESSAGE_DB))
         cursor = conn.cursor()
 
@@ -84,6 +124,7 @@ def get_unreplied_messages():
 
         cursor.execute(query, (cutoff_apple_ns,))
         rows = cursor.fetchall()
+        print(f"  Messages in last {DAYS_BACK} days: {len(rows)}")
         conn.close()
 
         # Group by conversation (phone/email) and find unreplied ones

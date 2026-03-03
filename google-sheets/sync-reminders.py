@@ -21,6 +21,7 @@ Schedule (optional):
 import json
 import subprocess
 import sys
+import time
 from pathlib import Path
 from datetime import datetime
 
@@ -42,8 +43,21 @@ TAB_NAME = "To-Do & Reminders"
 
 # ─── Apple Reminders ─────────────────────────────────────────────────────────
 
+def activate_reminders():
+    """Launch and activate Reminders so it's ready for AppleScript queries."""
+    print("  Activating Reminders app...")
+    subprocess.run(
+        ['osascript', '-e', 'tell application "Reminders" to activate'],
+        capture_output=True, text=True, timeout=10
+    )
+    time.sleep(2)  # Give app a moment to fully load
+
+
 def get_reminders():
     """Read incomplete reminders from Apple Reminders using AppleScript."""
+
+    # Make sure Reminders is running before we query it
+    activate_reminders()
 
     script = '''
     set output to ""
@@ -54,13 +68,21 @@ def get_reminders():
             set incompleteReminders to (every reminder of aList whose completed is false)
             repeat with aReminder in incompleteReminders
                 set reminderName to name of aReminder
-                set reminderBody to body of aReminder
+
+                -- Get body/notes safely (body can be missing value)
+                set reminderBody to ""
+                try
+                    set rb to body of aReminder
+                    if rb is not missing value then set reminderBody to rb
+                end try
 
                 -- Get due date if exists
                 set dueStr to "none"
                 try
                     set dueDate to due date of aReminder
-                    set dueStr to (month of dueDate as integer) & "/" & (day of dueDate) & "/" & (year of dueDate)
+                    if dueDate is not missing value then
+                        set dueStr to (month of dueDate as integer) & "/" & (day of dueDate) & "/" & (year of dueDate)
+                    end if
                 end try
 
                 -- Get priority
@@ -79,11 +101,13 @@ def get_reminders():
                 set createStr to "none"
                 try
                     set createDate to creation date of aReminder
-                    set createStr to (month of createDate as integer) & "/" & (day of createDate) & "/" & (year of createDate)
+                    if createDate is not missing value then
+                        set createStr to (month of createDate as integer) & "/" & (day of createDate) & "/" & (year of createDate)
+                    end if
                 end try
 
                 -- Build delimited row
-                set output to output & reminderName & "|||" & dueStr & "|||" & priStr & "|||" & listName & "|||" & createStr & "|||" & (reminderBody as text) & "\\n"
+                set output to output & reminderName & "|||" & dueStr & "|||" & priStr & "|||" & listName & "|||" & createStr & "|||" & reminderBody & "\\n"
             end repeat
         end repeat
     end tell
@@ -93,7 +117,7 @@ def get_reminders():
     try:
         result = subprocess.run(
             ['osascript', '-e', script],
-            capture_output=True, text=True, timeout=30
+            capture_output=True, text=True, timeout=90  # Up from 30s
         )
 
         if result.returncode != 0:
@@ -141,7 +165,8 @@ def get_reminders():
         return reminders
 
     except subprocess.TimeoutExpired:
-        print("  ERROR: AppleScript timed out. Is Reminders app responsive?")
+        print("  ERROR: AppleScript timed out after 90s.")
+        print("  Try opening the Reminders app manually first, then re-run this script.")
         return []
     except Exception as e:
         print(f"  ERROR: {e}")
