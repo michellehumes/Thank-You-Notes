@@ -46,11 +46,24 @@ TAB_NAME = "To-Do & Reminders"
 def activate_reminders():
     """Launch and activate Reminders so it's ready for AppleScript queries."""
     print("  Activating Reminders app...")
-    subprocess.run(
-        ['osascript', '-e', 'tell application "Reminders" to activate'],
-        capture_output=True, text=True, timeout=10
-    )
-    time.sleep(2)  # Give app a moment to fully load
+    try:
+        subprocess.run(
+            ['osascript', '-e', 'tell application "Reminders" to activate'],
+            capture_output=True, text=True, timeout=15
+        )
+        time.sleep(2)  # Give app a moment to fully load
+    except subprocess.TimeoutExpired:
+        # macOS may be showing an Automation permission dialog.
+        # Fix: System Settings > Privacy & Security > Automation
+        #      Find Terminal and check the box next to "Reminders"
+        print()
+        print("  ⚠️  macOS blocked AppleScript access to Reminders.")
+        print("  You need to grant Automation permission:")
+        print("    System Settings → Privacy & Security → Automation")
+        print("    Find Terminal → check the box next to 'Reminders'")
+        print("  Then quit Terminal, reopen it, and re-run this script.")
+        print()
+        sys.exit(1)
 
 
 def get_reminders():
