@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shop All Templates | Shelzy's Designs",
+  title: "Shop All Templates + Water Bottles | Shelzy's Designs",
   description:
-    "Browse digital spreadsheet templates, planners, and trackers. Budget tools, wedding planners, business templates, and more.",
+    "Browse 60+ instant-download spreadsheet templates, digital planners, and personalized water bottles. Budget trackers, wedding planners, business dashboards, ADHD tools, meal planners, and more. Download instantly and customize in Excel or Google Sheets.",
   openGraph: {
-    title: "Shop All Templates | Shelzy's Designs",
+    title: "Shop All Templates + Water Bottles | Shelzy's Designs",
     description:
-      "Browse digital spreadsheet templates, planners, and trackers. Budget tools, wedding planners, business templates, and more.",
+      "60+ instant-download spreadsheet templates and personalized water bottles. Budget trackers, wedding planners, business dashboards, and more.",
     type: "website",
     siteName: "Shelzy's Designs",
   },

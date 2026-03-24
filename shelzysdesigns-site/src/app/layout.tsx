@@ -20,7 +20,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Shelzy's Designs | Personalized Water Bottles and Digital Templates",
   description:
-    "Custom personalized water bottles with permanent sublimation printing, plus instant-download digital templates for budgeting, planning, and organizing. Free personalization on every bottle.",
+    "Custom personalized water bottles with permanent sublimation printing, plus instant-download digital templates for budgeting, wedding planning, and organizing. Free personalization on every bottle.",
   metadataBase: new URL("https://shelzysdesigns.com"),
   openGraph: {
     siteName: "Shelzy's Designs",
@@ -33,16 +33,19 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  other: {
-    "script:ld+json": JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "Shelzy's Designs",
-      url: "https://shelzysdesigns.com",
-      description:
-        "Digital templates, planners, and trackers designed to simplify your life.",
-    }),
-  },
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Shelzy's Designs",
+  url: "https://shelzysdesigns.com",
+  logo: "https://shelzysdesigns.com/shelzy_images/shelzy_01_img01.svg",
+  description:
+    "Digital spreadsheet templates, planners, and personalized water bottles designed for real life. Instant download. Free personalization.",
+  sameAs: [
+    "https://www.etsy.com/shop/ShelzysDesigns",
+  ],
 };
 
 export default function RootLayout({
@@ -56,6 +59,10 @@ export default function RootLayout({
       className={`${montserrat.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
         {children}
         <Analytics />
         <SpeedInsights />
