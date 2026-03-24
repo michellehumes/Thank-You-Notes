@@ -54,6 +54,15 @@ const productBlogLinks: Record<string, { href: string; title: string }[]> = {
   "etsy-seller-profit-calculator": [
     { href: "/blog/etsy-seller-dashboard-templates", title: "Etsy Seller Dashboard Templates: Track Your Shop Like a Pro" },
   ],
+  "weekly-meal-planner": [
+    { href: "/blog/weekly-meal-planner-grocery-list-template", title: "The Best Weekly Meal Planner with Automatic Grocery List (Google Sheets)" },
+  ],
+  "meal-planner-auto-grocery-list": [
+    { href: "/blog/weekly-meal-planner-grocery-list-template", title: "The Best Weekly Meal Planner with Automatic Grocery List (Google Sheets)" },
+  ],
+  "job-search-command-center": [
+    { href: "/blog/job-search-tracker-spreadsheet-template", title: "The Best Job Search Tracker Spreadsheet (Stop Losing Applications in Your Inbox)" },
+  ],
 };
 
 export async function generateStaticParams() {

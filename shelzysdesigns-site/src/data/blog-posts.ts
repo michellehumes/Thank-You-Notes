@@ -788,6 +788,311 @@ export const blogPosts: BlogPost[] = [
       },
     ],
   },
+
+  // ── Article 6: Meal Planner with Grocery List ──
+  {
+    slug: "weekly-meal-planner-grocery-list-template",
+    title: "The Best Weekly Meal Planner with Automatic Grocery List (Google Sheets)",
+    metaTitle:
+      "Weekly Meal Planner with Grocery List Template | Shelzy's Designs",
+    metaDescription:
+      "The best weekly meal planner that builds your grocery list automatically. Plan meals, generate a shopping list, and cut food waste -- all inside Google Sheets or Excel.",
+    ogImageAlt: "Weekly meal planner spreadsheet with automatic grocery list in Google Sheets",
+    ogImage: `${BASE_URL}/blog/images/weekly-meal-planner-grocery-list-template.jpg`,
+    headline:
+      "The Best Weekly Meal Planner with Automatic Grocery List (Google Sheets)",
+    description:
+      "The best weekly meal planner that builds your grocery list automatically. Plan meals, generate a shopping list, and cut food waste -- all inside Google Sheets or Excel.",
+    datePublished: "2026-03-24",
+    dateModified: "2026-03-24",
+    targetKeyword: "weekly meal planner with grocery list template",
+    secondaryKeywords: [
+      "meal planner google sheets",
+      "meal planning spreadsheet",
+      "auto grocery list template",
+      "weekly dinner planner",
+      "meal prep planner template",
+    ],
+    internalLinks: [
+      { label: "Weekly Meal Planner", href: "/products/weekly-meal-planner" },
+      { label: "Meal Planner + Auto Grocery List", href: "/products/meal-planner-auto-grocery-list" },
+      { label: "Productivity + Life Templates", href: "/collections/productivity" },
+    ],
+    faq: [
+      {
+        question: "Can a meal planner spreadsheet automatically generate a grocery list?",
+        answer:
+          "Yes -- the Meal Planner + Auto Grocery List template from Shelzy's Designs generates a grocery list based on the meals you plan for the week. It pulls the ingredients automatically so you never have to write the same list twice.",
+      },
+      {
+        question: "Does the meal planner template work in Google Sheets and Excel?",
+        answer:
+          "Yes. Both the Weekly Meal Planner and the Meal Planner + Auto Grocery List work in Google Sheets and Microsoft Excel. Download once and use in either app.",
+      },
+      {
+        question: "How do I stop wasting food every week?",
+        answer:
+          "Meal planning is the most effective way to reduce food waste. When you plan meals before shopping, you only buy what you need. A template with an automatic grocery list prevents over-buying by generating a precise list from your planned meals.",
+      },
+    ],
+    category: "productivity",
+    excerpt:
+      "A meal planner that builds your grocery list automatically saves more than time -- it cuts food waste, reduces stress, and keeps you out of the drive-through.",
+    bodySections: [
+      {
+        type: "h2",
+        text: "Why Meal Planning Fails for Most People",
+      },
+      {
+        type: "p",
+        text: "Most meal planning systems collapse within two weeks. Not because the idea is bad -- meal planning genuinely works -- but because the execution is tedious. Writing out a plan, then writing out a grocery list from scratch, then realizing mid-week you forgot an ingredient and defaulting to takeout. The friction kills the habit.",
+      },
+      {
+        type: "p",
+        text: "The fix isn't more motivation. It's less friction. The right meal planner template eliminates the steps that cause people to give up: the blank-page problem, the manual grocery list, and the mental load of tracking what you have versus what you need.",
+      },
+      {
+        type: "h2",
+        text: "What Makes a Good Meal Planner Template",
+      },
+      {
+        type: "p",
+        text: "There is no shortage of meal planner printables, apps, and sticky-note systems. Most of them share the same flaw: they track what you plan to eat but stop there. A spreadsheet-based meal planner beats them all on two counts -- it is customizable to exactly how your household eats, and it can calculate a grocery list automatically.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Weekly view covering breakfast, lunch, dinner, and snacks",
+          "Automatic grocery list that populates from your meal selections",
+          "Customizable categories so you only plan what you actually need",
+          "Built-in budget tracking for weekly food spend",
+          "Works offline -- no app subscription, no login required",
+          "Works in Google Sheets and Excel",
+        ],
+      },
+      {
+        type: "callout",
+        text: "Households that plan meals weekly spend 20-25% less on groceries and waste significantly less food. The savings on a $5.99 template pay back in the first shopping trip.",
+      },
+      {
+        type: "h2",
+        text: "The Weekly Meal Planner Template",
+      },
+      {
+        type: "p",
+        text: "The Weekly Meal Planner from Shelzy's Designs gives you a clean seven-day view with dedicated rows for each meal. You fill in what you plan to eat, and the template handles the structure. It is designed for people who want to plan without overcomplicating it -- no elaborate recipe databases, no 40-column ingredient trackers. Just a clear, usable plan for the week.",
+      },
+      {
+        type: "h3",
+        text: "For Advanced Planners: The Auto Grocery List Version",
+      },
+      {
+        type: "p",
+        text: "The Meal Planner + Auto Grocery List goes one step further. As you enter meals, the template generates a categorized shopping list -- produce, proteins, pantry staples, dairy -- without you writing anything down. It pulls from the meals you have planned and consolidates repeated ingredients across multiple dinners. The result is a precise shopping list you can take directly to the store or copy into Instacart.",
+      },
+      {
+        type: "h2",
+        text: "How to Actually Use a Meal Planner Consistently",
+      },
+      {
+        type: "p",
+        text: "The people who stick with meal planning long-term share one habit: they plan at the same time every week. Sunday morning, Saturday evening, Friday lunch -- whatever works. The template should already be open on a recurring basis, not something you dig out when you remember. Bookmark it, pin it, make it part of a 15-minute weekly routine.",
+      },
+      {
+        type: "ol",
+        items: [
+          "Open the template on the same day each week",
+          "Check what you already have in the fridge and pantry",
+          "Plan 5-6 dinners and sketch out lunches",
+          "Let the grocery list generate automatically from your plan",
+          "Order groceries or shop with the list -- no improvising at the store",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Meal Planning for Families vs. Solo",
+      },
+      {
+        type: "p",
+        text: "A single person planning for themselves needs a different structure than a family of four with different dietary needs. The Shelzy templates are built to be customized -- you can collapse the breakfast rows if you eat the same thing every morning, hide the snack column if you do not track those, or add a notes column for dietary restrictions.",
+      },
+      {
+        type: "p",
+        text: "Families get the most value from the auto grocery list feature because multiple meals across multiple nights means the ingredient list gets long fast. Having it generated automatically rather than assembled manually saves 10-15 minutes of weekly effort -- time that compounds quickly.",
+      },
+      {
+        type: "h2",
+        text: "Meal Planning and Budget Tracking Together",
+      },
+      {
+        type: "p",
+        text: "Food is one of the most controllable line items in a household budget -- and one of the most commonly overspent ones. The Weekly Meal Planner includes a basic budget tracker so you can set a weekly food spend target and see whether you are hitting it. Pair it with the Monthly Budget Tracker to get a complete picture of where your grocery dollars are going month over month.",
+      },
+      {
+        type: "callout",
+        text: "Both meal planner templates work in Google Sheets and Microsoft Excel. Download once and use on any device. No subscription. No account needed.",
+      },
+    ],
+  },
+
+  // ── Article 7: Job Search Tracker Spreadsheet ──
+  {
+    slug: "job-search-tracker-spreadsheet-template",
+    title: "The Best Job Search Tracker Spreadsheet (Stop Losing Applications in Your Inbox)",
+    metaTitle:
+      "Job Search Tracker Spreadsheet Template | Shelzy's Designs",
+    metaDescription:
+      "The best job search tracker spreadsheet to organize applications, interviews, and follow-ups. Stop losing track of where you applied and start managing your job search like a system.",
+    ogImageAlt: "Job search tracker spreadsheet template in Google Sheets for organizing applications",
+    ogImage: `${BASE_URL}/blog/images/job-search-tracker-spreadsheet-template.jpg`,
+    headline:
+      "The Best Job Search Tracker Spreadsheet (Stop Losing Applications in Your Inbox)",
+    description:
+      "The best job search tracker spreadsheet to organize applications, interviews, and follow-ups. Stop losing track of where you applied and start managing your job search like a system.",
+    datePublished: "2026-03-24",
+    dateModified: "2026-03-24",
+    targetKeyword: "job search tracker spreadsheet",
+    secondaryKeywords: [
+      "job application tracker template",
+      "job search spreadsheet google sheets",
+      "interview tracker spreadsheet",
+      "job search organization template",
+      "job search command center",
+    ],
+    internalLinks: [
+      { label: "Job Search Command Center", href: "/products/job-search-command-center" },
+      { label: "Productivity + Life Templates", href: "/collections/productivity" },
+      { label: "Small Business Planner 2026", href: "/products/small-business-planner-2026" },
+    ],
+    faq: [
+      {
+        question: "What should a job search tracker spreadsheet include?",
+        answer:
+          "A good job search tracker should include columns for company name, role title, application date, status, contact name, follow-up date, interview notes, and outcome. The Job Search Command Center from Shelzy's Designs covers all of these plus a networking log and salary tracking.",
+      },
+      {
+        question: "Is Google Sheets good for tracking job applications?",
+        answer:
+          "Yes -- Google Sheets is one of the best tools for job search tracking because it is accessible from any device, easy to customize, and free to use. A pre-built template saves you the time of setting up columns and formulas from scratch.",
+      },
+      {
+        question: "How do I follow up on job applications without being annoying?",
+        answer:
+          "A good rule of thumb: follow up once by email 5-7 business days after applying if you have not heard back, and once more 5-7 days after an interview. A follow-up date column in your tracker prevents you from following up too early or too late.",
+      },
+    ],
+    category: "productivity",
+    excerpt:
+      "A job search without a tracker is a job search in chaos. Here is how to build a system that keeps you organized, on time, and ahead of every follow-up.",
+    bodySections: [
+      {
+        type: "h2",
+        text: "Why Most Job Searches Feel Out of Control",
+      },
+      {
+        type: "p",
+        text: "You applied to 30 companies. Three of them want to talk. You cannot remember which three sent emails, what stage each one is at, or which recruiter you spoke to last week. You miss a follow-up. You accidentally apply to the same company twice. You have no idea how many roles you have applied to this month or what your response rate is.",
+      },
+      {
+        type: "p",
+        text: "This is the default job search experience -- and it is entirely avoidable. A simple tracker turns a chaotic inbox into a managed pipeline. You always know where every application stands, who to follow up with, and what is coming next.",
+      },
+      {
+        type: "h2",
+        text: "What a Job Search Tracker Spreadsheet Should Track",
+      },
+      {
+        type: "p",
+        text: "The bare minimum for a job search tracker is company, role, and status. But the applications that convert -- the ones that land interviews -- tend to come from searches that go deeper than that.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Company name and role title",
+          "Application date and source (LinkedIn, company site, referral)",
+          "Current status -- applied, phone screen, interview, offer, rejected",
+          "Contact name and email for each role",
+          "Follow-up date -- when to check back in",
+          "Interview prep notes -- key points, stories, questions to ask",
+          "Salary range and compensation notes",
+          "Networking log -- who you have reached out to and when",
+        ],
+      },
+      {
+        type: "callout",
+        text: "Candidates who follow up consistently after applying get 40% more callbacks than those who do not. You cannot follow up consistently without knowing when you applied.",
+      },
+      {
+        type: "h2",
+        text: "The Job Search Command Center",
+      },
+      {
+        type: "p",
+        text: "The Job Search Command Center from Shelzy's Designs is built for active job seekers who need more than a list of companies. It covers your full pipeline: applications, phone screens, interviews, follow-up cadence, networking contacts, and salary research -- all in one spreadsheet.",
+      },
+      {
+        type: "p",
+        text: "At $7.99, it is the most comprehensive job search template available as an instant-download spreadsheet. Works in both Google Sheets and Excel. Download once and use it for the full duration of your search.",
+      },
+      {
+        type: "h3",
+        text: "What Is Included",
+      },
+      {
+        type: "ul",
+        items: [
+          "Application tracker with status pipeline and follow-up dates",
+          "Interview prep sheet for each role -- STAR stories, company research, questions",
+          "Networking log to track contacts, introductions, and follow-ups",
+          "Salary research tracker to compare compensation across roles",
+          "Weekly job search activity log -- applications sent, contacts made, interviews scheduled",
+          "Dashboard summary so you can see your full search at a glance",
+        ],
+      },
+      {
+        type: "h2",
+        text: "How to Run Your Job Search Like a System",
+      },
+      {
+        type: "p",
+        text: "The people who find jobs fastest are not necessarily the most qualified -- they are the most organized. A system means nothing falls through the cracks. Every application is tracked. Every follow-up happens on time. Every interview gets prep. Every offer gets compared against the others.",
+      },
+      {
+        type: "ol",
+        items: [
+          "Log every application the same day you submit it",
+          "Set a follow-up date 5-7 business days out for each application",
+          "Prep for every interview using your notes before the call",
+          "Log the outcome immediately -- good or bad",
+          "Review your pipeline weekly and identify where things are stalling",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Networking Is a Separate Track",
+      },
+      {
+        type: "p",
+        text: "Most job search trackers ignore networking entirely. That is a mistake. 70-80% of jobs are filled through referrals and relationships -- the application tracker is only half the picture. The Job Search Command Center includes a dedicated networking log so you can track who you have reached out to, what was discussed, and when to follow up -- separate from your application pipeline but visible in the same dashboard.",
+      },
+      {
+        type: "h2",
+        text: "When to Use a Simple Tracker vs. a Full Command Center",
+      },
+      {
+        type: "p",
+        text: "If you are applying to 5-10 roles and your search is relatively straightforward, a basic tracker with company, role, status, and follow-up date is enough. The Weekly Meal Planner-level of simplicity -- just what you need, nothing more.",
+      },
+      {
+        type: "p",
+        text: "If you are running an active search with 20+ applications, multiple interview tracks, and active networking, the Job Search Command Center pays for itself in the first week. The cost of a missed follow-up or a botched interview because you did not prep is far higher than $7.99.",
+      },
+      {
+        type: "callout",
+        text: "The Job Search Command Center works in Google Sheets and Microsoft Excel. Download instantly -- no waiting, no account required. Start tracking today.",
+      },
+    ],
+  },
 ];
 
 // ─────────────────────────────────────────────
