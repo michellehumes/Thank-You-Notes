@@ -44,7 +44,7 @@ export const products: Product[] = [
     slug: "monthly-budget-tracker",
     name: "Monthly Budget Tracker",
     description:
-      "Track your income, expenses, and savings goals month by month with a clean, visual budget tracker. Perfect for anyone ready to take control of their finances.",
+      "See exactly where your money goes every month. This spreadsheet tracks income, expenses, and savings goals in one clean view with auto-calculating formulas. Built for anyone who wants real clarity on their finances, not just a place to log numbers.",
     price: 5.99,
     category: "budget-finance",
     tags: ["budget", "finance", "monthly", "tracker", "savings"],
@@ -60,7 +60,7 @@ export const products: Product[] = [
     slug: "paycheck-budget-planner",
     name: "Paycheck Budget Planner",
     description:
-      "Allocate every paycheck with intention using a structured paycheck-by-paycheck budgeting system. Ideal for biweekly or weekly pay schedules.",
+      "Stop guessing what you can afford between paychecks. This template allocates every dollar the moment it hits your account, using a paycheck-by-paycheck system that works for weekly or biweekly pay. No math required.",
     price: 5.99,
     category: "budget-finance",
     tags: ["budget", "paycheck", "biweekly", "planner"],
@@ -76,7 +76,7 @@ export const products: Product[] = [
     slug: "digital-cash-stuffing-system",
     name: "Digital Cash Stuffing System",
     description:
-      "Bring the popular cash stuffing method into the digital world. Organize your money into virtual envelopes and watch your savings grow.",
+      "The cash stuffing method, done digitally. Divide your money into virtual envelopes for every spending category and watch your savings actually build. No physical cash, no fuss, full control.",
     price: 5.99,
     category: "budget-finance",
     tags: ["cash stuffing", "envelopes", "budget", "savings"],
@@ -92,7 +92,7 @@ export const products: Product[] = [
     slug: "family-budget-planner",
     name: "Family Budget Planner",
     description:
-      "Manage household finances as a team with a planner built for families. Track shared expenses, individual spending, and joint savings goals.",
+      "One spreadsheet for the whole household. Track shared bills, individual spending, and joint savings goals in a system built for how families actually manage money together.",
     price: 5.99,
     category: "budget-finance",
     tags: ["family", "budget", "household", "planner"],
@@ -106,9 +106,9 @@ export const products: Product[] = [
   {
     id: 5,
     slug: "2026-annual-budget-planner",
-    name: "2026 Annual Budget Planner",
+    name: "2026 Annual Finance Planner",
     description:
-      "Plan your entire year of finances in one place with monthly breakdowns, annual summaries, and goal tracking built for 2026.",
+      "Plan your entire financial year from one dashboard. Monthly breakdowns, annual summaries, and savings goal tracking all in one file. Built specifically for 2026 with a full 12-month layout.",
     price: 5.99,
     category: "budget-finance",
     tags: ["annual", "budget", "2026", "yearly", "planner"],
@@ -124,7 +124,7 @@ export const products: Product[] = [
     slug: "debt-payoff-tracker",
     name: "Debt Payoff Tracker",
     description:
-      "Visualize your path to debt freedom with a tracker that supports snowball and avalanche methods. Stay motivated as you watch balances drop.",
+      "Watch your debt disappear in real time. This tracker supports both the snowball and avalanche methods with visual progress charts so you can see exactly how close you are to freedom.",
     price: 5.99,
     category: "budget-finance",
     tags: ["debt", "payoff", "snowball", "avalanche", "tracker"],
@@ -140,7 +140,7 @@ export const products: Product[] = [
     slug: "debt-payoff-savings-tracker",
     name: "Debt Payoff + Savings Tracker",
     description:
-      "Tackle debt and build savings at the same time. This dual-purpose tracker helps you balance paying down what you owe while growing your emergency fund.",
+      "You do not have to choose between paying off debt and building savings. This dual-purpose tracker shows you exactly how to do both at once, with separate views for balances and emergency fund growth.",
     price: 5.99,
     category: "budget-finance",
     tags: ["debt", "savings", "payoff", "tracker", "emergency fund"],
@@ -158,7 +158,7 @@ export const products: Product[] = [
     slug: "small-business-planner-2026",
     name: "Small Business Planner 2026",
     description:
-      "An all-in-one planner for small business owners covering revenue tracking, expense management, quarterly goals, and monthly reviews for 2026.",
+      "Run your business like you mean it. This planner covers revenue tracking, expense management, quarterly goal setting, and monthly reviews in one organized spreadsheet built for 2026.",
     price: 7.99,
     category: "business",
     tags: ["business", "planner", "2026", "small business", "revenue"],
@@ -174,7 +174,7 @@ export const products: Product[] = [
     slug: "side-hustle-income-expense-tracker",
     name: "Side Hustle Income + Expense Tracker",
     description:
-      "Keep your side hustle finances organized with a dedicated income and expense tracker. Know exactly what you're earning after costs.",
+      "Know exactly what your side hustle actually pays you after every expense. Log income and costs in real time, see your true profit at a glance, and stop leaving money on the table at tax time.",
     price: 5.99,
     category: "business",
     tags: ["side hustle", "income", "expense", "tracker", "freelance"],
@@ -190,7 +190,7 @@ export const products: Product[] = [
     slug: "12-month-side-hustle-log",
     name: "12-Month Side Hustle Log",
     description:
-      "Log a full year of side hustle activity including hours worked, income earned, and monthly trends. Great for tax prep and goal setting.",
+      "A full year of your side hustle in one spreadsheet. Log hours, income, and expenses month by month with trend charts that show exactly where your business is growing and where it is not.",
     price: 5.99,
     category: "business",
     tags: ["side hustle", "log", "12 month", "yearly", "income"],
@@ -222,7 +222,7 @@ export const products: Product[] = [
     slug: "etsy-seller-analytics-dashboard",
     name: "Etsy Seller Analytics Dashboard",
     description:
-      "Analyze your Etsy shop performance with a dashboard that tracks sales, traffic, conversion rates, and revenue trends over time.",
+      "Your Etsy shop deserves better data than what Etsy gives you. This dashboard surfaces your most important metrics in one clean view: which listings drive revenue, where traffic drops off, and exactly what to scale.",
     price: 7.99,
     category: "business",
     tags: ["etsy", "seller", "analytics", "dashboard", "ecommerce"],
@@ -256,7 +256,7 @@ export const products: Product[] = [
     slug: "adhd-life-dashboard",
     name: "ADHD Life Dashboard",
     description:
-      "A structured yet flexible life dashboard designed for ADHD brains. Manage tasks, habits, routines, and priorities without the overwhelm.",
+      "A planning system built for how your brain actually works. Flexible enough to adapt, structured enough to keep you on track. Manage tasks, habits, routines, and priorities without the overwhelm.",
     price: 7.99,
     category: "productivity",
     tags: ["adhd", "dashboard", "productivity", "habits", "routines"],
@@ -272,7 +272,7 @@ export const products: Product[] = [
     slug: "project-goal-tracker",
     name: "Project + Goal Tracker",
     description:
-      "Break big projects into actionable steps and track your progress toward personal or professional goals with built-in milestone tracking.",
+      "Turn big goals into daily wins. Break any project into clear steps, assign timelines, and watch your progress build with visual milestone tracking that keeps you moving forward.",
     price: 5.99,
     category: "productivity",
     tags: ["project", "goals", "tracker", "milestones", "planning"],
@@ -598,7 +598,7 @@ export const products: Product[] = [
     slug: "wedding-budget-tracker",
     name: "Wedding Budget Tracker",
     description:
-      "Stay on budget for the big day with a detailed tracker covering every wedding expense category. See what you've spent vs. what's left at a glance.",
+      "See exactly where your wedding budget stands at every stage of planning. Every vendor, deposit, and payment deadline in one organized view so nothing slips through and no number surprises you.",
     price: 5.99,
     category: "wedding",
     tags: ["wedding", "budget", "tracker", "expenses", "planning"],
@@ -614,7 +614,7 @@ export const products: Product[] = [
     slug: "wedding-planning-checklist-budget",
     name: "Wedding Planning Checklist + Budget",
     description:
-      "A comprehensive wedding checklist paired with a budget tracker so nothing falls through the cracks. Covers 12+ months of planning milestones.",
+      "Every wedding task and every wedding dollar, in one file. This checklist covers 12+ months of planning milestones alongside a full budget tracker so your timeline and your spending stay aligned from engagement to reception.",
     price: 7.99,
     category: "wedding",
     tags: ["wedding", "checklist", "budget", "planning", "timeline"],
@@ -628,9 +628,9 @@ export const products: Product[] = [
   {
     id: 37,
     slug: "interactive-wedding-planner-dashboard",
-    name: "Interactive Wedding Planner Dashboard",
+    name: "Wedding Planner Dashboard",
     description:
-      "The ultimate wedding planning experience with interactive dashboards for budgets, guest lists, seating charts, vendor management, and countdown timers.",
+      "Everything your wedding needs in one dashboard. Budgets, guest lists, vendor contacts, seating charts, and a countdown timer all built into one interactive spreadsheet that does the organizing so you can focus on the planning.",
     price: 9.99,
     category: "wedding",
     tags: ["wedding", "dashboard", "interactive", "planner", "all-in-one"],
@@ -646,7 +646,7 @@ export const products: Product[] = [
     slug: "bachelorette-party-planner",
     name: "Bachelorette Party Planner",
     description:
-      "Plan an unforgettable bachelorette party with templates for itineraries, budgets, guest lists, and activity planning.",
+      "Plan the trip she will actually remember. This spreadsheet covers the budget, guest list, itinerary, and activity options so the maid of honor has everything in one place well before the trip begins.",
     price: 5.99,
     category: "wedding",
     tags: ["bachelorette", "party", "planner", "wedding", "celebration"],
@@ -926,7 +926,7 @@ export const products: Product[] = [
     slug: "personalized-water-bottle",
     name: "Personalized Water Bottle",
     description:
-      "A premium stainless steel water bottle with permanent sublimation printing. Your design is fused into the coating, not stuck on top. No peeling, no fading, no scratching. Free personalization on every bottle.",
+      "Your name, permanently. Our stainless steel water bottles use sublimation printing that fuses your design directly into the coating. No decals, no vinyl, nothing that peels or scratches off. Just a clean, custom bottle built to last.",
     price: 34.99,
     category: "water-bottles",
     tags: ["water bottle", "personalized", "sublimation", "custom", "gift"],
