@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2000" height="1500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="2000" height="1500" fill="#fefefe"/>
+  <!-- Header band -->
+  <rect width="2000" height="260" fill="#fb5887"/>
+  <!-- Header text -->
+  <text x="100" y="155" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="white">Personalized Water Bottle</text>
+  <text x="100" y="225" font-family="Arial, sans-serif" font-size="42" fill="white" opacity="0.9">Premium Sublimation Print</text>
+  <text x="1900" y="225" font-family="Arial, sans-serif" font-size="36" fill="white" opacity="0.85" text-anchor="end">SHELZY'S DESIGNS</text>
+  <!-- Bottle shape -->
+  <rect x="800" y="340" width="400" height="60" rx="18" fill="#2d2d2d"/>
+  <rect x="780" y="390" width="440" height="900" rx="60" fill="#fb5887"/>
+  <rect x="820" y="420" width="360" height="840" rx="50" fill="#fc7fa8"/>
+  <!-- Shine -->
+  <rect x="850" y="440" width="80" height="780" rx="40" fill="white" opacity="0.25"/>
+  <!-- Name label area -->
+  <rect x="820" y="580" width="360" height="200" rx="12" fill="white" opacity="0.92"/>
+  <text x="1000" y="660" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#fb5887" text-anchor="middle">YOUR NAME</text>
+  <text x="1000" y="720" font-family="Arial, sans-serif" font-size="30" fill="#2d2d2d" text-anchor="middle">Custom Design Here</text>
+  <!-- Bottom label area -->
+  <rect x="840" y="840" width="320" height="140" rx="10" fill="white" opacity="0.85"/>
+  <text x="1000" y="900" font-family="Arial, sans-serif" font-size="28" fill="#2d2d2d" text-anchor="middle" font-weight="bold">20oz Stainless Steel</text>
+  <text x="1000" y="940" font-family="Arial, sans-serif" font-size="24" fill="#555" text-anchor="middle">No Peel. No Fade. No Scratch.</text>
+  <!-- Features strip -->
+  <rect x="60" y="1340" width="1880" height="120" fill="#f9f9f9" rx="10"/>
+  <text x="200" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Free Personalization</text>
+  <text x="700" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Ships in 3-5 Days</text>
+  <text x="1200" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Permanent Print</text>
+  <text x="1750" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#fb5887" text-anchor="middle" font-weight="bold">$34.99</text>
+</svg>

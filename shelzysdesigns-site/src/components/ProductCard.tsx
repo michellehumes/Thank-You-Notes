@@ -10,7 +10,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   const isPhysical = product.compatibility === "physical";
   const hasLsUrl =
     product.lemonSqueezyUrl && product.lemonSqueezyUrl !== "#";
-  const buyUrl = hasLsUrl ? product.lemonSqueezyUrl : product.etsyUrl;
 
   return (
     <Link
@@ -64,7 +63,11 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
           <span className="text-pink text-xs font-semibold group-hover:underline">
-            {isPhysical ? "Shop on Etsy →" : hasLsUrl ? "Buy Now →" : "Shop on Etsy →"}
+            {isPhysical
+              ? "Personalize Yours →"
+              : hasLsUrl
+              ? "Buy Now →"
+              : "Shop on Etsy →"}
           </span>
         </div>
       </div>

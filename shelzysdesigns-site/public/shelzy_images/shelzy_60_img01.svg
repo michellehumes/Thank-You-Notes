@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2000" height="1500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="2000" height="1500" fill="#fefefe"/>
+  <rect width="2000" height="260" fill="#fb5887"/>
+  <text x="100" y="155" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="white">Holiday Water Bottle</text>
+  <text x="100" y="225" font-family="Arial, sans-serif" font-size="42" fill="white" opacity="0.9">Seasonal + Limited Edition Designs</text>
+  <text x="1900" y="225" font-family="Arial, sans-serif" font-size="36" fill="white" opacity="0.85" text-anchor="end">SHELZY'S DESIGNS</text>
+  <!-- Main bottle with holiday theme -->
+  <rect x="820" y="330" width="360" height="65" rx="20" fill="#2d2d2d"/>
+  <rect x="800" y="385" width="400" height="880" rx="70" fill="#fb5887"/>
+  <rect x="835" y="420" width="330" height="810" rx="60" fill="#fc7fa8"/>
+  <rect x="865" y="440" width="80" height="770" rx="40" fill="white" opacity="0.2"/>
+  <!-- Holiday decorations on bottle -->
+  <text x="900" y="530" font-family="Arial, sans-serif" font-size="70">❄</text>
+  <text x="1010" y="530" font-family="Arial, sans-serif" font-size="70">🎄</text>
+  <text x="890" y="620" font-family="Arial, sans-serif" font-size="55">🎁</text>
+  <text x="1010" y="620" font-family="Arial, sans-serif" font-size="55">⭐</text>
+  <!-- Name plate -->
+  <rect x="835" y="680" width="330" height="160" rx="14" fill="white" opacity="0.92"/>
+  <text x="1000" y="752" font-family="Arial, sans-serif" font-size="48" fill="#fb5887" text-anchor="middle" font-weight="bold">HOLIDAY 2025</text>
+  <text x="1000" y="800" font-family="Arial, sans-serif" font-size="26" fill="#2d2d2d" text-anchor="middle">Limited Edition Gift</text>
+  <!-- Snowflakes background -->
+  <text x="200" y="700" font-family="Arial, sans-serif" font-size="80" fill="#fb5887" opacity="0.12">❄</text>
+  <text x="1650" y="800" font-family="Arial, sans-serif" font-size="100" fill="#fb5887" opacity="0.1">🎄</text>
+  <text x="150" y="1100" font-family="Arial, sans-serif" font-size="60" fill="#3ca4d7" opacity="0.12">❄</text>
+  <text x="1700" y="400" font-family="Arial, sans-serif" font-size="70" fill="#fe8c43" opacity="0.12">⭐</text>
+  <!-- Features strip -->
+  <rect x="60" y="1340" width="1880" height="120" fill="#f9f9f9" rx="10"/>
+  <text x="220" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Limited Edition Designs</text>
+  <text x="780" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Perfect Holiday Gift</text>
+  <text x="1280" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Free Personalization</text>
+  <text x="1800" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#fb5887" text-anchor="middle" font-weight="bold">$34.99</text>
+</svg>

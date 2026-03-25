@@ -901,7 +901,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4461552541/40-days-lent-activity-bundle-for-kids",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_52_img01.svg"],
+    images: ["/shelzy_images/shelzy_53_img01.svg"],
   },
   {
     id: 54,
@@ -917,7 +917,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4467420325/mothers-day-svg-bundle-mom-life-cut",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_52_img01.svg"],
+    images: ["/shelzy_images/shelzy_54_img01.svg"],
   },
 
   // ── Water Bottles (Physical) ──────────────
@@ -935,7 +935,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
     featured: true,
     bestSeller: true,
-    images: [],
+    images: ["/shelzy_images/shelzy_55_img01.svg"],
   },
   {
     id: 56,
@@ -951,7 +951,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
     featured: true,
     bestSeller: false,
-    images: [],
+    images: ["/shelzy_images/shelzy_56_img01.svg"],
   },
   {
     id: 57,
@@ -967,7 +967,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
     featured: false,
     bestSeller: false,
-    images: [],
+    images: ["/shelzy_images/shelzy_57_img01.svg"],
   },
   {
     id: 58,
@@ -983,7 +983,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
     featured: false,
     bestSeller: false,
-    images: [],
+    images: ["/shelzy_images/shelzy_58_img01.svg"],
   },
   {
     id: 59,
@@ -999,7 +999,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
     featured: false,
     bestSeller: false,
-    images: [],
+    images: ["/shelzy_images/shelzy_59_img01.svg"],
   },
   {
     id: 60,
@@ -1015,7 +1015,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
     featured: false,
     bestSeller: false,
-    images: [],
+    images: ["/shelzy_images/shelzy_60_img01.svg"],
   },
 ];
 

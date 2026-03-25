@@ -11,6 +11,7 @@ import {
   getProductsByCategory,
   getAllCategories,
 } from "@/data/products";
+import WaterBottleCustomizer from "@/components/WaterBottleCustomizer";
 
 // Blog back-links: maps product slug → relevant blog article(s)
 const productBlogLinks: Record<string, { href: string; title: string }[]> = {
@@ -305,9 +306,14 @@ export default async function ProductPage({
                 ))}
               </div>
 
-              {/* Buy Now button — Lemon Squeezy overlay when URL set, Etsy fallback */}
-              {(() => {
-                const isPhysical = product.compatibility === "physical";
+              {/* Buy Now — customizer for physical, direct checkout for digital */}
+              {product.compatibility === "physical" ? (
+                <WaterBottleCustomizer
+                  productName={product.name}
+                  etsyUrl={product.etsyUrl}
+                  price={product.price}
+                />
+              ) : (() => {
                 const hasLsUrl =
                   product.lemonSqueezyUrl &&
                   product.lemonSqueezyUrl !== "#";
@@ -319,40 +325,26 @@ export default async function ProductPage({
                     href={buyUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`block w-full bg-pink text-white font-heading font-semibold text-center py-4 rounded-lg hover:bg-pink-hover transition mb-3${hasLsUrl && !isPhysical ? " lemonsqueezy-button" : ""}`}
+                    className={`block w-full bg-pink text-white font-heading font-semibold text-center py-4 rounded-lg hover:bg-pink-hover transition mb-3${hasLsUrl ? " lemonsqueezy-button" : ""}`}
                   >
-                    {isPhysical
-                      ? `Shop on Etsy — $${product.price.toFixed(2)}`
-                      : hasLsUrl
+                    {hasLsUrl
                       ? `Buy Now — $${product.price.toFixed(2)}`
                       : `Shop on Etsy — $${product.price.toFixed(2)}`}
                   </a>
                 );
               })()}
 
-              {/* Fulfillment note */}
-              <div className="flex items-center justify-center gap-2 text-text-light text-sm mb-6">
-                {product.compatibility === "physical" ? (
-                  <>
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="1" y="3" width="15" height="13" rx="2" ry="2" />
-                      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                      <circle cx="5.5" cy="18.5" r="2.5" />
-                      <circle cx="18.5" cy="18.5" r="2.5" />
-                    </svg>
-                    <span>Ships in 3-5 Business Days</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    <span>Instant Download</span>
-                  </>
-                )}
-              </div>
+              {/* Fulfillment note — only shown for digital products; physical handled in customizer */}
+              {product.compatibility !== "physical" && (
+                <div className="flex items-center justify-center gap-2 text-text-light text-sm mb-6">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  <span>Instant Download</span>
+                </div>
+              )}
 
               {/* Description */}
               <p className="text-text-light leading-relaxed">
