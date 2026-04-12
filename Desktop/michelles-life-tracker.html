@@ -99,11 +99,19 @@ const CRITICAL_DEADLINES = [
 // Etsy stats -- updated by agent on each run
 const ETSY_STATS = {
   month: 'April 2026',
-  salesCount: 6,
-  revenue: 76.63,
-  avgOrderValue: 12.77,
+  salesCount: 21,
+  revenue: 628.95,
+  avgOrderValue: 29.95,
+  visits: 850,
+  cvr: 2.5,
+  totalSalesLifetime: 270,
+  activeListings: 78,
+  adsVisits: 493,
+  adsPct: 58,
+  abandonedCarts: 21,
+  abandonedCartValue: 1363,
   openMessages: 4,
-  adsLaunched: false,
+  adsLaunched: true,
   saleEnds: '2026-04-14',
   lastUpdated: '2026-04-12',
 };
@@ -183,9 +191,9 @@ const AFFILIATE_SITES = [
 // Agent System Status -- updated by Life Ops agent on each run
 const AGENT_STATUS = [
   { id: 'career', name: 'Job Search', icon: '\uD83D\uDCBC', color: '#5b8fa8', lastRun: '2026-04-12T10:20:00-06:00', status: 'healthy', metric: 'YELLOW', metricLabel: 'Pipeline' },
-  { id: 'etsy', name: 'Etsy CEO', icon: '\uD83C\uDFA8', color: '#c27089', lastRun: '2026-04-12T10:20:00-06:00', status: 'healthy', metric: '$76.63', metricLabel: 'Apr Revenue' },
+  { id: 'etsy', name: 'Etsy CEO', icon: '\uD83C\uDFA8', color: '#c27089', lastRun: '2026-04-12T11:30:00-06:00', status: 'healthy', metric: '$628.95', metricLabel: 'Apr Revenue' },
   { id: 'fertility', name: 'Fertility', icon: '\uD83C\uDF3C', color: '#7fb5b8', lastRun: '2026-04-12T10:20:00-06:00', status: 'healthy', metric: 'FOLLICULAR', metricLabel: 'CD 5' },
-  { id: 'affiliate', name: 'Affiliate', icon: '\uD83D\uDEE0\uFE0F', color: '#c4956e', lastRun: '2026-04-10T13:31:00-04:00', status: 'healthy', metric: '7', metricLabel: 'Articles' },
+  { id: 'affiliate', name: 'Affiliate', icon: '\uD83D\uDEE0\uFE0F', color: '#c4956e', lastRun: '2026-04-12T11:30:00-06:00', status: 'healthy', metric: '9', metricLabel: 'Articles' },
   { id: 'life-ops', name: 'Life Ops', icon: '\u2699\uFE0F', color: '#2d2d2d', lastRun: '2026-04-12T10:20:00-06:00', status: 'healthy', metric: '14', metricLabel: 'Tasks Active' },
 ];
 
@@ -983,7 +991,7 @@ function RecentlyCompleted({ workstreams }) {
 }
 
 function EtsyRevenueTicker() {
-  const { month, salesCount, revenue, avgOrderValue, openMessages, adsLaunched, saleEnds, lastUpdated } = ETSY_STATS;
+  const { month, salesCount, revenue, avgOrderValue, visits, cvr, totalSalesLifetime, activeListings, adsVisits, adsPct, abandonedCarts, abandonedCartValue, openMessages, adsLaunched, saleEnds, lastUpdated } = ETSY_STATS;
   const daysLeft = daysUntil(saleEnds);
   const urgent = daysLeft <= 3;
   return (
@@ -993,43 +1001,55 @@ function EtsyRevenueTicker() {
       borderRadius: 14,
       padding: '12px 18px',
       marginBottom: 4,
-      display: 'flex',
-      alignItems: 'center',
-      gap: 20,
-      flexWrap: 'wrap',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
         <span style={{ fontSize: 18 }}>{'\uD83C\uDFA8'}</span>
         <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: '#fb5887' }}>Shelzy's Designs</span>
         <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb' }}>{month}</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginLeft: 'auto' }}>Updated {lastUpdated}</span>
       </div>
-      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', flex: 1 }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#fb5887', lineHeight: 1 }}>{salesCount}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#888', fontWeight: 600 }}>SALES</div>
-        </div>
+      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#34c759', lineHeight: 1 }}>${revenue.toFixed(2)}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#888', fontWeight: 600 }}>REVENUE</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Revenue</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#fb5887', lineHeight: 1 }}>{salesCount}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Orders</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#fe8c43', lineHeight: 1 }}>{visits}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Visits</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#5b8fa8', lineHeight: 1 }}>{cvr}%</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>CVR</div>
         </div>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#fe8c43', lineHeight: 1 }}>${avgOrderValue.toFixed(2)}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#888', fontWeight: 600 }}>AVG ORDER</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>AOV</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#888', lineHeight: 1 }}>{adsPct}%</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Ads Traffic</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: abandonedCarts > 15 ? '#ff3b30' : '#888', lineHeight: 1 }}>{abandonedCarts}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Abandoned</div>
         </div>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: openMessages > 0 ? '#ff3b30' : '#34c759', lineHeight: 1 }}>{openMessages}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#888', fontWeight: 600 }}>MSGS</div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: adsLaunched ? '#34c759' : '#ff3b30', lineHeight: 1 }}>{adsLaunched ? 'ON' : 'OFF'}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#888', fontWeight: 600 }}>ADS</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Msgs</div>
         </div>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: urgent ? '#ff3b30' : '#fe8c43', lineHeight: 1 }}>{daysLeft <= 0 ? 'ENDED' : daysLeft + 'd'}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#888', fontWeight: 600 }}>SALE LEFT</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Sale Left</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#888', lineHeight: 1 }}>{totalSalesLifetime}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Total Sales</div>
         </div>
       </div>
-      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc' }}>Updated {lastUpdated}</span>
     </div>
   );
 }
@@ -1039,11 +1059,27 @@ function AffiliateSitesPanel() {
   const sLabel = (s) => s === 'hold' ? 'HOLD' : s === 'active' ? 'ACTIVE' : s === 'concept' ? 'CONCEPT' : s.toUpperCase();
   return (
     <div style={{ marginBottom: 16 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-        <div style={{ width: 3, height: 16, borderRadius: 2, background: '#c4956e' }} />
-        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: 1.5 }}>
-          Affiliate Sites
-        </span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 3, height: 16, borderRadius: 2, background: '#c4956e' }} />
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+            Affiliate Sites
+          </span>
+        </div>
+        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 16, color: COLORS.green }}>$3.90</span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase', marginLeft: 5 }}>Amazon MTD</span>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 16, color: COLORS.blue }}>616</span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase', marginLeft: 5 }}>Clicks</span>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 16, color: COLORS.dark }}>3</span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase', marginLeft: 5 }}>Shipped</span>
+          </div>
+        </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 10 }}>
         {AFFILIATE_SITES.map(site => (
