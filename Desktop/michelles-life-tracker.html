@@ -8,6 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script src="dashboard-data.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #fefefe; -webkit-font-smoothing: antialiased; }
@@ -84,169 +85,13 @@
 <script type="text/babel">
 const { useState, useMemo, useEffect, useCallback, useRef } = React;
 
-// Agent metadata -- updated by life-tracker managed agent on each run
-const LAST_AGENT_UPDATE = '2026-04-12T10:20:00-06:00';
-
-// Critical time-bound deadlines surfaced at the top of the dashboard
-// Agent updates these on each run. Format: { label, date (YYYY-MM-DD), color, icon }
-const CRITICAL_DEADLINES = [
-  { label: 'Tax Deadline', date: '2026-04-15', color: '#c4605a', icon: '\uD83D\uDCB8' },
-  { label: 'Etsy Sale Ends', date: '2026-04-14', color: '#c4956e', icon: '\uD83C\uDFE6' },
-  { label: 'Job Target Window', date: '2026-05-13', color: '#5b8fa8', icon: '\uD83C\uDFAF' },
-  { label: 'Fertile Window', date: '2026-04-17', color: '#7fb5b8', icon: '\uD83C\uDF38' },
-];
-
-// Etsy stats -- updated by agent on each run
-const ETSY_STATS = {
-  month: 'April 2026',
-  salesCount: 21,
-  revenue: 628.95,
-  avgOrderValue: 29.95,
-  visits: 850,
-  cvr: 2.5,
-  totalSalesLifetime: 270,
-  activeListings: 78,
-  adsVisits: 493,
-  adsPct: 58,
-  abandonedCarts: 21,
-  abandonedCartValue: 1363,
-  openMessages: 4,
-  adsLaunched: true,
-  saleEnds: '2026-04-14',
-  lastUpdated: '2026-04-12',
-  ytd: { revenue: 4525.64, orders: 108, visits: 5563, cvr: 1.9 },
-  monthlyHistory: [
-    { month: 'Jan', revenue: null, orders: null, note: 'est. ~$970 (Jan+Feb=$1,944)' },
-    { month: 'Feb', revenue: null, orders: null, note: 'est. ~$974 (Jan+Feb=$1,944)' },
-    { month: 'Mar', revenue: 1952.24, orders: 42, visits: 2184, cvr: 1.9 },
-    { month: 'Apr', revenue: 628.95, orders: 21, visits: 850, cvr: 2.5, partial: true },
-  ],
-  janFebCombined: { revenue: 1944.45, orders: 45 },
-};
-
-// Affiliate site performance -- updated by Affiliate CEO agent
-const AFFILIATE_SITES = [
-  {
-    id: 'tst',
-    name: 'ToolShedTested',
-    icon: '\uD83D\uDEE0\uFE0F',
-    color: '#c4956e',
-    url: 'toolshedtested.com',
-    articles: { live: 9, staged: 0, total: 9 },
-    amazonTag: 'toolshedtested-20',
-    amazonEarnings: 0.00,
-    amazonStatus: 'active',
-    gsc: { avgPosition: 45.8, impressions: 1407, clicks: 0, indexedPages: 253, topPage: 'makita-vs-milwaukee' },
-    blocker: 'GSC: michelle.e.humes@gmail.com not authorized -- check Settings > Users',
-    nextCheck: '2026-05-10',
-    status: 'hold',
-    signal: '9 affiliate articles live (Apr 9-12). Scale mode: 2/day. GSC check May 10.',
-    lastUpdated: '2026-04-12',
-  },
-  {
-    id: 'chs',
-    name: 'CleverHomeStorage',
-    icon: '\uD83C\uDFE0',
-    color: '#5b8fa8',
-    url: 'cleverhomestorage.com',
-    articles: { live: 41, staged: 0, total: 41 },
-    amazonTag: 'cleverhomestorage-20',
-    amazonEarnings: 0.00,
-    amazonStatus: 'active',
-    gsc: null,
-    blocker: null,
-    nextCheck: null,
-    status: 'hold',
-    signal: '41 posts live. Tag confirmed active. On hold -- focus is TST until first affiliate clicks.',
-    lastUpdated: '2026-04-10',
-  },
-  {
-    id: 'cgf',
-    name: 'CustomGiftFinder',
-    icon: '\uD83C\uDF81',
-    color: '#c27089',
-    url: 'customgiftfinder.com',
-    articles: { live: 40, staged: 0, total: 40 },
-    amazonTag: 'customgiftfinder-20',
-    amazonEarnings: 0.00,
-    amazonStatus: 'active',
-    gsc: null,
-    blocker: null,
-    nextCheck: null,
-    status: 'hold',
-    signal: '40 posts live. Tag confirmed active. Seasonal -- queue Q4 gift guides Aug 2026.',
-    lastUpdated: '2026-04-10',
-  },
-  {
-    id: 'shelzysbeauty',
-    name: 'ShelzysBeauty',
-    icon: '\uD83D\uDC84',
-    color: '#c27089',
-    url: 'shelzysbeauty.com',
-    articles: { live: 29, staged: 0, total: 29 },
-    amazonTag: 'shelzysbeauty-20',
-    amazonEarnings: 0.00,
-    amazonStatus: 'active',
-    gsc: { avgPosition: null, impressions: null, clicks: null, indexedPages: null, topPage: null },
-    blocker: null,
-    nextCheck: null,
-    status: 'hold',
-    signal: '29 articles live. OG images + ItemList schema deployed Mar 26. Tag active. On hold -- TST first.',
-    lastUpdated: '2026-04-10',
-  },
-];
-
-// Agent System Status -- updated by Life Ops agent on each run
-const AGENT_STATUS = [
-  { id: 'career', name: 'Job Search', icon: '\uD83D\uDCBC', color: '#5b8fa8', lastRun: '2026-04-12T10:20:00-06:00', status: 'healthy', metric: 'YELLOW', metricLabel: 'Pipeline' },
-  { id: 'etsy', name: 'Etsy CEO', icon: '\uD83C\uDFA8', color: '#c27089', lastRun: '2026-04-12T11:30:00-06:00', status: 'healthy', metric: '$628.95', metricLabel: 'Apr Revenue' },
-  { id: 'fertility', name: 'Fertility', icon: '\uD83C\uDF3C', color: '#7fb5b8', lastRun: '2026-04-12T10:20:00-06:00', status: 'healthy', metric: 'FOLLICULAR', metricLabel: 'CD 5' },
-  { id: 'affiliate', name: 'Affiliate', icon: '\uD83D\uDEE0\uFE0F', color: '#c4956e', lastRun: '2026-04-12T11:30:00-06:00', status: 'healthy', metric: '9', metricLabel: 'Articles' },
-  { id: 'life-ops', name: 'Life Ops', icon: '\u2699\uFE0F', color: '#2d2d2d', lastRun: '2026-04-12T10:20:00-06:00', status: 'healthy', metric: '14', metricLabel: 'Tasks Active' },
-];
-
-// Gmail log data -- updated by Gmail agent on each triage run
-const GMAIL_DATA = {
-  date: 'April 9, 2026',
-  time: '9:22 AM EDT',
-  unreadScanned: 30,
-  actionItems: [
-    { priority: 'HIGH', title: 'IRS Online Account Notification', body: 'Notification received Apr 12. Tax deadline April 15 in 3 days.', action: 'Log in at irs.gov/account to view before filing.' },
-    { priority: 'HIGH', title: 'Etsy: Rebecca Dam -- Order #4023266408', body: 'Customer message received Apr 9. Body not readable in Gmail -- must open Etsy Seller Hub.', action: 'Reply via Etsy Messages in Seller Hub.' },
-    { priority: 'HIGH', title: 'Diana Carnevale -- 3 open Etsy messages', body: 'Multiple threads open. Most urgent customer in queue.', action: 'Reply via Etsy Seller Hub -- Messages.' },
-    { priority: 'MEDIUM', title: 'PNC $4,000 Transfer Scheduled', body: 'From PNC Interest Checking x1583 to Chase x3045. Payment ID: 5075103594. Received Apr 8.', action: 'Verify this was your transfer. If unauthorized call PNC: 1-800-762-2035.' },
-    { priority: 'MEDIUM', title: 'Etsy Support -- Accidental order refund', body: 'Ordered "Personalized Kids Beach Towel" from ThePaisleyBox on Apr 4. Etsy requesting feedback on resolution.', action: 'Check if refund processed. Complete feedback survey.' },
-  ],
-  securityFlags: [
-    'PHISHING: "Security notice" from zhuldyz.amanzhol21@fizmat.kz -- fake McAfee OTP. Do not engage.',
-    'Google OAuth alert: "Untitled project" access granted -- verify was you.',
-    'X (Twitter): New login from ChromeDesktop/Mac at East Hampton NY -- verify was you.',
-  ],
-  financialSummary: '$4,000 PNC->Chase transfer in progress. $76.39 Etsy payout deposited. Chase autopay confirmed on 2 accounts.',
-  lowPriority: 25,
-};
-
-// Decision queue -- items flagged by agents needing Michelle's decision
-const DECISION_QUEUE = [
-  { id: 'dq-6', agent: 'financial', urgency: 'critical', text: 'IRS notification in online account -- 3 days to tax deadline Apr 15', action: 'Log in at irs.gov to view notification immediately' },
-  { id: 'dq-1', agent: 'career', urgency: 'high', text: 'BGB Group VP role -- verify if expired at LinkedIn', action: 'Check linkedin.com/jobs/view/4393957391' },
-  { id: 'dq-7', agent: 'career', urgency: 'high', text: 'CMI Media Group SVP Engagement Strategy (9/10 fit) -- reach out to Hemali re: remote', action: 'Draft outreach to Hemali before applying cold -- do NOT send without approval' },
-  { id: 'dq-8', agent: 'career', urgency: 'high', text: 'Klick Health SVP Media Strategy -- verify remote status before full prep', action: 'Check careers.klick.com/roles/36d8c476-5b69-4a51-876d-0ebc239a33e2' },
-  { id: 'dq-2', agent: 'etsy', urgency: 'high', text: '4 open customer messages need replies via Seller Hub', action: 'Reply to Diana Carnevale, Rebecca Dam, Joshua Hargrave, Courtney Beaudette' },
-  { id: 'dq-3', agent: 'etsy', urgency: 'high', text: 'Publish 3 bulk pack listings before Apr 14 sale ends', action: 'Publish in Etsy Seller Hub -- 2 days remaining' },
-  { id: 'dq-4', agent: 'career', urgency: 'medium', text: 'Brio Group follow-up draft ready -- approve to send', action: 'Review draft at /data/job-tracker/drafts/' },
-  { id: 'dq-5', agent: 'etsy', urgency: 'medium', text: 'Approve wedding planner outreach drafts (4 venues)', action: 'Review Gmail drafts' },
-];
-
-// Tomorrow's priorities -- set by Life Ops evening run
-const TOMORROW_PRIORITIES = [
-  'Check IRS online account notification -- 3 days to Apr 15 tax deadline',
-  'Reach out to Hemali at CMI Media Group re: SVP Engagement Strategy remote flex (do NOT send without Michelle approval)',
-  'Apply to Real Chemistry VP Strategy Director ($190K-$220K) via Greenhouse',
-  'Apply to Regeneron Sr. Director ($216K-$360K) via Workday -- posting is 65+ days old',
-  'Publish 3 bulk pack Etsy listings before Apr 14 sale expires (2 days left)',
-  'Reply to 4 open Etsy customer messages in Seller Hub',
-];
+// All agent-managed data lives in dashboard-data.js -- loaded above
+// Agents update ONLY dashboard-data.js, never this file
+const {
+  LAST_AGENT_UPDATE, CRITICAL_DEADLINES, ETSY_STATS, AFFILIATE_SITES,
+  AGENT_STATUS, GMAIL_DATA, DECISION_QUEUE, TOMORROW_PRIORITIES,
+  FERTILITY_STATE, FINANCE_STATE, CAREER_STATE,
+} = window.DASHBOARD_DATA;
 
 const COLORS = {
   white: '#ffffff',
@@ -424,9 +269,9 @@ const DEFAULT_WORKSTREAMS = [
     summary: 'FOCUS MODE: Sea Glass Wedding Place Cards only. 23.8% CVR, traffic-constrained winner. Sale expires Apr 14 -- bulk listings + Etsy ads launch needed before then. Phase 4 variant packages ready.',
     tasks: [
       { id: 'sh-1', name: 'Sea Glass Place Cards listing live (ID: 4444585325)', status: STATUS.COMPLETE, detail: '6 sales in April: $10.19 + $11.03 + $12.33 + $10.27 + $22.62 (Apr 11) + $10.19 (Apr 12) = $76.63. 2 shipping label refunds: $5.64 + $5.77 credited. 23.8% CVR, traffic-constrained winner. Sale ends Apr 14 (2 days).', lastModified: '2026-04-12' },
-      { id: 'sh-2', name: 'Launch Etsy Ads ($5/day) on listing 4444585325', status: STATUS.BLOCKED, detail: 'APPROVED but not launched. Every day undeployed is traffic left on table during peak wedding season. Switch to "Efficient spending" strategy (ROAS 1.75 vs 2.44 shop avg). Must do in Etsy Seller Hub.', lastModified: '2026-04-11' },
-      { id: 'sh-3', name: 'Respond to open Etsy customer messages', status: STATUS.BLOCKED, detail: 'Diana Carnevale (3+ msgs, latest Apr 9, MOST URGENT), Rebecca Dam (Order #4023266408, Apr 9), Joshua Hargrave (Apr 9 UNREAD), Courtney Beaudette (Order #4002462398). Must reply via Etsy Seller Hub -- message bodies not visible in Gmail.', lastModified: '2026-04-11' },
-      { id: 'sh-9', name: 'Publish 3 bulk pack listings before Apr 14 sale ends', status: STATUS.BLOCKED, detail: '3 bulk packs (50/100/150-unit) built and approved. Must publish before or immediately after 15% sale expires Apr 14. Capture bulk wedding orders at full pricing. Do in Etsy Seller Hub.', lastModified: '2026-04-11' },
+      { id: 'sh-2', name: 'Etsy Ads running -- $17/day "Efficient spending"', status: STATUS.COMPLETE, detail: 'Ads live. Strategy switched to "Efficient spending" at $17/day ($500/mo cap). Shop-level ROAS 2.53 (30d). Sea glass listing ROAS 1.75 -- monitoring. ADHD Planner ROAS 0.48 -- recommend pausing that listing\'s ads.', lastModified: '2026-04-12' },
+      { id: 'sh-3', name: 'Etsy messages cleared -- 0 unread (Apr 12)', status: STATUS.COMPLETE, detail: '0 unread messages as of Apr 12. Diana Carnevale has open ORDER (not message) -- Water Bottle x2 ships Apr 13. Check Etsy Orders for fulfillment. Rebecca Dam + Joshua Hargrave conversations resolved.', lastModified: '2026-04-12' },
+      { id: 'sh-9', name: 'Bulk pack listings published (50/100/150-pack)', status: STATUS.COMPLETE, detail: 'All 3 published live Apr 9: 50-pack (4485621407), 100-pack (4485628192), 150-pack (4485622637). Each has 1 placeholder image only -- needs 5+ real photos for Etsy search visibility. This is now priority gap.', lastModified: '2026-04-09' },
       { id: 'sh-4', name: 'Phase 4 keyword variant listings (4 packages ready)', status: STATUS.NOT_STARTED, detail: 'All 4 packages built: Sea Glass Escort Cards, Sea Glass Wedding Favors, Coastal Wedding Place Cards, Beach Wedding Place Cards. Each has title/tags/description/pricing files. Create drafts in Etsy -- SAVE AS DRAFT, do not publish without Michelle approval per listing.', lastModified: '2026-04-11' },
       { id: 'sh-5', name: 'Add bulk listing images (3 packs)', status: STATUS.NOT_STARTED, detail: 'All 3 live bulk packs have placeholder image only. This is the #1 conversion unlock for bulk orders.', lastModified: '2026-04-11' },
       { id: 'sh-10', name: 'Reclaim Pinterest Instagram connection', status: STATUS.BLOCKED, detail: 'Pinterest email Apr 10: Instagram permissions removed because password changed. Must reclaim at pinterest.com/settings/social-permissions to restore auto-publishing from Shelzy\'s Designs Instagram.', lastModified: '2026-04-11' },
@@ -463,8 +308,8 @@ const DEFAULT_WORKSTREAMS = [
     summary: 'VALIDATION MODE -- HOLD on new content. 7 articles in pipeline (5 live, 2 staged). Next GSC check May 10. Amazon Associates: $0 earnings, traffic problem confirmed. GSC access blocker open.',
     tasks: [
       { id: 'ts-1', name: 'Site live on Next.js (Vercel)', status: STATUS.COMPLETE, detail: 'Next.js 14, Vercel deploy. Amazon tag: toolshedtested-20. 253 static pages. Build SUCCESS.', lastModified: '2026-04-10' },
-      { id: 'ts-2', name: '5 validation articles live', status: STATUS.COMPLETE, detail: 'Deployed Apr 9-10: best-laser-levels, best-belt-sanders, best-band-saws, best-torque-wrench, best-stud-finder. Internal links added Apr 10. Makita-vs-Milwaukee: 1,407 impressions, 0 clicks -- monitoring.', lastModified: '2026-04-10' },
-      { id: 'ts-9', name: 'Deploy 2 staged articles to Vercel', status: STATUS.NOT_STARTED, detail: 'STAGED and ready: best-reciprocating-saw-2026.mdx + best-circular-saw-under-100-2026.mdx. Copy to /src/content/posts/ and run vercel deploy --prod. Then STOP content production until May 10 GSC check.', lastModified: '2026-04-11' },
+      { id: 'ts-2', name: '9 affiliate articles live (scale mode)', status: STATUS.COMPLETE, detail: 'Apr 9-12: laser levels, belt sanders, band saws, torque wrenches, stud finders, reciprocating saws, circular saw <$100, brad nailer, paint sprayer. Scale mode 2/day. GSC check gate: May 10.', lastModified: '2026-04-12' },
+      { id: 'ts-9', name: 'Continue scale: 2 articles/day from keyword queue', status: STATUS.IN_PROGRESS, detail: 'Next: best-finish-nailer-2026, best-framing-nailer-2026, best-air-compressor-for-painting-2026. All in keyword pipeline at /data/affiliate/state.json. Stop if GSC shows 0 impressions at 30 days.', lastModified: '2026-04-12' },
       { id: 'ts-10', name: 'Resolve GSC access (michelle.e.humes@gmail.com)', status: STATUS.BLOCKED, detail: 'michelle.e.humes@gmail.com not authorized on TST GSC property. Michelle: check GSC Settings > Users and permissions to find owner account and grant access.', lastModified: '2026-04-11' },
       { id: 'ts-11', name: 'GSC signal check -- May 10 gate', status: STATUS.NOT_STARTED, detail: 'HOLD all new content until May 10 GSC check-in. Avg position 45.8. Makita-vs-Milwaukee: 1,407 impressions, 0 clicks. Kill criteria: no traction after initial test batch.', lastModified: '2026-04-11' },
       { id: 'ts-3', name: 'Fix duplicate ASIN issue (50 posts remaining)', status: STATUS.IN_PROGRESS, detail: 'Post 3030 fixed. 50 remaining posts have same ASIN repeated across all product links. Low priority until validation signal confirmed.', lastModified: '2026-03-10' },
@@ -1464,6 +1309,197 @@ function WorkstreamCard({ ws, isExpanded, onToggle, taskFilter, searchQuery, onS
 }
 
 // === TAB CONFIG ===
+// === FERTILITY TICKER ===
+function FertilityTicker() {
+  const f = FERTILITY_STATE;
+  const daysToFW = daysUntil(f.fertileWindowStart);
+  const daysToOv = daysUntil(f.ovulationDate);
+  const inFW = daysToFW <= 0 && daysToOv >= -1;
+  const phaseColor = inFW ? '#e8526a' : '#7fb5b8';
+  const phaseColors = { early_follicular: '#7fb5b8', follicular: '#7fb5b8', ovulatory: '#e8526a', luteal: '#c4956e', late_luteal: '#c4956e' };
+  const color = phaseColors[f.phase] || '#7fb5b8';
+  return (
+    <div style={{ background: color + '08', border: '1px solid ' + color + '30', borderRadius: 14, padding: '12px 18px', marginBottom: 4 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <span style={{ fontSize: 16 }}>{'\uD83C\uDF38'}</span>
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color }}>Cycle Tracker</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb' }}>Cycle {f.cycleNumber} -- {f.phaseLabel}</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginLeft: 'auto' }}>Updated {f.lastUpdated}</span>
+      </div>
+      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 12 }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 28, color, lineHeight: 1 }}>{f.cycleDay}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Cycle Day</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 28, color: inFW ? '#e8526a' : daysToFW <= 3 ? '#fe8c43' : color, lineHeight: 1 }}>
+            {inFW ? 'NOW' : daysToFW + 'd'}
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Fertile Window</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 28, color: '#c4956e', lineHeight: 1 }}>{daysToOv}d</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>To Ovulation</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#aaa', lineHeight: 1 }}>May 6</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Next Period</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#aaa', lineHeight: 1 }}>May 1</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Earliest Test</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: f.lhSurgeDetected ? '#e8526a' : '#ccc', lineHeight: 1 }}>{f.lhSurgeDetected ? 'YES' : 'NO'}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>LH Surge</div>
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        {[
+          { label: 'Fertile Apr 17-22', color: '#e8526a' },
+          { label: 'Peak Apr 19-21', color: '#c4605a' },
+          { label: 'Ovulation Apr 21', color: '#c4956e' },
+          { label: 'Implant Apr 27 - May 1', color: '#7fb5b8' },
+          { label: 'Test May 1 (earliest)', color: '#888' },
+        ].map(b => (
+          <div key={b.label} style={{ background: b.color + '15', borderRadius: 8, padding: '4px 10px' }}>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: b.color, fontWeight: 600 }}>{b.label}</span>
+          </div>
+        ))}
+      </div>
+      {!f.lhSurgeDetected && daysToFW <= 5 && (
+        <div style={{ marginTop: 10, background: '#fe8c4320', borderRadius: 8, padding: '8px 12px' }}>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: '#fe8c43', fontWeight: 600 }}>
+            {'\u26A0\uFE0F'} Start LH strips Apr 17 (CD10) -- fertile window opens in {daysToFW} days
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// === FINANCE PULSE ===
+function FinancePulse() {
+  const f = FINANCE_STATE;
+  const taxDaysLeft = daysUntil(f.taxDeadline);
+  const taxUrgent = taxDaysLeft <= 3;
+  return (
+    <div style={{ background: taxUrgent ? '#c4605a08' : '#6aaa7e08', border: '1px solid ' + (taxUrgent ? '#c4605a30' : '#6aaa7e25'), borderRadius: 14, padding: '12px 18px', marginBottom: 4 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <span style={{ fontSize: 16 }}>{'\uD83D\uDCB0'}</span>
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: COLORS.dark }}>Financial Pulse</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginLeft: 'auto' }}>Updated {f.lastUpdated}</span>
+      </div>
+      {taxUrgent && (
+        <div style={{ background: '#c4605a18', border: '1px solid #c4605a40', borderRadius: 10, padding: '8px 14px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 22, color: '#c4605a', lineHeight: 1 }}>{taxDaysLeft}d</span>
+          <div>
+            <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: '#c4605a' }}>TAX DEADLINE APR 15</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#c4605a99' }}>
+              {f.irsNotification ? 'IRS notification pending -- check irs.gov/account before filing' : 'File Form 1040 or extension (4868)'}
+            </div>
+          </div>
+        </div>
+      )}
+      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 24, color: '#c4605a', lineHeight: 1 }}>
+            ${f.overBudget.toLocaleString()}
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Over Budget</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#bbb' }}>{f.budgetCategory}</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 24, color: COLORS.green, lineHeight: 1 }}>
+            ${f.uiWeeklyBenefit}/wk
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>UI Benefits</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 24, color: COLORS.blue, lineHeight: 1 }}>
+            {f.runwayMonths}mo
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Runway</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 24, color: COLORS.orange, lineHeight: 1 }}>
+            -${f.monthlyDeficit.toLocaleString()}
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Mo. Deficit</div>
+        </div>
+      </div>
+      {(f.monarchSyncExpired || f.amexBalance > 0) && (
+        <div style={{ marginTop: 10, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {f.monarchSyncExpired && (
+            <div style={{ background: COLORS.yellow + '18', borderRadius: 8, padding: '4px 10px' }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: COLORS.yellow, fontWeight: 600 }}>{'\u26A0\uFE0F'} Monarch Chase sync expired -- reauthorize</span>
+            </div>
+          )}
+          {f.amexBalance > 0 && (
+            <div style={{ background: '#5b8fa815', borderRadius: 8, padding: '4px 10px' }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#5b8fa8', fontWeight: 600 }}>Amex ${f.amexBalance} due {f.amexDue}</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// === CAREER PIPELINE ===
+function CareerPipeline() {
+  const c = CAREER_STATE;
+  const statusColor2 = { apply_now: COLORS.green, outreach_first: COLORS.orange, verify_apply: COLORS.blue, verify_remote: COLORS.yellow };
+  const statusLabel = { apply_now: 'APPLY NOW', outreach_first: 'OUTREACH FIRST', verify_apply: 'VERIFY+APPLY', verify_remote: 'VERIFY REMOTE' };
+  return (
+    <div style={{ background: '#5b8fa808', border: '1px solid #5b8fa825', borderRadius: 14, padding: '12px 18px', marginBottom: 4 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <span style={{ fontSize: 16 }}>{'\uD83D\uDCBC'}</span>
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: COLORS.blue }}>Job Pipeline</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb' }}>{c.targetComp} target -- {c.floorComp} floor</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginLeft: 'auto' }}>Updated {c.lastUpdated}</span>
+      </div>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
+        {[
+          { label: 'Sourced',   value: c.sourcedCount,   color: '#2d2d2d' },
+          { label: 'Applied',   value: c.appliedCount,   color: '#3ca4d7' },
+          { label: 'Screening', value: c.screeningCount, color: '#8adbde' },
+          { label: 'Interview', value: c.interviewCount, color: '#fe8c43' },
+        ].map(s => (
+          <div key={s.label} style={{ textAlign: 'center', minWidth: 60 }}>
+            <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 28, color: s.color, lineHeight: 1 }}>{s.value}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>{s.label}</div>
+          </div>
+        ))}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: 8, borderLeft: '1px solid ' + COLORS.midGray }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb' }}>Target date</div>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: COLORS.blue }}>May 13 -- sign offer</div>
+        </div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#aaa', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>Top 5 Active Roles</div>
+        {c.topRoles.map((r, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', background: '#fff', borderRadius: 8, border: '1px solid ' + COLORS.midGray }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 11, color: '#ccc', minWidth: 14 }}>{i + 1}</span>
+            <div style={{ flex: 1 }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 11, color: COLORS.dark }}>{r.company}</span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#999', marginLeft: 6 }}>{r.title}</span>
+            </div>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#aaa' }}>{r.comp}</span>
+            <span style={{
+              fontSize: 9, fontWeight: 700, fontFamily: "'Inter', sans-serif",
+              padding: '2px 7px', borderRadius: 8,
+              background: (statusColor2[r.status] || '#aaa') + '20',
+              color: statusColor2[r.status] || '#aaa',
+              whiteSpace: 'nowrap',
+            }}>{statusLabel[r.status] || r.status}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const TABS = [
   { id: 'career',    label: 'Career',    icon: '\uD83D\uDCBC', color: COLORS.blue },
   { id: 'etsy',      label: 'Etsy',      icon: '\uD83C\uDFA8', color: COLORS.pink },
@@ -1737,6 +1773,7 @@ function LifeTracker() {
 
         {activeTab === 'career' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <CareerPipeline />
             {tabDecisions.length > 0 && <DecisionQueue items={tabDecisions} />}
             <TomorrowPriorities />
             {renderWorkstreams(tabWs)}
@@ -1761,6 +1798,7 @@ function LifeTracker() {
 
         {activeTab === 'finance' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <FinancePulse />
             {tabDecisions.length > 0 && <DecisionQueue items={tabDecisions} />}
             {renderWorkstreams(tabWs)}
           </div>
@@ -1768,6 +1806,7 @@ function LifeTracker() {
 
         {activeTab === 'fertility' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <FertilityTicker />
             {renderWorkstreams(tabWs)}
           </div>
         )}
