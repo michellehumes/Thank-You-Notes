@@ -116,7 +116,7 @@ const AFFILIATE_SITES = [
     icon: '\uD83D\uDEE0\uFE0F',
     color: '#c4956e',
     url: 'toolshedtested.com',
-    articles: { live: 5, staged: 2, total: 7 },
+    articles: { live: 9, staged: 0, total: 9 },
     amazonTag: 'toolshedtested-20',
     amazonEarnings: 0.00,
     amazonStatus: 'active',
@@ -124,8 +124,8 @@ const AFFILIATE_SITES = [
     blocker: 'GSC: michelle.e.humes@gmail.com not authorized -- check Settings > Users',
     nextCheck: '2026-05-10',
     status: 'hold',
-    signal: '5 articles live (Apr 9-10). 2 staged ready to deploy. Hold on new content until May 10 GSC gate.',
-    lastUpdated: '2026-04-10',
+    signal: '9 affiliate articles live (Apr 9-12). Scale mode: 2/day. GSC check May 10.',
+    lastUpdated: '2026-04-12',
   },
   {
     id: 'chs',
@@ -133,16 +133,16 @@ const AFFILIATE_SITES = [
     icon: '\uD83C\uDFE0',
     color: '#5b8fa8',
     url: 'cleverhomestorage.com',
-    articles: { live: 0, staged: 0, total: 0 },
-    amazonTag: null,
-    amazonEarnings: 0,
-    amazonStatus: 'not-configured',
+    articles: { live: 41, staged: 0, total: 41 },
+    amazonTag: 'cleverhomestorage-20',
+    amazonEarnings: 0.00,
+    amazonStatus: 'active',
     gsc: null,
     blocker: null,
     nextCheck: null,
-    status: 'concept',
-    signal: 'Early stage. No content published. Pinterest-first traffic model.',
-    lastUpdated: '2026-02-01',
+    status: 'hold',
+    signal: '41 posts live. Tag confirmed active. On hold -- focus is TST until first affiliate clicks.',
+    lastUpdated: '2026-04-10',
   },
   {
     id: 'cgf',
@@ -150,16 +150,16 @@ const AFFILIATE_SITES = [
     icon: '\uD83C\uDF81',
     color: '#c27089',
     url: 'customgiftfinder.com',
-    articles: { live: 0, staged: 0, total: 0 },
-    amazonTag: null,
-    amazonEarnings: 0,
-    amazonStatus: 'not-configured',
+    articles: { live: 40, staged: 0, total: 40 },
+    amazonTag: 'customgiftfinder-20',
+    amazonEarnings: 0.00,
+    amazonStatus: 'active',
     gsc: null,
     blocker: null,
     nextCheck: null,
-    status: 'concept',
-    signal: 'Concept stage. Site not built yet.',
-    lastUpdated: '2026-02-01',
+    status: 'hold',
+    signal: '40 posts live. Tag confirmed active. Seasonal -- queue Q4 gift guides Aug 2026.',
+    lastUpdated: '2026-04-10',
   },
   {
     id: 'shelzysbeauty',
@@ -168,15 +168,15 @@ const AFFILIATE_SITES = [
     color: '#c27089',
     url: 'shelzysbeauty.com',
     articles: { live: 29, staged: 0, total: 29 },
-    amazonTag: null,
-    amazonEarnings: 0,
-    amazonStatus: 'not-configured',
+    amazonTag: 'shelzysbeauty-20',
+    amazonEarnings: 0.00,
+    amazonStatus: 'active',
     gsc: { avgPosition: null, impressions: null, clicks: null, indexedPages: null, topPage: null },
     blocker: null,
     nextCheck: null,
-    status: 'active',
-    signal: '29 articles live. OG images + ItemList schema deployed Mar 26. GSC verified.',
-    lastUpdated: '2026-03-26',
+    status: 'hold',
+    signal: '29 articles live. OG images + ItemList schema deployed Mar 26. Tag active. On hold -- TST first.',
+    lastUpdated: '2026-04-10',
   },
 ];
 
@@ -1073,14 +1073,12 @@ function AffiliateSitesPanel() {
                   <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase' }}>Staged</div>
                 </div>
               )}
-              {site.amazonTag && (
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: site.amazonEarnings > 0 ? COLORS.green : '#bbb', lineHeight: 1 }}>
-                    ${site.amazonEarnings.toFixed(2)}
-                  </div>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase' }}>Amazon</div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: site.amazonEarnings > 0 ? COLORS.green : '#ccc', lineHeight: 1 }}>
+                  {site.amazonTag ? '$' + site.amazonEarnings.toFixed(2) : '--'}
                 </div>
-              )}
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase' }}>Amazon</div>
+              </div>
               {site.gsc && site.gsc.avgPosition != null && (
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: site.gsc.avgPosition > 30 ? COLORS.orange : COLORS.green, lineHeight: 1 }}>
