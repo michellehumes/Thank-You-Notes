@@ -42,6 +42,7 @@ app.use('/api/score', require('./routes/score'));
 app.use('/api/todos', require('./routes/todos'));
 app.use('/api/briefs', require('./routes/briefs'));
 app.use('/api/sync', require('./routes/sync'));
+app.use('/api/ask', require('./routes/ask'));
 
 // ── Root redirect ───────────────────────────────────
 app.get('/', (req, res) => res.redirect('/dashboard/'));
