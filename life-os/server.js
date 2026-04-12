@@ -1,4 +1,12 @@
 require('dotenv').config();
+
+// Route outbound HTTPS through the environment proxy if set (needed for Anthropic SDK)
+const _proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy;
+if (_proxyUrl) {
+  const { setGlobalDispatcher, ProxyAgent } = require('undici');
+  setGlobalDispatcher(new ProxyAgent(_proxyUrl));
+}
+
 const express = require('express');
 const path = require('path');
 const { getDb, closeDb } = require('./config/database');
