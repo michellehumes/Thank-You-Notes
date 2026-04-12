@@ -1059,7 +1059,7 @@ function AffiliateSitesPanel() {
                   <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase' }}>Amazon</div>
                 </div>
               )}
-              {site.gsc && (
+              {site.gsc && site.gsc.avgPosition != null && (
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: site.gsc.avgPosition > 30 ? COLORS.orange : COLORS.green, lineHeight: 1 }}>
                     {site.gsc.avgPosition}
@@ -1067,7 +1067,7 @@ function AffiliateSitesPanel() {
                   <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase' }}>GSC Pos</div>
                 </div>
               )}
-              {site.gsc && (
+              {site.gsc && site.gsc.impressions != null && (
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: site.gsc.impressions > 0 ? COLORS.blue : '#bbb', lineHeight: 1 }}>
                     {site.gsc.impressions.toLocaleString()}
