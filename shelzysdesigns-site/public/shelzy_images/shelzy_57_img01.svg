@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2000" height="1500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="2000" height="1500" fill="#fefefe"/>
+  <rect width="2000" height="260" fill="#fe8c43"/>
+  <text x="100" y="155" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="white">Bachelorette Party Bottles</text>
+  <text x="100" y="225" font-family="Arial, sans-serif" font-size="42" fill="white" opacity="0.9">Matching Crew Sets</text>
+  <text x="1900" y="225" font-family="Arial, sans-serif" font-size="36" fill="white" opacity="0.85" text-anchor="end">SHELZY'S DESIGNS</text>
+  <!-- Bottle group: bride bottle center, two sides -->
+  <rect x="860" y="300" width="280" height="65" rx="20" fill="#2d2d2d"/>
+  <rect x="840" y="355" width="320" height="900" rx="65" fill="#fb5887"/>
+  <rect x="875" y="390" width="250" height="830" rx="55" fill="#fc7fa8"/>
+  <rect x="905" y="410" width="70" height="790" rx="35" fill="white" opacity="0.2"/>
+  <rect x="875" y="530" width="250" height="200" rx="14" fill="white" opacity="0.92"/>
+  <text x="1000" y="610" font-family="Arial, sans-serif" font-size="46" fill="#fb5887" text-anchor="middle" font-weight="bold">BRIDE</text>
+  <text x="1000" y="660" font-family="Arial, sans-serif" font-size="28" fill="#555" text-anchor="middle">Last Fling Before the Ring</text>
+  <!-- Left bottle -->
+  <rect x="400" y="380" width="220" height="50" rx="15" fill="#2d2d2d"/>
+  <rect x="385" y="420" width="250" height="780" rx="50" fill="#fe8c43"/>
+  <rect x="410" y="448" width="200" height="720" rx="42" fill="#ffa666"/>
+  <rect x="435" y="465" width="50" height="680" rx="25" fill="white" opacity="0.2"/>
+  <rect x="410" y="560" width="200" height="140" rx="10" fill="white" opacity="0.9"/>
+  <text x="510" y="625" font-family="Arial, sans-serif" font-size="30" fill="#fe8c43" text-anchor="middle" font-weight="bold">SQUAD</text>
+  <text x="510" y="665" font-family="Arial, sans-serif" font-size="22" fill="#555" text-anchor="middle">Taylor</text>
+  <!-- Right bottle -->
+  <rect x="1380" y="380" width="220" height="50" rx="15" fill="#2d2d2d"/>
+  <rect x="1365" y="420" width="250" height="780" rx="50" fill="#8adbde"/>
+  <rect x="1390" y="448" width="200" height="720" rx="42" fill="#a8e6e9"/>
+  <rect x="1415" y="465" width="50" height="680" rx="25" fill="white" opacity="0.2"/>
+  <rect x="1390" y="560" width="200" height="140" rx="10" fill="white" opacity="0.9"/>
+  <text x="1490" y="625" font-family="Arial, sans-serif" font-size="30" fill="#2d7a7c" text-anchor="middle" font-weight="bold">SQUAD</text>
+  <text x="1490" y="665" font-family="Arial, sans-serif" font-size="22" fill="#555" text-anchor="middle">Ashley</text>
+  <!-- Features strip -->
+  <rect x="60" y="1340" width="1880" height="120" fill="#f9f9f9" rx="10"/>
+  <text x="220" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Whole Crew Matching</text>
+  <text x="740" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Custom Names + Titles</text>
+  <text x="1260" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Ships in 3-5 Days</text>
+  <text x="1800" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#fb5887" text-anchor="middle" font-weight="bold">$34.99 ea</text>
+</svg>

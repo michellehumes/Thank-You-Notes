@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2000" height="1500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="2000" height="1500" fill="#fefefe"/>
+  <rect width="2000" height="260" fill="#2d2d2d"/>
+  <text x="100" y="155" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="white">Corporate + Bulk Orders</text>
+  <text x="100" y="225" font-family="Arial, sans-serif" font-size="42" fill="#fb5887" opacity="0.95">Branded Bottles for Teams + Events</text>
+  <text x="1900" y="225" font-family="Arial, sans-serif" font-size="36" fill="white" opacity="0.7" text-anchor="end">SHELZY'S DESIGNS</text>
+  <!-- Multiple bottles row -->
+  <!-- Bottle 1 (left) -->
+  <rect x="220" y="370" width="200" height="50" rx="14" fill="#555"/>
+  <rect x="205" y="410" width="230" height="760" rx="50" fill="#2d2d2d"/>
+  <rect x="230" y="438" width="180" height="700" rx="42" fill="#444"/>
+  <rect x="255" y="455" width="45" height="660" rx="22" fill="white" opacity="0.12"/>
+  <rect x="230" y="560" width="180" height="120" rx="10" fill="white" opacity="0.88"/>
+  <text x="320" y="620" font-family="Arial, sans-serif" font-size="24" fill="#2d2d2d" text-anchor="middle" font-weight="bold">YOUR LOGO</text>
+  <text x="320" y="650" font-family="Arial, sans-serif" font-size="18" fill="#666" text-anchor="middle">HERE</text>
+  <!-- Bottle 2 -->
+  <rect x="540" y="370" width="200" height="50" rx="14" fill="#555"/>
+  <rect x="525" y="410" width="230" height="760" rx="50" fill="#fb5887"/>
+  <rect x="550" y="438" width="180" height="700" rx="42" fill="#fc7fa8"/>
+  <rect x="575" y="455" width="45" height="660" rx="22" fill="white" opacity="0.18"/>
+  <rect x="550" y="560" width="180" height="120" rx="10" fill="white" opacity="0.9"/>
+  <text x="640" y="620" font-family="Arial, sans-serif" font-size="24" fill="#fb5887" text-anchor="middle" font-weight="bold">YOUR LOGO</text>
+  <text x="640" y="650" font-family="Arial, sans-serif" font-size="18" fill="#666" text-anchor="middle">HERE</text>
+  <!-- Bottle 3 (prominent center) -->
+  <rect x="870" y="340" width="260" height="60" rx="18" fill="#2d2d2d"/>
+  <rect x="850" y="390" width="300" height="840" rx="62" fill="#fe8c43"/>
+  <rect x="880" y="422" width="240" height="776" rx="54" fill="#ffa666"/>
+  <rect x="910" y="442" width="60" height="736" rx="30" fill="white" opacity="0.18"/>
+  <rect x="880" y="570" width="240" height="160" rx="12" fill="white" opacity="0.9"/>
+  <text x="1000" y="640" font-family="Arial, sans-serif" font-size="30" fill="#fe8c43" text-anchor="middle" font-weight="bold">YOUR BRAND</text>
+  <text x="1000" y="680" font-family="Arial, sans-serif" font-size="22" fill="#555" text-anchor="middle">Custom Design</text>
+  <!-- Bottle 4 -->
+  <rect x="1240" y="370" width="200" height="50" rx="14" fill="#555"/>
+  <rect x="1225" y="410" width="230" height="760" rx="50" fill="#3ca4d7"/>
+  <rect x="1250" y="438" width="180" height="700" rx="42" fill="#6bbde1"/>
+  <rect x="1275" y="455" width="45" height="660" rx="22" fill="white" opacity="0.18"/>
+  <rect x="1250" y="560" width="180" height="120" rx="10" fill="white" opacity="0.9"/>
+  <text x="1340" y="620" font-family="Arial, sans-serif" font-size="24" fill="#3ca4d7" text-anchor="middle" font-weight="bold">YOUR LOGO</text>
+  <text x="1340" y="650" font-family="Arial, sans-serif" font-size="18" fill="#666" text-anchor="middle">HERE</text>
+  <!-- Bottle 5 -->
+  <rect x="1560" y="370" width="200" height="50" rx="14" fill="#555"/>
+  <rect x="1545" y="410" width="230" height="760" rx="50" fill="#8adbde"/>
+  <rect x="1570" y="438" width="180" height="700" rx="42" fill="#a8e6e9"/>
+  <rect x="1595" y="455" width="45" height="660" rx="22" fill="white" opacity="0.18"/>
+  <rect x="1570" y="560" width="180" height="120" rx="10" fill="white" opacity="0.9"/>
+  <text x="1660" y="620" font-family="Arial, sans-serif" font-size="24" fill="#2d7a7c" text-anchor="middle" font-weight="bold">YOUR LOGO</text>
+  <text x="1660" y="650" font-family="Arial, sans-serif" font-size="18" fill="#666" text-anchor="middle">HERE</text>
+  <!-- Features strip -->
+  <rect x="60" y="1340" width="1880" height="120" fill="#f9f9f9" rx="10"/>
+  <text x="220" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Bulk Pricing 10+ Units</text>
+  <text x="780" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Custom Logo + Branding</text>
+  <text x="1300" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#2d2d2d" text-anchor="middle">Team + Event Gifting</text>
+  <text x="1800" y="1415" font-family="Arial, sans-serif" font-size="34" fill="#fb5887" text-anchor="middle" font-weight="bold">From $34.99</text>
+</svg>
