@@ -119,7 +119,7 @@ async function askQuestion(question, context) {
 
   try {
     const response = await c.messages.create({
-      model: 'claude-opus-4-6',
+      model: 'claude-sonnet-4-6',
       max_tokens: 250,
       system: [ASK_SYSTEM_PROMPT],
       messages: [{ role: 'user', content: userContent }],
