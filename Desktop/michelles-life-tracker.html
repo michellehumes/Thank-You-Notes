@@ -189,6 +189,27 @@ const AGENT_STATUS = [
   { id: 'life-ops', name: 'Life Ops', icon: '\u2699\uFE0F', color: '#2d2d2d', lastRun: '2026-04-12T10:20:00-06:00', status: 'healthy', metric: '14', metricLabel: 'Tasks Active' },
 ];
 
+// Gmail log data -- updated by Gmail agent on each triage run
+const GMAIL_DATA = {
+  date: 'April 9, 2026',
+  time: '9:22 AM EDT',
+  unreadScanned: 30,
+  actionItems: [
+    { priority: 'HIGH', title: 'IRS Online Account Notification', body: 'Notification received Apr 12. Tax deadline April 15 in 3 days.', action: 'Log in at irs.gov/account to view before filing.' },
+    { priority: 'HIGH', title: 'Etsy: Rebecca Dam -- Order #4023266408', body: 'Customer message received Apr 9. Body not readable in Gmail -- must open Etsy Seller Hub.', action: 'Reply via Etsy Messages in Seller Hub.' },
+    { priority: 'HIGH', title: 'Diana Carnevale -- 3 open Etsy messages', body: 'Multiple threads open. Most urgent customer in queue.', action: 'Reply via Etsy Seller Hub -- Messages.' },
+    { priority: 'MEDIUM', title: 'PNC $4,000 Transfer Scheduled', body: 'From PNC Interest Checking x1583 to Chase x3045. Payment ID: 5075103594. Received Apr 8.', action: 'Verify this was your transfer. If unauthorized call PNC: 1-800-762-2035.' },
+    { priority: 'MEDIUM', title: 'Etsy Support -- Accidental order refund', body: 'Ordered "Personalized Kids Beach Towel" from ThePaisleyBox on Apr 4. Etsy requesting feedback on resolution.', action: 'Check if refund processed. Complete feedback survey.' },
+  ],
+  securityFlags: [
+    'PHISHING: "Security notice" from zhuldyz.amanzhol21@fizmat.kz -- fake McAfee OTP. Do not engage.',
+    'Google OAuth alert: "Untitled project" access granted -- verify was you.',
+    'X (Twitter): New login from ChromeDesktop/Mac at East Hampton NY -- verify was you.',
+  ],
+  financialSummary: '$4,000 PNC->Chase transfer in progress. $76.39 Etsy payout deposited. Chase autopay confirmed on 2 accounts.',
+  lowPriority: 25,
+};
+
 // Decision queue -- items flagged by agents needing Michelle's decision
 const DECISION_QUEUE = [
   { id: 'dq-6', agent: 'financial', urgency: 'critical', text: 'IRS notification in online account -- 3 days to tax deadline Apr 15', action: 'Log in at irs.gov to view notification immediately' },
@@ -699,9 +720,10 @@ function AgentStatusGrid() {
 }
 
 // === DECISION QUEUE (v4) ===
-function DecisionQueue() {
-  if (!DECISION_QUEUE || DECISION_QUEUE.length === 0) return null;
-  const urgencyColor = (u) => u === 'high' ? COLORS.red : u === 'medium' ? COLORS.orange : COLORS.blue;
+function DecisionQueue({ items }) {
+  const qItems = items !== undefined ? items : DECISION_QUEUE;
+  if (!qItems || qItems.length === 0) return null;
+  const urgencyColor = (u) => u === 'critical' ? COLORS.red : u === 'high' ? COLORS.red : u === 'medium' ? COLORS.orange : COLORS.blue;
   const agentIcon = (id) => {
     const a = AGENT_STATUS.find(x => x.id === id);
     return a ? a.icon : '';
@@ -711,7 +733,6 @@ function DecisionQueue() {
       background: '#fff',
       borderRadius: 14,
       padding: '16px 20px',
-      marginBottom: 16,
       border: '1px solid ' + COLORS.midGray,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
@@ -719,8 +740,9 @@ function DecisionQueue() {
         <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: 1.5 }}>
           Decisions Needed
         </span>
+        <span style={{ marginLeft: 'auto', background: COLORS.red + '18', color: COLORS.red, fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 10, padding: '2px 8px', borderRadius: 10 }}>{qItems.length}</span>
       </div>
-      {DECISION_QUEUE.map(item => (
+      {qItems.map(item => (
         <div key={item.id} style={{
           display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 0',
           borderBottom: '1px solid ' + COLORS.lightGray,
@@ -1372,15 +1394,133 @@ function WorkstreamCard({ ws, isExpanded, onToggle, taskFilter, searchQuery, onS
   );
 }
 
+// === TAB CONFIG ===
+const TABS = [
+  { id: 'career',    label: 'Career',    icon: '\uD83D\uDCBC', color: COLORS.blue },
+  { id: 'etsy',      label: 'Etsy',      icon: '\uD83C\uDFA8', color: COLORS.pink },
+  { id: 'affiliate', label: 'Affiliate', icon: '\uD83D\uDEE0\uFE0F', color: COLORS.orange },
+  { id: 'finance',   label: 'Finance',   icon: '\uD83D\uDCB0', color: COLORS.green },
+  { id: 'fertility', label: 'Fertility', icon: '\uD83C\uDF3C', color: COLORS.aqua },
+  { id: 'gmail',     label: 'Gmail',     icon: '\uD83D\uDCE7', color: '#ea4335' },
+  { id: 'todo',      label: 'To Do',     icon: '\uD83D\uDCCB', color: COLORS.dark },
+];
+const TAB_WS = {
+  career:    ['job-search'],
+  etsy:      ['shelzys'],
+  affiliate: ['toolshed', 'cleverhome', 'customgift'],
+  finance:   ['financial'],
+  fertility: ['ttc'],
+  gmail:     [],
+  todo:      ['cadence', 'seap', 'wedding-followup', 'pennstate'],
+};
+const TAB_AGENTS = {
+  career:    ['career'],
+  etsy:      ['etsy'],
+  affiliate: ['affiliate'],
+  finance:   ['financial'],
+  fertility: ['fertility'],
+  gmail:     ['gmail'],
+  todo:      [],
+};
+
+function TabBar({ activeTab, onTabChange }) {
+  return (
+    <div style={{ display: 'flex', gap: 0, borderBottom: '2px solid ' + COLORS.midGray, marginBottom: 20, overflowX: 'auto' }}>
+      {TABS.map(tab => {
+        const active = activeTab === tab.id;
+        return (
+          <button key={tab.id} onClick={() => onTabChange(tab.id)} style={{
+            padding: '10px 14px',
+            border: 'none',
+            background: active ? tab.color + '12' : 'transparent',
+            color: active ? tab.color : '#aaa',
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 12,
+            fontWeight: active ? 700 : 500,
+            borderBottom: active ? '3px solid ' + tab.color : '3px solid transparent',
+            marginBottom: -2,
+            cursor: 'pointer',
+            transition: 'all 0.15s',
+            whiteSpace: 'nowrap',
+            borderRadius: '8px 8px 0 0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 5,
+          }}>
+            <span style={{ fontSize: 13 }}>{tab.icon}</span>
+            {tab.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function GmailPanel() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ background: '#fff', borderRadius: 14, padding: '16px 20px', border: '1px solid ' + COLORS.midGray }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+          <div style={{ width: 3, height: 16, borderRadius: 2, background: '#ea4335' }} />
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: 1.5 }}>Last Triage</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb', marginLeft: 'auto' }}>{GMAIL_DATA.date} at {GMAIL_DATA.time}</span>
+        </div>
+        <div style={{ display: 'flex', gap: 20, marginBottom: 16, flexWrap: 'wrap' }}>
+          {[
+            { label: 'Scanned', value: GMAIL_DATA.unreadScanned, color: '#ea4335' },
+            { label: 'Actions', value: GMAIL_DATA.actionItems.length, color: COLORS.orange },
+            { label: 'Low Pri', value: GMAIL_DATA.lowPriority, color: '#aaa' },
+          ].map(s => (
+            <div key={s.label} style={{ textAlign: 'center' }}>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 24, color: s.color, lineHeight: 1 }}>{s.value}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+        {GMAIL_DATA.actionItems.map((item, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 0', borderBottom: i < GMAIL_DATA.actionItems.length - 1 ? '1px solid ' + COLORS.lightGray : 'none' }}>
+            <span style={{
+              fontSize: 9, fontWeight: 700, fontFamily: "'Inter', sans-serif",
+              padding: '2px 8px', borderRadius: 8, flexShrink: 0, marginTop: 2,
+              background: item.priority === 'HIGH' ? COLORS.red + '18' : COLORS.orange + '18',
+              color: item.priority === 'HIGH' ? COLORS.red : COLORS.orange,
+            }}>{item.priority}</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: COLORS.dark }}>{item.title}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: '#999', marginTop: 2, lineHeight: 1.4 }}>{item.body}</div>
+              {item.action && <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: COLORS.blue, marginTop: 3 }}>\u27A4 {item.action}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+      {GMAIL_DATA.financialSummary && (
+        <div style={{ background: COLORS.green + '08', border: '1px solid ' + COLORS.green + '25', borderRadius: 12, padding: '12px 16px' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 10, color: COLORS.green, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 6 }}>Financial Activity</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: '#666', lineHeight: 1.5 }}>{GMAIL_DATA.financialSummary}</div>
+        </div>
+      )}
+      <div style={{ background: COLORS.red + '08', border: '1px solid ' + COLORS.red + '20', borderRadius: 12, padding: '12px 16px' }}>
+        <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 10, color: COLORS.red, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 6 }}>Security Flags</div>
+        {GMAIL_DATA.securityFlags.map((flag, i) => (
+          <div key={i} style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: '#888', padding: '3px 0', lineHeight: 1.4 }}>\u26A0\uFE0F {flag}</div>
+        ))}
+      </div>
+      <div style={{ background: COLORS.yellow + '12', border: '1px solid ' + COLORS.yellow + '35', borderRadius: 10, padding: '10px 14px' }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: '#a07a30', fontWeight: 600 }}>
+          Last triage: April 9. Run Gmail agent for a fresh scan.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LifeTracker() {
   const [workstreams, setWorkstreams] = useState(() => {
     const saved = loadState();
     return saved || DEFAULT_WORKSTREAMS;
   });
   const [expandedIds, setExpandedIds] = useState(new Set(['job-search']));
-  const [filter, setFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [allExpanded, setAllExpanded] = useState(false);
+  const [activeTab, setActiveTab] = useState('career');
   const [kanbanJobSearch, setKanbanJobSearch] = useState(false);
 
   useEffect(() => {
@@ -1393,16 +1533,6 @@ function LifeTracker() {
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
-  };
-
-  const toggleAll = () => {
-    if (allExpanded) {
-      setExpandedIds(new Set());
-      setAllExpanded(false);
-    } else {
-      setExpandedIds(new Set(workstreams.map(ws => ws.id)));
-      setAllExpanded(true);
-    }
   };
 
   const cycleStatus = useCallback((wsId, taskId) => {
@@ -1450,55 +1580,46 @@ function LifeTracker() {
   const blockedTasks = workstreams.reduce((sum, ws) => sum + ws.tasks.filter(t => t.status === STATUS.BLOCKED || t.status === STATUS.ON_HOLD).length, 0);
   const overallProgress = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
-  const filtered = useMemo(() => {
-    let result = workstreams;
-    if (filter !== 'all') {
-      result = result.filter(ws => ws.tasks.some(t => matchesFilter(t, filter)));
-    }
-    if (searchQuery) {
-      result = result.filter(ws => ws.tasks.some(t => matchesSearch(t, searchQuery)) || ws.name.toLowerCase().includes(searchQuery.toLowerCase()));
-    }
-    // Auto-sort by urgency: blocked tasks weighted 3x + stale in-progress tasks
-    const scored = result.map((ws, originalIndex) => {
-      const blocked = ws.tasks.filter(t => t.status === STATUS.BLOCKED).length;
-      const stale = ws.tasks.filter(t =>
-        t.status === STATUS.IN_PROGRESS && getDaysSinceModified(t.lastModified) >= 7
-      ).length;
-      return { ws, score: blocked * 3 + stale, originalIndex };
-    });
-    scored.sort((a, b) => b.score - a.score || a.originalIndex - b.originalIndex);
-    return scored.map(s => s.ws);
-  }, [filter, searchQuery, workstreams]);
+  const tabWsIds = TAB_WS[activeTab] || [];
+  const tabWs = workstreams.filter(ws => tabWsIds.includes(ws.id));
+  const tabAgents = TAB_AGENTS[activeTab] || [];
+  const tabDecisions = DECISION_QUEUE.filter(d => tabAgents.includes(d.agent));
 
-  const filters = [
-    { key: 'all', label: 'All', count: workstreams.length },
-    { key: 'active', label: 'In Progress', count: inProgressTasks },
-    { key: 'todo', label: 'Not Started', count: notStartedTasks },
-    { key: 'done', label: 'Complete', count: completedTasks },
-    { key: 'blocked', label: 'Blocked', count: blockedTasks },
-  ];
+  const renderWorkstreams = (wsItems) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {wsItems.map(ws => (
+        <WorkstreamCard
+          key={ws.id}
+          ws={ws}
+          isExpanded={expandedIds.has(ws.id)}
+          onToggle={() => toggle(ws.id)}
+          taskFilter="all"
+          searchQuery=""
+          onStatusChange={cycleStatus}
+          onAddTask={addTask}
+          kanbanMode={ws.id === 'job-search' && kanbanJobSearch}
+          onToggleKanban={ws.id === 'job-search' ? () => setKanbanJobSearch(prev => !prev) : undefined}
+        />
+      ))}
+    </div>
+  );
 
   return (
     <div style={{
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       background: COLORS.white,
       minHeight: '100vh',
-      padding: '32px 24px',
+      padding: '24px 20px',
       maxWidth: 900,
       margin: '0 auto',
     }}>
+
+      {/* Header */}
       <div className="shelzy-header">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10 }}>
           <div>
             <div className="shelzy-brand-mark">Shelzy's Designs</div>
-            <h1 className="header-title" style={{
-              fontFamily: "'Montserrat', sans-serif",
-              fontWeight: 800,
-              fontSize: 26,
-              color: COLORS.dark,
-              margin: 0,
-              letterSpacing: -0.5,
-            }}>
+            <h1 className="header-title" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 26, color: COLORS.dark, margin: 0, letterSpacing: -0.5 }}>
               Life OS
             </h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#999', margin: '4px 0 0' }}>
@@ -1509,177 +1630,94 @@ function LifeTracker() {
             </p>
           </div>
           <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-            <button onClick={() => exportDashboardJSON(workstreams)} style={{
-              padding: '6px 14px',
-              borderRadius: 8,
-              background: '#f5f5f7',
-              color: '#888',
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 10,
-              fontWeight: 600,
-            }}>Export JSON</button>
-            <button onClick={resetData} style={{
-              padding: '6px 14px',
-              borderRadius: 8,
-              background: '#f5f5f7',
-              color: '#aaa',
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 10,
-              fontWeight: 600,
-            }}>Reset</button>
+            <button onClick={() => exportDashboardJSON(workstreams)} style={{ padding: '6px 14px', borderRadius: 8, background: '#f5f5f7', color: '#888', fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600 }}>Export</button>
+            <button onClick={resetData} style={{ padding: '6px 14px', borderRadius: 8, background: '#f5f5f7', color: '#aaa', fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600 }}>Reset</button>
           </div>
         </div>
       </div>
 
-      <div className="mini-stats-row" style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
-        <MiniStat label="Total Tasks" value={totalTasks} color={COLORS.dark} onClick={() => { setFilter('all'); }} active={filter === 'all'} />
-        <MiniStat label="Complete" value={completedTasks} color={COLORS.green} onClick={() => { setFilter('done'); setExpandedIds(new Set(workstreams.map(ws => ws.id))); setAllExpanded(true); }} active={filter === 'done'} />
-        <MiniStat label="In Progress" value={inProgressTasks} color={COLORS.blue} onClick={() => { setFilter('active'); setExpandedIds(new Set(workstreams.map(ws => ws.id))); setAllExpanded(true); }} active={filter === 'active'} />
-        <MiniStat label="Not Started" value={notStartedTasks} color={COLORS.orange} onClick={() => { setFilter('todo'); setExpandedIds(new Set(workstreams.map(ws => ws.id))); setAllExpanded(true); }} active={filter === 'todo'} />
-        <MiniStat label="Blocked" value={blockedTasks} color={COLORS.red} onClick={() => { setFilter('blocked'); setExpandedIds(new Set(workstreams.map(ws => ws.id))); setAllExpanded(true); }} active={filter === 'blocked'} />
-      </div>
-
-      <div style={{
-        background: '#fff',
-        borderRadius: 14,
-        padding: '18px 20px',
-        marginBottom: 16,
-        border: '1px solid ' + COLORS.midGray,
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ width: 3, height: 16, borderRadius: 2, background: '#c4a07a' }} />
-            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: COLORS.dark }}>Overall Progress</span>
-          </div>
-          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: COLORS.pink }}>{overallProgress}%</span>
-        </div>
-        <div style={{ width: '100%', background: COLORS.midGray, borderRadius: 7, overflow: 'hidden', height: 10 }}>
-          <div style={{
-            width: `${Math.min(overallProgress, 100)}%`,
-            height: '100%',
-            background: 'linear-gradient(90deg, #c27089, #c4956e, #5b8fa8)',
-            borderRadius: 7,
-            transition: 'width 0.6s ease',
-          }} />
-        </div>
-        <div style={{ display: 'flex', gap: 16, marginTop: 10, flexWrap: 'wrap' }}>
-          {workstreams.map(ws => (
-            <div key={ws.id} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-              <span style={{ fontSize: 14 }}>{ws.icon}</span>
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#888' }}>{calcProgress(ws.tasks)}%</span>
+      {/* Mini stats */}
+      <div className="mini-stats-row" style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+        <MiniStat label="Total" value={totalTasks} color={COLORS.dark} />
+        <MiniStat label="Done" value={completedTasks} color={COLORS.green} />
+        <MiniStat label="Active" value={inProgressTasks} color={COLORS.blue} />
+        <MiniStat label="Queued" value={notStartedTasks} color={COLORS.orange} />
+        <MiniStat label="Blocked" value={blockedTasks} color={COLORS.red} />
+        <div style={{ flex: 1, minWidth: 140, display: 'flex', alignItems: 'center' }}>
+          <div style={{ width: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5 }}>Overall</span>
+              <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 13, color: COLORS.pink }}>{overallProgress}%</span>
             </div>
-          ))}
+            <ProgressBar progress={overallProgress} color={COLORS.pink} height={7} />
+          </div>
         </div>
       </div>
 
-      <AgentStatusGrid />
-      <DecisionQueue />
+      {/* Critical deadlines -- always visible */}
       <CountdownCards />
-      <EtsyRevenueTicker />
-      <AffiliateSitesPanel />
-      <TomorrowPriorities />
-      <TopActions workstreams={workstreams} />
-      <NeedsAttention workstreams={workstreams} />
-      <RecentlyCompleted workstreams={workstreams} />
 
-      <div style={{ marginBottom: 16 }}>
-        <input
-          className="search-input"
-          type="text"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          placeholder="Search tasks across all workstreams..."
-          style={{
-            width: '100%',
-            padding: '10px 16px',
-            borderRadius: 12,
-            border: '1px solid ' + COLORS.midGray,
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 13,
-            background: '#fff',
-            transition: 'border-color 0.2s',
-          }}
-          onFocus={e => e.target.style.borderColor = COLORS.blue}
-          onBlur={e => e.target.style.borderColor = COLORS.midGray}
-        />
+      {/* Agent status -- always visible */}
+      <AgentStatusGrid />
+
+      {/* Tab navigation */}
+      <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+
+      {/* Tab content */}
+      <div style={{ paddingTop: 4 }}>
+
+        {activeTab === 'career' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {tabDecisions.length > 0 && <DecisionQueue items={tabDecisions} />}
+            <TomorrowPriorities />
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+        {activeTab === 'etsy' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <EtsyRevenueTicker />
+            {tabDecisions.length > 0 && <DecisionQueue items={tabDecisions} />}
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+        {activeTab === 'affiliate' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <AffiliateSitesPanel />
+            {tabDecisions.length > 0 && <DecisionQueue items={tabDecisions} />}
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+        {activeTab === 'finance' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {tabDecisions.length > 0 && <DecisionQueue items={tabDecisions} />}
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+        {activeTab === 'fertility' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+        {activeTab === 'gmail' && <GmailPanel />}
+
+        {activeTab === 'todo' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <TopActions workstreams={tabWs} />
+            <NeedsAttention workstreams={tabWs} />
+            <RecentlyCompleted workstreams={workstreams} />
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
       </div>
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
-        {filters.map(f => (
-          <button
-            key={f.key}
-            className="filter-btn"
-            onClick={() => {
-              setFilter(f.key);
-              if (f.key !== 'all') {
-                setExpandedIds(new Set(workstreams.map(ws => ws.id)));
-                setAllExpanded(true);
-              }
-            }}
-            style={{
-              padding: '7px 16px',
-              borderRadius: 20,
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 12,
-              fontWeight: 600,
-              background: filter === f.key ? COLORS.dark : COLORS.lightGray,
-              color: filter === f.key ? '#fff' : '#888',
-              transition: 'all 0.2s',
-            }}
-          >
-            {f.label} ({f.count})
-          </button>
-        ))}
-        <div style={{ flex: 1 }} />
-        <button
-          onClick={toggleAll}
-          style={{
-            padding: '7px 16px',
-            borderRadius: 20,
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 12,
-            fontWeight: 600,
-            background: COLORS.lightGray,
-            color: '#888',
-            transition: 'all 0.2s',
-          }}
-        >
-          {allExpanded ? 'Collapse All' : 'Expand All'}
-        </button>
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {filtered.map(ws => (
-          <React.Fragment key={ws.id}>
-            {ws.id === 'shelzys' && <EtsyRevenueTicker />}
-            <WorkstreamCard
-              ws={ws}
-              isExpanded={expandedIds.has(ws.id)}
-              onToggle={() => toggle(ws.id)}
-              taskFilter={filter}
-              searchQuery={searchQuery}
-              onStatusChange={cycleStatus}
-              onAddTask={addTask}
-              kanbanMode={ws.id === 'job-search' && kanbanJobSearch}
-              onToggleKanban={ws.id === 'job-search' ? () => setKanbanJobSearch(prev => !prev) : undefined}
-            />
-          </React.Fragment>
-        ))}
-      </div>
-
-      <div style={{
-        textAlign: 'center',
-        padding: '32px 0 12px',
-        fontFamily: "'Inter', sans-serif",
-      }}>
-        <div style={{
-          display: 'inline-block',
-          background: '#eee',
-          height: 1,
-          width: 60,
-          borderRadius: 1,
-          marginBottom: 12,
-        }} />
+      <div style={{ textAlign: 'center', padding: '32px 0 12px' }}>
+        <div style={{ display: 'inline-block', background: '#eee', height: 1, width: 60, borderRadius: 1, marginBottom: 12 }} />
         <div style={{ fontSize: 9, fontWeight: 600, fontFamily: "'Montserrat', sans-serif", letterSpacing: 2, textTransform: 'uppercase', color: '#ccc' }}>
           Shelzy's Designs
         </div>
