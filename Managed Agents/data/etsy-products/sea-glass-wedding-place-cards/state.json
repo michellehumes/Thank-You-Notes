@@ -1,0 +1,126 @@
+{
+  "listing_id": "4444585325",
+  "listing_title_live": "Wedding Place Cards Personalized | Sea Glass Escort Cards | Beach Coastal Wedding Seating Cards | Custom Name Cards | Bridal Shower Decor",
+  "listing_status": "active",
+  "focus_mode": true,
+  "focus_mode_since": "2026-04-08",
+  "current_phase": "Phase 2/3 — Bulk pricing live (drafts) + Traffic scaling ready",
+  "baseline_30d": {
+    "captured": "2026-04-08",
+    "visits": 248,
+    "favorites": 23,
+    "sales": 59,
+    "revenue_usd": 280.25,
+    "renewals": 2,
+    "cvr_percent": 23.8,
+    "diagnosis": "traffic-constrained winner"
+  },
+  "deliverables_ready": {
+    "title": "138/140 char front-loaded -- title.txt -- DEPLOYED LIVE 2026-04-09",
+    "tags": "13 refined tags -- tags.txt -- DEPLOYED LIVE 2026-04-09 (trimmed to ≤20 chars per Etsy limit)",
+    "description": "existing 23.8% CVR copy -- bulk-order section added 2026-04-09 -- DO NOT TOUCH CORE",
+    "pricing": "tier ladder ready -- pricing.md",
+    "image_prompts": "10-image system ready -- image_prompts.md",
+    "audit": "gap analysis -- audit.md",
+    "wedding_planner_outreach": "full system built -- wedding_planner_outreach.md -- 3 templates + week 1 target framework"
+  },
+  "completed_actions": [
+    {"action": "Title deployed -- 138 char front-loaded, live on 4444585325", "date": "2026-04-09"},
+    {"action": "Tags updated -- 13/13 slots, replaced weak tags with bulk/escort terms", "date": "2026-04-09"},
+    {"action": "tags.txt corrected -- 3 over-20-char tags trimmed to match live deployed versions", "date": "2026-04-09"},
+    {"action": "Description updated -- bulk-order section added to HOW MANY DO I NEED", "date": "2026-04-09"},
+    {"action": "Bulk listing drafts created on Etsy", "date": "2026-04-09", "draft_ids": {"50pack": "4485621407", "100pack": "4485628192", "150pack": "4485622637"}},
+    {"action": "Wedding planner outreach system built -- wedding_planner_outreach.md + planner_outreach_log.csv", "date": "2026-04-09"},
+    {"action": "All 3 bulk listings published live -- 50-pack (4485621407), 100-pack (4485628192), 150-pack (4485622637)", "date": "2026-04-09", "note": "1 placeholder image each (bulk_quantity.png), Shelzy's Calculated shipping, weight/dims set per pack size"}
+  ],
+  "pending_actions": [
+    {
+      "priority": 1,
+      "action": "Replace placeholder image on all 3 bulk listings with real product photography",
+      "blocker": "requires real photos -- currently using bulk_quantity.png placeholder",
+      "listing_ids": {"50pack": "4485621407", "100pack": "4485628192", "150pack": "4485622637"},
+      "note": "Use image_prompts.md to generate or shoot real bulk pack photos. All 3 listings are LIVE."
+    },
+    {
+      "priority": 2,
+      "action": "Monitor sea glass ads ROAS -- currently 1.75 (below shop avg 2.43). Consider switching strategy from 'Greater visibility' to 'Efficient spending' if ROAS doesn't improve after bulk listings go live",
+      "note": "Ads verified 2026-04-09: listing 4444585325 IS being advertised. Spend $127.90/30d, 216 clicks, 2 orders, $224.20 revenue. Budget cap $500/day, actual avg ~$23/day. Strategy: Greater visibility."
+    },
+    {
+      "priority": 3,
+      "action": "Review outreach first batch -- pull delivered orders from last 30 days, draft first 5 messages for Michelle approval",
+      "blocker": "requires Claude in Chrome -- Etsy Orders dashboard",
+      "target": "grow reviews from 8 to 30+ in 90 days",
+      "log": "review_outreach_log.json"
+    },
+    {
+      "priority": 4,
+      "action": "Wedding planner outreach -- source 10 Week 1 contacts via Instagram hashtags + The Knot Pro",
+      "blocker": "requires Claude in Chrome -- Instagram + The Knot Pro browsing",
+      "note": "Targets, handles, contact methods ready in wedding_planner_outreach.md. DO NOT send without Michelle approval."
+    },
+    {
+      "priority": 5,
+      "action": "Pinterest traffic -- 5-10 pins from listing images linking to 4444585325",
+      "blocker": "requires Claude in Chrome -- Pinterest account access",
+      "note": "Phase 3 traffic lever. Low lift if images already exist."
+    }
+  ],
+  "latest_metrics": {
+    "captured": "2026-04-12T11:45:00-06:00",
+    "shop_total_sales": 270,
+    "shop_active_listings": 78,
+    "apr_month_to_date": {
+      "period": "Apr 1-12",
+      "shop_visits": 850,
+      "shop_orders": 21,
+      "shop_cvr": "2.5%",
+      "shop_revenue_usd": 628.95,
+      "avg_order_value": 29.95,
+      "ads_visits": 493,
+      "ads_pct_of_traffic": "58%",
+      "abandoned_carts": 21,
+      "abandoned_cart_value": 1363,
+      "item_favorites": 67,
+      "new_reviews": 3,
+      "repeat_buyers": 3,
+      "top_listings_by_revenue": [
+        {"title": "Bridesmaid/Bachelorette Favor", "visits": 115, "orders": 5, "revenue": 175},
+        {"title": "Teacher Planner Spreadsheet 2026", "visits": 140, "orders": 9, "revenue": 92.31},
+        {"title": "ADHD Planner Google Sheets 2026", "visits": 222, "orders": 3, "revenue": 24.37}
+      ]
+    },
+    "listing_4444585325_apr_mtd": {
+      "period": "Apr 1-12",
+      "visits": 70,
+      "items_sold": 0,
+      "revenue_usd": 0.00,
+      "note": "0 orders showing in stats -- likely attribution lag for custom/made-to-order items or orders attributed to shop not listing"
+    },
+    "note": "Next scheduled stats pull Wed 2026-04-15."
+  },
+  "holds": [
+    "Do NOT replace hero thumbnail while CVR >= 20%",
+    "Do NOT touch description core copy while CVR >= 20%"
+  ],
+  "phase_status": {
+    "phase_1": "COMPLETE -- title + tags + bulk messaging deployed live",
+    "phase_2": "COMPLETE -- all 3 bulk listings live (50/100/150-pack) with placeholder image + Shelzy's shipping",
+    "phase_3": "READY -- Etsy Ads running ($500/mo), Pinterest + planner outreach system built, pending Chrome execution",
+    "phase_4": "PACKAGE READY -- 4 keyword variant listing packages built 2026-04-10, pending Etsy draft creation via Chrome + Michelle approval to publish"
+  },
+  "phase_4_variants": [
+    {"name": "Sea Glass Escort Cards", "folder": "sea-glass-escort-cards", "keyword": "escort cards wedding", "status": "package_ready"},
+    {"name": "Sea Glass Wedding Favor", "folder": "sea-glass-wedding-favor", "keyword": "sea glass wedding favor", "status": "package_ready"},
+    {"name": "Coastal Wedding Place Cards", "folder": "coastal-wedding-place-cards", "keyword": "coastal wedding place cards", "status": "package_ready"},
+    {"name": "Beach Wedding Place Cards", "folder": "beach-wedding-place-cards", "keyword": "beach wedding place cards", "status": "package_ready"}
+  ],
+  "next_stats_pull": "Claude in Chrome -- weekly on Wednesday (next: 2026-04-15)",
+  "shop_sale_note": "Shop-wide 15% sale active Apr 6-14. Check after Apr 14 for clean per-unit pricing baseline.",
+  "post_sale_plan": "post_sale_transition_plan.md -- execute on 2026-04-14/15 Chrome session",
+  "review_watch": [
+    {"customer": "Courtney Beaudette", "wedding": "2026-04-15", "status": "committed", "note": "Check for review on/after Apr 15"},
+    {"customer": "Courtney Wise", "wedding": "2026-04-18", "status": "outreach_by_michelle", "note": "Check for review on/after Apr 18"}
+  ],
+  "last_updated": "2026-04-11T08:10:00-06:00"
+}

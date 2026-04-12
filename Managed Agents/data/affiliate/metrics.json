@@ -1,0 +1,91 @@
+{
+  "last_updated": "2026-04-12",
+  "amazon_associates": {
+    "account": "michelle.e.humes@gmail.com",
+    "store_id": "spinshoespe0a-20",
+    "confirmed_active": true,
+    "confirmed_date": "2026-04-09",
+    "tracking_ids": {
+      "toolshedtested-20": "confirmed active",
+      "customgiftfinder-20": "confirmed active",
+      "cleverhomestorage-20": "confirmed active",
+      "shelzysbeauty-20": "confirmed active",
+      "shelzysdesigns-20": "confirmed active",
+      "neatnesthome-20": "confirmed active"
+    },
+    "earnings_apr_mtd": "$3.90",
+    "clicks_apr_mtd": 616,
+    "items_shipped_apr_mtd": 3,
+    "items_ordered_apr_mtd": 4,
+    "conversion_apr_mtd": "0.65%",
+    "earnings_last_7d": "$3.90",
+    "earnings_total": "$3.90",
+    "last_dashboard_check": "2026-04-12",
+    "per_site_breakdown": "unknown -- Tracking ID dropdown did not filter via URL param. Combined total only.",
+    "diagnosis": "Site appears in 3,880 impressions / 400 queries over 3 months but avg position 45.8 (page 4-5). Zero clicks converting to affiliate purchases. Tag is valid. Problem is ranking -- not enough domain authority to reach page 1. Scale mode: producing more high-intent content to increase surface area.",
+    "gsc_3month_summary": {
+      "total_clicks": 10,
+      "total_impressions": 3880,
+      "avg_ctr": "0.3%",
+      "avg_position": 45.8,
+      "pages_with_impressions": 72,
+      "top_opportunity": "makita-vs-milwaukee -- 1407 impressions, 0 clicks. Get to page 1 and drive real traffic.",
+      "other_high_impression_pages": [
+        "best-impact-driver-vs-drill-difference: 356 impressions",
+        "best-oscillating-multi-tools-2025: 337 impressions",
+        "best-leaf-blower: 157 impressions (top query)"
+      ],
+      "checked_date": "2026-04-10"
+    }
+  },
+  "affiliate_tag": "toolshedtested-20",
+  "sites": {
+    "toolshedtested.com": {
+      "tracking_id": "toolshedtested-20",
+      "total_posts": 201,
+      "affiliate_posts_total": 9,
+      "affiliate_posts_deployed": 9,
+      "affiliate_clicks_total": 0,
+      "affiliate_revenue_total": "$0.00",
+      "gsc_indexed": 73,
+      "gsc_total_impressions_30d": null,
+      "gsc_total_clicks_30d": null,
+      "notes": "Tag confirmed valid 2026-04-09. 9 agent-produced articles deployed as of 2026-04-12. No clicks yet -- first check 2026-05-10."
+    },
+    "cleverhomestorage.com": {
+      "tracking_id": "cleverhomestorage-20",
+      "total_posts": 41,
+      "affiliate_posts_total": 0,
+      "notes": "On hold. Tag confirmed active. Focus is toolshedtested.com."
+    },
+    "customgiftfinder.com": {
+      "tracking_id": "customgiftfinder-20",
+      "total_posts": 40,
+      "affiliate_posts_total": 0,
+      "notes": "On hold. Tag confirmed active. Seasonal -- queue Q4 gift guides in August."
+    },
+    "shelzysbeauty.com": {
+      "tracking_id": "shelzysbeauty-20",
+      "total_posts": 29,
+      "affiliate_posts_total": 0,
+      "notes": "On hold. Tag confirmed active. Deprioritized until TST shows traction."
+    }
+  },
+  "articles_by_date": {
+    "2026-04-09": ["best-laser-levels-2026", "best-belt-sanders-2026", "best-band-saws-2026"],
+    "2026-04-10": ["best-torque-wrenches-2026", "best-stud-finders-2026", "best-reciprocating-saws-2026", "best-circular-saw-under-100-2026"],
+    "2026-04-12": ["best-brad-nailer-2026", "best-paint-sprayer-2026"]
+  },
+  "check_in_date": "2026-05-10",
+  "kill_criteria": "Pause any article topic cluster showing zero impressions in GSC at 30 days. Pause site if all test articles show no clicks at 45 days.",
+  "total_articles_deployed": 9,
+  "mode": "SCALE",
+  "scale_mode_daily_target": "2 articles/day",
+  "next_keywords": [
+    {"keyword": "best finish nailer 2026", "intent_score": 8, "est_aov": "$150-300"},
+    {"keyword": "best framing nailer 2026", "intent_score": 8, "est_aov": "$200-400"},
+    {"keyword": "best air compressor for painting 2026", "intent_score": 7, "est_aov": "$100-300"},
+    {"keyword": "best cordless drill under 50 2026", "intent_score": 7, "est_aov": "$40-80"},
+    {"keyword": "best router table 2026", "intent_score": 7, "est_aov": "$200-500"}
+  ]
+}
