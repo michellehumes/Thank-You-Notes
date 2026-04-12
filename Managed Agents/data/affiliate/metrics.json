@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-12",
+  "last_updated": "2026-04-13",
   "amazon_associates": {
     "account": "michelle.e.humes@gmail.com",
     "store_id": "spinshoespe0a-20",
@@ -42,9 +42,9 @@
   "sites": {
     "toolshedtested.com": {
       "tracking_id": "toolshedtested-20",
-      "total_posts": 201,
-      "affiliate_posts_total": 9,
-      "affiliate_posts_deployed": 9,
+      "total_posts": 11,
+      "affiliate_posts_total": 11,
+      "affiliate_posts_deployed": 11,
       "affiliate_clicks_total": 0,
       "affiliate_revenue_total": "$0.00",
       "gsc_indexed": 73,
@@ -72,20 +72,56 @@
     }
   },
   "articles_by_date": {
-    "2026-04-09": ["best-laser-levels-2026", "best-belt-sanders-2026", "best-band-saws-2026"],
-    "2026-04-10": ["best-torque-wrenches-2026", "best-stud-finders-2026", "best-reciprocating-saws-2026", "best-circular-saw-under-100-2026"],
-    "2026-04-12": ["best-brad-nailer-2026", "best-paint-sprayer-2026"]
+    "2026-04-09": [
+      "best-laser-levels-2026",
+      "best-belt-sanders-2026",
+      "best-band-saws-2026"
+    ],
+    "2026-04-10": [
+      "best-torque-wrenches-2026",
+      "best-stud-finders-2026",
+      "best-reciprocating-saws-2026",
+      "best-circular-saw-under-100-2026"
+    ],
+    "2026-04-12": [
+      "best-brad-nailer-2026",
+      "best-paint-sprayer-2026"
+    ],
+    "2026-04-13": [
+      "best-finish-nailer-2026",
+      "best-framing-nailer-2026"
+    ]
   },
   "check_in_date": "2026-05-10",
   "kill_criteria": "Pause any article topic cluster showing zero impressions in GSC at 30 days. Pause site if all test articles show no clicks at 45 days.",
-  "total_articles_deployed": 9,
+  "total_articles_deployed": 11,
   "mode": "SCALE",
   "scale_mode_daily_target": "2 articles/day",
   "next_keywords": [
-    {"keyword": "best finish nailer 2026", "intent_score": 8, "est_aov": "$150-300"},
-    {"keyword": "best framing nailer 2026", "intent_score": 8, "est_aov": "$200-400"},
-    {"keyword": "best air compressor for painting 2026", "intent_score": 7, "est_aov": "$100-300"},
-    {"keyword": "best cordless drill under 50 2026", "intent_score": 7, "est_aov": "$40-80"},
-    {"keyword": "best router table 2026", "intent_score": 7, "est_aov": "$200-500"}
+    {
+      "keyword": "best air compressor for painting 2026",
+      "intent_score": 7,
+      "est_aov": "$100-300"
+    },
+    {
+      "keyword": "best cordless drill under 50 2026",
+      "intent_score": 7,
+      "est_aov": "$40-80"
+    },
+    {
+      "keyword": "best router table 2026",
+      "intent_score": 7,
+      "est_aov": "$200-500"
+    },
+    {
+      "keyword": "best miter saw 2026",
+      "intent_score": 9,
+      "est_aov": "$200-600"
+    },
+    {
+      "keyword": "best table saw 2026",
+      "intent_score": 9,
+      "est_aov": "$300-800"
+    }
   ]
 }

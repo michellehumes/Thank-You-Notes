@@ -1,0 +1,276 @@
+{
+  "last_run": "2026-04-13",
+  "mode": "SCALE",
+  "status": "ACTIVE",
+  "primary_site": "toolshedtested.com",
+  "affiliate_tag": "toolshedtested-20",
+  "articles_produced": [
+    {
+      "title": "Best Laser Levels 2026: 6 Models Tested for Accuracy and Range",
+      "slug": "best-laser-levels-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best laser level 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-laser-levels-2026.mdx",
+      "date": "2026-04-09",
+      "deploy_date": "2026-04-09",
+      "live_url": "https://toolshedtested.com/best-laser-levels-2026",
+      "products_count": 6,
+      "deployed": true
+    },
+    {
+      "title": "Best Belt Sanders 2026: 5 Models Tested for Wood, Metal, and Paint Removal",
+      "slug": "best-belt-sanders-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best belt sander 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-belt-sanders-2026.mdx",
+      "date": "2026-04-09",
+      "deploy_date": "2026-04-09",
+      "live_url": "https://toolshedtested.com/best-belt-sanders-2026",
+      "products_count": 5,
+      "deployed": true
+    },
+    {
+      "title": "Best Band Saws 2026: 5 Models Tested for Wood, Metal, and Portability",
+      "slug": "best-band-saws-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best band saw 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-band-saws-2026.mdx",
+      "date": "2026-04-09",
+      "deploy_date": "2026-04-10",
+      "live_url": "https://toolshedtested.com/best-band-saws-2026",
+      "products_count": 5,
+      "deployed": true
+    },
+    {
+      "title": "Best Torque Wrenches 2026: 5 Models Tested for Accuracy and Durability",
+      "slug": "best-torque-wrenches-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best torque wrench 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-torque-wrenches-2026.mdx",
+      "date": "2026-04-10",
+      "deploy_date": "2026-04-10",
+      "live_url": "https://toolshedtested.com/best-torque-wrenches-2026",
+      "products_count": 5,
+      "deployed": true
+    },
+    {
+      "title": "Best Stud Finders 2026: 5 Models Tested",
+      "slug": "best-stud-finders-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best stud finder 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-stud-finders-2026.mdx",
+      "date": "2026-04-10",
+      "deploy_date": "2026-04-10",
+      "live_url": "https://toolshedtested.com/best-stud-finders-2026",
+      "products_count": 5,
+      "deployed": true
+    },
+    {
+      "title": "Best Reciprocating Saws 2026: 5 Models Tested for Demo, Pruning, and Remodeling",
+      "slug": "best-reciprocating-saws-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best reciprocating saw 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-reciprocating-saw-2026.mdx",
+      "date": "2026-04-10",
+      "deploy_date": "2026-04-10",
+      "live_url": "https://toolshedtested.com/best-reciprocating-saws-2026",
+      "products_count": 5,
+      "deployed": true,
+      "note": "Deployed as best-reciprocating-saws-2026 (existing repo article matched; agent staged version consolidated)"
+    },
+    {
+      "title": "Best Circular Saws Under $100 in 2026: 5 Models Tested",
+      "slug": "best-circular-saw-under-100-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best circular saw under 100 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-circular-saw-under-100-2026.mdx",
+      "date": "2026-04-10",
+      "deploy_date": "2026-04-10",
+      "live_url": "https://toolshedtested.com/best-circular-saw-under-100-2026",
+      "products_count": 5,
+      "deployed": true
+    },
+    {
+      "title": "Best Brad Nailers 2026: 5 Models Tested for Trim, Cabinets, and Finish Work",
+      "slug": "best-brad-nailer-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best brad nailer 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-brad-nailer-2026.mdx",
+      "date": "2026-04-12",
+      "deploy_date": "2026-04-12",
+      "live_url": "https://toolshedtested.com/best-brad-nailer-2026",
+      "products_count": 5,
+      "deployed": true
+    },
+    {
+      "title": "Best Paint Sprayers 2026: 5 Models Tested for Interior, Exterior, and Furniture",
+      "slug": "best-paint-sprayer-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best paint sprayer 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-paint-sprayer-2026.mdx",
+      "date": "2026-04-12",
+      "deploy_date": "2026-04-12",
+      "live_url": "https://toolshedtested.com/best-paint-sprayer-2026",
+      "products_count": 5,
+      "deployed": true
+    },
+    {
+      "title": "Best Finish Nailers 2026: 5 Models Tested for Trim, Door Casing, and Crown Molding",
+      "slug": "best-finish-nailer-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best finish nailer 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-finish-nailer-2026.mdx",
+      "date": "2026-04-13",
+      "deploy_date": "2026-04-13",
+      "live_url": "https://toolshedtested.com/best-finish-nailer-2026",
+      "products_count": 5,
+      "deployed": true
+    },
+    {
+      "title": "Best Framing Nailers 2026: 5 Models Tested for Wall Framing, Decks, and Sheathing",
+      "slug": "best-framing-nailer-2026",
+      "site": "toolshedtested.com",
+      "keyword": "best framing nailer 2026",
+      "intent": "buyer",
+      "status": "deployed",
+      "file": "/data/affiliate-posts/toolshedtested/best-framing-nailer-2026.mdx",
+      "date": "2026-04-13",
+      "deploy_date": "2026-04-13",
+      "live_url": "https://toolshedtested.com/best-framing-nailer-2026",
+      "products_count": 5,
+      "deployed": true
+    }
+  ],
+  "keyword_pipeline": [
+    {
+      "keyword": "best laser level 2026",
+      "site": "toolshedtested.com",
+      "intent_score": 9,
+      "est_cpc": "$4-8",
+      "est_aov": "$60-330",
+      "article_status": "deployed"
+    },
+    {
+      "keyword": "best belt sander 2026",
+      "site": "toolshedtested.com",
+      "intent_score": 8,
+      "est_cpc": "$3-6",
+      "est_aov": "$50-220",
+      "article_status": "deployed"
+    },
+    {
+      "keyword": "best band saw 2026",
+      "site": "toolshedtested.com",
+      "intent_score": 8,
+      "est_cpc": "$3-7",
+      "est_aov": "$150-600",
+      "article_status": "deployed"
+    },
+    {
+      "keyword": "best torque wrench 2026",
+      "site": "toolshedtested.com",
+      "intent_score": 8,
+      "est_cpc": "$3-6",
+      "est_aov": "$30-150",
+      "article_status": "deployed"
+    },
+    {
+      "keyword": "best stud finder 2026",
+      "site": "toolshedtested.com",
+      "intent_score": 7,
+      "est_cpc": "$2-4",
+      "est_aov": "$20-80",
+      "article_status": "deployed"
+    },
+    {
+      "keyword": "best reciprocating saw 2026",
+      "site": "toolshedtested.com",
+      "intent_score": 8,
+      "est_cpc": "$3-6",
+      "est_aov": "$120-300",
+      "article_status": "deployed"
+    },
+    {
+      "keyword": "best circular saw under 100 2026",
+      "site": "toolshedtested.com",
+      "intent_score": 8,
+      "est_cpc": "$3-5",
+      "est_aov": "$50-100",
+      "article_status": "deployed"
+    },
+    {
+      "keyword": "best brad nailer 2026",
+      "site": "toolshedtested.com",
+      "intent_score": 8,
+      "est_cpc": "$3-6",
+      "est_aov": "$100-200",
+      "article_status": "deployed"
+    },
+    {
+      "keyword": "best paint sprayer 2026",
+      "site": "toolshedtested.com",
+      "intent_score": 8,
+      "est_cpc": "$4-8",
+      "est_aov": "$100-400",
+      "article_status": "deployed"
+    }
+  ],
+  "seo_sprint_2026_04_10": {
+    "completed": true,
+    "actions": [
+      "Updated modified dates on 8 high-impression pages",
+      "Added 4 internal links to makita-vs-milwaukee (top impression page, 1407 impressions, 0 clicks)",
+      "Improved excerpt on best-angle-grinder-under-50-2026 to name winner",
+      "Deployed all changes to Vercel production -- toolshedtested.com"
+    ],
+    "blocked": [
+      "GSC sitemap submission -- michelle.e.humes@gmail.com does not have access to TST GSC property",
+      "URL indexing requests -- same access blocker"
+    ]
+  },
+  "scale_kill_decisions": [],
+  "next_keyword_candidates": [
+    {
+      "keyword": "best air compressor for painting 2026",
+      "intent_score": 7,
+      "est_aov": "$100-300",
+      "status": "queued"
+    },
+    {
+      "keyword": "best cordless drill under 50 2026",
+      "intent_score": 7,
+      "est_aov": "$40-80",
+      "status": "queued"
+    },
+    {
+      "keyword": "best router table 2026",
+      "intent_score": 7,
+      "est_aov": "$200-500",
+      "status": "queued"
+    }
+  ],
+  "next_action": "Continue scale mode: 2 articles/day. Next: best-air-compressor-for-painting-2026, best-cordless-drill-under-50-2026. GSC check gate: 2026-05-10.",
+  "gsc_check_date": "2026-05-10",
+  "articles_total_deployed": 11,
+  "scale_mode_start": "2026-04-12"
+}
