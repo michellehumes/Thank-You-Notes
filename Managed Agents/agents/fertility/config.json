@@ -1,0 +1,8 @@
+{
+  "oura_api": {
+    "token": "2RPVTEBM3OCDBUBE3IB2FAOXL7WI7S4E",
+    "label": "Fertility Agent",
+    "created": "2026-04-10",
+    "base_url": "https://api.ouraring.com/v2"
+  }
+}
