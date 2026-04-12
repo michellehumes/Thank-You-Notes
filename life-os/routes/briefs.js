@@ -25,9 +25,9 @@ router.get('/today', (req, res) => {
 });
 
 // POST /api/briefs/generate
-router.post('/generate', (req, res) => {
+router.post('/generate', async (req, res) => {
   try {
-    const brief = executiveBriefService.generateBrief();
+    const brief = await executiveBriefService.generateBrief();
     res.json(brief);
   } catch (err) {
     res.status(500).json({ status: 'error', message: err.message });

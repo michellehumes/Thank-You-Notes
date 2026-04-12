@@ -9,6 +9,7 @@ const anomalyService = require('./anomalyService');
 const jobService = require('./jobService');
 const scoringService = require('./scoringService');
 const todoAutomation = require('./todoAutomationService');
+const aiService = require('./aiService');
 
 const log = createServiceLogger('brief');
 
@@ -16,7 +17,7 @@ function tryRequire(mod) {
   try { return require(mod); } catch { return null; }
 }
 
-function generateBrief() {
+async function generateBrief() {
   const today = new Date().toISOString().split('T')[0];
   log.info(`Generating executive brief for ${today}`);
 
@@ -148,11 +149,20 @@ function generateBrief() {
   // Top 3 actions from auto-todos
   const top3Actions = JSON.stringify(actionItems.slice(0, 3));
 
-  // Natural language brief
-  const naturalLanguage = `Executive Score: ${score.overall}/100 (${statusLabel}). ` +
+  // Natural language brief — AI-generated with template fallback
+  const templateNarrative = `Executive Score: ${score.overall}/100 (${statusLabel}). ` +
     `Financial: ${financeSection.highlights[0]}. ` +
     `Career: ${careerSection.highlights[0]}. ` +
     `${riskFlags.length > 0 ? 'Risks: ' + riskFlags.map(r => r.text).join(', ') + '.' : 'No active risks.'}`;
+
+  const aiNarrative = await aiService.generateBriefNarrative({
+    score,
+    sections: { finance: financeSection, career: careerSection, health: healthSection, messages: msgSection },
+    riskFlags,
+    actionItems,
+  });
+
+  const naturalLanguage = aiNarrative ?? templateNarrative;
 
   // Persist brief
   try {

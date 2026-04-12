@@ -43,11 +43,11 @@ function startScheduler() {
   });
 
   // ── 7:00 AM — Generate daily executive brief ──────────────
-  cron.schedule('0 7 * * *', () => {
+  cron.schedule('0 7 * * *', async () => {
     log.info('Generating morning executive brief...');
     try {
       const briefService = require('../services/executiveBriefService');
-      const brief = briefService.generateBrief();
+      const brief = await briefService.generateBrief();
       log.info(`Executive brief generated: score=${brief.executive_score}, grade=${brief.grade}`);
     } catch (err) {
       log.error(`Brief generation failed: ${err.message}`);
