@@ -114,6 +114,14 @@ const ETSY_STATS = {
   adsLaunched: true,
   saleEnds: '2026-04-14',
   lastUpdated: '2026-04-12',
+  ytd: { revenue: 4525.64, orders: 108, visits: 5563, cvr: 1.9 },
+  monthlyHistory: [
+    { month: 'Jan', revenue: null, orders: null, note: 'est. ~$970 (Jan+Feb=$1,944)' },
+    { month: 'Feb', revenue: null, orders: null, note: 'est. ~$974 (Jan+Feb=$1,944)' },
+    { month: 'Mar', revenue: 1952.24, orders: 42, visits: 2184, cvr: 1.9 },
+    { month: 'Apr', revenue: 628.95, orders: 21, visits: 850, cvr: 2.5, partial: true },
+  ],
+  janFebCombined: { revenue: 1944.45, orders: 45 },
 };
 
 // Affiliate site performance -- updated by Affiliate CEO agent
@@ -991,7 +999,7 @@ function RecentlyCompleted({ workstreams }) {
 }
 
 function EtsyRevenueTicker() {
-  const { month, salesCount, revenue, avgOrderValue, visits, cvr, totalSalesLifetime, activeListings, adsVisits, adsPct, abandonedCarts, abandonedCartValue, openMessages, adsLaunched, saleEnds, lastUpdated } = ETSY_STATS;
+  const { month, salesCount, revenue, avgOrderValue, visits, cvr, totalSalesLifetime, activeListings, adsVisits, adsPct, abandonedCarts, abandonedCartValue, openMessages, adsLaunched, saleEnds, lastUpdated, ytd, monthlyHistory, janFebCombined } = ETSY_STATS;
   const daysLeft = daysUntil(saleEnds);
   const urgent = daysLeft <= 3;
   return (
@@ -1048,6 +1056,33 @@ function EtsyRevenueTicker() {
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#888', lineHeight: 1 }}>{totalSalesLifetime}</div>
           <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Total Sales</div>
+        </div>
+      </div>
+      <div style={{ borderTop: '1px solid #fb588715', marginTop: 12, paddingTop: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#fb5887', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>2026 YTD</span>
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 14, color: '#34c759' }}>${ytd.revenue.toFixed(2)}</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#aaa' }}>/</span>
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: '#fb5887' }}>{ytd.orders} orders</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#aaa' }}>/</span>
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: '#5b8fa8' }}>{ytd.visits.toLocaleString()} visits</span>
+        </div>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          <div style={{ background: '#fb588710', borderRadius: 8, padding: '5px 10px', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#bbb', fontWeight: 600 }}>JAN+FEB</span>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 13, color: '#888' }}>${janFebCombined.revenue.toFixed(2)}</span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc' }}>{janFebCombined.orders}mo</span>
+          </div>
+          {monthlyHistory.filter(m => m.revenue !== null).map(m => (
+            <div key={m.month} style={{ background: m.partial ? '#fb588718' : '#fb588710', borderRadius: 8, padding: '5px 10px', display: 'flex', alignItems: 'center', gap: 6, border: m.partial ? '1px solid #fb588730' : 'none' }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#bbb', fontWeight: 600 }}>{m.month.toUpperCase()}{m.partial ? '*' : ''}</span>
+              <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 13, color: m.partial ? '#fb5887' : '#34c759' }}>${m.revenue.toFixed(2)}</span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc' }}>{m.orders}mo</span>
+            </div>
+          ))}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc' }}>* partial month</span>
+          </div>
         </div>
       </div>
     </div>
