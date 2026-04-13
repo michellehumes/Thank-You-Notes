@@ -31,6 +31,22 @@ const virtualCollections: Record<
       "Printable activity bundles, party games, and digital art packs. Instant download PDF files ready to print at home. Great for parties, holidays, and family activities.",
     categorySlugs: ["printables-bundles"],
   },
+  "wedding-collection": {
+    name: "Wedding Collection",
+    description:
+      "Everything for your wedding day -- planners, seating charts, menus, welcome signs, bridal shower games, and more",
+    metaDescription:
+      "Wedding planning bundles, seating charts, timeline cards, welcome signs, menu cards, bridal shower games, and bachelorette itineraries. Instant download printables and spreadsheets for your perfect day.",
+    categorySlugs: ["wedding", "save-the-dates"],
+  },
+  "seasonal-gifts": {
+    name: "Seasonal Gifts",
+    description:
+      "Printable gift tags, cards, coupon books, and invitations for every occasion",
+    metaDescription:
+      "Teacher Appreciation gift tags, Mother's Day cards and certificates, Father's Day coupon books, and graduation invitations. Instant download printables you can personalize and print at home.",
+    categorySlugs: ["seasonal-gifts"],
+  },
 };
 
 // SEO meta descriptions per category slug
@@ -53,6 +69,8 @@ const categoryMetaDescriptions: Record<string, string> = {
     "Printable activity bundles, bachelorette games, holiday packs, and seasonal graphics. Instant download PDFs ready to print at home.",
   "water-bottles":
     "Personalized stainless steel water bottles with permanent sublimation printing. Free personalization on every bottle. Perfect for bridesmaids, bachelorette parties, kids, and corporate gifts. Ships in 3-5 business days.",
+  "seasonal-gifts":
+    "Printable gift tags, greeting cards, coupon books, and party invitations for Teacher Appreciation, Mother's Day, Father's Day, and graduation. Instant download PDFs you can personalize and print at home.",
 };
 
 export async function generateMetadata({

@@ -17,7 +17,8 @@ export interface Product {
     | "party-events"
     | "save-the-dates"
     | "printables-bundles"
-    | "water-bottles";
+    | "water-bottles"
+    | "seasonal-gifts";
   tags: string[];
   compatibility: "excel" | "sheets" | "both" | "pdf" | "physical";
   lemonSqueezyUrl: string;
@@ -1017,6 +1018,202 @@ export const products: Product[] = [
     bestSeller: false,
     images: ["/shelzy_images/shelzy_60_img01.svg"],
   },
+
+  // ── Seasonal Gifts ──────────────────────
+  {
+    id: 61,
+    slug: "teacher-appreciation-gift-tags",
+    name: "Teacher Appreciation Gift Tags",
+    description:
+      "Show your favorite teacher some love with printable gift tags perfect for end-of-year gifts, Teacher Appreciation Week, or any time you want to say thank you. Print at home, cut, and attach to any gift.",
+    price: 4.99,
+    category: "seasonal-gifts",
+    tags: ["teacher", "appreciation", "gift tags", "printable", "school"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_61_img01.svg"],
+  },
+  {
+    id: 62,
+    slug: "mothers-day-gift-certificates",
+    name: "Mother's Day Gift Certificates",
+    description:
+      "Give Mom something personal with printable gift certificates she can redeem for breakfast in bed, a spa day, a movie night, or anything you dream up. Customize the text and print at home.",
+    price: 5.0,
+    category: "seasonal-gifts",
+    tags: ["mothers day", "gift certificate", "printable", "mom", "coupon"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_62_img01.svg"],
+  },
+  {
+    id: 63,
+    slug: "mothers-day-printable-cards",
+    name: "Mother's Day Printable Cards",
+    description:
+      "Beautiful printable cards for Mom, Grandma, or any mother figure in your life. Print on cardstock, fold, and add your own message inside. Multiple designs included.",
+    price: 4.0,
+    category: "seasonal-gifts",
+    tags: ["mothers day", "card", "printable", "mom", "greeting card"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_63_img01.svg"],
+  },
+  {
+    id: 64,
+    slug: "graduation-party-invitation",
+    name: "Graduation Party Invitation",
+    description:
+      "Celebrate the graduate with a stylish printable invitation. Customize with their name, school, date, and party details. Print at home or send digitally.",
+    price: 4.0,
+    category: "seasonal-gifts",
+    tags: ["graduation", "invitation", "party", "printable", "celebration"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_64_img01.svg"],
+  },
+  {
+    id: 65,
+    slug: "fathers-day-coupon-book",
+    name: "Father's Day Coupon Book",
+    description:
+      "A printable coupon book Dad will actually use. Includes pre-written coupons for car washes, breakfast in bed, remote control rights, and blank ones he can fill in himself.",
+    price: 4.99,
+    category: "seasonal-gifts",
+    tags: ["fathers day", "coupon book", "printable", "dad", "gift"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_65_img01.svg"],
+  },
+
+  // ── Wedding (new printable designs) ─────
+  {
+    id: 66,
+    slug: "wedding-planning-bundle",
+    name: "Wedding Planning Bundle",
+    description:
+      "Everything you need to plan your wedding in one download. Includes a budget tracker, guest list manager, vendor contact sheet, timeline planner, and seating chart template. Works in Excel and Google Sheets.",
+    price: 19.99,
+    category: "wedding",
+    tags: ["wedding", "planning", "bundle", "budget", "guest list", "all-in-one"],
+    compatibility: "both",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: true,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_66_img01.svg"],
+  },
+  {
+    id: 67,
+    slug: "coastal-bridal-shower-games",
+    name: "Coastal Bridal Shower Games",
+    description:
+      "A set of printable bridal shower games with a breezy coastal theme. Includes bingo, he said she said, advice cards, and more. Print at home and play at any beach or nautical-themed shower.",
+    price: 7.0,
+    category: "wedding",
+    tags: ["bridal shower", "games", "coastal", "beach", "printable", "party"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_67_img01.svg"],
+  },
+  {
+    id: 68,
+    slug: "wedding-seating-chart",
+    name: "Wedding Seating Chart",
+    description:
+      "A clean, elegant seating chart template you can customize with your guest names and table numbers. Print as a poster or display on a screen at your reception.",
+    price: 6.99,
+    category: "wedding",
+    tags: ["wedding", "seating chart", "reception", "printable", "table"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_68_img01.svg"],
+  },
+  {
+    id: 69,
+    slug: "wedding-day-timeline-card",
+    name: "Wedding Day Timeline Card",
+    description:
+      "Keep your wedding party and guests on schedule with a printable timeline card. Customize with your ceremony, cocktail hour, reception, and send-off times.",
+    price: 5.99,
+    category: "wedding",
+    tags: ["wedding", "timeline", "schedule", "card", "printable", "day-of"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_69_img01.svg"],
+  },
+  {
+    id: 70,
+    slug: "coastal-wedding-welcome-sign",
+    name: "Coastal Wedding Welcome Sign",
+    description:
+      "Welcome your guests with a beautiful coastal-themed sign you can print as a poster or display on an easel. Customize with your names, date, and venue. Perfect for beach and waterfront weddings.",
+    price: 8.0,
+    category: "wedding",
+    tags: ["wedding", "welcome sign", "coastal", "beach", "printable", "poster"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_70_img01.svg"],
+  },
+  {
+    id: 71,
+    slug: "wedding-menu-card",
+    name: "Wedding Menu Card",
+    description:
+      "An elegant printable menu card for your reception dinner. Customize with your courses, dietary notes, and wedding date. Print on cardstock for a polished table setting.",
+    price: 5.49,
+    category: "wedding",
+    tags: ["wedding", "menu", "card", "reception", "printable", "dinner"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_71_img01.svg"],
+  },
+  {
+    id: 72,
+    slug: "bachelorette-weekend-itinerary",
+    name: "Bachelorette Weekend Itinerary",
+    description:
+      "Keep the whole crew on the same page with a printable weekend itinerary. Customize with your destination, activities, restaurants, and emergency contacts. Share digitally or print for everyone.",
+    price: 5.99,
+    category: "wedding",
+    tags: ["bachelorette", "itinerary", "weekend", "party", "printable", "trip"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    featured: false,
+    bestSeller: false,
+    images: ["/shelzy_images/shelzy_72_img01.svg"],
+  },
 ];
 
 // ─────────────────────────────────────────────
@@ -1074,6 +1271,12 @@ const categories: Category[] = [
     name: "Personalized Water Bottles",
     description:
       "Premium stainless steel water bottles with permanent sublimation printing. Free personalization on every bottle.",
+  },
+  {
+    slug: "seasonal-gifts",
+    name: "Seasonal Gifts",
+    description:
+      "Printable gift tags, cards, coupon books, and invitations for Teacher Appreciation, Mother's Day, Father's Day, and graduation",
   },
 ];
 
