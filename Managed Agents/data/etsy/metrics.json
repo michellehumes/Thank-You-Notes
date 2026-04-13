@@ -1,0 +1,49 @@
+{
+  "last_updated": "2026-04-13T18:12:00-04:00",
+  "source": "seeded from email_summary.json + MEMORY.md -- etsy agent will overwrite on next run",
+  "shop": {
+    "name": "Shelzy's Designs",
+    "active_listings": null,
+    "reviews": null,
+    "star_seller": null
+  },
+  "period_30d": {
+    "revenue": null,
+    "orders": null,
+    "visits": null,
+    "cvr": null,
+    "aov": null
+  },
+  "period_7d": {
+    "revenue": null,
+    "orders": null,
+    "visits": null,
+    "cvr": null,
+    "aov": null
+  },
+  "today": {
+    "date": "2026-04-13",
+    "revenue": 38.92,
+    "orders": 4,
+    "order_details": [
+      {"order_id": "4027876782", "customer": "2f65wvgd4me4gn47", "amount": 5.45},
+      {"order_id": "4031544191", "customer": "sarahdanner2", "amount": 11.04},
+      {"order_id": "4031360373", "customer": "7q1sl4ljmlnftif8", "amount": 11.18},
+      {"order_id": "4031348195", "customer": "cmc322z", "amount": 11.25}
+    ]
+  },
+  "ytd": {
+    "revenue": null,
+    "orders": null
+  },
+  "ads": {
+    "daily_budget": null,
+    "spend_mtd": null,
+    "roas": null,
+    "top_listings": []
+  },
+  "messages": {
+    "unread": null,
+    "open_conversations": null
+  }
+}
