@@ -385,7 +385,7 @@ export default async function ProductPage({
           )}
 
           {/* Trust badges */}
-          <TrustBadges />
+          <TrustBadges variant={product.compatibility === "physical" ? "physical" : "digital"} />
         </div>
       </main>
 
