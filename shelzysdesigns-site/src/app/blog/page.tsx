@@ -45,6 +45,15 @@ const categoryColors: Record<string, string> = {
   "water-bottles": "bg-blue/10 text-blue",
 };
 
+const cardBgColors: Record<string, string> = {
+  "budget-finance": "bg-pink/15",
+  wedding: "bg-teal/15",
+  productivity: "bg-blue/15",
+  business: "bg-orange/15",
+  etsy: "bg-pink/15",
+  "water-bottles": "bg-blue/15",
+};
+
 export default function BlogIndex() {
   const posts = getAllBlogPosts();
 
@@ -77,10 +86,10 @@ export default function BlogIndex() {
                   href={`/blog/${post.slug}`}
                   className="group bg-white rounded-xl border border-mid-gray overflow-hidden hover:shadow-md transition"
                 >
-                  {/* Image placeholder */}
-                  <div className="aspect-[16/9] bg-light-gray flex items-center justify-center">
-                    <span className="font-heading font-bold text-2xl text-mid-gray select-none">
-                      SD
+                  {/* Category color card */}
+                  <div className={`aspect-[16/9] flex items-center justify-center ${cardBgColors[post.category] || "bg-light-gray"}`}>
+                    <span className="font-heading font-bold text-sm tracking-widest uppercase opacity-40 select-none">
+                      {categoryLabels[post.category] || "Blog"}
                     </span>
                   </div>
 
