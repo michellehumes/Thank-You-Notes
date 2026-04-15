@@ -47,7 +47,25 @@ const collections = [
   },
 ];
 
-const steps = [
+const bottleSteps = [
+  {
+    num: 1,
+    title: "Choose Your Bottle",
+    desc: "Pick your size, color, and style. All bottles are premium stainless steel.",
+  },
+  {
+    num: 2,
+    title: "Add Personalization",
+    desc: "Enter a name, phrase, or date. We print it permanently -- no peeling, ever.",
+  },
+  {
+    num: 3,
+    title: "Delivered in Days",
+    desc: "Ships in 3-5 business days. Perfect for gifts, events, and everyday use.",
+  },
+];
+
+const templateSteps = [
   {
     num: 1,
     title: "Choose Your Template",
@@ -83,28 +101,28 @@ export default function Home() {
             {/* Text */}
             <div className="text-center md:text-left">
               <p className="text-pink font-heading font-semibold text-sm tracking-wide uppercase mb-3">
-                Spreadsheets, Planners + Custom Bottles
+                Personalized Water Bottles + Digital Templates
               </p>
               <h1 className="font-heading text-4xl sm:text-5xl font-bold text-charcoal leading-tight mb-5">
-                Organize Your Life with Templates That Actually Work
+                Gifts They&apos;ll Love. Tools That Actually Work.
               </h1>
               <p className="text-text-light text-lg mb-8 max-w-lg mx-auto md:mx-0">
-                Budget trackers, wedding planners, business dashboards, and
-                personalized water bottles -- all designed for real life.
-                Download instantly. Customize freely.
+                Custom water bottles with permanent sublimation printing, plus
+                instant-download templates for budgeting, wedding planning, and
+                more. Free personalization on every bottle.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Link
-                  href="/shop"
+                  href="/collections/water-bottles"
                   className="inline-block bg-pink hover:bg-pink-hover text-white font-heading font-semibold px-8 py-3.5 rounded-lg transition text-center"
                 >
-                  Shop All Templates
+                  Shop Custom Bottles
                 </Link>
                 <Link
-                  href="/collections/water-bottles"
+                  href="/shop"
                   className="inline-block border-2 border-charcoal text-charcoal hover:bg-charcoal hover:text-white font-heading font-semibold px-8 py-3.5 rounded-lg transition text-center"
                 >
-                  Custom Water Bottles
+                  Browse Templates
                 </Link>
               </div>
             </div>
@@ -149,22 +167,47 @@ export default function Home() {
               How It Works
             </h2>
             <p className="text-white/60 text-center mb-12 max-w-md mx-auto">
-              From checkout to customized in under five minutes.
+              Two ways to shop. Both ridiculously easy.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
-              {steps.map((step) => (
-                <div key={step.num} className="flex flex-col items-center">
-                  <div className="w-16 h-16 rounded-full bg-pink text-white flex items-center justify-center font-heading font-bold text-2xl mb-5">
-                    {step.num}
-                  </div>
-                  <h3 className="font-heading font-semibold text-lg text-white mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-white/70 text-sm max-w-xs">
-                    {step.desc}
-                  </p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Water Bottles Track */}
+              <div>
+                <p className="text-blue font-heading font-semibold text-sm tracking-wide uppercase text-center mb-8">
+                  Custom Water Bottles
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+                  {bottleSteps.map((step) => (
+                    <div key={step.num} className="flex flex-col items-center">
+                      <div className="w-14 h-14 rounded-full bg-blue text-white flex items-center justify-center font-heading font-bold text-xl mb-4">
+                        {step.num}
+                      </div>
+                      <h3 className="font-heading font-semibold text-base text-white mb-2">
+                        {step.title}
+                      </h3>
+                      <p className="text-white/70 text-sm">{step.desc}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              {/* Templates Track */}
+              <div>
+                <p className="text-pink font-heading font-semibold text-sm tracking-wide uppercase text-center mb-8">
+                  Digital Templates
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+                  {templateSteps.map((step) => (
+                    <div key={step.num} className="flex flex-col items-center">
+                      <div className="w-14 h-14 rounded-full bg-pink text-white flex items-center justify-center font-heading font-bold text-xl mb-4">
+                        {step.num}
+                      </div>
+                      <h3 className="font-heading font-semibold text-base text-white mb-2">
+                        {step.title}
+                      </h3>
+                      <p className="text-white/70 text-sm">{step.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
