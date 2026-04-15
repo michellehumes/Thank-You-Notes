@@ -9,9 +9,6 @@ Status: EXPANDED -- 90 niches, 30 days of daily 3-book batches
 
 | # | Niche | Category | Michelle Edge | Priority |
 |---|-------|----------|---------------|----------|
-| 1 | Symptom & Pain Tracking Journal (chronic illness) | Health | Pharma/HCP background | HIGH |
-| 2 | Fertility + TTC Tracker (BBT, OPK, cycle log) | Health | Personal + professional | HIGH |
-| 3 | Medication Log Book (daily meds, dosage, refills) | Health | Pharma background | HIGH |
 | 4 | Caregiver Daily Log (elder care, memory care) | Health | High emotional purchase | HIGH |
 | 5 | Home Maintenance Log Book (annual tracker) | Home | Already built for Etsy -- crossover | HIGH |
 | 6 | Cancer Treatment Journal (chemo cycles, doctor Q&A) | Health | Oncology/Keytruda background | HIGH |
@@ -106,7 +103,9 @@ Status: EXPANDED -- 90 niches, 30 days of daily 3-book batches
 
 | Book Slug | Status | ASIN | Published |
 |-----------|--------|------|-----------|
-| -- | -- | -- | -- |
+| symptom-pain-tracking-journal | interior-done | -- | -- |
+| fertility-ttc-tracker | interior-done | -- | -- |
+| medication-log-book | interior-done | -- | -- |
 
 ---
 

@@ -1,7 +1,7 @@
 # KDP Book Catalog -- Shelzy's Designs
 
 Last updated: 2026-04-15
-Total books: 0 live | 0 in pipeline
+Total books: 0 live | 3 in pipeline
 
 ---
 
@@ -13,7 +13,9 @@ Total books: 0 live | 0 in pipeline
 
 ## In Pipeline
 
-*None yet -- run `/kdp-publisher batch` to start first 3 books.*
+| symptom-pain-tracking-journal | Symptom & Pain Tracking Journal | Symptom & Pain Tracking Journal (chronic illness) | interior-done | -- | $8.99 | ~$3.22 | -- | Created 2026-04-15 |
+| fertility-ttc-tracker | Fertility & TTC Tracker | Fertility + TTC Tracker (BBT, OPK, cycle log) | interior-done | -- | $9.99 | ~$3.94 | -- | Created 2026-04-15 |
+| medication-log-book | Medication Log Book | Medication Log Book (daily meds, dosage, refills) | interior-done | -- | $7.99 | ~$2.74 | -- | Created 2026-04-15 |
 
 ---
 
