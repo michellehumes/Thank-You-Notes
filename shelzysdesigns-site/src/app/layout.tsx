@@ -45,6 +45,8 @@ const organizationSchema = {
     "Digital spreadsheet templates, planners, and personalized water bottles designed for real life. Instant download. Free personalization.",
   sameAs: [
     "https://www.etsy.com/shop/ShelzysDesigns",
+    "https://instagram.com/shelzysdesigns",
+    "https://pinterest.com/shelzysdesigns",
   ],
 };
 

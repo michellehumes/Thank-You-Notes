@@ -101,6 +101,7 @@ const categoryLabels: Record<string, string> = {
   productivity: "Productivity",
   business: "Business",
   etsy: "Etsy",
+  "water-bottles": "Water Bottles",
 };
 
 const categoryColors: Record<string, string> = {
@@ -109,6 +110,7 @@ const categoryColors: Record<string, string> = {
   productivity: "bg-blue/10 text-blue",
   business: "bg-orange/10 text-orange",
   etsy: "bg-pink/10 text-pink",
+  "water-bottles": "bg-blue/10 text-blue",
 };
 
 export default async function BlogPostPage({

@@ -5,9 +5,9 @@ import Footer from "@/components/Footer";
 import { getAllBlogPosts } from "@/data/blog-posts";
 
 export const metadata: Metadata = {
-  title: "Spreadsheet Templates Blog — Tips, Guides & Comparisons | Shelzy's Designs",
+  title: "Blog — Guides, Tips & Personalization Ideas | Shelzy's Designs",
   description:
-    "Budget templates, wedding planning spreadsheets, ADHD planners, Etsy seller dashboards — guides and comparisons to help you find the right template for how you actually live and work.",
+    "Personalized water bottle ideas, budget templates, wedding planning spreadsheets, and more -- practical guides to help you find the right product for how you actually live.",
   alternates: {
     canonical: "https://shelzysdesigns.com/blog",
   },
@@ -33,6 +33,7 @@ const categoryLabels: Record<string, string> = {
   productivity: "Productivity",
   business: "Business",
   etsy: "Etsy",
+  "water-bottles": "Water Bottles",
 };
 
 const categoryColors: Record<string, string> = {
@@ -41,6 +42,7 @@ const categoryColors: Record<string, string> = {
   productivity: "bg-blue/10 text-blue",
   business: "bg-orange/10 text-orange",
   etsy: "bg-pink/10 text-pink",
+  "water-bottles": "bg-blue/10 text-blue",
 };
 
 export default function BlogIndex() {
