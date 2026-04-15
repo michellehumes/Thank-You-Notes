@@ -127,12 +127,20 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Decorative grid */}
+            {/* Visual grid -- replace these blocks with real product photos */}
             <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto md:mx-0 md:ml-auto">
-              <div className="aspect-[4/5] rounded-2xl bg-pink/15" />
-              <div className="aspect-[4/5] rounded-2xl bg-teal/20 translate-y-6" />
-              <div className="aspect-[4/5] rounded-2xl bg-orange/15 -translate-y-6" />
-              <div className="aspect-[4/5] rounded-2xl bg-blue/10" />
+              <div className="aspect-[4/5] rounded-2xl bg-pink/20 flex items-center justify-center">
+                <span className="text-pink/60 font-heading font-bold text-xs tracking-widest uppercase">Water Bottle</span>
+              </div>
+              <div className="aspect-[4/5] rounded-2xl bg-teal/20 translate-y-6 flex items-center justify-center">
+                <span className="text-teal/60 font-heading font-bold text-xs tracking-widest uppercase">Wedding</span>
+              </div>
+              <div className="aspect-[4/5] rounded-2xl bg-orange/15 -translate-y-6 flex items-center justify-center">
+                <span className="text-orange/60 font-heading font-bold text-xs tracking-widest uppercase">Digital</span>
+              </div>
+              <div className="aspect-[4/5] rounded-2xl bg-blue/15 flex items-center justify-center">
+                <span className="text-blue/60 font-heading font-bold text-xs tracking-widest uppercase">Templates</span>
+              </div>
             </div>
           </div>
         </section>
@@ -235,6 +243,43 @@ export default function Home() {
                   <ProductCard product={product} />
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Gift Occasions ───────────────────── */}
+        <section className="bg-light-gray py-16">
+          <div className="mx-auto max-w-[1200px] px-6">
+            <h2 className="font-heading text-3xl font-bold text-charcoal text-center mb-3">
+              The Perfect Personalized Gift
+            </h2>
+            <p className="text-text-light text-center mb-10 max-w-md mx-auto">
+              A custom water bottle they&apos;ll actually use -- with their name, a date, or whatever makes it theirs.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { label: "Birthdays", emoji: "🎂", href: "/collections/gifts-for-her" },
+                { label: "Weddings", emoji: "💍", href: "/collections/wedding" },
+                { label: "Graduation", emoji: "🎓", href: "/collections/water-bottles" },
+                { label: "Just Because", emoji: "🌸", href: "/collections/best-sellers" },
+              ].map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="bg-white rounded-2xl p-6 flex flex-col items-center text-center hover:shadow-md transition group"
+                >
+                  <span className="text-4xl mb-3">{item.emoji}</span>
+                  <span className="font-heading font-semibold text-charcoal group-hover:text-pink transition">{item.label}</span>
+                </Link>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <Link
+                href="/collections/water-bottles"
+                className="inline-block bg-pink hover:bg-pink-hover text-white font-heading font-semibold px-8 py-3.5 rounded-lg transition"
+              >
+                Shop Custom Bottles
+              </Link>
             </div>
           </div>
         </section>
