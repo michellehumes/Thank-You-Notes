@@ -27,7 +27,7 @@ Total books: 0 live | 0 in pipeline
 
 ## Notes
 
-- Pen name: TBD (choose: "Shelzy's Designs" vs "M. Humes" before first submission)
+- Pen name: Shelzy Perkins
 - KDP account: NOT YET CREATED -- see account setup checklist in skill
 - Tax interview: NOT COMPLETE
 - Bank account linked: NO
