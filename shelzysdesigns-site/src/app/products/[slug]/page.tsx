@@ -118,18 +118,6 @@ function getCompatibilityLabels(
   }
 }
 
-function StarIcon() {
-  return (
-    <svg
-      className="w-5 h-5 text-orange"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-    </svg>
-  );
-}
-
 export default async function ProductPage({
   params,
 }: {
@@ -180,11 +168,7 @@ export default async function ProductPage({
       },
     },
     category: categoryName,
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "5",
-      reviewCount: "47",
-    },
+    // aggregateRating omitted -- add only when real verified review data is available
   };
 
   // Breadcrumb schema
@@ -278,16 +262,6 @@ export default async function ProductPage({
               <h1 className="text-3xl font-bold font-heading text-charcoal mb-3">
                 {product.name}
               </h1>
-
-              {/* Star rating */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <StarIcon key={i} />
-                  ))}
-                </div>
-                <span className="text-text-light text-sm">(47 reviews)</span>
-              </div>
 
               {/* Price */}
               <p className="text-2xl font-bold text-charcoal mb-4">

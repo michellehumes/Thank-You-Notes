@@ -65,23 +65,9 @@ const steps = [
   },
 ];
 
-const reviews = [
-  {
-    quote:
-      "This budget tracker saved me so much time. I finally know where my money goes each month.",
-    name: "Jordan M.",
-  },
-  {
-    quote:
-      "I used the wedding planner for my entire engagement and it kept everything organized. Worth every penny.",
-    name: "Priya S.",
-  },
-  {
-    quote:
-      "Clean design, easy to use, and the formulas do the heavy lifting. Exactly what I needed for my small business.",
-    name: "Taylor R.",
-  },
-];
+// Reviews: replace these placeholders with real verified customer reviews (e.g. from Etsy)
+// until real reviews are available, this section should be hidden or replaced with an Etsy shop link
+const reviews: { quote: string; name: string; source?: string }[] = [];
 
 export default function Home() {
   const bestSellers = getBestSellers();
@@ -213,38 +199,56 @@ export default function Home() {
         {/* ── Social Proof ─────────────────────── */}
         <section className="bg-light-gray py-16">
           <div className="mx-auto max-w-[1200px] px-6">
-            <h2 className="font-heading text-3xl font-bold text-charcoal text-center mb-10">
-              Trusted by 500+ Happy Customers
+            <h2 className="font-heading text-3xl font-bold text-charcoal text-center mb-6">
+              Loved by Customers on Etsy
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {reviews.map((review) => (
-                <div
-                  key={review.name}
-                  className="bg-white rounded-xl p-6 shadow-sm"
-                >
-                  {/* Stars */}
-                  <div className="flex gap-1 mb-4 text-orange">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <svg
-                        key={i}
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                      </svg>
-                    ))}
+            {reviews.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {reviews.map((review) => (
+                  <div
+                    key={review.name}
+                    className="bg-white rounded-xl p-6 shadow-sm"
+                  >
+                    <div className="flex gap-1 mb-4 text-orange">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <svg
+                          key={i}
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <p className="text-charcoal text-sm mb-4 leading-relaxed">
+                      &ldquo;{review.quote}&rdquo;
+                    </p>
+                    <p className="font-heading font-semibold text-sm text-charcoal">
+                      {review.name}
+                      {review.source && (
+                        <span className="text-text-light font-normal ml-1">via {review.source}</span>
+                      )}
+                    </p>
                   </div>
-                  <p className="text-charcoal text-sm mb-4 leading-relaxed">
-                    &ldquo;{review.quote}&rdquo;
-                  </p>
-                  <p className="font-heading font-semibold text-sm text-charcoal">
-                    {review.name}
-                  </p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center">
+                <p className="text-text-light mb-6 max-w-md mx-auto">
+                  See what customers are saying about Shelzy&apos;s Designs on our Etsy shop.
+                </p>
+                <a
+                  href="https://www.etsy.com/shop/ShelzysDesigns#reviews"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block border-2 border-charcoal text-charcoal font-heading font-semibold px-8 py-3 rounded-lg hover:bg-charcoal hover:text-white transition"
+                >
+                  Read Our Reviews on Etsy
+                </a>
+              </div>
+            )}
           </div>
         </section>
 
@@ -279,7 +283,7 @@ export default function Home() {
               href="/about"
               className="inline-block border-2 border-charcoal text-charcoal font-heading font-semibold px-8 py-3 rounded-lg hover:bg-charcoal hover:text-white transition"
             >
-              Learn More
+              Meet the Designer
             </Link>
           </div>
         </section>

@@ -2,9 +2,9 @@ import Link from "next/link";
 
 const shopLinks = [
   { label: "Shop All", href: "/shop" },
+  { label: "Custom Water Bottles", href: "/collections/water-bottles" },
   { label: "Templates", href: "/collections/templates" },
-  { label: "Planners", href: "/collections/planners" },
-  { label: "Wedding", href: "/collections/wedding" },
+  { label: "Wedding Planning", href: "/collections/wedding" },
   { label: "Bundles", href: "/collections/bundles" },
 ];
 
@@ -12,6 +12,7 @@ const helpLinks = [
   { label: "Blog", href: "/blog" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
+  { label: "Shipping Policy", href: "/shipping" },
   { label: "Refund Policy", href: "/policies" },
 ];
 
@@ -26,7 +27,7 @@ export default function Footer() {
               Shelzy&apos;s Designs
             </p>
             <p className="text-white/60 text-sm">
-              Templates that actually work.
+              Custom water bottles + digital templates. Personalized for real life.
             </p>
           </div>
 
