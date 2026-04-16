@@ -1,17 +1,18 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TrustBadges from "@/components/TrustBadges";
 import ProductCard from "@/components/ProductCard";
 import ProductTabs from "@/components/ProductTabs";
+import WaterBottleCustomizer from "@/components/WaterBottleCustomizer";
 import {
   products,
   getProductBySlug,
   getProductsByCategory,
   getAllCategories,
 } from "@/data/products";
-import WaterBottleCustomizer from "@/components/WaterBottleCustomizer";
 
 // Blog back-links: maps product slug → relevant blog article(s)
 const productBlogLinks: Record<string, { href: string; title: string }[]> = {
@@ -79,9 +80,9 @@ export async function generateMetadata({
   const product = getProductBySlug(slug);
   if (!product) return { title: "Product Not Found" };
   const categoryName = getCategoryName(product.category);
-  const metaTitle = `${product.name} | ${categoryName} -- Shelzy's Designs`;
+  const metaTitle = `${product.name} -- ${categoryName}`;
   const metaDesc = product.description.length > 155
-    ? product.description.slice(0, 152) + "..."
+    ? product.description.slice(0, 155).replace(/\s+\S*$/, "") + "..."
     : product.description;
   const ogImage = product.images[0]
     ? `https://shelzysdesigns.com${product.images[0]}`
@@ -240,9 +241,13 @@ export default async function ProductPage({
             <div>
               <div className="aspect-square bg-light-gray rounded-lg overflow-hidden mb-4">
                 {product.images[0] ? (
-                  <img
+                  <Image
                     src={product.images[0]}
                     alt={product.name}
+                    width={600}
+                    height={600}
+                    priority
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -262,9 +267,12 @@ export default async function ProductPage({
                       i === 0 ? "ring-2 ring-pink" : ""
                     }`}
                   >
-                    <img
+                    <Image
                       src={img}
                       alt={`${product.name} preview ${i + 1}`}
+                      width={150}
+                      height={150}
+                      sizes="25vw"
                       className="w-full h-full object-cover"
                     />
                   </div>

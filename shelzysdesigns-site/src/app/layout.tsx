@@ -19,7 +19,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Shelzy's Designs | Personalized Water Bottles and Digital Templates",
+  title: {
+    default: "Shelzy's Designs | Personalized Water Bottles and Digital Templates",
+    template: "%s | Shelzy's Designs",
+  },
   description:
     "Custom personalized water bottles with permanent sublimation printing, plus instant-download digital templates for budgeting, wedding planning, and organizing. Free personalization on every bottle.",
   metadataBase: new URL("https://shelzysdesigns.com"),
@@ -50,7 +53,7 @@ const organizationSchema = {
   "@type": "Organization",
   name: "Shelzy's Designs",
   url: "https://shelzysdesigns.com",
-  logo: "https://shelzysdesigns.com/shelzy_images/shelzy_01_img01.svg",
+  logo: "https://shelzysdesigns.com/product_images/personalized-water-bottle.jpg",
   description:
     "Digital spreadsheet templates, planners, and personalized water bottles designed for real life. Instant download. Free personalization.",
   sameAs: [

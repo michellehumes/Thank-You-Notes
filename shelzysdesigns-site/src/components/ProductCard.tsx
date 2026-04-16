@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Product } from "@/data/products";
 export type { Product } from "@/data/products";
 
@@ -19,9 +20,12 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Product image */}
       <div className="relative aspect-square bg-light-gray overflow-hidden">
         {product.images[0] ? (
-          <img
+          <Image
             src={product.images[0]}
             alt={product.name}
+            width={400}
+            height={400}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 240px"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (

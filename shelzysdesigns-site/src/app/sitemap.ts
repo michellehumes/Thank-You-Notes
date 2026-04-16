@@ -57,6 +57,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
+  // Virtual collection pages
+  const virtualCollectionSlugs = [
+    "templates",
+    "planners",
+    "bundles",
+    "wedding-collection",
+    "seasonal-gifts",
+    "gifts-for-her",
+    "best-sellers",
+  ];
+  const virtualCollectionPages: MetadataRoute.Sitemap = virtualCollectionSlugs.map(
+    (slug) => ({
+      url: `${BASE_URL}/collections/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })
+  );
+
   // Product pages -- published only
   const productPages: MetadataRoute.Sitemap = publishedProducts.map((product) => ({
     url: `${BASE_URL}/products/${product.slug}`,
@@ -85,6 +104,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...staticPages,
     ...collectionPages,
+    ...virtualCollectionPages,
     ...productPages,
     ...blogIndexPage,
     ...blogPostPages,
