@@ -83,14 +83,29 @@ export async function generateMetadata({
   const metaDesc = product.description.length > 155
     ? product.description.slice(0, 152) + "..."
     : product.description;
+  const ogImage = product.images[0]
+    ? `https://shelzysdesigns.com${product.images[0]}`
+    : undefined;
   return {
     title: metaTitle,
     description: metaDesc,
+    alternates: {
+      canonical: `https://shelzysdesigns.com/products/${product.slug}`,
+    },
     openGraph: {
       title: metaTitle,
       description: metaDesc,
       type: "website",
       siteName: "Shelzy's Designs",
+      ...(ogImage && {
+        images: [{ url: ogImage, width: 1200, height: 1200, alt: product.name }],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaTitle,
+      description: metaDesc,
+      ...(ogImage && { images: [ogImage] }),
     },
   };
 }
@@ -299,8 +314,13 @@ export default async function ProductPage({
                 ))}
               </div>
 
-              {/* Buy Now — customizer for physical, direct checkout for digital */}
-              {product.compatibility === "physical" ? (
+              {/* Buy Now — customizer for physical, direct checkout for digital, or Coming Soon notice */}
+              {product.published === false ? (
+                <div className="w-full bg-light-gray border border-mid-gray rounded-lg py-4 px-6 mb-3 text-center">
+                  <p className="font-heading font-semibold text-charcoal text-sm mb-1">Coming Soon</p>
+                  <p className="text-text-light text-xs">This listing is not yet available. Check back soon.</p>
+                </div>
+              ) : product.compatibility === "physical" ? (
                 <WaterBottleCustomizer
                   productName={product.name}
                   etsyUrl={product.etsyUrl}
@@ -327,8 +347,8 @@ export default async function ProductPage({
                 );
               })()}
 
-              {/* Fulfillment note — only shown for digital products; physical handled in customizer */}
-              {product.compatibility !== "physical" && (
+              {/* Fulfillment note — only shown for published digital products; physical handled in customizer */}
+              {product.published !== false && product.compatibility !== "physical" && (
                 <div className="flex items-center justify-center gap-2 text-text-light text-sm mb-6">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />

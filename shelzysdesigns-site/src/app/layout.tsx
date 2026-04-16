@@ -26,9 +26,18 @@ export const metadata: Metadata = {
   openGraph: {
     siteName: "Shelzy's Designs",
     type: "website",
+    images: [
+      {
+        url: "/product_images/personalized-water-bottle.jpg",
+        width: 1200,
+        height: 1200,
+        alt: "Personalized Water Bottle -- Shelzy's Designs",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
+    images: ["/product_images/personalized-water-bottle.jpg"],
   },
   robots: {
     index: true,
