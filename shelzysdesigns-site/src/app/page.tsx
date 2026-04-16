@@ -144,47 +144,47 @@ export default function Home() {
 
             {/* Product image grid */}
             <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto md:mx-0 md:ml-auto">
-              <Link href="/products/personalized-water-bottle" className="aspect-[4/5] rounded-2xl overflow-hidden bg-light-gray block group">
+              <Link href="/products/personalized-water-bottle" className="aspect-square rounded-2xl overflow-hidden bg-white block group">
                 <Image
                   src="/product_images/personalized-water-bottle.jpg"
                   alt="Personalized Water Bottle"
-                  width={300}
-                  height={375}
+                  width={400}
+                  height={400}
                   priority
                   sizes="(max-width: 768px) 45vw, 180px"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 />
               </Link>
-              <Link href="/products/wedding-water-bottle-set" className="aspect-[4/5] rounded-2xl overflow-hidden bg-light-gray translate-y-6 block group">
+              <Link href="/products/wedding-water-bottle-set" className="aspect-square rounded-2xl overflow-hidden bg-white translate-y-6 block group">
                 <Image
                   src="/product_images/wedding-water-bottle-set.jpg"
                   alt="Wedding Water Bottle Set"
-                  width={300}
-                  height={375}
+                  width={400}
+                  height={400}
                   priority
                   sizes="(max-width: 768px) 45vw, 180px"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 />
               </Link>
-              <Link href="/products/monthly-budget-tracker" className="aspect-[4/5] rounded-2xl overflow-hidden bg-light-gray -translate-y-6 block group">
+              <Link href="/products/monthly-budget-tracker" className="aspect-square rounded-2xl overflow-hidden bg-white -translate-y-6 block group">
                 <Image
                   src="/product_images/monthly-budget-tracker.jpg"
                   alt="Monthly Budget Tracker"
-                  width={300}
-                  height={375}
+                  width={400}
+                  height={400}
                   priority
                   sizes="(max-width: 768px) 45vw, 180px"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 />
               </Link>
-              <Link href="/products/coastal-bridal-shower-games" className="aspect-[4/5] rounded-2xl overflow-hidden bg-light-gray block group">
+              <Link href="/products/coastal-bridal-shower-games" className="aspect-square rounded-2xl overflow-hidden bg-white block group">
                 <Image
                   src="/product_images/coastal-bridal-shower-games.jpg"
                   alt="Coastal Bridal Shower Games"
-                  width={300}
-                  height={375}
+                  width={400}
+                  height={400}
                   sizes="(max-width: 768px) 45vw, 180px"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 />
               </Link>
             </div>
