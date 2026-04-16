@@ -54,7 +54,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4450651293/monthly-budget-tracker-google-sheets",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_01_img01.svg"],
+    images: ["/product_images/monthly-budget-tracker.jpg"],
   },
   {
     id: 2,
@@ -70,7 +70,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4466923235/paycheck-budget-spreadsheet-biweekly",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_02_img01.svg"],
+    images: ["/product_images/paycheck-budget-planner.jpg"],
   },
   {
     id: 3,
@@ -86,7 +86,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4468749322/digital-cash-stuffing-budget-system",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_03_img01.svg"],
+    images: ["/product_images/digital-cash-stuffing-system.jpg"],
   },
   {
     id: 4,
@@ -102,7 +102,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4470666450/family-budget-spreadsheet-kids-expense",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_04_img01.svg"],
+    images: ["/product_images/family-budget-planner.jpg"],
   },
   {
     id: 5,
@@ -118,7 +118,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4454684004/budget-spreadsheet-template-2026-monthly",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_05_img01.svg"],
+    images: ["/product_images/2026-annual-budget-planner.jpg"],
   },
   {
     id: 6,
@@ -134,7 +134,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4472203453/debt-payoff-tracker-spreadsheet-snowball",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_06_img01.svg"],
+    images: ["/product_images/debt-payoff-tracker.jpg"],
   },
   {
     id: 7,
@@ -150,7 +150,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455440202/debt-payoff-savings-goal-tracker-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_07_img01.svg"],
+    images: ["/product_images/debt-payoff-savings-tracker.jpg"],
   },
 
   // ── Business ──────────────────────────────
@@ -168,7 +168,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4454785269/small-business-planner-spreadsheet-2026",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_08_img01.svg"],
+    images: ["/product_images/small-business-planner-2026.jpg"],
   },
   {
     id: 9,
@@ -184,7 +184,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4444597633/side-hustle-income-expense-tracker-excel",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_09_img01.svg"],
+    images: ["/product_images/side-hustle-income-expense-tracker.jpg"],
   },
   {
     id: 10,
@@ -200,7 +200,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4470488179/12-month-side-hustle-log-excel",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_10_img01.svg"],
+    images: ["/product_images/12-month-side-hustle-log.jpg"],
   },
   {
     id: 11,
@@ -216,7 +216,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4464388900/business-finance-tracker-excel-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_11_img01.svg"],
+    images: ["/product_images/business-finance-net-worth-dashboard.jpg"],
   },
   {
     id: 12,
@@ -232,7 +232,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4438165509/etsy-seller-spreadsheet-google-sheets",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_12_img01.svg"],
+    images: ["/product_images/etsy-seller-analytics-dashboard.jpg"],
   },
   {
     id: 13,
@@ -248,7 +248,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4438165509/etsy-seller-spreadsheet-google-sheets",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_13_img01.svg"],
+    images: ["/product_images/etsy-seller-profit-calculator.jpg"],
   },
 
   // ── Productivity + Life ───────────────────
@@ -266,7 +266,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4466870305/adhd-life-dashboard-planner-google",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_14_img01.svg"],
+    images: ["/product_images/adhd-life-dashboard.jpg"],
   },
   {
     id: 15,
@@ -282,7 +282,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455457091/project-goal-tracker-google-sheets",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_15_img01.svg"],
+    images: ["/product_images/project-goal-tracker.jpg"],
   },
   {
     id: 16,
@@ -298,7 +298,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4466932488/moving-planner-checklist-spreadsheet",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_16_img01.svg"],
+    images: ["/product_images/moving-day-planner.jpg"],
   },
   {
     id: 17,
@@ -314,7 +314,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4466832536/vacation-trip-planner-spreadsheet-budget",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_17_img01.svg"],
+    images: ["/product_images/vacation-trip-planner.jpg"],
   },
   {
     id: 18,
@@ -330,7 +330,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455422930/weekly-meal-planner-google-sheets",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_18_img01.svg"],
+    images: ["/product_images/weekly-meal-planner.jpg"],
   },
   {
     id: 19,
@@ -346,7 +346,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455422930/weekly-meal-planner-google-sheets",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_19_img01.svg"],
+    images: ["/product_images/meal-planner-auto-grocery-list.jpg"],
   },
   {
     id: 20,
@@ -362,7 +362,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455432592/workout-tracker-google-sheets-gym",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_20_img01.svg"],
+    images: ["/product_images/workout-tracker.jpg"],
   },
   {
     id: 21,
@@ -378,7 +378,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455450716/kids-chore-chart-daily-routine-reward",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_21_img01.svg"],
+    images: ["/product_images/kids-chore-chart-routine-tracker.jpg"],
   },
   {
     id: 22,
@@ -394,7 +394,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455371770/home-organization-planner-2026-cleaning",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_22_img01.svg"],
+    images: ["/product_images/home-cleaning-organization-planner.jpg"],
   },
 
   // ── Education ─────────────────────────────
@@ -412,7 +412,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455378310/2026-student-planner-spreadsheet-grade",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_23_img01.svg"],
+    images: ["/product_images/student-academic-planner-2026.jpg"],
   },
   {
     id: 24,
@@ -428,7 +428,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455359615/teacher-planner-2026-google-sheets-excel",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_24_img01.svg"],
+    images: ["/product_images/teacher-planner-2026.jpg"],
   },
 
   // ── Other Templates (category: productivity or business as appropriate) ──
@@ -446,7 +446,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455352356/2026-social-media-planner-spreadsheet",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_25_img01.svg"],
+    images: ["/product_images/social-media-planner-2026.jpg"],
   },
   {
     id: 26,
@@ -462,7 +462,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4453348355/2026-social-media-content-planner-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_26_img01.svg"],
+    images: ["/product_images/social-media-content-planner.jpg"],
   },
   {
     id: 27,
@@ -478,7 +478,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4469948638/ugc-creator-media-kit-template-canva",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_27_img01.svg"],
+    images: ["/product_images/ugc-creator-media-kit.jpg"],
   },
   {
     id: 28,
@@ -494,7 +494,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455461292/rental-property-income-tracker-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_28_img01.svg"],
+    images: ["/product_images/rental-property-income-tracker.jpg"],
   },
   {
     id: 29,
@@ -510,7 +510,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4472387217/pet-expense-tracker-spreadsheet-dog-cat",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_29_img01.svg"],
+    images: ["/product_images/pet-expense-tracker.jpg"],
   },
   {
     id: 30,
@@ -526,7 +526,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4460558570/babys-first-year-milestone-tracker",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_30_img01.svg"],
+    images: ["/product_images/babys-first-year-milestone-tracker.jpg"],
   },
   {
     id: 31,
@@ -542,7 +542,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4472491170/co-parenting-schedule-planner-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_31_img01.svg"],
+    images: ["/product_images/co-parenting-schedule-planner.jpg"],
   },
   {
     id: 32,
@@ -558,7 +558,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455332835/complete-2026-job-search-tracker-excel",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_32_img01.svg"],
+    images: ["/product_images/job-search-command-center.jpg"],
   },
 
   // ── Wedding ───────────────────────────────
@@ -576,7 +576,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4439536794/bridal-shower-planner-spreadsheet-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_33_img01.svg"],
+    images: ["/product_images/bridal-shower-planner.jpg"],
   },
   {
     id: 34,
@@ -592,7 +592,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4458817296/wedding-vendor-tracker-budget",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_34_img01.svg"],
+    images: ["/product_images/wedding-vendor-comparison-tool.jpg"],
   },
   {
     id: 35,
@@ -608,7 +608,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4458817296/wedding-vendor-tracker-budget",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_35_img01.svg"],
+    images: ["/product_images/wedding-budget-tracker.jpg"],
   },
   {
     id: 36,
@@ -624,7 +624,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4453351463/wedding-planning-checklist-budget",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_36_img01.svg"],
+    images: ["/product_images/wedding-planning-checklist-budget.jpg"],
   },
   {
     id: 37,
@@ -640,7 +640,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4430861134/interactive-wedding-planner-dashboard",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_37_img01.svg"],
+    images: ["/product_images/interactive-wedding-planner-dashboard.jpg"],
   },
   {
     id: 38,
@@ -656,7 +656,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4431620170/bachelorette-party-planner-spreadsheet",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_38_img01.svg"],
+    images: ["/product_images/bachelorette-party-planner.jpg"],
   },
 
   // ── Party + Events ────────────────────────
@@ -690,7 +690,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4472597131/easter-basket-budget-planner-spreadsheet",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_40_img01.svg"],
+    images: ["/product_images/easter-basket-budget-planner.jpg"],
   },
 
   // ── Save the Dates ────────────────────────
@@ -708,7 +708,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452708398/san-jose-skyline-save-the-date-hand",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_41_img01.svg"],
+    images: ["/product_images/san-jose-skyline-save-the-date.jpg"],
   },
   {
     id: 42,
@@ -724,7 +724,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4458588248/the-hillsboro-club-hillsboro-beach-save",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_42_img01.svg"],
+    images: ["/product_images/hillsboro-lighthouse-save-the-date.jpg"],
   },
   {
     id: 43,
@@ -740,7 +740,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452705060/philadelphia-skyline-save-the-date-hand",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_43_img01.svg"],
+    images: ["/product_images/philadelphia-skyline-save-the-date.jpg"],
   },
   {
     id: 44,
@@ -756,7 +756,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452707708/dallas-skyline-save-the-date-hand-drawn",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_44_img01.svg"],
+    images: ["/product_images/dallas-skyline-save-the-date.jpg"],
   },
   {
     id: 45,
@@ -772,7 +772,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452708980/austin-skyline-save-the-date-hand-drawn",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_45_img01.svg"],
+    images: ["/product_images/austin-skyline-save-the-date.jpg"],
   },
   {
     id: 46,
@@ -788,7 +788,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452698201/chicago-skyline-save-the-date-hand-drawn",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_46_img01.svg"],
+    images: ["/product_images/chicago-skyline-save-the-date.jpg"],
   },
   {
     id: 47,
@@ -804,7 +804,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452697625/los-angeles-skyline-save-the-date-hand",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_47_img01.svg"],
+    images: ["/product_images/los-angeles-skyline-save-the-date.jpg"],
   },
   {
     id: 48,
@@ -820,7 +820,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452692821/nyc-skyline-save-the-date-template-hand",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_48_img01.svg"],
+    images: ["/product_images/nyc-skyline-save-the-date.jpg"],
   },
 
   // ── Printables + Bundles ──────────────────
@@ -838,7 +838,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4434199130/bachelorette-party-scavenger-hunt",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_49_img01.svg"],
+    images: ["/product_images/bachelorette-scavenger-hunt.jpg"],
   },
   {
     id: 50,
@@ -854,7 +854,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4457898606/villa-vibes-bachelorette-party-bundle-23",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_50_img01.svg"],
+    images: ["/product_images/villa-vibes-bachelorette-bundle.jpg"],
   },
   {
     id: 51,
@@ -870,7 +870,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4461345391/st-patricks-day-kids-activity-bundle",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_51_img01.svg"],
+    images: ["/product_images/st-patricks-day-kids-activity-bundle.jpg"],
   },
   {
     id: 52,
@@ -886,7 +886,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4461340341/st-patricks-day-png-bundle-retro",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_52_img01.svg"],
+    images: ["/product_images/st-patricks-day-png-bundle.jpg"],
   },
   {
     id: 53,
@@ -902,7 +902,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4461552541/40-days-lent-activity-bundle-for-kids",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_53_img01.svg"],
+    images: ["/product_images/40-day-lent-devotional-activity-bundle.jpg"],
   },
   {
     id: 54,
@@ -918,7 +918,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4467420325/mothers-day-svg-bundle-mom-life-cut",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_54_img01.svg"],
+    images: ["/product_images/mothers-day-svg-bundle.jpg"],
   },
 
   // ── Water Bottles (Physical) ──────────────
@@ -936,7 +936,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4427123494",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_55_img01.svg"],
+    images: ["/product_images/personalized-water-bottle.jpg"],
   },
   {
     id: 56,
@@ -952,7 +952,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4435252492",
     featured: true,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_56_img01.svg"],
+    images: ["/product_images/wedding-water-bottle-set.jpg"],
   },
   {
     id: 57,
@@ -968,7 +968,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4465825536",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_57_img01.svg"],
+    images: ["/product_images/bachelorette-party-water-bottles.jpg"],
   },
   {
     id: 58,
@@ -984,7 +984,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4428315092",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_58_img01.svg"],
+    images: ["/product_images/kids-personalized-water-bottle.jpg"],
   },
   {
     id: 59,
@@ -1000,7 +1000,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4426781154",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_59_img01.svg"],
+    images: ["/product_images/corporate-bulk-water-bottles.jpg"],
   },
   {
     id: 60,
@@ -1016,7 +1016,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4435264870",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_60_img01.svg"],
+    images: ["/product_images/holiday-water-bottle.jpg"],
   },
 
   // ── Seasonal Gifts ──────────────────────
@@ -1116,7 +1116,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4476200829",
     featured: true,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_66_img01.svg"],
+    images: ["/product_images/wedding-planning-bundle.jpg"],
   },
   {
     id: 67,
@@ -1132,7 +1132,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4488636881",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_67_img01.svg"],
+    images: ["/product_images/coastal-bridal-shower-games.jpg"],
   },
   {
     id: 68,
