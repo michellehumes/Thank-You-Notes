@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { products } from "@/data/products";
+import { getPublishedProducts } from "@/data/products";
 import { blogPosts } from "@/data/blog-posts";
 
 const BASE_URL = "https://shelzysdesigns.com";
@@ -45,8 +45,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Collection pages (unique categories from products)
-  const uniqueCategories = [...new Set(products.map((p) => p.category))];
+  // Collection pages (unique categories from published products only)
+  const publishedProducts = getPublishedProducts();
+  const uniqueCategories = [...new Set(publishedProducts.map((p) => p.category))];
   const collectionPages: MetadataRoute.Sitemap = uniqueCategories.map(
     (category) => ({
       url: `${BASE_URL}/collections/${category}`,
@@ -56,8 +57,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
-  // Product pages
-  const productPages: MetadataRoute.Sitemap = products.map((product) => ({
+  // Product pages -- published only
+  const productPages: MetadataRoute.Sitemap = publishedProducts.map((product) => ({
     url: `${BASE_URL}/products/${product.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
