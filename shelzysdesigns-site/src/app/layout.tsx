@@ -47,6 +47,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  other: {
+    "p:domain_verify": "e3c1f8be645d6ac6344d51089de2c69a",
+  },
 };
 
 const organizationSchema = {
