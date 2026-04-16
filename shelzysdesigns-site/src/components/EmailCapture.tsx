@@ -46,8 +46,8 @@ export default function EmailCapture() {
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
-        <p className="font-heading font-semibold text-charcoal text-lg mb-1">You&apos;re in!</p>
-        <p className="text-text-light text-sm mb-4">{message}</p>
+        <p className="font-heading font-semibold text-charcoal text-lg mb-1">Check your inbox...</p>
+        <p className="text-text-light text-sm mb-4">Your 15% off code is on its way.</p>
         <div className="inline-block bg-white border-2 border-dashed border-pink rounded-xl px-8 py-4">
           <p className="text-xs text-text-light uppercase tracking-widest font-heading font-semibold mb-1">Your 15% off code</p>
           <p className="font-heading font-bold text-3xl text-pink tracking-widest">{discountCode}</p>

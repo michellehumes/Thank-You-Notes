@@ -26,6 +26,7 @@ export interface Product {
   featured: boolean;
   bestSeller: boolean;
   images: string[];
+  published?: boolean;
 }
 
 export interface Category {
@@ -674,6 +675,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_39_img01.svg"],
   },
   {
@@ -928,7 +930,7 @@ export const products: Product[] = [
     name: "Personalized Water Bottle",
     description:
       "Your name, permanently. Our stainless steel water bottles use sublimation printing that fuses your design directly into the coating. No decals, no vinyl, nothing that peels or scratches off. Just a clean, custom bottle built to last.",
-    price: 34.99,
+    price: 28.99,
     category: "water-bottles",
     tags: ["water bottle", "personalized", "sublimation", "custom", "gift"],
     compatibility: "physical",
@@ -1034,6 +1036,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_61_img01.svg"],
   },
   {
@@ -1050,6 +1053,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_62_img01.svg"],
   },
   {
@@ -1066,6 +1070,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_63_img01.svg"],
   },
   {
@@ -1082,6 +1087,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_64_img01.svg"],
   },
   {
@@ -1098,6 +1104,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_65_img01.svg"],
   },
 
@@ -1148,6 +1155,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_68_img01.svg"],
   },
   {
@@ -1164,6 +1172,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_69_img01.svg"],
   },
   {
@@ -1180,6 +1189,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_70_img01.svg"],
   },
   {
@@ -1196,6 +1206,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_71_img01.svg"],
   },
   {
@@ -1212,6 +1223,7 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_72_img01.svg"],
   },
 ];
@@ -1288,16 +1300,20 @@ export function getProductBySlug(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
 }
 
+export function getPublishedProducts(): Product[] {
+  return products.filter((p) => p.published !== false);
+}
+
 export function getProductsByCategory(category: string): Product[] {
   return products.filter((p) => p.category === category);
 }
 
 export function getFeaturedProducts(): Product[] {
-  return products.filter((p) => p.featured);
+  return products.filter((p) => p.published !== false && p.featured);
 }
 
 export function getBestSellers(): Product[] {
-  return products.filter((p) => p.bestSeller);
+  return products.filter((p) => p.published !== false && p.bestSeller);
 }
 
 export function getAllCategories(): Category[] {

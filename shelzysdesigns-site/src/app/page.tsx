@@ -140,6 +140,17 @@ export default function Home() {
                   Browse Templates
                 </Link>
               </div>
+
+              {/* Third CTA: email capture */}
+              <div className="mt-8 max-w-lg mx-auto md:mx-0">
+                <p className="text-sm font-heading font-semibold text-charcoal mb-2">
+                  Get 15% off your first order
+                </p>
+                <p className="text-xs text-text-light mb-3">
+                  Plus new templates and planning tips -- twice a month.
+                </p>
+                <EmailCapture />
+              </div>
             </div>
 
             {/* Product image grid */}
@@ -391,8 +402,7 @@ export default function Home() {
               Get 15% Off Your First Order
             </h2>
             <p className="text-text-light mb-8">
-              Sign up for early access to new templates, exclusive discounts, and
-              planning tips delivered to your inbox.
+              Plus new templates and planning tips -- twice a month.
             </p>
             <EmailCapture />
           </div>

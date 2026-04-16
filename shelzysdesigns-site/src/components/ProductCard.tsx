@@ -9,8 +9,6 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const isPhysical = product.compatibility === "physical";
-  const hasLsUrl =
-    product.lemonSqueezyUrl && product.lemonSqueezyUrl !== "#";
 
   return (
     <Link
@@ -61,6 +59,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="text-charcoal font-medium text-sm mb-2">
           ${product.price.toFixed(2)}
         </p>
+        {product.slug === "personalized-water-bottle" && (
+          <p className="text-xs text-text-light mb-2 leading-snug">
+            Includes a free matching template ($5.99 value) -- only on shelzysdesigns.com
+          </p>
+        )}
         <div className="flex items-center justify-between">
           {isPhysical ? (
             <span className="inline-block bg-orange/10 text-orange text-xs px-2 py-0.5 rounded-full">
@@ -72,11 +75,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
           <span className="text-pink text-xs font-semibold group-hover:underline">
-            {isPhysical
-              ? "Personalize Yours →"
-              : hasLsUrl
-              ? "Buy Now →"
-              : "Shop on Etsy →"}
+            {isPhysical ? "Make it mine →" : "Get the template →"}
           </span>
         </div>
       </div>

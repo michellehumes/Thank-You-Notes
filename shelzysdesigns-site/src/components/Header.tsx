@@ -12,6 +12,30 @@ const navLinks = [
   { label: "Blog", href: "/blog" },
 ];
 
+function LogoMark() {
+  return (
+    <svg
+      viewBox="0 0 40 40"
+      className="w-9 h-9 flex-shrink-0"
+      aria-hidden="true"
+    >
+      <rect width="40" height="40" rx="10" fill="#E91E63" />
+      <text
+        x="50%"
+        y="54%"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontFamily="Montserrat, sans-serif"
+        fontWeight="700"
+        fontSize="19"
+        fill="#ffffff"
+        letterSpacing="-0.5"
+      >
+        SD
+      </text>
+    </svg>
+  );
+}
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -19,8 +43,16 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-mid-gray">
       <div className="mx-auto max-w-[1200px] px-6 flex items-center justify-between h-16">
-        <Link href="/" className="font-heading font-bold text-charcoal text-xl">
-          Shelzy&apos;s Designs
+        <Link href="/" className="flex items-center gap-3" aria-label="Shelzy's Designs home">
+          <LogoMark />
+          <span className="hidden md:flex flex-col leading-tight">
+            <span className="font-heading font-bold text-charcoal text-lg">
+              Shelzy&apos;s Designs
+            </span>
+            <span className="text-pink text-xs font-medium">
+              Personal gifts. Practical tools.
+            </span>
+          </span>
         </Link>
 
         {/* Desktop nav */}
@@ -36,19 +68,8 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Right side: cart + mobile hamburger */}
+        {/* Right side: mobile hamburger */}
         <div className="flex items-center gap-3">
-          {/* Etsy shop link */}
-          <a
-            href="https://www.etsy.com/shop/ShelzysDesignsStore"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Shop on Etsy"
-            className="hidden sm:inline-block font-heading text-xs font-semibold uppercase tracking-wide text-charcoal hover:text-pink transition border border-charcoal hover:border-pink px-3 py-1.5 rounded-full"
-          >
-            Shop Etsy
-          </a>
-
           {/* Mobile hamburger */}
           <button
             className="md:hidden flex flex-col gap-1.5 p-2"
