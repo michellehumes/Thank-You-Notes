@@ -78,6 +78,16 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <a
+                  href="https://www.etsy.com/shop/ShelzysDesignsStore"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/60 hover:text-white text-sm transition"
+                >
+                  Etsy Shop
+                </a>
+              </li>
+              <li>
+                <a
                   href="https://instagram.com/shelzysdesigns"
                   target="_blank"
                   rel="noopener noreferrer"
