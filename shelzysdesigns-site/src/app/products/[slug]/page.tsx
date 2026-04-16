@@ -9,6 +9,8 @@ import ProductTabs from "@/components/ProductTabs";
 import WaterBottleCustomizer from "@/components/WaterBottleCustomizer";
 import RecentlyViewedWrapper from "@/components/RecentlyViewedWrapper";
 import Testimonials from "@/components/Testimonials";
+import ShopifyBuyButton from "@/components/ShopifyBuyButton";
+import { isShopifyEnabled } from "@/lib/shopify";
 import {
   products,
   getProductBySlug,
@@ -337,9 +339,22 @@ export default async function ProductPage({
                   price={product.price}
                 />
               ) : (() => {
+                // Priority: Shopify direct checkout > Lemon Squeezy > Etsy
+                const shopifyEnabled = isShopifyEnabled();
+                const hasShopifyVariant = shopifyEnabled && !!product.shopifyVariantId;
                 const hasLsUrl =
                   product.lemonSqueezyUrl &&
                   product.lemonSqueezyUrl !== "#";
+
+                if (hasShopifyVariant) {
+                  return (
+                    <ShopifyBuyButton
+                      variantId={product.shopifyVariantId!}
+                      label={`Buy Now -- $${product.price.toFixed(2)}`}
+                    />
+                  );
+                }
+
                 const buyUrl = hasLsUrl
                   ? product.lemonSqueezyUrl
                   : product.etsyUrl;

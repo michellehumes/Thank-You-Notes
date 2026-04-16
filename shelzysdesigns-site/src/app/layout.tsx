@@ -103,6 +103,13 @@ export default function RootLayout({
         )}
         {/* Lemon Squeezy checkout overlay — activates on links with class="lemonsqueezy-button" */}
         <Script src="https://app.lemonsqueezy.com/js/lemon.js" strategy="afterInteractive" />
+        {/* Shopify Buy Button SDK — loads only when checkout is enabled */}
+        {process.env.NEXT_PUBLIC_SHOPIFY_CHECKOUT_ENABLED === "true" && (
+          <Script
+            src="https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js"
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );
