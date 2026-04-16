@@ -27,6 +27,9 @@ export interface Product {
   bestSeller: boolean;
   images: string[];
   published?: boolean;
+  // ── Shopify direct checkout (Phase 1 -- optional until catalog synced)
+  shopifyProductId?: string;
+  shopifyVariantId?: string;
 }
 
 export interface Category {
