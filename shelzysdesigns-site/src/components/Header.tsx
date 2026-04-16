@@ -44,7 +44,7 @@ export default function Header() {
           aria-label="Shelzy's Designs home"
         >
           <img
-            src="/logo-script.svg"
+            src="/logo-script.png"
             alt=""
             aria-hidden="true"
             className="h-10 w-auto shrink-0"
