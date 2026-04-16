@@ -6,11 +6,11 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "About | Shelzy's Designs",
   description:
-    "Meet the designer behind the spreadsheets. Templates with real formulas, smart dashboards, and layouts that work.",
+    "Meet the maker behind Shelzy's Designs -- custom personalized water bottles and digital templates designed for real life.",
   openGraph: {
     title: "About | Shelzy's Designs",
     description:
-      "Meet the designer behind the spreadsheets. Templates with real formulas, smart dashboards, and layouts that work.",
+      "Meet the maker behind Shelzy's Designs -- custom personalized water bottles and digital templates designed for real life.",
     type: "website",
     siteName: "Shelzy's Designs",
   },
@@ -28,33 +28,39 @@ export default function AboutPage() {
 
           <div className="space-y-6 text-lg leading-relaxed text-charcoal">
             <p>
-              I&apos;m Michelle, and I believe the right template can change
-              your week.
+              I&apos;m Michelle, and I started Shelzy&apos;s Designs because I
+              kept running into the same problem: the things I wanted either
+              didn&apos;t exist or weren&apos;t made well enough.
             </p>
 
             <p>
-              I started Shelzy&apos;s Designs because I was tired of downloading
-              &ldquo;planners&rdquo; that looked pretty but didn&apos;t actually
+              The water bottles came first. I wanted something I could actually
+              give as a gift -- personalized, quality, not the kind that fades
+              after two washes. So I started making them. Permanent sublimation
+              printing, real stainless steel, names and designs that hold up.
+              Every bottle ships with free personalization because that&apos;s
+              the whole point.
+            </p>
+
+            <p>
+              The templates came from the same place. I was tired of downloading
+              &ldquo;planners&rdquo; that looked nice but didn&apos;t actually
               do anything. No formulas. No automation. Just empty cells with
-              nice fonts.
+              pretty fonts.
             </p>
 
             <p>
               So I built what I actually wanted: spreadsheets with real formulas,
               smart dashboards, and layouts that make sense the second you open
-              them.
+              them. Every template in this shop is something I&apos;ve used,
+              tested, and refined -- from budgets that auto-calculate to wedding
+              planners that keep every vendor, guest, and deadline in one place.
             </p>
 
             <p>
-              Every template in this shop is something I&apos;ve used, tested,
-              and refined. From budgets that auto-calculate to wedding planners
-              that keep every vendor, guest, and deadline in one place.
-            </p>
-
-            <p>
-              Whether you&apos;re organizing your finances, launching a side
-              hustle, or planning the biggest day of your life, there&apos;s a
-              Shelzy&apos;s Designs template for that.
+              Whether you&apos;re looking for a personalized gift, organizing
+              your finances, or planning the biggest day of your life, there&apos;s
+              a Shelzy&apos;s Designs product for that.
             </p>
           </div>
 

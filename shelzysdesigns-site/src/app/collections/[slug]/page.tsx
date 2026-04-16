@@ -4,6 +4,11 @@ import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
 import { products, getAllCategories } from "@/data/products";
 
+// Best-seller slugs (products flagged bestSeller: true)
+const bestSellerSlugs = new Set(
+  products.filter((p) => p.bestSeller).map((p) => p.slug)
+);
+
 // Virtual collections that combine multiple categories
 const virtualCollections: Record<
   string,
@@ -46,6 +51,22 @@ const virtualCollections: Record<
     metaDescription:
       "Teacher Appreciation gift tags, Mother's Day cards and certificates, Father's Day coupon books, and graduation invitations. Instant download printables you can personalize and print at home.",
     categorySlugs: ["seasonal-gifts"],
+  },
+  "gifts-for-her": {
+    name: "Gifts for Her",
+    description:
+      "Personalized water bottles, wedding planners, budget tools, and party supplies -- thoughtful gifts she will actually use",
+    metaDescription:
+      "Personalized gifts for her: custom water bottles, wedding planners, budget trackers, and party supplies. Permanent sublimation printing on every bottle. Instant-download templates. Free personalization.",
+    categorySlugs: ["water-bottles", "wedding", "seasonal-gifts", "party-events"],
+  },
+  "best-sellers": {
+    name: "Best Sellers",
+    description:
+      "Our most popular products -- from custom water bottles to budget trackers and wedding planners",
+    metaDescription:
+      "Shop Shelzy's Designs best sellers: personalized water bottles, budget trackers, wedding planners, ADHD dashboards, and more. Customer favorites with free personalization on every bottle.",
+    categorySlugs: [],
   },
 };
 
@@ -134,9 +155,11 @@ export default async function CollectionPage({
   // Check virtual collections first
   const virtual = virtualCollections[slug];
   if (virtual) {
-    const collectionProducts = products.filter((p) =>
-      virtual.categorySlugs.includes(p.category)
-    );
+    // best-sellers uses the bestSeller flag instead of category slugs
+    const collectionProducts =
+      slug === "best-sellers"
+        ? products.filter((p) => bestSellerSlugs.has(p.slug))
+        : products.filter((p) => virtual.categorySlugs.includes(p.category));
 
     return (
       <>

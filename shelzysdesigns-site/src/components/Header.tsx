@@ -6,12 +6,10 @@ import Link from "next/link";
 const navLinks = [
   { label: "Shop All", href: "/shop" },
   { label: "Water Bottles", href: "/collections/water-bottles" },
-  { label: "Templates", href: "/collections/templates" },
-  { label: "Planners", href: "/collections/planners" },
+  { label: "Best Sellers", href: "/collections/best-sellers" },
+  { label: "Gifts for Her", href: "/collections/gifts-for-her" },
   { label: "Wedding", href: "/collections/wedding" },
   { label: "Blog", href: "/blog" },
-  { label: "FAQ", href: "/faq" },
-  { label: "About", href: "/about" },
 ];
 
 function CartIcon() {
@@ -57,14 +55,16 @@ export default function Header() {
 
         {/* Right side: cart + mobile hamburger */}
         <div className="flex items-center gap-3">
-          {/* Cart icon */}
-          <Link
-            href="/shop"
-            aria-label="Shop"
-            className="text-charcoal hover:text-pink transition p-1"
+          {/* Etsy shop link */}
+          <a
+            href="https://www.etsy.com/shop/ShelzysDesignsStore"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Shop on Etsy"
+            className="hidden sm:inline-block font-heading text-xs font-semibold uppercase tracking-wide text-charcoal hover:text-pink transition border border-charcoal hover:border-pink px-3 py-1.5 rounded-full"
           >
-            <CartIcon />
-          </Link>
+            Shop Etsy
+          </a>
 
           {/* Mobile hamburger */}
           <button

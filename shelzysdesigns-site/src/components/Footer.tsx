@@ -3,9 +3,10 @@ import Link from "next/link";
 const shopLinks = [
   { label: "Shop All", href: "/shop" },
   { label: "Custom Water Bottles", href: "/collections/water-bottles" },
-  { label: "Templates", href: "/collections/templates" },
+  { label: "Best Sellers", href: "/collections/best-sellers" },
+  { label: "Gifts for Her", href: "/collections/gifts-for-her" },
   { label: "Wedding Planning", href: "/collections/wedding" },
-  { label: "Bundles", href: "/collections/bundles" },
+  { label: "Templates", href: "/collections/templates" },
 ];
 
 const helpLinks = [

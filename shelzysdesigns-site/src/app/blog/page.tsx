@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     canonical: "https://shelzysdesigns.com/blog",
   },
   openGraph: {
-    title: "Spreadsheet Templates Blog | Shelzy's Designs",
+    title: "Blog — Guides, Tips & Personalization Ideas | Shelzy's Designs",
     description:
       "Budget templates, wedding planning spreadsheets, ADHD planners, Etsy seller dashboards — guides and comparisons to help you find the right template.",
     type: "website",

@@ -78,20 +78,20 @@ export const blogPosts: BlogPost[] = [
       "We compare the best budget spreadsheet templates for 2026 — free and paid — so you can find the one that actually fits your money style.",
     bodySections: [
       {
-        type: "h2",
-        text: "Why Most Budget Templates Fail Before March",
+        type: "p",
+        text: "I built the first version of our budget tracker for myself after downloading seven different free templates and abandoning every single one of them. They were either too cluttered, too basic, or just ugly enough that I didn't want to open them. A budget you don't open doesn't work. So I started over with a blank sheet and built what I actually needed.",
       },
       {
         type: "p",
-        text: "Every January, millions of people download a budget template. By March, most of them have stopped using it. The template isn't the problem — the fit is. A budget built for someone who gets paid biweekly looks nothing like one built for a freelancer with irregular income. A household tracking groceries for five needs different categories than a single person splitting rent with a roommate. The best budget spreadsheet template for 2026 isn't the most comprehensive one — it's the one you'll actually open next month.",
+        text: "The templates in this shop came out of that same frustration. Here's what we've learned about what actually matters -- and how different options stack up.",
       },
       {
         type: "h2",
-        text: "What Actually Matters in a Budget Spreadsheet",
+        text: "What Makes a Budget Spreadsheet Worth Using",
       },
       {
         type: "p",
-        text: "Before comparing specific templates, it helps to know what separates a useful budget spreadsheet from a pretty one that collects dust. Here's what to look for:",
+        text: "The best budget template isn't the most comprehensive one -- it's the one you'll actually open next month. Here's what separates useful from abandoned:",
       },
       {
         type: "ul",
@@ -154,7 +154,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         type: "p",
-        text: "Our Monthly Budget Tracker is built for anyone who wants a clean, comprehensive view of their finances every month. It includes separate tabs for income, fixed expenses, variable expenses, and savings — all feeding into a visual dashboard that shows your balance, savings rate, and spending by category. Formulas are pre-built and locked so you can't accidentally break them. Works in both Excel and Google Sheets.",
+        text: "This is the one I use personally and the one that sells every day. It has separate tabs for income, fixed expenses, variable expenses, and savings -- all feeding into a visual dashboard that shows your balance, savings rate, and category spending at a glance. Formulas are pre-built. You can't accidentally break them. Works in Excel and Google Sheets. $5.99.",
       },
       {
         type: "h3",
@@ -559,11 +559,11 @@ export const blogPosts: BlogPost[] = [
       },
       {
         type: "p",
-        text: "Most small business owners know their revenue number. Fewer know their actual profit after expenses. Even fewer can tell you which product line or service is most profitable, how their revenue this quarter compares to last quarter, or exactly how much they owe in estimated taxes. This isn't a knowledge problem — it's a system problem. When your financial data lives in your bank app, your receipts live in your email, and your goals live in a notes app, there's no way to see the full picture.",
+        text: "I run a small shop. For the first year, my revenue lived in one tab, my expenses in another, my inventory in a sticky note, and my goals in a notes app I opened twice. It worked fine until I needed to answer a real question -- 'am I actually making money?' -- and I couldn't.",
       },
       {
         type: "p",
-        text: "A small business planner spreadsheet puts everything in one organized workbook so you stop spending mental energy tracking down information and start spending it on decisions.",
+        text: "The Small Business Planner in our shop came out of rebuilding that system from scratch. Everything in one workbook: revenue, expenses, profit, goals, inventory. Here's what a planner like that should actually track -- and why.",
       },
       {
         type: "h2",
@@ -841,16 +841,16 @@ export const blogPosts: BlogPost[] = [
       "A meal planner that builds your grocery list automatically saves more than time -- it cuts food waste, reduces stress, and keeps you out of the drive-through.",
     bodySections: [
       {
+        type: "p",
+        text: "I built our meal planner template because I kept doing the same thing every Sunday: writing out meals, then rewriting the entire grocery list from scratch, then forgetting one ingredient anyway and ending up at the store twice. The version I built auto-generates the grocery list from whatever meals you plan for the week. Change a meal -- the list updates. Add a recipe -- the ingredients appear. It sounds obvious. I couldn't find a free template that actually did it.",
+      },
+      {
         type: "h2",
-        text: "Why Meal Planning Fails for Most People",
+        text: "Why Meal Planning Usually Fails",
       },
       {
         type: "p",
-        text: "Most meal planning systems collapse within two weeks. Not because the idea is bad -- meal planning genuinely works -- but because the execution is tedious. Writing out a plan, then writing out a grocery list from scratch, then realizing mid-week you forgot an ingredient and defaulting to takeout. The friction kills the habit.",
-      },
-      {
-        type: "p",
-        text: "The fix isn't more motivation. It's less friction. The right meal planner template eliminates the steps that cause people to give up: the blank-page problem, the manual grocery list, and the mental load of tracking what you have versus what you need.",
+        text: "It's not a motivation problem. It's a friction problem. The right template removes the two steps that cause people to quit: the blank-page planning problem and the manual grocery list. Here's what actually makes the difference:",
       },
       {
         type: "h2",
@@ -1743,6 +1743,283 @@ export const blogPosts: BlogPost[] = [
       {
         type: "p",
         text: "Ready to order? Browse our full collection of personalized water bottles and use the customizer on any product page to preview your text before you buy.",
+      },
+    ],
+  },
+
+  // ── Article 11: Best Personalized Birthday Gifts Under $50 ──
+  {
+    slug: "best-personalized-birthday-gifts-under-50",
+    title: "Best Personalized Birthday Gifts Under $50 (That People Actually Love)",
+    metaTitle:
+      "Best Personalized Birthday Gifts Under $50 | Shelzy's Designs",
+    metaDescription:
+      "Looking for a personalized birthday gift that won't break the bank? We've rounded up the best custom birthday gifts under $50 -- from personalized water bottles to digital planners.",
+    ogImageAlt: "Best personalized birthday gifts under $50 -- custom water bottles and digital templates",
+    ogImage: `${BASE_URL}/blog/images/best-personalized-birthday-gifts-under-50.jpg`,
+    headline:
+      "Best Personalized Birthday Gifts Under $50 (That People Actually Love)",
+    description:
+      "A practical guide to the best personalized birthday gifts under $50 -- things that feel thoughtful, look great, and don't require a last-minute Amazon panic.",
+    datePublished: "2026-04-15",
+    dateModified: "2026-04-15",
+    targetKeyword: "personalized birthday gifts under 50",
+    secondaryKeywords: [
+      "personalized birthday gifts",
+      "custom birthday gifts",
+      "unique birthday gifts",
+      "personalized water bottle gift",
+      "best birthday gifts for her",
+    ],
+    internalLinks: [
+      { label: "Personalized Water Bottle", href: "/products/personalized-water-bottle" },
+      { label: "Monthly Budget Tracker", href: "/products/monthly-budget-tracker" },
+      { label: "ADHD Life Dashboard", href: "/products/adhd-life-dashboard" },
+      { label: "Shop All Gifts", href: "/collections/gifts-for-her" },
+    ],
+    faq: [
+      {
+        question: "What is a good personalized birthday gift under $50?",
+        answer:
+          "A personalized stainless steel water bottle ($34.99) is one of the best options -- it's practical, looks great, and feels custom without feeling generic. Other strong picks: a digital planner or budget tracker they can use every day.",
+      },
+      {
+        question: "How long does a personalized water bottle take to ship?",
+        answer:
+          "Personalized water bottles from Shelzy's Designs ship in 3-5 business days with standard shipping. The sublimation printing is done to order, so you'll want to order at least a week before the birthday.",
+      },
+      {
+        question: "Are personalized gifts better than regular gifts?",
+        answer:
+          "Yes -- studies consistently show that personalized gifts feel more thoughtful and are kept longer than generic ones. Even a small personalization (a name, an inside joke, a meaningful date) makes a big difference in how the gift lands.",
+      },
+      {
+        question: "What do you put on a personalized water bottle for a birthday?",
+        answer:
+          "Popular choices: the person's name, a nickname, their birth year, a motivational phrase, or a meaningful date. Keep it short -- 1-3 words or a short phrase prints best and looks cleanest on the bottle.",
+      },
+    ],
+    category: "water-bottles",
+    excerpt:
+      "The best personalized birthday gifts under $50 -- from custom water bottles to digital planners -- that feel thoughtful without requiring a lot of planning.",
+    bodySections: [
+      {
+        type: "p",
+        text: "One of the most common messages I get in my shop is some version of: \"I have no idea what to get her but I want it to feel personal.\" I love those messages, because that is exactly what we make for.",
+      },
+      {
+        type: "p",
+        text: "Everything in our shop is either fully personalized or designed to feel like it was made specifically for someone. Here are the gifts that customers come back to order again and again -- for birthdays, holidays, and \"I just wanted to get you something\" moments.",
+      },
+      {
+        type: "h2",
+        text: "A Personalized Water Bottle -- $34.99",
+      },
+      {
+        type: "p",
+        text: "This is our most popular birthday gift, and honestly it's not close. We use sublimation printing -- not vinyl, not stickers, not decals. The design is fused permanently into the coating of the bottle. It will not peel in the dishwasher. It will not scratch off when it bumps around in a gym bag. It just stays beautiful.",
+      },
+      {
+        type: "p",
+        text: "You tell us the name, phrase, or date you want printed. We handle everything else. The bottle ships in 3-5 business days, which means if you order at least a week before the birthday, you're golden.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Premium stainless steel -- double-walled, keeps cold 24 hours",
+          "Permanent sublimation print -- dishwasher safe, won't peel or fade",
+          "Free personalization on every single order",
+          "Multiple sizes and colors",
+          "Ships in 3-5 business days",
+        ],
+      },
+      {
+        type: "callout",
+        text: "Who it's perfect for: the friend who lives at the gym, the coworker who has everything, the mom who would never buy something nice for herself, the sister-in-law you always struggle to shop for.",
+      },
+      {
+        type: "h2",
+        text: "A Digital Planner She'll Actually Use -- $5.99 to $12.99",
+      },
+      {
+        type: "p",
+        text: "I designed every template in this shop because I needed it myself and couldn't find one that worked. The budget tracker started because I kept abandoning spreadsheets that were either too complicated or too ugly to open. The ADHD dashboard came from a year of trying to figure out how to actually function. These aren't templates made to look good in a screenshot -- they're tools I built to use every day.",
+      },
+      {
+        type: "p",
+        text: "They download instantly. Your person has access the second checkout is complete -- no waiting, no shipping. Works in Google Sheets and Excel.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Budget Tracker ($5.99) -- for the friend who just moved out or started a new job",
+          "ADHD Life Dashboard ($9.99) -- for anyone who struggles to feel organized",
+          "Wedding Planner ($12.99) -- if she's engaged or deep in bridesmaid duties",
+          "Meal Planner ($7.99) -- for the person who hates the \"what's for dinner\" question",
+        ],
+      },
+      {
+        type: "h2",
+        text: "The Bachelorette Water Bottle Set -- for a group birthday",
+      },
+      {
+        type: "p",
+        text: "If the birthday is also a trip -- a bachelorette weekend that happens to fall on someone's birthday, a girls' trip, a milestone celebration -- matching personalized water bottles for the whole group are something people keep talking about for years. Each bottle gets a different name. They ship together. It's a group gift that actually photographs well and doesn't involve a giant card everyone signs in the parking lot.",
+      },
+      {
+        type: "h2",
+        text: "What to put on the bottle",
+      },
+      {
+        type: "p",
+        text: "Short and specific is always better than long and generic. A first name. A nickname only you call her. Her graduation year. A phrase she says constantly. The city she grew up in. Something that makes it unmistakably hers. If you're unsure, her first name alone is beautiful -- simple, permanent, personal.",
+      },
+      {
+        type: "h2",
+        text: "Order timing",
+      },
+      {
+        type: "p",
+        text: "Water bottles are made to order -- we personalize each one when it's placed. Production takes 1-2 days, shipping is 3-5 business days. Order at least 7 days before the birthday and you'll be comfortable. Digital templates are instant -- no timing to worry about at all.",
+      },
+    ],
+  },
+
+  // ── Article 12: Budget Spreadsheet Templates for Couples ──
+  {
+    slug: "budget-spreadsheet-templates-for-couples",
+    title: "Budget Spreadsheet Templates for Couples (That Don't Start Fights)",
+    metaTitle:
+      "Budget Spreadsheet Templates for Couples | Shelzy's Designs",
+    metaDescription:
+      "Managing money as a couple is harder than managing it alone. Here are the best budget spreadsheet templates for couples -- designed for two incomes, shared expenses, and different spending styles.",
+    ogImageAlt: "Budget spreadsheet template for couples managing shared finances",
+    ogImage: `${BASE_URL}/blog/images/budget-spreadsheet-templates-for-couples.jpg`,
+    headline:
+      "Budget Spreadsheet Templates for Couples (That Don't Start Fights)",
+    description:
+      "Managing money as a couple is harder than managing it alone. Here are the best budget spreadsheet templates for couples -- designed for two incomes, shared expenses, and different spending styles.",
+    datePublished: "2026-04-15",
+    dateModified: "2026-04-15",
+    targetKeyword: "budget spreadsheet template for couples",
+    secondaryKeywords: [
+      "couples budget template",
+      "shared budget spreadsheet",
+      "budget for two people",
+      "household budget template",
+      "joint budget google sheets",
+    ],
+    internalLinks: [
+      { label: "Monthly Budget Tracker", href: "/products/monthly-budget-tracker" },
+      { label: "Family Budget Planner", href: "/products/family-budget-planner" },
+      { label: "Paycheck Budget Planner", href: "/products/paycheck-budget-planner" },
+      { label: "Budget + Finance Collection", href: "/collections/budget-finance" },
+    ],
+    faq: [
+      {
+        question: "What is the best budget spreadsheet for couples?",
+        answer:
+          "The Monthly Budget Tracker ($5.99) handles two income streams, shared and individual expenses, and a combined dashboard showing your household's full financial picture. For couples on different pay schedules, the Paycheck Budget Planner ($7.99) works better -- it builds your budget per paycheck rather than per month.",
+      },
+      {
+        question: "Should couples have a joint budget or separate budgets?",
+        answer:
+          "Most couples do best with a hybrid: a shared budget for household and joint expenses, plus individual spending money each person controls without needing to report it. Our Family Budget Planner has built-in sections for both.",
+      },
+      {
+        question: "How do you split expenses fairly between partners with different incomes?",
+        answer:
+          "The most common approaches are 50/50 (simple, works when incomes are similar), proportional (each contributes a percentage of income), or a joint account for shared expenses plus separate personal accounts. Our budget templates accommodate all three -- just adjust the income and expense tabs to reflect how you split things.",
+      },
+      {
+        question: "Does the budget template work in Google Sheets?",
+        answer:
+          "Yes -- all of our templates work in both Google Sheets and Excel. Google Sheets is the easier option for couples since you can both access and edit the same file without sending anything back and forth.",
+      },
+    ],
+    category: "budget-finance",
+    excerpt:
+      "Managing money as a couple is harder than managing it solo. The right budget template makes shared finances less of a negotiation and more of a system.",
+    bodySections: [
+      {
+        type: "p",
+        text: "Here's the thing nobody tells you about managing money with a partner: it's not really about the money. It's about having a shared system both people actually trust and use. You can have identical incomes, identical financial goals, and still fight about spending if one person is tracking carefully and the other has no idea what the budget even is.",
+      },
+      {
+        type: "p",
+        text: "I designed our budget templates to be genuinely shareable. One file, both people can see it, everything in one place. Here's what works, what doesn't, and which template fits your situation.",
+      },
+      {
+        type: "h2",
+        text: "The core problem with most couples' budgets",
+      },
+      {
+        type: "p",
+        text: "Most budget templates are built for one person. One income column. One set of spending categories. One person doing all the tracking. That works fine until you add a second income, shared rent, different spending habits, and two people who have very different ideas about what \"discretionary\" means.",
+      },
+      {
+        type: "p",
+        text: "What couples actually need: a template that handles two incomes cleanly, separates shared expenses from personal spending, and shows a combined picture without requiring one person to be the sole spreadsheet manager.",
+      },
+      {
+        type: "h2",
+        text: "Monthly Budget Tracker -- best for couples with similar pay schedules",
+      },
+      {
+        type: "p",
+        text: "This is our most-used template and it works well for couples who are both paid monthly or semi-monthly. There's an income section with multiple rows -- enter both salaries, any freelance income, side income, whatever you bring in. The expense section has shared categories (rent, utilities, groceries) and personal categories you can customize for each person. The dashboard shows total household income, total expenses, and what's left at month end.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Works in Google Sheets -- both partners can edit the same file",
+          "Pre-built income rows for two earners",
+          "Shared and personal expense sections",
+          "Visual dashboard showing household balance at a glance",
+          "$5.99, instant download",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Paycheck Budget Planner -- best for couples on different pay schedules",
+      },
+      {
+        type: "p",
+        text: "If one person is paid weekly and one is paid bi-weekly, or one has a salary and one does freelance, a monthly template gets messy. The Paycheck Budget Planner builds the budget around when money actually arrives. You assign bills and expenses to whichever paycheck covers them. Nothing gets lost between pay periods, and you always know exactly what's coming in and going out before each paycheck lands.",
+      },
+      {
+        type: "h2",
+        text: "Family Budget Planner -- best for households with shared savings goals",
+      },
+      {
+        type: "p",
+        text: "If you're saving for something specific together -- a house, a vacation, a baby, early retirement -- the Family Budget Planner has dedicated savings goal tracking alongside the regular budget. You set the goal, set the timeline, and the template calculates how much you need to set aside each month to hit it. Good for couples who want the budget to work toward something, not just track what already happened.",
+      },
+      {
+        type: "h2",
+        text: "How to set it up as a couple",
+      },
+      {
+        type: "ol",
+        items: [
+          "Download and open in Google Sheets -- share the file with your partner so both of you have edit access",
+          "Enter both incomes in the income section",
+          "List every shared expense (rent, utilities, subscriptions, groceries)",
+          "Add a 'personal spending' line for each person -- an amount each of you can spend without reporting it",
+          "Review together once a week, not daily -- daily reviews turn into arguments, weekly reviews turn into habits",
+        ],
+      },
+      {
+        type: "callout",
+        text: "The personal spending line is the most important line in a couples' budget. Everyone needs some money they control completely. Build it in from the start.",
+      },
+      {
+        type: "h2",
+        text: "The one thing that makes couples budgets work",
+      },
+      {
+        type: "p",
+        text: "It's not the template. It's a regular check-in. Pick one day a week -- Sunday works well -- and spend 15 minutes looking at the numbers together. Not to audit each other. Just to stay on the same page. Couples who do this report fewer money arguments and more progress toward shared goals. The template just makes the numbers easy to see.",
       },
     ],
   },

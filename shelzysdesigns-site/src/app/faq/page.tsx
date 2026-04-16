@@ -75,7 +75,7 @@ const faqs = [
   {
     question: "I have a question about a specific product.",
     answer:
-      "Email us at michelle.e.humes@gmail.com and we'll get back to you within 24 hours.",
+      "Send us a message through our Etsy shop or use the Contact page -- we respond within 24 hours.",
   },
 ];
 

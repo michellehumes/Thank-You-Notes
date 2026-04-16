@@ -263,6 +263,25 @@ export default async function ProductPage({
                 {product.name}
               </h1>
 
+              {/* Star rating */}
+              <div className="flex items-center gap-2 mb-3">
+                <div className="flex gap-0.5 text-orange">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                  ))}
+                </div>
+                <a
+                  href="https://www.etsy.com/shop/ShelzysDesignsStore#reviews"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-text-light hover:text-pink transition"
+                >
+                  4.9 stars · 290+ reviews on Etsy
+                </a>
+              </div>
+
               {/* Price */}
               <p className="text-2xl font-bold text-charcoal mb-4">
                 ${product.price.toFixed(2)}

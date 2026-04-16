@@ -83,9 +83,23 @@ const templateSteps = [
   },
 ];
 
-// Reviews: replace these placeholders with real verified customer reviews (e.g. from Etsy)
-// until real reviews are available, this section should be hidden or replaced with an Etsy shop link
-const reviews: { quote: string; name: string; source?: string }[] = [];
+const reviews: { quote: string; name: string; product: string }[] = [
+  {
+    quote: "I bought 14 water bottles for my Love Island themed Bach trip and they looked AMAZING!!! Exactly as pictured and all my friends are obsessed with them!",
+    name: "Zobia",
+    product: "Personalized Water Bottle",
+  },
+  {
+    quote: "Customer service is superb. I asked how I could customise the ADHD planner to better suit my needs, and Shelzy was incredibly helpful. Would definitely recommend this seller, absolutely top notch.",
+    name: "Yvonne",
+    product: "ADHD Life Dashboard",
+  },
+  {
+    quote: "The seller was so easy to work with, easy to communicate with and made sure that these arrived on time for my wedding. I would recommend this shop to anyone!",
+    name: "Courtney",
+    product: "Wedding Order",
+  },
+];
 
 export default function Home() {
   const bestSellers = getBestSellers();
@@ -127,20 +141,36 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Visual grid -- replace these blocks with real product photos */}
+            {/* Product image grid */}
             <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto md:mx-0 md:ml-auto">
-              <div className="aspect-[4/5] rounded-2xl bg-pink/20 flex items-center justify-center">
-                <span className="text-pink/60 font-heading font-bold text-xs tracking-widest uppercase">Water Bottle</span>
-              </div>
-              <div className="aspect-[4/5] rounded-2xl bg-teal/20 translate-y-6 flex items-center justify-center">
-                <span className="text-teal/60 font-heading font-bold text-xs tracking-widest uppercase">Wedding</span>
-              </div>
-              <div className="aspect-[4/5] rounded-2xl bg-orange/15 -translate-y-6 flex items-center justify-center">
-                <span className="text-orange/60 font-heading font-bold text-xs tracking-widest uppercase">Digital</span>
-              </div>
-              <div className="aspect-[4/5] rounded-2xl bg-blue/15 flex items-center justify-center">
-                <span className="text-blue/60 font-heading font-bold text-xs tracking-widest uppercase">Templates</span>
-              </div>
+              <Link href="/products/personalized-water-bottle" className="aspect-[4/5] rounded-2xl overflow-hidden bg-light-gray block group">
+                <img
+                  src="/product_images/personalized-water-bottle.jpg"
+                  alt="Personalized Water Bottle"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </Link>
+              <Link href="/products/wedding-water-bottle-set" className="aspect-[4/5] rounded-2xl overflow-hidden bg-light-gray translate-y-6 block group">
+                <img
+                  src="/product_images/wedding-water-bottle-set.jpg"
+                  alt="Wedding Water Bottle Set"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </Link>
+              <Link href="/products/monthly-budget-tracker" className="aspect-[4/5] rounded-2xl overflow-hidden bg-light-gray -translate-y-6 block group">
+                <img
+                  src="/product_images/monthly-budget-tracker.jpg"
+                  alt="Monthly Budget Tracker"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </Link>
+              <Link href="/products/coastal-bridal-shower-games" className="aspect-[4/5] rounded-2xl overflow-hidden bg-light-gray block group">
+                <img
+                  src="/product_images/coastal-bridal-shower-games.jpg"
+                  alt="Coastal Bridal Shower Games"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </Link>
             </div>
           </div>
         </section>
@@ -315,9 +345,7 @@ export default function Home() {
                     </p>
                     <p className="font-heading font-semibold text-sm text-charcoal">
                       {review.name}
-                      {review.source && (
-                        <span className="text-text-light font-normal ml-1">via {review.source}</span>
-                      )}
+                      <span className="text-text-light font-normal ml-1">· {review.product} · via Etsy</span>
                     </p>
                   </div>
                 ))}
@@ -328,7 +356,7 @@ export default function Home() {
                   See what customers are saying about Shelzy&apos;s Designs on our Etsy shop.
                 </p>
                 <a
-                  href="https://www.etsy.com/shop/ShelzysDesigns#reviews"
+                  href="https://www.etsy.com/shop/ShelzysDesignsStore#reviews"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block border-2 border-charcoal text-charcoal font-heading font-semibold px-8 py-3 rounded-lg hover:bg-charcoal hover:text-white transition"

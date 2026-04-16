@@ -29,10 +29,10 @@ export default function ContactPage() {
                 Email
               </h2>
               <a
-                href="mailto:michelle.e.humes@gmail.com"
+                href="mailto:hello@shelzysdesigns.com"
                 className="text-pink hover:text-pink-hover transition text-sm"
               >
-                michelle.e.humes@gmail.com
+                hello@shelzysdesigns.com
               </a>
               <p className="text-text-light text-sm mt-2">
                 Best for order issues, file downloads, and general questions.
@@ -44,7 +44,7 @@ export default function ContactPage() {
                 Etsy Messages
               </h2>
               <a
-                href="https://www.etsy.com/shop/ShelzysDesigns"
+                href="https://www.etsy.com/shop/ShelzysDesignsStore"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-pink hover:text-pink-hover transition text-sm"

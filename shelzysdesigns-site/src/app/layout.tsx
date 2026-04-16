@@ -3,6 +3,7 @@ import { Montserrat, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -44,7 +45,7 @@ const organizationSchema = {
   description:
     "Digital spreadsheet templates, planners, and personalized water bottles designed for real life. Instant download. Free personalization.",
   sameAs: [
-    "https://www.etsy.com/shop/ShelzysDesigns",
+    "https://www.etsy.com/shop/ShelzysDesignsStore",
     "https://instagram.com/shelzysdesigns",
     "https://pinterest.com/shelzysdesigns",
   ],
@@ -61,6 +62,7 @@ export default function RootLayout({
       className={`${montserrat.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <AnnouncementBar />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -69,15 +71,19 @@ export default function RootLayout({
         <Analytics />
         <SpeedInsights />
         {/* Google Analytics 4 */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${process.env.NEXT_PUBLIC_GA_ID}');`,
-          }}
-        />
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${process.env.NEXT_PUBLIC_GA_ID}');`,
+              }}
+            />
+          </>
+        )}
         {/* Lemon Squeezy checkout overlay — activates on links with class="lemonsqueezy-button" */}
         <Script src="https://app.lemonsqueezy.com/js/lemon.js" strategy="afterInteractive" />
       </body>

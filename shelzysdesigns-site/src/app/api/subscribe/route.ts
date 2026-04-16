@@ -73,6 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
+    const discountCode = process.env.DISCOUNT_CODE || "WELCOME15";
 
     // Try email services in order of preference
     const delivered =
@@ -80,14 +81,13 @@ export async function POST(request: NextRequest) {
       (await addToMailchimp(normalizedEmail));
 
     if (!delivered) {
-      // No email service configured yet — log it and still return success
-      // so the UX isn't broken. Connect an email service via Vercel env vars.
       console.log(`[SUBSCRIBE] New signup (no email service configured): ${normalizedEmail}`);
     }
 
     return NextResponse.json({
       success: true,
-      message: "You're in! Check your email for your 15% off code.",
+      discountCode,
+      message: `Your code is ready -- use it at checkout.`,
     });
   } catch (err) {
     console.error("[SUBSCRIBE] Error:", err);
