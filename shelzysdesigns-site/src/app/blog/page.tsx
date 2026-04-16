@@ -86,11 +86,14 @@ export default function BlogIndex() {
                   href={`/blog/${post.slug}`}
                   className="group bg-white rounded-xl border border-mid-gray overflow-hidden hover:shadow-md transition"
                 >
-                  {/* Category color card */}
-                  <div className={`aspect-[16/9] flex items-center justify-center ${cardBgColors[post.category] || "bg-light-gray"}`}>
-                    <span className="font-heading font-bold text-sm tracking-widest uppercase opacity-40 select-none">
-                      {categoryLabels[post.category] || "Blog"}
-                    </span>
+                  {/* Featured image */}
+                  <div className={`aspect-[16/9] overflow-hidden ${cardBgColors[post.category] || "bg-light-gray"}`}>
+                    <img
+                      src={post.ogImage.replace("https://shelzysdesigns.com", "")}
+                      alt={post.ogImageAlt}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
                   </div>
 
                   <div className="p-6">

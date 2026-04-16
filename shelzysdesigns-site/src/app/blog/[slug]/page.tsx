@@ -173,11 +173,13 @@ export default async function BlogPostPage({
             {post.description}
           </p>
 
-          {/* Featured image placeholder */}
-          <div className="aspect-[16/9] bg-light-gray rounded-xl flex items-center justify-center mb-10">
-            <span className="font-heading font-bold text-3xl text-mid-gray select-none">
-              SD
-            </span>
+          {/* Featured image */}
+          <div className="aspect-[16/9] bg-light-gray rounded-xl overflow-hidden mb-10">
+            <img
+              src={post.ogImage.replace("https://shelzysdesigns.com", "")}
+              alt={post.ogImageAlt}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* Article body */}
