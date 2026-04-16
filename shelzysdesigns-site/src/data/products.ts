@@ -59,6 +59,8 @@ export const products: Product[] = [
     featured: true,
     bestSeller: true,
     images: ["/product_images/monthly-budget-tracker.jpg"],
+    shopifyProductId: "15086039105904",
+    shopifyVariantId: "53637865341296",
   },
   {
     id: 2,
@@ -75,6 +77,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/paycheck-budget-planner.jpg"],
+    shopifyProductId: "15086039171440",
+    shopifyVariantId: "53637865537904",
   },
   {
     id: 3,
@@ -91,6 +95,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/digital-cash-stuffing-system.jpg"],
+    shopifyProductId: "15086039204208",
+    shopifyVariantId: "53637865570672",
   },
   {
     id: 4,
@@ -107,6 +113,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/family-budget-planner.jpg"],
+    shopifyProductId: "15086039236976",
+    shopifyVariantId: "53637865603440",
   },
   {
     id: 5,
@@ -123,6 +131,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/2026-annual-budget-planner.jpg"],
+    shopifyProductId: "15086039269744",
+    shopifyVariantId: "53637865636208",
   },
   {
     id: 6,
@@ -139,6 +149,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/debt-payoff-tracker.jpg"],
+    shopifyProductId: "15086039335280",
+    shopifyVariantId: "53637865865584",
   },
   {
     id: 7,
@@ -155,6 +167,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/debt-payoff-savings-tracker.jpg"],
+    shopifyProductId: "15086039368048",
+    shopifyVariantId: "53637865898352",
   },
 
   // ── Business ──────────────────────────────
@@ -173,6 +187,8 @@ export const products: Product[] = [
     featured: true,
     bestSeller: true,
     images: ["/product_images/small-business-planner-2026.jpg"],
+    shopifyProductId: "15086039400816",
+    shopifyVariantId: "53637866062192",
   },
   {
     id: 9,
@@ -189,6 +205,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/side-hustle-income-expense-tracker.jpg"],
+    shopifyProductId: "15086039433584",
+    shopifyVariantId: "53637866094960",
   },
   {
     id: 10,
@@ -205,6 +223,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/12-month-side-hustle-log.jpg"],
+    shopifyProductId: "15086039499120",
+    shopifyVariantId: "53637867110768",
   },
   {
     id: 11,
@@ -221,6 +241,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/business-finance-net-worth-dashboard.jpg"],
+    shopifyProductId: "15086039531888",
+    shopifyVariantId: "53637867143536",
   },
   {
     id: 12,
@@ -237,6 +259,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/etsy-seller-analytics-dashboard.jpg"],
+    shopifyProductId: "15086039564656",
+    shopifyVariantId: "53637867176304",
   },
   {
     id: 13,
@@ -253,6 +277,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/etsy-seller-profit-calculator.jpg"],
+    shopifyProductId: "15086039597424",
+    shopifyVariantId: "53637867307376",
   },
 
   // ── Productivity + Life ───────────────────
@@ -271,6 +297,8 @@ export const products: Product[] = [
     featured: true,
     bestSeller: true,
     images: ["/product_images/adhd-life-dashboard.jpg"],
+    shopifyProductId: "15086039630192",
+    shopifyVariantId: "53637867340144",
   },
   {
     id: 15,
@@ -287,6 +315,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/project-goal-tracker.jpg"],
+    shopifyProductId: "15086039662960",
+    shopifyVariantId: "53637867405680",
   },
   {
     id: 16,
@@ -303,6 +333,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/moving-day-planner.jpg"],
+    shopifyProductId: "15086039695728",
+    shopifyVariantId: "53637867438448",
   },
   {
     id: 17,
@@ -319,6 +351,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/vacation-trip-planner.jpg"],
+    shopifyProductId: "15086039728496",
+    shopifyVariantId: "53637867471216",
   },
   {
     id: 18,
@@ -335,6 +369,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/weekly-meal-planner.jpg"],
+    shopifyProductId: "15086039794032",
+    shopifyVariantId: "53637867635056",
   },
   {
     id: 19,
@@ -351,6 +387,8 @@ export const products: Product[] = [
     featured: true,
     bestSeller: true,
     images: ["/product_images/meal-planner-auto-grocery-list.jpg"],
+    shopifyProductId: "15086039826800",
+    shopifyVariantId: "53637867667824",
   },
   {
     id: 20,
@@ -367,6 +405,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/workout-tracker.jpg"],
+    shopifyProductId: "15086039859568",
+    shopifyVariantId: "53637867700592",
   },
   {
     id: 21,
@@ -383,6 +423,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/kids-chore-chart-routine-tracker.jpg"],
+    shopifyProductId: "15086039892336",
+    shopifyVariantId: "53637867733360",
   },
   {
     id: 22,
@@ -399,6 +441,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/home-cleaning-organization-planner.jpg"],
+    shopifyProductId: "15086039925104",
+    shopifyVariantId: "53637867766128",
   },
 
   // ── Education ─────────────────────────────
@@ -417,6 +461,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/student-academic-planner-2026.jpg"],
+    shopifyProductId: "15086039957872",
+    shopifyVariantId: "53637867798896",
   },
   {
     id: 24,
@@ -433,6 +479,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/teacher-planner-2026.jpg"],
+    shopifyProductId: "15086039990640",
+    shopifyVariantId: "53637867831664",
   },
 
   // ── Other Templates (category: productivity or business as appropriate) ──
@@ -451,6 +499,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/social-media-planner-2026.jpg"],
+    shopifyProductId: "15086040023408",
+    shopifyVariantId: "53637867864432",
   },
   {
     id: 26,
@@ -467,6 +517,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/social-media-content-planner.jpg"],
+    shopifyProductId: "15086040056176",
+    shopifyVariantId: "53637867897200",
   },
   {
     id: 27,
@@ -483,6 +535,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/ugc-creator-media-kit.jpg"],
+    shopifyProductId: "15086040088944",
+    shopifyVariantId: "53637868028272",
   },
   {
     id: 28,
@@ -499,6 +553,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/rental-property-income-tracker.jpg"],
+    shopifyProductId: "15086040121712",
+    shopifyVariantId: "53637868061040",
   },
   {
     id: 29,
@@ -515,6 +571,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/pet-expense-tracker.jpg"],
+    shopifyProductId: "15086040154480",
+    shopifyVariantId: "53637868093808",
   },
   {
     id: 30,
@@ -531,6 +589,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/babys-first-year-milestone-tracker.jpg"],
+    shopifyProductId: "15086040187248",
+    shopifyVariantId: "53637868126576",
   },
   {
     id: 31,
@@ -547,6 +607,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/co-parenting-schedule-planner.jpg"],
+    shopifyProductId: "15086040220016",
+    shopifyVariantId: "53637868159344",
   },
   {
     id: 32,
@@ -563,6 +625,8 @@ export const products: Product[] = [
     featured: true,
     bestSeller: true,
     images: ["/product_images/job-search-command-center.jpg"],
+    shopifyProductId: "15086040252784",
+    shopifyVariantId: "53637868192112",
   },
 
   // ── Wedding ───────────────────────────────
@@ -581,6 +645,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/bridal-shower-planner.jpg"],
+    shopifyProductId: "15086040285552",
+    shopifyVariantId: "53637868224880",
   },
   {
     id: 34,
@@ -597,6 +663,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/wedding-vendor-comparison-tool.jpg"],
+    shopifyProductId: "15086040318320",
+    shopifyVariantId: "53637868257648",
   },
   {
     id: 35,
@@ -613,6 +681,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/wedding-budget-tracker.jpg"],
+    shopifyProductId: "15086040351088",
+    shopifyVariantId: "53637868290416",
   },
   {
     id: 36,
@@ -629,6 +699,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/wedding-planning-checklist-budget.jpg"],
+    shopifyProductId: "15086040383856",
+    shopifyVariantId: "53637868323184",
   },
   {
     id: 37,
@@ -645,6 +717,8 @@ export const products: Product[] = [
     featured: true,
     bestSeller: true,
     images: ["/product_images/interactive-wedding-planner-dashboard.jpg"],
+    shopifyProductId: "15086040449392",
+    shopifyVariantId: "53637868454256",
   },
   {
     id: 38,
@@ -661,6 +735,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/bachelorette-party-planner.jpg"],
+    shopifyProductId: "15086040482160",
+    shopifyVariantId: "53637868487024",
   },
 
   // ── Party + Events ────────────────────────
@@ -680,6 +756,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_39_img01.svg"],
+    shopifyProductId: "15086040514928",
+    shopifyVariantId: "53637868519792",
   },
   {
     id: 40,
@@ -696,6 +774,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/easter-basket-budget-planner.jpg"],
+    shopifyProductId: "15086040547696",
+    shopifyVariantId: "53637868552560",
   },
 
   // ── Save the Dates ────────────────────────
@@ -714,6 +794,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/san-jose-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040580464",
+    shopifyVariantId: "53637868585328",
   },
   {
     id: 42,
@@ -730,6 +812,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/hillsboro-lighthouse-save-the-date.jpg"],
+    shopifyProductId: "15086040646000",
+    shopifyVariantId: "53637868683632",
   },
   {
     id: 43,
@@ -746,6 +830,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/philadelphia-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040678768",
+    shopifyVariantId: "53637868716400",
   },
   {
     id: 44,
@@ -762,6 +848,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/dallas-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040711536",
+    shopifyVariantId: "53637868749168",
   },
   {
     id: 45,
@@ -778,6 +866,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/austin-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040744304",
+    shopifyVariantId: "53637868781936",
   },
   {
     id: 46,
@@ -794,6 +884,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/chicago-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040777072",
+    shopifyVariantId: "53637868814704",
   },
   {
     id: 47,
@@ -810,6 +902,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/los-angeles-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040842608",
+    shopifyVariantId: "53637868945776",
   },
   {
     id: 48,
@@ -826,6 +920,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/nyc-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040875376",
+    shopifyVariantId: "53637868978544",
   },
 
   // ── Printables + Bundles ──────────────────
@@ -844,6 +940,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/bachelorette-scavenger-hunt.jpg"],
+    shopifyProductId: "15086040908144",
+    shopifyVariantId: "53637869011312",
   },
   {
     id: 50,
@@ -860,6 +958,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/villa-vibes-bachelorette-bundle.jpg"],
+    shopifyProductId: "15086040940912",
+    shopifyVariantId: "53637869044080",
   },
   {
     id: 51,
@@ -876,6 +976,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/st-patricks-day-kids-activity-bundle.jpg"],
+    shopifyProductId: "15086040973680",
+    shopifyVariantId: "53637869076848",
   },
   {
     id: 52,
@@ -892,6 +994,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/st-patricks-day-png-bundle.jpg"],
+    shopifyProductId: "15086041006448",
+    shopifyVariantId: "53637869109616",
   },
   {
     id: 53,
@@ -908,6 +1012,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/40-day-lent-devotional-activity-bundle.jpg"],
+    shopifyProductId: "15086041039216",
+    shopifyVariantId: "53637869142384",
   },
   {
     id: 54,
@@ -924,6 +1030,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/mothers-day-svg-bundle.jpg"],
+    shopifyProductId: "15086041071984",
+    shopifyVariantId: "53637869175152",
   },
 
   // ── Water Bottles (Physical) ──────────────
@@ -1041,6 +1149,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_61_img01.svg"],
+    shopifyProductId: "15086041104752",
+    shopifyVariantId: "53637869207920",
   },
   {
     id: 62,
@@ -1058,6 +1168,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_62_img01.svg"],
+    shopifyProductId: "15086041137520",
+    shopifyVariantId: "53637869240688",
   },
   {
     id: 63,
@@ -1075,6 +1187,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_63_img01.svg"],
+    shopifyProductId: "15086041170288",
+    shopifyVariantId: "53637869273456",
   },
   {
     id: 64,
@@ -1092,6 +1206,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_64_img01.svg"],
+    shopifyProductId: "15086041203056",
+    shopifyVariantId: "53637869306224",
   },
   {
     id: 65,
@@ -1109,6 +1225,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_65_img01.svg"],
+    shopifyProductId: "15086041268592",
+    shopifyVariantId: "53637869404528",
   },
 
   // ── Wedding (new printable designs) ─────
@@ -1127,6 +1245,8 @@ export const products: Product[] = [
     featured: true,
     bestSeller: false,
     images: ["/product_images/wedding-planning-bundle.jpg"],
+    shopifyProductId: "15086041301360",
+    shopifyVariantId: "53637869437296",
   },
   {
     id: 67,
@@ -1143,6 +1263,8 @@ export const products: Product[] = [
     featured: false,
     bestSeller: false,
     images: ["/product_images/coastal-bridal-shower-games.jpg"],
+    shopifyProductId: "15086041334128",
+    shopifyVariantId: "53637869470064",
   },
   {
     id: 68,
@@ -1160,6 +1282,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_68_img01.svg"],
+    shopifyProductId: "15086041366896",
+    shopifyVariantId: "53637869502832",
   },
   {
     id: 69,
@@ -1177,6 +1301,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_69_img01.svg"],
+    shopifyProductId: "15086041399664",
+    shopifyVariantId: "53637869535600",
   },
   {
     id: 70,
@@ -1194,6 +1320,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_70_img01.svg"],
+    shopifyProductId: "15086041432432",
+    shopifyVariantId: "53637869568368",
   },
   {
     id: 71,
@@ -1211,6 +1339,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_71_img01.svg"],
+    shopifyProductId: "15086041465200",
+    shopifyVariantId: "53637869601136",
   },
   {
     id: 72,
@@ -1228,6 +1358,8 @@ export const products: Product[] = [
     bestSeller: false,
     published: false,
     images: ["/shelzy_images/shelzy_72_img01.svg"],
+    shopifyProductId: "15086041530736",
+    shopifyVariantId: "53637869666672",
   },
 ];
 
