@@ -18,7 +18,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="group block bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
     >
       {/* Product image */}
-      <div className="relative aspect-square bg-light-gray overflow-hidden">
+      <div className="relative aspect-square bg-white overflow-hidden">
         {product.images[0] ? (
           <Image
             src={product.images[0]}
@@ -26,7 +26,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             width={400}
             height={400}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 240px"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

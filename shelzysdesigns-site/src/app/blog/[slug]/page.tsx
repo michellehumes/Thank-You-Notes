@@ -174,11 +174,11 @@ export default async function BlogPostPage({
           </p>
 
           {/* Featured image */}
-          <div className="aspect-[16/9] bg-light-gray rounded-xl overflow-hidden mb-10">
+          <div className="aspect-[16/9] bg-white rounded-xl overflow-hidden mb-10">
             <img
               src={post.ogImage.replace("https://shelzysdesigns.com", "")}
               alt={post.ogImageAlt}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
 

@@ -240,7 +240,7 @@ export default async function ProductPage({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
             {/* LEFT: Image Gallery */}
             <div>
-              <div className="aspect-square bg-light-gray rounded-lg overflow-hidden mb-4">
+              <div className="aspect-square bg-white rounded-lg overflow-hidden mb-4">
                 {product.images[0] ? (
                   <Image
                     src={product.images[0]}
@@ -249,7 +249,7 @@ export default async function ProductPage({
                     height={600}
                     priority
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
@@ -264,7 +264,7 @@ export default async function ProductPage({
                 {product.images.slice(0, 4).map((img, i) => (
                   <div
                     key={i}
-                    className={`aspect-square bg-light-gray rounded-lg overflow-hidden ${
+                    className={`aspect-square bg-white rounded-lg overflow-hidden ${
                       i === 0 ? "ring-2 ring-pink" : ""
                     }`}
                   >
@@ -274,7 +274,7 @@ export default async function ProductPage({
                       width={150}
                       height={150}
                       sizes="25vw"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   </div>
                 ))}

@@ -87,11 +87,11 @@ export default function BlogIndex() {
                   className="group bg-white rounded-xl border border-mid-gray overflow-hidden hover:shadow-md transition"
                 >
                   {/* Featured image */}
-                  <div className={`aspect-[16/9] overflow-hidden ${cardBgColors[post.category] || "bg-light-gray"}`}>
+                  <div className={`aspect-[16/9] overflow-hidden ${cardBgColors[post.category] || "bg-white"}`}>
                     <img
                       src={post.ogImage.replace("https://shelzysdesigns.com", "")}
                       alt={post.ogImageAlt}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
                     />
                   </div>
