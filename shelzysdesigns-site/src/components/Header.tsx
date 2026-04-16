@@ -38,8 +38,25 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-mid-gray">
       <div className="mx-auto max-w-[1200px] px-6 flex items-center justify-between h-16">
-        <Link href="/" className="font-heading font-bold text-charcoal text-xl">
-          Shelzy&apos;s Designs
+        <Link
+          href="/"
+          className="flex items-center gap-3 shrink-0"
+          aria-label="Shelzy's Designs home"
+        >
+          <img
+            src="/logo-script.png"
+            alt=""
+            aria-hidden="true"
+            className="h-10 w-auto shrink-0"
+          />
+          <span className="hidden md:flex flex-col leading-tight">
+            <span className="font-heading font-bold text-charcoal text-xl">
+              Shelzy&apos;s Designs
+            </span>
+            <span className="text-[#E63A7E] text-[11px] font-medium tracking-[0.05em]">
+              Personal gifts. Practical tools.
+            </span>
+          </span>
         </Link>
 
         {/* Desktop nav */}
