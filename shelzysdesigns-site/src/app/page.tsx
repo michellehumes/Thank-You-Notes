@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import TrustBadges from "@/components/TrustBadges";
 import { getBestSellers } from "@/data/products";
 import EmailCapture from "@/components/EmailCapture";
+import HeroEmailCapture from "@/components/HeroEmailCapture";
 
 export const metadata: Metadata = {
   title: "Shelzy's Designs | Personalized Water Bottles and Digital Templates",
@@ -121,6 +122,7 @@ export default function Home() {
                   Custom Water Bottles
                 </Link>
               </div>
+              <HeroEmailCapture />
             </div>
 
             {/* Decorative grid */}

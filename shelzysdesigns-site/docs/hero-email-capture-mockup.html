@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hero email capture — mobile / tablet / desktop preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #fb5887;
+    --pink-hover: #e04d79;
+    --orange: #fe8c43;
+    --blue: #3ca4d7;
+    --teal: #8adbde;
+    --charcoal: #2d2d2d;
+    --light-gray: #f5f5f5;
+    --mid-gray: #e0e0e0;
+    --text-light: #666666;
+    --white: #fefefe;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: var(--light-gray);
+    color: var(--charcoal);
+    padding: 24px;
+  }
+  h1.page {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    margin: 0 0 8px;
+  }
+  p.page {
+    color: var(--text-light);
+    font-size: 13px;
+    margin: 0 0 24px;
+  }
+  .row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .frame {
+    background: var(--white);
+    border: 1px solid var(--mid-gray);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .frame-label {
+    padding: 8px 12px;
+    background: var(--charcoal);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .viewport {
+    overflow: auto;
+  }
+
+  /* Hero -- shared visual structure mirroring page.tsx */
+  .hero {
+    background: var(--white);
+    padding: 40px 24px;
+  }
+  .hero-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    color: var(--pink);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 0 18px;
+    text-align: center;
+  }
+  .hero p.lead {
+    color: var(--text-light);
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0 0 28px;
+    max-width: 32rem;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cta-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .btn {
+    display: inline-block;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    text-align: center;
+    text-decoration: none;
+    border: 2px solid transparent;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--pink);
+    color: var(--white);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--charcoal);
+    border-color: var(--charcoal);
+  }
+
+  /* Email capture block */
+  .email-capture {
+    margin-top: 24px;
+    max-width: 28rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .ec-headline {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin: 0 0 4px;
+  }
+  .ec-sub {
+    color: var(--text-light);
+    font-size: 12px;
+    margin: 0 0 12px;
+  }
+  .ec-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ec-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--mid-gray);
+    font-size: 14px;
+    color: var(--charcoal);
+    font-family: 'Inter', sans-serif;
+  }
+  .ec-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--pink);
+  }
+  .ec-btn {
+    background: var(--pink);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: none;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .ec-btn:hover { background: var(--pink-hover); }
+
+  /* Decorative grid (placeholder squares) */
+  .deco {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 320px;
+    margin: 32px auto 0;
+  }
+  .deco > div { aspect-ratio: 4/5; border-radius: 16px; }
+  .deco > div:nth-child(1) { background: rgba(251,88,135,.15); }
+  .deco > div:nth-child(2) { background: rgba(138,219,222,.2); transform: translateY(24px); }
+  .deco > div:nth-child(3) { background: rgba(254,140,67,.15); transform: translateY(-24px); }
+  .deco > div:nth-child(4) { background: rgba(60,164,215,.10); }
+
+  /* Tablet (≥640px sm:): inline form, side by side */
+  .frame-tablet .ec-form,
+  .frame-desktop .ec-form {
+    flex-direction: row;
+  }
+  .frame-tablet .cta-stack,
+  .frame-desktop .cta-stack {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  /* Desktop (≥768px md:): two columns, left-aligned text */
+  .frame-desktop .hero-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+  .frame-desktop .hero-eyebrow,
+  .frame-desktop .hero h1,
+  .frame-desktop .hero p.lead { text-align: left; }
+  .frame-desktop .hero p.lead { margin-left: 0; }
+  .frame-desktop .cta-stack { justify-content: flex-start; }
+  .frame-desktop .email-capture { margin-left: 0; margin-right: 0; }
+  .frame-desktop .deco { margin: 0 0 0 auto; }
+
+  /* Confirmation state demo */
+  .confirmation {
+    margin-top: 24px;
+    max-width: 28rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 12px 0;
+  }
+  .confirmation p {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--charcoal);
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page">Hero email capture — three-viewport preview</h1>
+<p class="page">Mobile (375px) · Tablet (768px) · Desktop (1440px). All frames render the same React tree at fixed widths.</p>
+
+<div class="row">
+
+  <!-- ─────────── Mobile 375 ─────────── -->
+  <div class="frame" style="width: 375px;">
+    <div class="frame-label">MOBILE — 375px</div>
+    <div class="viewport frame-mobile">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <p class="hero-eyebrow">Spreadsheets, Planners + Custom Bottles</p>
+            <h1>Organize Your Life with Templates That Actually Work</h1>
+            <p class="lead">Budget trackers, wedding planners, business dashboards, and personalized water bottles -- all designed for real life. Download instantly. Customize freely.</p>
+            <div class="cta-stack">
+              <a href="#" class="btn btn-primary">Shop All Templates</a>
+              <a href="#" class="btn btn-secondary">Custom Water Bottles</a>
+            </div>
+            <div class="email-capture">
+              <p class="ec-headline">Get 15% off your first order</p>
+              <p class="ec-sub">Plus new templates and planning tips -- twice a month.</p>
+              <form class="ec-form" onsubmit="event.preventDefault(); this.parentElement.outerHTML = document.getElementById('confirmation-tpl').innerHTML;">
+                <input class="ec-input" type="email" placeholder="your@email.com" required>
+                <button class="ec-btn" type="submit">Send my code</button>
+              </form>
+            </div>
+            <div class="deco">
+              <div></div><div></div><div></div><div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ─────────── Tablet 768 ─────────── -->
+  <div class="frame" style="width: 768px;">
+    <div class="frame-label">TABLET — 768px</div>
+    <div class="viewport frame-tablet">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <p class="hero-eyebrow">Spreadsheets, Planners + Custom Bottles</p>
+            <h1>Organize Your Life with Templates That Actually Work</h1>
+            <p class="lead">Budget trackers, wedding planners, business dashboards, and personalized water bottles -- all designed for real life. Download instantly. Customize freely.</p>
+            <div class="cta-stack">
+              <a href="#" class="btn btn-primary">Shop All Templates</a>
+              <a href="#" class="btn btn-secondary">Custom Water Bottles</a>
+            </div>
+            <div class="email-capture">
+              <p class="ec-headline">Get 15% off your first order</p>
+              <p class="ec-sub">Plus new templates and planning tips -- twice a month.</p>
+              <form class="ec-form">
+                <input class="ec-input" type="email" placeholder="your@email.com" required>
+                <button class="ec-btn" type="submit">Send my code</button>
+              </form>
+            </div>
+            <div class="deco">
+              <div></div><div></div><div></div><div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ─────────── Desktop 1440 ─────────── -->
+  <div class="frame" style="width: 1440px; max-width: 100%;">
+    <div class="frame-label">DESKTOP — 1440px</div>
+    <div class="viewport frame-desktop">
+      <section class="hero" style="padding: 80px 24px;">
+        <div class="hero-grid">
+          <div>
+            <p class="hero-eyebrow">Spreadsheets, Planners + Custom Bottles</p>
+            <h1 style="font-size: 48px;">Organize Your Life with Templates That Actually Work</h1>
+            <p class="lead">Budget trackers, wedding planners, business dashboards, and personalized water bottles -- all designed for real life. Download instantly. Customize freely.</p>
+            <div class="cta-stack">
+              <a href="#" class="btn btn-primary">Shop All Templates</a>
+              <a href="#" class="btn btn-secondary">Custom Water Bottles</a>
+            </div>
+            <div class="email-capture">
+              <p class="ec-headline">Get 15% off your first order</p>
+              <p class="ec-sub">Plus new templates and planning tips -- twice a month.</p>
+              <form class="ec-form">
+                <input class="ec-input" type="email" placeholder="your@email.com" required>
+                <button class="ec-btn" type="submit">Send my code</button>
+              </form>
+            </div>
+          </div>
+          <div class="deco" style="margin: 0 0 0 auto;">
+            <div></div><div></div><div></div><div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</div>
+
+<!-- Confirmation state demo (after submit, mobile only for clarity) -->
+<template id="confirmation-tpl">
+  <div class="confirmation">
+    <p>Check your inbox -- your code is on the way.</p>
+  </div>
+</template>
+
+<p class="page" style="margin-top: 32px;">
+  Layout notes: form input + button stack vertically on mobile (375px) and inline on tablet/desktop (≥640px). Form width caps at <code>max-w-md</code> (28rem) and inherits the hero text column, so it never stretches full page. Submit replaces the form with a single-line confirmation.
+</p>
+
+</body>
+</html>
