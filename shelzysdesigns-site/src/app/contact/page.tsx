@@ -29,10 +29,10 @@ export default function ContactPage() {
                 Email
               </h2>
               <a
-                href="mailto:hello@shelzysdesigns.com"
+                href="mailto:shelzysdesigns@outlook.com"
                 className="text-pink hover:text-pink-hover transition text-sm"
               >
-                hello@shelzysdesigns.com
+                shelzysdesigns@outlook.com
               </a>
               <p className="text-text-light text-sm mt-2">
                 Best for order issues, file downloads, and general questions.
