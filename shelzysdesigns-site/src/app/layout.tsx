@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import AnnouncementBar from "@/components/AnnouncementBar";
+import ExitIntentPopup from "@/components/ExitIntentPopup";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -80,6 +81,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
         {children}
+        <ExitIntentPopup />
         <Analytics />
         <SpeedInsights />
         {/* Google Analytics 4 */}

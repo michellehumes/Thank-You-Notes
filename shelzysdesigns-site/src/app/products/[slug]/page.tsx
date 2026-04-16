@@ -8,6 +8,7 @@ import ProductCard from "@/components/ProductCard";
 import ProductTabs from "@/components/ProductTabs";
 import WaterBottleCustomizer from "@/components/WaterBottleCustomizer";
 import RecentlyViewedWrapper from "@/components/RecentlyViewedWrapper";
+import Testimonials from "@/components/Testimonials";
 import {
   products,
   getProductBySlug,
@@ -383,6 +384,9 @@ export default async function ProductPage({
               productName={product.name}
             />
           </div>
+
+          {/* Social proof -- testimonials */}
+          <Testimonials category={product.category} />
 
           {/* Cross-sell section */}
           {relatedProducts.length > 0 && (
