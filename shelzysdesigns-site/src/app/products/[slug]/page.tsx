@@ -7,6 +7,7 @@ import TrustBadges from "@/components/TrustBadges";
 import ProductCard from "@/components/ProductCard";
 import ProductTabs from "@/components/ProductTabs";
 import WaterBottleCustomizer from "@/components/WaterBottleCustomizer";
+import RecentlyViewedWrapper from "@/components/RecentlyViewedWrapper";
 import {
   products,
   getProductBySlug,
@@ -430,6 +431,9 @@ export default async function ProductPage({
               </div>
             </div>
           )}
+
+          {/* Recently Viewed */}
+          <RecentlyViewedWrapper currentSlug={product.slug} />
 
           {/* Trust badges */}
           <TrustBadges variant={product.compatibility === "physical" ? "physical" : "digital"} />

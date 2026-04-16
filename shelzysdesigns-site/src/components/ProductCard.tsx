@@ -43,7 +43,12 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {product.bestSeller && (
           <span className="absolute top-0 right-0 bg-pink text-white text-xs px-2 py-1 rounded-bl-lg font-semibold">
-            Best Seller
+            Popular
+          </span>
+        )}
+        {product.featured && !product.bestSeller && (
+          <span className="absolute top-0 right-0 bg-teal text-white text-xs px-2 py-1 rounded-bl-lg font-semibold">
+            Featured
           </span>
         )}
       </div>

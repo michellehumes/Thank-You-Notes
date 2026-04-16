@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
-import { products, getAllCategories } from "@/data/products";
+import { products, getPublishedProducts, getAllCategories } from "@/data/products";
 
-// Best-seller slugs (products flagged bestSeller: true)
+// Best-seller slugs (published products flagged bestSeller: true)
 const bestSellerSlugs = new Set(
-  products.filter((p) => p.bestSeller).map((p) => p.slug)
+  getPublishedProducts().filter((p) => p.bestSeller).map((p) => p.slug)
 );
 
 // Virtual collections that combine multiple categories
@@ -158,8 +159,8 @@ export default async function CollectionPage({
     // best-sellers uses the bestSeller flag instead of category slugs
     const collectionProducts =
       slug === "best-sellers"
-        ? products.filter((p) => bestSellerSlugs.has(p.slug))
-        : products.filter((p) => virtual.categorySlugs.includes(p.category));
+        ? getPublishedProducts().filter((p) => bestSellerSlugs.has(p.slug))
+        : getPublishedProducts().filter((p) => virtual.categorySlugs.includes(p.category));
 
     return (
       <>
@@ -168,6 +169,13 @@ export default async function CollectionPage({
           {/* Collection hero */}
           <div className="bg-light-gray border-b border-mid-gray py-10">
             <div className="mx-auto max-w-[1200px] px-6">
+              <nav className="text-sm text-text-light mb-4">
+                <Link href="/" className="hover:text-charcoal transition">Home</Link>
+                <span className="mx-2">/</span>
+                <Link href="/shop" className="hover:text-charcoal transition">Shop</Link>
+                <span className="mx-2">/</span>
+                <span className="text-charcoal">{virtual.name}</span>
+              </nav>
               <h1 className="font-heading text-3xl sm:text-4xl font-bold text-charcoal mb-3">
                 {virtual.name}
               </h1>
@@ -215,7 +223,7 @@ export default async function CollectionPage({
     );
   }
 
-  const collectionProducts = products.filter((p) => p.category === slug);
+  const collectionProducts = getPublishedProducts().filter((p) => p.category === slug);
   const isPhysical = slug === "water-bottles";
 
   return (
@@ -225,6 +233,13 @@ export default async function CollectionPage({
         {/* Collection hero */}
         <div className="bg-light-gray border-b border-mid-gray py-10">
           <div className="mx-auto max-w-[1200px] px-6">
+            <nav className="text-sm text-text-light mb-4">
+              <Link href="/" className="hover:text-charcoal transition">Home</Link>
+              <span className="mx-2">/</span>
+              <Link href="/shop" className="hover:text-charcoal transition">Shop</Link>
+              <span className="mx-2">/</span>
+              <span className="text-charcoal">{category.name}</span>
+            </nav>
             <h1 className="font-heading text-3xl sm:text-4xl font-bold text-charcoal mb-3">
               {category.name}
             </h1>

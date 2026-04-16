@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
-import { products, getAllCategories } from "@/data/products";
+import { getPublishedProducts, getAllCategories } from "@/data/products";
 
 type SortOption = "best-selling" | "newest" | "price-low" | "price-high";
 type PriceRange = "all" | "under-5" | "5-7" | "8-plus";
@@ -16,6 +17,7 @@ export default function ShopPage() {
   const [priceRange, setPriceRange] = useState<PriceRange>("all");
   const [sort, setSort] = useState<SortOption>("best-selling");
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   const toggleCategory = (slug: string) => {
     setSelectedCategories((prev) =>
@@ -24,7 +26,18 @@ export default function ShopPage() {
   };
 
   const filteredProducts = useMemo(() => {
-    let result = [...products];
+    let result = [...getPublishedProducts()];
+
+    // Search filter
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.tags.some((t) => t.toLowerCase().includes(q)) ||
+          p.description.toLowerCase().includes(q)
+      );
+    }
 
     // Category filter
     if (selectedCategories.length > 0) {
@@ -56,22 +69,54 @@ export default function ShopPage() {
     }
 
     return result;
-  }, [selectedCategories, priceRange, sort]);
+  }, [selectedCategories, priceRange, sort, search]);
 
   return (
     <>
       <Header />
       <main className="bg-white min-h-screen">
         <div className="mx-auto max-w-[1200px] px-6 py-8">
-          {/* Page header */}
-          <div className="mb-8">
-            <h1 className="font-heading text-3xl font-bold text-charcoal mb-2">
-              Shop All
-            </h1>
-            <p className="text-text-light text-sm">
-              {filteredProducts.length} product
-              {filteredProducts.length !== 1 ? "s" : ""}
-            </p>
+          {/* Breadcrumb */}
+          <nav className="text-sm text-text-light mb-6">
+            <Link href="/" className="hover:text-charcoal transition">
+              Home
+            </Link>
+            <span className="mx-2">/</span>
+            <span className="text-charcoal">Shop</span>
+          </nav>
+
+          {/* Page header + search */}
+          <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+            <div>
+              <h1 className="font-heading text-3xl font-bold text-charcoal mb-2">
+                Shop All
+              </h1>
+              <p className="text-text-light text-sm">
+                {filteredProducts.length} product
+                {filteredProducts.length !== 1 ? "s" : ""}
+              </p>
+            </div>
+            <div className="relative w-full sm:w-72">
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-light pointer-events-none"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search products..."
+                className="w-full border border-mid-gray rounded-lg pl-10 pr-4 py-2 text-sm text-charcoal bg-white focus:outline-none focus:border-pink transition placeholder:text-text-light"
+              />
+            </div>
           </div>
 
           {/* Mobile filter toggle */}
