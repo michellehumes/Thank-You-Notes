@@ -35,7 +35,7 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-async function addToButtondown(email: string): Promise<boolean> {
+async function addToButtondown(email: string, source: string): Promise<boolean> {
   const apiKey = process.env.BUTTONDOWN_API_KEY;
   if (!apiKey) return false;
 
@@ -47,8 +47,8 @@ async function addToButtondown(email: string): Promise<boolean> {
     },
     body: JSON.stringify({
       email,
-      tags: ["15off-signup", "website"],
-      notes: "Signed up for 15% off via shelzysdesigns.com",
+      tags: ["10off-signup", "gift-tag-pack", source],
+      notes: `Signed up via ${source} on shelzysdesigns.com`,
     }),
   });
 
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { email } = await request.json();
+    const { email, source = "site_generic" } = await request.json();
 
     if (!email || !isValidEmail(email)) {
       return NextResponse.json(
@@ -101,15 +101,15 @@ export async function POST(request: NextRequest) {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    const discountCode = process.env.DISCOUNT_CODE || "WELCOME15";
+    const discountCode = process.env.DISCOUNT_CODE || "WELCOME10";
 
     // Try email services in order of preference
     const delivered =
-      (await addToButtondown(normalizedEmail)) ||
+      (await addToButtondown(normalizedEmail, source)) ||
       (await addToMailchimp(normalizedEmail));
 
     if (!delivered) {
-      console.log(`[SUBSCRIBE] New signup (no email service configured): ${normalizedEmail}`);
+      console.log(`[SUBSCRIBE] New signup (no email service configured): ${normalizedEmail} source=${source}`);
     }
 
     return NextResponse.json({
