@@ -101,6 +101,7 @@ const categoryLabels: Record<string, string> = {
   productivity: "Productivity",
   business: "Business",
   etsy: "Etsy",
+  "water-bottles": "Water Bottles",
 };
 
 const categoryColors: Record<string, string> = {
@@ -109,6 +110,7 @@ const categoryColors: Record<string, string> = {
   productivity: "bg-blue/10 text-blue",
   business: "bg-orange/10 text-orange",
   etsy: "bg-pink/10 text-pink",
+  "water-bottles": "bg-blue/10 text-blue",
 };
 
 export default async function BlogPostPage({
@@ -171,11 +173,13 @@ export default async function BlogPostPage({
             {post.description}
           </p>
 
-          {/* Featured image placeholder */}
-          <div className="aspect-[16/9] bg-light-gray rounded-xl flex items-center justify-center mb-10">
-            <span className="font-heading font-bold text-3xl text-mid-gray select-none">
-              SD
-            </span>
+          {/* Featured image */}
+          <div className="aspect-[16/9] bg-white rounded-xl overflow-hidden mb-10">
+            <img
+              src={post.ogImage.replace("https://shelzysdesigns.com", "")}
+              alt={post.ogImageAlt}
+              className="w-full h-full object-contain"
+            />
           </div>
 
           {/* Article body */}

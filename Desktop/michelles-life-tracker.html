@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Michelle's Life OS -- Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script src="dashboard-data.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #fefefe; -webkit-font-smoothing: antialiased; }
+  button { cursor: pointer; border: none; outline: none; }
+  button:hover { opacity: 0.85; }
+  input:focus { outline: none; }
+
+  .shelzy-header {
+    background: #fff;
+    padding: 0 0 24px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+  .shelzy-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, #d4a0b0, #c4956e);
+    border-radius: 1px;
+  }
+  .shelzy-brand-mark {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #c4a07a;
+    margin-bottom: 4px;
+  }
+
+  @keyframes statusPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .task-row { animation: slideIn 0.25s ease; }
+  .status-badge-click { cursor: pointer; user-select: none; transition: transform 0.15s ease; }
+  .status-badge-click:hover { transform: scale(1.05); }
+  .status-badge-click:active { animation: statusPulse 0.3s ease; }
+  .recently-completed-item { animation: fadeIn 0.4s ease; }
+
+  @media (max-width: 640px) {
+    .mini-stats-row { gap: 6px !important; }
+    .mini-stat { min-width: 70px !important; padding: 8px 10px !important; }
+    .mini-stat-value { font-size: 20px !important; }
+    .mini-stat-label { font-size: 9px !important; }
+    .header-title { font-size: 22px !important; }
+    .filter-btn { padding: 5px 10px !important; font-size: 11px !important; }
+    .ws-header { padding: 14px 14px !important; gap: 10px !important; }
+    .ws-icon { font-size: 22px !important; }
+    .ws-name { font-size: 14px !important; }
+    .ws-tasks { padding: 8px 14px 14px !important; }
+    .task-detail { font-size: 11px !important; }
+    .search-input { font-size: 14px !important; }
+    .add-task-row { flex-direction: column !important; }
+    .add-task-row input { width: 100% !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useMemo, useEffect, useCallback, useRef } = React;
+
+// All agent-managed data lives in dashboard-data.js -- loaded above
+// Agents update ONLY dashboard-data.js, never this file
+const {
+  LAST_AGENT_UPDATE, CRITICAL_DEADLINES, ETSY_STATS, AFFILIATE_SITES,
+  AGENT_STATUS, GMAIL_DATA, DECISION_QUEUE, TOMORROW_PRIORITIES,
+  FERTILITY_STATE, FINANCE_STATE, CAREER_STATE,
+} = window.DASHBOARD_DATA;
+
+const COLORS = {
+  white: '#ffffff',
+  pink: '#c27089',
+  orange: '#c4956e',
+  blue: '#5b8fa8',
+  aqua: '#7fb5b8',
+  dark: '#2d2d2d',
+  lightGray: '#f7f7f8',
+  midGray: '#ebebed',
+  green: '#6aaa7e',
+  yellow: '#d4a843',
+  red: '#c4605a',
+};
+
+const STATUS = {
+  NOT_STARTED: 'Not Started',
+  IN_PROGRESS: 'In Progress',
+  COMPLETE: 'Complete',
+  ON_HOLD: 'On Hold',
+  BLOCKED: 'Blocked',
+};
+
+const STATUS_CYCLE = [STATUS.NOT_STARTED, STATUS.IN_PROGRESS, STATUS.COMPLETE, STATUS.BLOCKED, STATUS.ON_HOLD];
+
+const statusColor = (s) => {
+  switch (s) {
+    case STATUS.COMPLETE: return COLORS.green;
+    case STATUS.IN_PROGRESS: return COLORS.blue;
+    case STATUS.NOT_STARTED: return '#aaa';
+    case STATUS.ON_HOLD: return COLORS.yellow;
+    case STATUS.BLOCKED: return COLORS.red;
+    default: return COLORS.midGray;
+  }
+};
+
+const statusEmoji = (s) => {
+  switch (s) {
+    case STATUS.COMPLETE: return '\u2705';
+    case STATUS.IN_PROGRESS: return '\u{1F504}';
+    case STATUS.NOT_STARTED: return '\u26AA';
+    case STATUS.ON_HOLD: return '\u23F8\uFE0F';
+    case STATUS.BLOCKED: return '\u{1F6D1}';
+    default: return '';
+  }
+};
+
+// Job pipeline stage detection for Kanban view
+function getJobStage(task) {
+  const name = (task.name || '').toLowerCase();
+  const detail = (task.detail || '').toLowerCase();
+  if (task.status === STATUS.BLOCKED || task.status === STATUS.ON_HOLD) return 'Blocked';
+  if (task.status === STATUS.COMPLETE) {
+    if (name.includes('rejected') || detail.includes('rejected') || detail.includes('moved forward with')) return 'Rejected';
+    return null;
+  }
+  if (task.status === STATUS.NOT_STARTED) {
+    const jobKeywords = ['vp', 'svp', 'sr director', 'director', 'apply via', 'greenhouse', 'workday'];
+    return jobKeywords.some(k => name.includes(k) || detail.includes(k)) ? 'Sourced' : null;
+  }
+  if (task.status === STATUS.IN_PROGRESS) {
+    if (name.includes('interview') || detail.includes('interview')) return 'Interview';
+    if (detail.includes('awaiting scheduling') || detail.includes('scheduling') || detail.includes('next round') || detail.includes('phone screen')) return 'Screening';
+    if (detail.includes('verify') && detail.includes('apply')) return 'Sourced';
+    if (detail.includes('applied') || detail.includes('application submitted')) return 'Applied';
+    return 'Applied';
+  }
+  return null;
+}
+const KANBAN_COLS = ['Sourced', 'Applied', 'Screening', 'Interview', 'Blocked', 'Rejected'];
+const KANBAN_COL_COLORS = {
+  Sourced: '#2d2d2d',
+  Applied: '#3ca4d7',
+  Screening: '#8adbde',
+  Interview: '#fe8c43',
+  Blocked: '#ff3b30',
+  Rejected: '#aaa',
+};
+
+// Staleness detection
+function getDaysSinceModified(lastModified) {
+  if (!lastModified) return 0;
+  const modified = new Date(lastModified + 'T00:00:00');
+  const now = new Date();
+  return Math.floor((now - modified) / (1000 * 60 * 60 * 24));
+}
+
+function getStalenessWarning(task) {
+  if (task.status !== STATUS.IN_PROGRESS) return null;
+  const days = getDaysSinceModified(task.lastModified);
+  if (days >= 14) return { label: `STALE (${days}d)`, color: COLORS.red, level: 'critical' };
+  if (days >= 7) return { label: `STALE (${days}d)`, color: COLORS.orange, level: 'warning' };
+  return null;
+}
+
+// Agent timestamp formatting
+function formatAgentUpdate(isoString) {
+  if (!isoString) return 'Never';
+  try {
+    const d = new Date(isoString);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' at ' +
+      d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  } catch (e) { return 'Unknown'; }
+}
+
+// JSON export
+function exportDashboardJSON(workstreams) {
+  const data = {
+    exported: new Date().toISOString(),
+    version: 'michelles-life-tracker-v2',
+    workstreams,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `life-tracker-export-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+const matchesFilter = (task, filter) => {
+  if (filter === 'all') return true;
+  if (filter === 'active') return task.status === STATUS.IN_PROGRESS;
+  if (filter === 'done') return task.status === STATUS.COMPLETE;
+  if (filter === 'todo') return task.status === STATUS.NOT_STARTED;
+  if (filter === 'blocked') return task.status === STATUS.BLOCKED || task.status === STATUS.ON_HOLD;
+  return true;
+};
+
+const matchesSearch = (task, search) => {
+  if (!search) return true;
+  const q = search.toLowerCase();
+  return task.name.toLowerCase().includes(q) || task.detail.toLowerCase().includes(q);
+};
+
+const DEFAULT_WORKSTREAMS = [
+  {
+    id: 'job-search',
+    name: 'Job Search',
+    icon: '\u{1F4BC}',
+    color: COLORS.blue,
+    summary: 'CRITICAL: 0 applications submitted. 3-5 week window to sign a role (target May 13-27). $200K-$220K target, $175K floor. Remote only. 3 new leads Apr 12: CMI Media (9/10 fit, leverage Hemali), Klick Health SVP (needs remote verify), Amgen Dir backup.',
+    tasks: [
+      { id: 'js-19', name: 'Avalere Health VP Director of Media -- REJECTED', status: STATUS.COMPLETE, detail: 'Rejected Apr 10 by Anne Reese-Ternay (Senior Talent Partner). "Decided to move forward with another candidate." Kept warm -- "would welcome opportunity to stay in touch for future roles."', lastModified: '2026-04-11' },
+      { id: 'js-1', name: 'Doceree -- phone screen', status: STATUS.COMPLETE, detail: 'Completed call with Alexandra G. on 3/4. Next: interview with President/Co-Founder and COO', lastModified: '2026-03-04' },
+      { id: 'js-2', name: 'Doceree -- next round interviews', status: STATUS.IN_PROGRESS, detail: 'Awaiting scheduling with leadership team. Applied 3/10 -- over 4 weeks stale. Follow up urgently.', lastModified: '2026-04-10' },
+      { id: 'js-3', name: 'Infinite Roar / Publicis SVP Strategy', status: STATUS.IN_PROGRESS, detail: 'Applied 2/25, emailed Nicole Simpson. Now 6+ weeks old. Cold unless new contact made.', lastModified: '2026-04-10' },
+      { id: 'js-4', name: 'EVERSANA SVP Strategic Planning ($196K-$270K)', status: STATUS.IN_PROGRESS, detail: 'Highest comp ceiling. Remote (NY anchor). Verify JD body + remote language then apply. Prior EVERSANA history may give traction.', lastModified: '2026-04-11' },
+      { id: 'js-4b', name: 'EVERSANA VP Media Strategy & Planning', status: STATUS.IN_PROGRESS, detail: 'NEW (Apr 9). HCP+DTC pharma media strategy. Distinct from SVP role. Verify remote + comp in JD (login-walled). Draft at /data/job-tracker/eversana-intouch-vp-media-strategy/outreach.md', lastModified: '2026-04-11' },
+      { id: 'js-5', name: 'Jellyfish VP Media Strategy', status: STATUS.IN_PROGRESS, detail: 'Applied 3/10. Liz Barbara is recruiter contact. 4 weeks stale -- send follow-up.', lastModified: '2026-04-10' },
+      { id: 'js-6', name: 'Spark Foundry VP Audience Strategy', status: STATUS.IN_PROGRESS, detail: 'Application submitted ~3/5. 5 weeks stale. No response. Direct outreach needed.', lastModified: '2026-04-10' },
+      { id: 'js-7', name: 'BGB Group VP Engagement Strategy ($185K-$220K) -- VERIFY', status: STATUS.BLOCKED, detail: 'MISSED: Priority 1 for 3 days (Apr 8-10) with no action. Web search Apr 10 shows likely expired per TealHQ. Verify at linkedin.com/jobs/view/4393957391 immediately. If closed, check bgbgroup.com/opportunities for replacement.', lastModified: '2026-04-11' },
+      { id: 'js-15', name: 'Real Chemistry VP Strategy Director ($190K-$220K)', status: STATUS.NOT_STARTED, detail: 'NEW (Apr 9). Omnichannel strategy VP. Remote-USA confirmed. Strong Tier 1 agency fit. Apply via Greenhouse: job-boards.greenhouse.io/realchemistry/jobs/4967182008. Verify East Hampton is outside 1hr office radius.', lastModified: '2026-04-11' },
+      { id: 'js-16', name: 'Regeneron Sr Director Commercial Planning ($216K-$360K)', status: STATUS.NOT_STARTED, detail: 'NEW (Apr 9). Highest comp ceiling. Remote USA confirmed. Rare Disease + Cardio-metabolic -- HCP targeting directly applicable. Posted Feb 13, confirmed live Apr 9. Apply via Workday.', lastModified: '2026-04-11' },
+      { id: 'js-17', name: 'Fingerpaint VP Client Services', status: STATUS.NOT_STARTED, detail: 'NEW (Apr 8). Medcomm pharma agency (biotech/rare disease/oncology). Remote confirmed. Comp not published -- flag for screening call. Apply via LinkedIn: jobs/view/4378868011', lastModified: '2026-04-11' },
+      { id: 'js-18', name: 'Underscore Marketing Sr Director/VP Strategy', status: STATUS.NOT_STARTED, detail: 'NEW (Apr 9). Pharma-specialist media agency. DTC + HCP integrated. Remote confirmed. Comp not published -- verify $175K+ in screening. Fit 7/10. Greenhouse: job-boards.greenhouse.io/underscoremarketing/jobs/4184865009', lastModified: '2026-04-11' },
+      { id: 'js-20', name: 'CMI Media Group SVP Engagement Strategy ($140K-$295K)', status: STATUS.NOT_STARTED, detail: 'NEW (Apr 12). Direct title match. Michelle has existing contact Hemali at CMI. Comp band strong ($140K-$295K). Fit 9/10 conditional on remote. FIRST STEP: reach out to Hemali directly re: remote flexibility BEFORE applying cold. cmimediagroup.com/jobs/senior-vice-president-engagement-strategy/', lastModified: '2026-04-12' },
+      { id: 'js-21', name: 'Klick Health SVP Media Strategy & Planning', status: STATUS.NOT_STARTED, detail: 'NEW (Apr 12). World\'s largest independent pharma agency. HCP+DTC integrated media strategy + planning. 15+ yrs required. GATE: remote status not confirmed -- verify JD before full prep. If remote confirmed, immediate Tier 1 priority. Fit 8/10 conditional. careers.klick.com/roles/36d8c476-5b69-4a51-876d-0ebc239a33e2', lastModified: '2026-04-12' },
+      { id: 'js-22', name: 'Amgen Director Omnichannel Marketing Cardiovascular ($200K-$270K)', status: STATUS.NOT_STARTED, detail: 'NEW (Apr 12). Posted Apr 6. Remote USA confirmed. Comp strong ($200K-$270K employer-confirmed). Director title (borderline vs VP target). Pharma in-house client-side, content production slant. Tier 3 backup -- apply after all Tier 1 roles submitted. Fit 6/10. careers.amgen.com', lastModified: '2026-04-12' },
+      { id: 'js-8', name: 'Weekly new role scan automation', status: STATUS.COMPLETE, detail: 'Google Sheet tracker auto-scanning for VP/Director+ remote roles', lastModified: '2026-02-15' },
+      { id: 'js-9', name: 'Resume tailoring system + COMPASS cover letter', status: STATUS.COMPLETE, detail: 'Multiple resume versions ready. COMPASS framework cover letter complete.', lastModified: '2026-04-10' },
+      { id: 'js-10', name: 'Interview prep system (STAR frameworks)', status: STATUS.COMPLETE, detail: 'interview-coach skill active with personalized STAR responses using 15+ years pharma media experience', lastModified: '2026-03-01' },
+      { id: 'js-11', name: 'Stale apps follow-up (Digitas, Apex, Heartbeat, Publicis)', status: STATUS.NOT_STARTED, detail: 'Now 6-7+ weeks old with only auto-confirmations. Likely cold. Direct outreach is last chance.', lastModified: '2026-04-10' },
+      { id: 'js-12', name: 'Updated LinkedIn Skills and About Me profile', status: STATUS.COMPLETE, detail: 'Refreshed LinkedIn skills section and About Me to align with VP/SVP healthcare media positioning.', lastModified: '2026-03-18' },
+      { id: 'js-13', name: 'Fractional pipeline (Catalant, Graphite, SoloGig)', status: STATUS.NOT_STARTED, detail: 'QUEUED Day 4. Accept fractional immediately at $8K-$12K+/month while FTE search runs. Fastest income path. Register profiles this weekend.', lastModified: '2026-04-11' },
+      { id: 'js-14', name: 'Brio Group follow-up', status: STATUS.BLOCKED, detail: 'Outreach sent 2026-04-01. Day 8 follow-up draft at /data/job-tracker/drafts/brio-follow-up-day8-2026-04-09.md. Not sent -- awaiting Michelle approval to send. Cadence now day 10, next cadence Apr 22.', lastModified: '2026-04-11' },
+    ],
+  },
+  {
+    id: 'shelzys',
+    name: "Shelzy's Designs (Etsy)",
+    icon: '\u{1F3A8}',
+    color: COLORS.pink,
+    summary: 'FOCUS MODE: Sea Glass Wedding Place Cards only. 23.8% CVR, traffic-constrained winner. Sale expires Apr 14 -- bulk listings + Etsy ads launch needed before then. Phase 4 variant packages ready.',
+    tasks: [
+      { id: 'sh-1', name: 'Sea Glass Place Cards listing live (ID: 4444585325)', status: STATUS.COMPLETE, detail: '6 sales in April: $10.19 + $11.03 + $12.33 + $10.27 + $22.62 (Apr 11) + $10.19 (Apr 12) = $76.63. 2 shipping label refunds: $5.64 + $5.77 credited. 23.8% CVR, traffic-constrained winner. Sale ends Apr 14 (2 days).', lastModified: '2026-04-12' },
+      { id: 'sh-2', name: 'Etsy Ads running -- $17/day "Efficient spending"', status: STATUS.COMPLETE, detail: 'Ads live. Strategy switched to "Efficient spending" at $17/day ($500/mo cap). Shop-level ROAS 2.53 (30d). Sea glass listing ROAS 1.75 -- monitoring. ADHD Planner ROAS 0.48 -- recommend pausing that listing\'s ads.', lastModified: '2026-04-12' },
+      { id: 'sh-3', name: 'Etsy messages cleared -- 0 unread (Apr 12)', status: STATUS.COMPLETE, detail: '0 unread messages as of Apr 12. Diana Carnevale has open ORDER (not message) -- Water Bottle x2 ships Apr 13. Check Etsy Orders for fulfillment. Rebecca Dam + Joshua Hargrave conversations resolved.', lastModified: '2026-04-12' },
+      { id: 'sh-9', name: 'Bulk pack listings published (50/100/150-pack)', status: STATUS.COMPLETE, detail: 'All 3 published live Apr 9: 50-pack (4485621407), 100-pack (4485628192), 150-pack (4485622637). Each has 1 placeholder image only -- needs 5+ real photos for Etsy search visibility. This is now priority gap.', lastModified: '2026-04-09' },
+      { id: 'sh-4', name: 'Phase 4 keyword variant listings (4 packages ready)', status: STATUS.NOT_STARTED, detail: 'All 4 packages built: Sea Glass Escort Cards, Sea Glass Wedding Favors, Coastal Wedding Place Cards, Beach Wedding Place Cards. Each has title/tags/description/pricing files. Create drafts in Etsy -- SAVE AS DRAFT, do not publish without Michelle approval per listing.', lastModified: '2026-04-11' },
+      { id: 'sh-5', name: 'Add bulk listing images (3 packs)', status: STATUS.NOT_STARTED, detail: 'All 3 live bulk packs have placeholder image only. This is the #1 conversion unlock for bulk orders.', lastModified: '2026-04-11' },
+      { id: 'sh-10', name: 'Reclaim Pinterest Instagram connection', status: STATUS.BLOCKED, detail: 'Pinterest email Apr 10: Instagram permissions removed because password changed. Must reclaim at pinterest.com/settings/social-permissions to restore auto-publishing from Shelzy\'s Designs Instagram.', lastModified: '2026-04-11' },
+      { id: 'sh-11', name: 'Approve + send 4 wedding planner vendor outreach drafts', status: STATUS.NOT_STARTED, detail: 'Drafts queued in Gmail (NOT sent -- awaiting approval): Devin Tracy Events, Lovely Indeed Events (Montauk/North Fork), Destination Wedding Studio (Florida Keys), Tara Skinner Events (coastal Georgia). Review and approve each before sending.', lastModified: '2026-04-11' },
+      { id: 'sh-6', name: 'Etsy Product Factory skill system', status: STATUS.COMPLETE, detail: 'Full SKILL.md with brand specs, SEO, image prompts, background batch mode for unattended generation', lastModified: '2026-03-15' },
+      { id: 'sh-7', name: 'Water bottles -- paused', status: STATUS.ON_HOLD, detail: 'Paused. Focus mode: sea glass place cards only until traffic scaled.', lastModified: '2026-04-10' },
+      { id: 'sh-8', name: 'Digital products -- paused', status: STATUS.ON_HOLD, detail: 'Paused. Product Factory pipeline on hold. Resume after sea glass is scaled.', lastModified: '2026-04-10' },
+    ],
+  },
+  {
+    id: 'cadence',
+    name: 'Cadence Health Media',
+    icon: '\u{1F3E5}',
+    color: COLORS.aqua,
+    summary: 'Fractional HCP media strategy consultancy. Domain purchased. Site deployed. Email setup next.',
+    tasks: [
+      { id: 'ch-1', name: 'Website built on Netlify', status: STATUS.COMPLETE, detail: 'Live at thunderous-sawine-53ff65.netlify.app. All sections complete with SEO updates.', lastModified: '2026-03-18' },
+      { id: 'ch-2', name: 'Service tiers defined', status: STATUS.COMPLETE, detail: 'Healthcare Media Audit / Fractional Strategist / Embedded Leadership', lastModified: '2026-03-01' },
+      { id: 'ch-3', name: 'Domain purchased (cadencehealthmedia.com)', status: STATUS.COMPLETE, detail: 'Purchased on Namecheap. Nameservers pointed to Netlify DNS. DNS activated.', lastModified: '2026-03-18' },
+      { id: 'ch-4', name: 'SSL certificate provisioning', status: STATUS.COMPLETE, detail: 'DNS propagated, SSL should be active. Verify at cadencehealthmedia.com.', lastModified: '2026-04-10' },
+      { id: 'ch-5', name: 'Email forwarding (michelle@cadencehealthmedia.com)', status: STATUS.IN_PROGRESS, detail: 'Planning ImprovMX setup to forward to michelle.e.humes@gmail.com', lastModified: '2026-03-18' },
+      { id: 'ch-6', name: 'Namecheap email verification', status: STATUS.BLOCKED, detail: 'OVERDUE -- deadline was Apr 2. 9 days past due. Domain may be at risk of suspension. Check Namecheap immediately.', lastModified: '2026-04-11' },
+      { id: 'ch-7', name: 'Connect CTA button to Calendly', status: STATUS.NOT_STARTED, detail: '"Start a Conversation" button needs functional Calendly link', lastModified: '2026-03-01' },
+      { id: 'ch-8', name: 'Deploy updated site to Netlify', status: STATUS.NOT_STARTED, detail: 'SEO-updated HTML ready. Deploy = drag index.html to Netlify.', lastModified: '2026-03-18' },
+      { id: 'ch-9', name: 'LinkedIn soft launch announcement', status: STATUS.NOT_STARTED, detail: 'Draft post positioning as fractional HCP media strategist', lastModified: '2026-03-01' },
+      { id: 'ch-10', name: 'First client outreach', status: STATUS.NOT_STARTED, detail: 'Target first-time pharma launchers, health tech companies', lastModified: '2026-03-01' },
+    ],
+  },
+  {
+    id: 'toolshed',
+    name: 'ToolShedTested.com',
+    icon: '\u{1F6E0}\uFE0F',
+    color: COLORS.orange,
+    summary: 'VALIDATION MODE -- HOLD on new content. 7 articles in pipeline (5 live, 2 staged). Next GSC check May 10. Amazon Associates: $0 earnings, traffic problem confirmed. GSC access blocker open.',
+    tasks: [
+      { id: 'ts-1', name: 'Site live on Next.js (Vercel)', status: STATUS.COMPLETE, detail: 'Next.js 14, Vercel deploy. Amazon tag: toolshedtested-20. 253 static pages. Build SUCCESS.', lastModified: '2026-04-10' },
+      { id: 'ts-2', name: '9 affiliate articles live (scale mode)', status: STATUS.COMPLETE, detail: 'Apr 9-12: laser levels, belt sanders, band saws, torque wrenches, stud finders, reciprocating saws, circular saw <$100, brad nailer, paint sprayer. Scale mode 2/day. GSC check gate: May 10.', lastModified: '2026-04-12' },
+      { id: 'ts-9', name: 'Continue scale: 2 articles/day from keyword queue', status: STATUS.IN_PROGRESS, detail: 'Next: best-finish-nailer-2026, best-framing-nailer-2026, best-air-compressor-for-painting-2026. All in keyword pipeline at /data/affiliate/state.json. Stop if GSC shows 0 impressions at 30 days.', lastModified: '2026-04-12' },
+      { id: 'ts-10', name: 'Resolve GSC access (michelle.e.humes@gmail.com)', status: STATUS.BLOCKED, detail: 'michelle.e.humes@gmail.com not authorized on TST GSC property. Michelle: check GSC Settings > Users and permissions to find owner account and grant access.', lastModified: '2026-04-11' },
+      { id: 'ts-11', name: 'GSC signal check -- May 10 gate', status: STATUS.NOT_STARTED, detail: 'HOLD all new content until May 10 GSC check-in. Avg position 45.8. Makita-vs-Milwaukee: 1,407 impressions, 0 clicks. Kill criteria: no traction after initial test batch.', lastModified: '2026-04-11' },
+      { id: 'ts-3', name: 'Fix duplicate ASIN issue (50 posts remaining)', status: STATUS.IN_PROGRESS, detail: 'Post 3030 fixed. 50 remaining posts have same ASIN repeated across all product links. Low priority until validation signal confirmed.', lastModified: '2026-03-10' },
+      { id: 'ts-4', name: 'Homepage CTA buttons fix', status: STATUS.NOT_STARTED, detail: 'Buttons not functioning. Quick win from site audit.', lastModified: '2026-03-01' },
+      { id: 'ts-5', name: 'Missing featured images', status: STATUS.NOT_STARTED, detail: 'Several posts showing without thumbnails on blog cards', lastModified: '2026-03-01' },
+      { id: 'ts-6', name: 'Product images as affiliate links', status: STATUS.NOT_STARTED, detail: 'Images should be clickable affiliate links, not just "Check Price" buttons', lastModified: '2026-03-01' },
+    ],
+  },
+  {
+    id: 'cleverhome',
+    name: 'CleverHomeStorage.com',
+    icon: '\u{1F3E0}',
+    color: COLORS.blue,
+    summary: 'Home organization affiliate site. Early stage. Needs content strategy and Pinterest integration.',
+    tasks: [
+      { id: 'chs-1', name: 'Domain registered + site live', status: STATUS.COMPLETE, detail: 'Hosted on Hostinger/WordPress', lastModified: '2026-02-01' },
+      { id: 'chs-2', name: 'Content strategy defined', status: STATUS.NOT_STARTED, detail: 'Aspirational how-to content. Pinterest-first traffic model.', lastModified: '2026-02-01' },
+      { id: 'chs-3', name: 'Initial articles published', status: STATUS.NOT_STARTED, detail: 'Need 10+ articles to start ranking', lastModified: '2026-02-01' },
+      { id: 'chs-4', name: 'Amazon Associates integration', status: STATUS.NOT_STARTED, detail: 'Affiliate links, FTC disclosures, product showcases', lastModified: '2026-02-01' },
+      { id: 'chs-5', name: 'Pinterest account + pins', status: STATUS.NOT_STARTED, detail: 'Primary traffic driver for this niche', lastModified: '2026-02-01' },
+    ],
+  },
+  {
+    id: 'customgift',
+    name: 'CustomGiftFinder.com',
+    icon: '\u{1F381}',
+    color: COLORS.pink,
+    summary: 'Personalized gifts affiliate comparison engine. Concept stage.',
+    tasks: [
+      { id: 'cgf-1', name: 'Business concept defined', status: STATUS.COMPLETE, detail: 'Personalized gifts affiliate comparison engine', lastModified: '2026-02-01' },
+      { id: 'cgf-2', name: 'Domain registered', status: STATUS.IN_PROGRESS, detail: 'Confirm registration status', lastModified: '2026-02-01' },
+      { id: 'cgf-3', name: 'Site build', status: STATUS.NOT_STARTED, detail: 'Comparison engine, product database, affiliate links', lastModified: '2026-02-01' },
+      { id: 'cgf-4', name: 'Content creation', status: STATUS.NOT_STARTED, detail: 'Gift guides, comparison articles, seasonal content', lastModified: '2026-02-01' },
+    ],
+  },
+  {
+    id: 'seap',
+    name: 'NY SEAP Program',
+    icon: '\u{1F4CB}',
+    color: COLORS.dark,
+    summary: 'Self-Employment Assistance Program for digital downloads business.',
+    tasks: [
+      { id: 'seap-1', name: 'Business concept chosen', status: STATUS.COMPLETE, detail: 'Digital downloads: planners, org tools, wedding templates, printables', lastModified: '2026-02-01' },
+      { id: 'seap-2', name: 'SEAP application package drafted', status: STATUS.COMPLETE, detail: 'Business strategy form ES 161.2 drafted', lastModified: '2026-02-15' },
+      { id: 'seap-3', name: 'Watch orientation videos', status: STATUS.NOT_STARTED, detail: 'dol.ny.gov/applying-seap Part 1 and Part 2 required', lastModified: '2026-02-15' },
+      { id: 'seap-4', name: 'Submit SEAP application', status: STATUS.NOT_STARTED, detail: 'Log into labor.ny.gov, navigate to SEAP', lastModified: '2026-02-15' },
+      { id: 'seap-5', name: 'Complete 20 hrs entrepreneurial training', status: STATUS.NOT_STARTED, detail: 'Free through SCORE/SBDC', lastModified: '2026-02-15' },
+      { id: 'seap-6', name: 'Meet with business counselor (2x)', status: STATUS.NOT_STARTED, detail: 'Required as part of program', lastModified: '2026-02-15' },
+    ],
+  },
+  {
+    id: 'wedding-followup',
+    name: 'Wedding Follow-Up',
+    icon: '\u{1F48D}',
+    color: COLORS.pink,
+    summary: '150+ thank you notes on "The Perkins" stationery. ~18 of 99 done.',
+    tasks: [
+      { id: 'wf-1', name: 'Address envelopes', status: STATUS.IN_PROGRESS, detail: '~18 of 99 envelopes addressed. 81 remaining. Dr. Doug & Lisa Trepp needs redo.', lastModified: '2026-03-01' },
+      { id: 'wf-2', name: 'Write personalized notes', status: STATUS.IN_PROGRESS, detail: 'Done: Connor & Lauren, Emily & Mel, Kristy & Jake, Katie Martell, others.', lastModified: '2026-03-01' },
+      { id: 'wf-3', name: 'Mail completed notes', status: STATUS.IN_PROGRESS, detail: '1 confirmed sent (Peter & Alexa Quinn). Others in various stages.', lastModified: '2026-03-01' },
+      { id: 'wf-4', name: 'Bridesmaids notes (Kristy, Sapna, Danielle)', status: STATUS.IN_PROGRESS, detail: 'Kristy done. Sapna and Danielle TBD.', lastModified: '2026-03-01' },
+      { id: 'wf-5', name: 'Family notes (Kathleen, Quinn, Ruby, Anna, Marzi)', status: STATUS.NOT_STARTED, detail: 'Key family recipients still need personalized notes', lastModified: '2026-03-01' },
+      { id: 'wf-6', name: 'High-value gift notes ($500+)', status: STATUS.NOT_STARTED, detail: 'Jean Marie & Kenneth ($1,320), Kristen Munnelly ($1,495), Randall & Lisa ($470)', lastModified: '2026-03-01' },
+      { id: 'wf-7', name: 'Remaining guest notes', status: STATUS.NOT_STARTED, detail: 'Bulk of remaining 81 envelopes. Prioritize by gift value.', lastModified: '2026-03-01' },
+    ],
+  },
+  {
+    id: 'ttc',
+    name: 'TTC / Fertility',
+    icon: '\u{1F33C}',
+    color: COLORS.aqua,
+    summary: 'CD5 (Apr 12). FOLLICULAR mode. No action needed for ~5 days. Fertile window opens Apr 17 -- start LH strips that morning. Estimated ovulation: Apr 21. Next period if no conception: May 6.',
+    tasks: [
+      { id: 'ttc-1', name: 'Log BBT daily (before rising)', status: STATUS.IN_PROGRESS, detail: 'Overnight skin temperature analysis via Oura Ring. Biphasic shift confirmation. New cycle CD1: Apr 8. CD5 today -- log each morning, same time.', lastModified: '2026-04-12' },
+      { id: 'ttc-2', name: 'Start LH strips Apr 17 (CD10)', status: STATUS.NOT_STARTED, detail: 'Fertile window opens Apr 17 (CD10). Begin LH strips that morning. Peak fertility: Apr 19-21. Estimated ovulation: Apr 21 (CD14). Using Clearblue/Premom.', lastModified: '2026-04-11' },
+      { id: 'ttc-3', name: 'Cycle-over-cycle trend analysis', status: STATUS.IN_PROGRESS, detail: 'Cycle 1 -- confidence low (first tracked cycle, no history). Confidence grows after each completed cycle of LH + BBT data. Next period if no conception: May 6.', lastModified: '2026-04-11' },
+      { id: 'ttc-4', name: 'Test window planning', status: STATUS.NOT_STARTED, detail: 'Earliest test: May 1 (DPO 10, sensitive strip, FMU only). Reliable: May 3 (DPO 12). Definitive: May 5 (DPO 14, expected period).', lastModified: '2026-04-11' },
+      { id: 'ttc-5', name: 'Bloom fertility dashboard', status: STATUS.COMPLETE, detail: 'Custom React dashboard for temperature + cycle visualization', lastModified: '2026-02-15' },
+      { id: 'ttc-6', name: 'TTC Performance Tracker skill', status: STATUS.COMPLETE, detail: 'Daily automated tracking: DPO logging, Oura correlation, symptom logging, ovulation confirmation', lastModified: '2026-03-01' },
+      { id: 'ttc-7', name: 'Symptom + mood tracking', status: STATUS.IN_PROGRESS, detail: 'Logging: cervical mucus, breast tenderness, cramping, spotting, fatigue, nausea, mood, bloating', lastModified: '2026-04-10' },
+    ],
+  },
+  {
+    id: 'financial',
+    name: 'Financial Optimization',
+    icon: '\u{1F4B0}',
+    color: COLORS.green,
+    summary: 'CRITICAL: Tax deadline Apr 15 (3 days). IRS notification in online account -- check immediately. $3,257 over Personal Spending budget (up from $1,734 yesterday). Monarch Chase sync expired. $6K/month deficit, 16-month runway.',
+    tasks: [
+      { id: 'fin-1', name: 'Subscription audit', status: STATUS.COMPLETE, detail: 'Cancelled 8 subs: ~$258/mo ($3,096/yr). Notion, ElevenLabs, Otter, Nuuly, InVideo, Disney+, Airtable, Shopify', lastModified: '2026-02-15' },
+      { id: 'fin-2', name: 'Chase Sapphire spending analysis', status: STATUS.COMPLETE, detail: '2025 and 2026 YTD dashboards built with category breakdowns', lastModified: '2026-02-20' },
+      { id: 'fin-3', name: 'Joint budget model with Gray', status: STATUS.IN_PROGRESS, detail: 'Navigating post-marriage financial integration. Separate + joint accounts. Weekly Household CFO audit active.', lastModified: '2026-03-15' },
+      { id: 'fin-4', name: 'Credit card rewards optimization', status: STATUS.IN_PROGRESS, detail: 'Chase Sapphire Reserve, Amex Platinum/Gold, Hilton, Marriott. Tracking points value and expiration.', lastModified: '2026-03-15' },
+      { id: 'fin-5', name: 'UI benefits tracking', status: STATUS.IN_PROGRESS, detail: '$869/week. ~17 weeks remaining as of Apr 10 2026. Runway approx 16 months total household.', lastModified: '2026-04-10' },
+      { id: 'fin-6', name: 'Monthly expense tracking + classification', status: STATUS.IN_PROGRESS, detail: 'April alerts: $3,257 over Personal Spending (Apr 12, up from $1,734 yesterday). Garbage budget exceeded by $3. Monarch Chase sync expired -- reauthorize. Amex statement ready (account 95005, due May 8, balance $154.80).', lastModified: '2026-04-12' },
+      { id: 'fin-9', name: 'Review Sonnenalp Resort $1,000.94 charge', status: STATUS.NOT_STARTED, detail: 'Monarch flagged Apr 10: $1,000.94 from Sonnenalp Resort on Sapphire Reserve (...1041), categorized as Experience. Verify this is correct and expected before closing.', lastModified: '2026-04-11' },
+      { id: 'fin-7', name: 'Reauthorize Chase in Monarch', status: STATUS.BLOCKED, detail: 'Chase access expired -- Monarch cannot sync transactions. Open Monarch app and reauthorize to restore syncing.', lastModified: '2026-04-10' },
+      { id: 'fin-8', name: 'File taxes -- Form 1040 (deadline Apr 15)', status: STATUS.BLOCKED, detail: 'CRITICAL: April 15 is 3 days away. File or confirm extension (Form 4868) immediately. Taxes owed still due Apr 15 even with extension. IRS sent notification to online account Apr 12 -- check irs.gov before filing.', lastModified: '2026-04-12' },
+      { id: 'fin-10', name: 'Check IRS online account notification (Apr 12)', status: STATUS.NOT_STARTED, detail: 'IRS sent notification email Apr 12 re: IRS online account. May relate to tax filing, refund, or payment. Log in at irs.gov to view before Apr 15 deadline.', lastModified: '2026-04-12' },
+    ],
+  },
+  {
+    id: 'pennstate',
+    name: 'Penn State vs Wisconsin Trip',
+    icon: '\u{1F3C8}',
+    color: COLORS.orange,
+    summary: 'September 2026 group football weekend. Hotel block secured.',
+    tasks: [
+      { id: 'ps-1', name: 'Hotel block negotiated', status: STATUS.COMPLETE, detail: 'Michael Houser at HFL-Hotels. Block secured for group.', lastModified: '2026-02-15' },
+      { id: 'ps-2', name: 'Group guest list', status: STATUS.IN_PROGRESS, detail: 'Coordinating attendees and room assignments', lastModified: '2026-03-01' },
+      { id: 'ps-3', name: 'Travel arrangements', status: STATUS.NOT_STARTED, detail: 'Flights/driving plans, East Hampton to State College', lastModified: '2026-03-01' },
+      { id: 'ps-4', name: 'Tailgate planning', status: STATUS.NOT_STARTED, detail: 'Food, drinks, setup, parking passes', lastModified: '2026-03-01' },
+      { id: 'ps-5', name: 'Game tickets secured', status: STATUS.NOT_STARTED, detail: 'Confirm ticket availability and purchase for the group', lastModified: '2026-03-01' },
+      { id: 'ps-6', name: 'Weekend itinerary', status: STATUS.NOT_STARTED, detail: 'Friday arrival through Sunday departure schedule', lastModified: '2026-03-01' },
+    ],
+  },
+];
+
+const STORAGE_KEY = 'michelles-life-tracker-v5';
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch (e) {}
+  return null;
+}
+
+function saveState(workstreams) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(workstreams));
+  } catch (e) {}
+}
+
+function genId() {
+  return 'task-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+}
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function calcProgress(tasks) {
+  if (!tasks.length) return 0;
+  const done = tasks.filter(t => t.status === STATUS.COMPLETE).length;
+  return Math.round((done / tasks.length) * 100);
+}
+
+function ProgressBar({ progress, color, height = 10 }) {
+  return (
+    <div style={{ width: '100%', background: COLORS.midGray, borderRadius: height / 2, overflow: 'hidden', height }}>
+      <div style={{
+        width: `${Math.min(progress, 100)}%`,
+        height: '100%',
+        background: color,
+        borderRadius: height / 2,
+        transition: 'width 0.6s ease',
+      }} />
+    </div>
+  );
+}
+
+function StatusBadge({ status, onClick }) {
+  return (
+    <span
+      className={onClick ? 'status-badge-click' : ''}
+      onClick={onClick}
+      title={onClick ? 'Click to change status' : ''}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 4,
+        padding: '3px 10px',
+        borderRadius: 20,
+        fontSize: 11,
+        fontWeight: 600,
+        fontFamily: "'Inter', sans-serif",
+        background: statusColor(status) + '20',
+        color: statusColor(status),
+        whiteSpace: 'nowrap',
+      }}>
+      {statusEmoji(status)} {status}
+    </span>
+  );
+}
+
+function MiniStat({ label, value, color, onClick, active }) {
+  return (
+    <div
+      className="mini-stat"
+      onClick={onClick}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '12px 16px',
+        background: active ? color + '25' : color + '12',
+        borderRadius: 12,
+        minWidth: 90,
+        cursor: onClick ? 'pointer' : 'default',
+        border: active ? '2px solid ' + color : '2px solid transparent',
+        transition: 'all 0.2s ease',
+        transform: active ? 'scale(1.04)' : 'scale(1)',
+      }}>
+      <span className="mini-stat-value" style={{ fontSize: 26, fontWeight: 800, fontFamily: "'Montserrat', sans-serif", color }}>{value}</span>
+      <span className="mini-stat-label" style={{ fontSize: 10, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: COLORS.dark, textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 2 }}>{label}</span>
+    </div>
+  );
+}
+
+function daysUntil(dateStr) {
+  const target = new Date(dateStr + 'T00:00:00');
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+}
+
+// === AGENT STATUS GRID (v4) ===
+function AgentStatusGrid() {
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <div style={{ width: 3, height: 16, borderRadius: 2, background: '#c4a07a' }} />
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+          Agent Status
+        </span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
+        {AGENT_STATUS.map(agent => {
+          const hoursSinceRun = agent.lastRun ? Math.floor((Date.now() - new Date(agent.lastRun).getTime()) / 3600000) : 999;
+          const isStale = hoursSinceRun > 24;
+          const isWarning = hoursSinceRun > 12;
+          const statusColor2 = isStale ? COLORS.red : isWarning ? COLORS.yellow : COLORS.green;
+          const statusLabel = isStale ? 'STALE' : isWarning ? 'AGING' : 'OK';
+          return (
+            <div key={agent.id} style={{
+              background: '#fff',
+              borderRadius: 12,
+              padding: '14px 16px',
+              border: '1px solid ' + COLORS.midGray,
+              borderLeft: '4px solid ' + agent.color,
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <span style={{ fontSize: 14 }}>{agent.icon}</span>
+                <span style={{
+                  fontSize: 9, fontWeight: 700, fontFamily: "'Inter', sans-serif",
+                  padding: '2px 6px', borderRadius: 8,
+                  background: statusColor2 + '20', color: statusColor2,
+                }}>{statusLabel}</span>
+              </div>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: COLORS.dark, marginBottom: 4 }}>
+                {agent.name}
+              </div>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 18, color: agent.color, marginBottom: 2 }}>
+                {agent.metric}
+              </div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#999' }}>
+                {agent.metricLabel}
+              </div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginTop: 6 }}>
+                {agent.lastRun ? formatAgentUpdate(agent.lastRun) : 'Never'}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// === DECISION QUEUE (v4) ===
+function DecisionQueue({ items }) {
+  const qItems = items !== undefined ? items : DECISION_QUEUE;
+  if (!qItems || qItems.length === 0) return null;
+  const urgencyColor = (u) => u === 'critical' ? COLORS.red : u === 'high' ? COLORS.red : u === 'medium' ? COLORS.orange : COLORS.blue;
+  const agentIcon = (id) => {
+    const a = AGENT_STATUS.find(x => x.id === id);
+    return a ? a.icon : '';
+  };
+  return (
+    <div style={{
+      background: '#fff',
+      borderRadius: 14,
+      padding: '16px 20px',
+      border: '1px solid ' + COLORS.midGray,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+        <div style={{ width: 3, height: 16, borderRadius: 2, background: '#c4605a' }} />
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+          Decisions Needed
+        </span>
+        <span style={{ marginLeft: 'auto', background: COLORS.red + '18', color: COLORS.red, fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 10, padding: '2px 8px', borderRadius: 10 }}>{qItems.length}</span>
+      </div>
+      {qItems.map(item => (
+        <div key={item.id} style={{
+          display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 0',
+          borderBottom: '1px solid ' + COLORS.lightGray,
+        }}>
+          <span style={{
+            fontSize: 9, fontWeight: 700, fontFamily: "'Inter', sans-serif",
+            padding: '2px 8px', borderRadius: 8, flexShrink: 0, marginTop: 2,
+            background: urgencyColor(item.urgency) + '18', color: urgencyColor(item.urgency),
+          }}>{item.urgency.toUpperCase()}</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: COLORS.dark }}>
+              {agentIcon(item.agent)} {item.text}
+            </div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#999', marginTop: 2 }}>
+              {item.action}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// === TOMORROW'S PRIORITIES (v4) ===
+function TomorrowPriorities() {
+  if (!TOMORROW_PRIORITIES || TOMORROW_PRIORITIES.length === 0) return null;
+  return (
+    <div style={{
+      background: '#fff',
+      borderRadius: 14,
+      padding: '16px 20px',
+      marginBottom: 16,
+      border: '1px solid ' + COLORS.midGray,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <div style={{ width: 3, height: 16, borderRadius: 2, background: '#5b8fa8' }} />
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+          Tomorrow's Priorities
+        </span>
+      </div>
+      {TOMORROW_PRIORITIES.map((p, i) => (
+        <div key={i} style={{
+          display: 'flex', alignItems: 'flex-start', gap: 10, padding: '6px 0',
+        }}>
+          <span style={{
+            fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 16, color: COLORS.blue,
+            minWidth: 24,
+          }}>{i + 1}</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 500, color: COLORS.dark, lineHeight: 1.4 }}>
+            {p}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CountdownCards() {
+  return (
+    <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
+      {CRITICAL_DEADLINES.map((d, i) => {
+        const days = daysUntil(d.date);
+        const urgent = days <= 3;
+        const soon = days <= 7;
+        const bg = urgent ? d.color + '18' : soon ? d.color + '10' : COLORS.lightGray;
+        const border = urgent ? '2px solid ' + d.color + '60' : '2px solid transparent';
+        return (
+          <div key={i} style={{
+            flex: 1, minWidth: 120,
+            background: bg,
+            border,
+            borderRadius: 12,
+            padding: '10px 14px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+          }}>
+            <span style={{ fontSize: 16 }}>{d.icon}</span>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 22, color: days <= 0 ? COLORS.red : d.color, lineHeight: 1 }}>
+              {days <= 0 ? 'PAST DUE' : days === 1 ? 'TOMORROW' : `${days}d`}
+            </span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, color: COLORS.dark }}>{d.label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function TopActions({ workstreams }) {
+  const actions = [];
+  workstreams.forEach(ws => {
+    ws.tasks.forEach(t => {
+      if (t.status === STATUS.BLOCKED) {
+        actions.push({ ...t, wsName: ws.name, wsIcon: ws.icon, wsColor: ws.color, priority: 1 });
+      }
+    });
+  });
+  // Also surface oldest in-progress tasks
+  workstreams.forEach(ws => {
+    ws.tasks.forEach(t => {
+      if (t.status === STATUS.IN_PROGRESS) {
+        actions.push({ ...t, wsName: ws.name, wsIcon: ws.icon, wsColor: ws.color, priority: 2 });
+      }
+    });
+  });
+  actions.sort((a, b) => {
+    if (a.priority !== b.priority) return a.priority - b.priority;
+    return (a.lastModified || '').localeCompare(b.lastModified || '');
+  });
+  const top = actions.slice(0, 5);
+  if (!top.length) return null;
+  return (
+    <div style={{
+      background: COLORS.dark + '05',
+      border: '1px solid ' + COLORS.midGray,
+      borderRadius: 14,
+      padding: '14px 18px',
+      marginBottom: 16,
+    }}>
+      <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: COLORS.dark, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+        {'\u26A1'} Top Actions
+      </div>
+      {top.map((t, i) => (
+        <div key={i} style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '6px 0',
+          borderBottom: i < top.length - 1 ? '1px solid ' + COLORS.midGray : 'none',
+        }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: '#fff', background: t.wsColor, padding: '2px 7px', borderRadius: 8, fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap' }}>{t.wsIcon} {t.wsName}</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: COLORS.dark, flex: 1 }}>{t.name}</span>
+          <span style={{
+            fontSize: 10, fontWeight: 700, fontFamily: "'Inter', sans-serif",
+            padding: '2px 8px', borderRadius: 10,
+            background: (t.status === STATUS.BLOCKED ? COLORS.red : COLORS.blue) + '20',
+            color: t.status === STATUS.BLOCKED ? COLORS.red : COLORS.blue,
+            whiteSpace: 'nowrap',
+          }}>{t.status === STATUS.BLOCKED ? 'BLOCKED' : 'ACTIVE'}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function NeedsAttention({ workstreams }) {
+  const items = [];
+  workstreams.forEach(ws => {
+    ws.tasks.forEach(t => {
+      if (t.status === STATUS.BLOCKED) {
+        items.push({ ...t, workstream: ws.name, wsIcon: ws.icon, reason: 'BLOCKED', priority: 1 });
+      }
+      const staleness = getStalenessWarning(t);
+      if (staleness && staleness.level === 'critical') {
+        items.push({ ...t, workstream: ws.name, wsIcon: ws.icon, reason: staleness.label, priority: 2 });
+      }
+    });
+  });
+  items.sort((a, b) => a.priority - b.priority);
+  if (!items.length) return null;
+
+  return (
+    <div style={{
+      background: COLORS.red + '08',
+      border: '1px solid ' + COLORS.red + '30',
+      borderRadius: 14,
+      padding: '14px 18px',
+      marginBottom: 16,
+    }}>
+      <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: COLORS.red, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+        {'\u26A0\uFE0F'} Needs Attention ({items.length})
+      </div>
+      {items.map((t, i) => (
+        <div key={i} style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '5px 0',
+          borderBottom: i < items.length - 1 ? '1px solid ' + COLORS.red + '15' : 'none',
+        }}>
+          <span style={{ fontSize: 14 }}>{t.wsIcon}</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: COLORS.dark, flex: 1 }}>{t.name}</span>
+          <span style={{
+            fontSize: 10,
+            fontWeight: 700,
+            fontFamily: "'Inter', sans-serif",
+            padding: '2px 8px',
+            borderRadius: 10,
+            background: (t.reason === 'BLOCKED' ? COLORS.red : COLORS.orange) + '20',
+            color: t.reason === 'BLOCKED' ? COLORS.red : COLORS.orange,
+          }}>{t.reason}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function RecentlyCompleted({ workstreams }) {
+  const recent = [];
+  workstreams.forEach(ws => {
+    ws.tasks.forEach(t => {
+      if (t.status === STATUS.COMPLETE && t.lastModified) {
+        recent.push({ ...t, workstream: ws.name, wsIcon: ws.icon });
+      }
+    });
+  });
+  recent.sort((a, b) => (b.lastModified || '').localeCompare(a.lastModified || ''));
+  const top5 = recent.slice(0, 5);
+  if (!top5.length) return null;
+
+  return (
+    <div style={{
+      background: COLORS.green + '08',
+      border: '1px solid ' + COLORS.green + '30',
+      borderRadius: 14,
+      padding: '14px 18px',
+      marginBottom: 16,
+    }}>
+      <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: COLORS.green, marginBottom: 10 }}>
+        Recently Completed
+      </div>
+      {top5.map((t, i) => (
+        <div key={i} className="recently-completed-item" style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '5px 0',
+          borderBottom: i < top5.length - 1 ? '1px solid ' + COLORS.green + '15' : 'none',
+        }}>
+          <span style={{ fontSize: 14 }}>{t.wsIcon}</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: COLORS.dark, flex: 1 }}>{t.name}</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#aaa' }}>{t.lastModified}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EtsyRevenueTicker() {
+  const { month, salesCount, revenue, avgOrderValue, visits, cvr, totalSalesLifetime, activeListings, adsVisits, adsPct, abandonedCarts, abandonedCartValue, openMessages, adsLaunched, saleEnds, lastUpdated, ytd, monthlyHistory, janFebCombined } = ETSY_STATS;
+  const daysLeft = daysUntil(saleEnds);
+  const urgent = daysLeft <= 3;
+  return (
+    <div style={{
+      background: urgent ? '#fb588708' : '#fb588705',
+      border: '1px solid ' + (urgent ? '#fb588740' : '#fb588720'),
+      borderRadius: 14,
+      padding: '12px 18px',
+      marginBottom: 4,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <span style={{ fontSize: 18 }}>{'\uD83C\uDFA8'}</span>
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: '#fb5887' }}>Shelzy's Designs</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb' }}>{month}</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginLeft: 'auto' }}>Updated {lastUpdated}</span>
+      </div>
+      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#34c759', lineHeight: 1 }}>${revenue.toFixed(2)}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Revenue</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#fb5887', lineHeight: 1 }}>{salesCount}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Orders</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#fe8c43', lineHeight: 1 }}>{visits}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Visits</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#5b8fa8', lineHeight: 1 }}>{cvr}%</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>CVR</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#fe8c43', lineHeight: 1 }}>${avgOrderValue.toFixed(2)}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>AOV</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#888', lineHeight: 1 }}>{adsPct}%</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Ads Traffic</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: abandonedCarts > 15 ? '#ff3b30' : '#888', lineHeight: 1 }}>{abandonedCarts}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Abandoned</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: openMessages > 0 ? '#ff3b30' : '#34c759', lineHeight: 1 }}>{openMessages}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Msgs</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: urgent ? '#ff3b30' : '#fe8c43', lineHeight: 1 }}>{daysLeft <= 0 ? 'ENDED' : daysLeft + 'd'}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Sale Left</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#888', lineHeight: 1 }}>{totalSalesLifetime}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Total Sales</div>
+        </div>
+      </div>
+      <div style={{ borderTop: '1px solid #fb588715', marginTop: 12, paddingTop: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#fb5887', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>2026 YTD</span>
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 14, color: '#34c759' }}>${ytd.revenue.toFixed(2)}</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#aaa' }}>/</span>
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: '#fb5887' }}>{ytd.orders} orders</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#aaa' }}>/</span>
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: '#5b8fa8' }}>{ytd.visits.toLocaleString()} visits</span>
+        </div>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          <div style={{ background: '#fb588710', borderRadius: 8, padding: '5px 10px', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#bbb', fontWeight: 600 }}>JAN+FEB</span>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 13, color: '#888' }}>${janFebCombined.revenue.toFixed(2)}</span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc' }}>{janFebCombined.orders}mo</span>
+          </div>
+          {monthlyHistory.filter(m => m.revenue !== null).map(m => (
+            <div key={m.month} style={{ background: m.partial ? '#fb588718' : '#fb588710', borderRadius: 8, padding: '5px 10px', display: 'flex', alignItems: 'center', gap: 6, border: m.partial ? '1px solid #fb588730' : 'none' }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#bbb', fontWeight: 600 }}>{m.month.toUpperCase()}{m.partial ? '*' : ''}</span>
+              <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 13, color: m.partial ? '#fb5887' : '#34c759' }}>${m.revenue.toFixed(2)}</span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc' }}>{m.orders}mo</span>
+            </div>
+          ))}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc' }}>* partial month</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AffiliateSitesPanel() {
+  const sColor = (s) => s === 'hold' ? COLORS.yellow : s === 'active' ? COLORS.green : s === 'blocked' ? COLORS.red : '#aaa';
+  const sLabel = (s) => s === 'hold' ? 'HOLD' : s === 'active' ? 'ACTIVE' : s === 'concept' ? 'CONCEPT' : s.toUpperCase();
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 3, height: 16, borderRadius: 2, background: '#c4956e' }} />
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+            Affiliate Sites
+          </span>
+        </div>
+        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 16, color: COLORS.green }}>$3.90</span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase', marginLeft: 5 }}>Amazon MTD</span>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 16, color: COLORS.blue }}>616</span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase', marginLeft: 5 }}>Clicks</span>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 16, color: COLORS.dark }}>3</span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase', marginLeft: 5 }}>Shipped</span>
+          </div>
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 10 }}>
+        {AFFILIATE_SITES.map(site => (
+          <div key={site.id} style={{
+            background: '#fff', borderRadius: 12, padding: '14px 16px',
+            border: '1px solid ' + COLORS.midGray, borderLeft: '4px solid ' + site.color,
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: 14 }}>{site.icon}</span>
+                <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: COLORS.dark }}>{site.name}</span>
+              </div>
+              <span style={{
+                fontSize: 9, fontWeight: 700, fontFamily: "'Inter', sans-serif",
+                padding: '2px 7px', borderRadius: 8,
+                background: sColor(site.status) + '20', color: sColor(site.status),
+              }}>{sLabel(site.status)}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 14, marginBottom: 8, flexWrap: 'wrap' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: site.color, lineHeight: 1 }}>{site.articles.live}</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase' }}>Live</div>
+              </div>
+              {site.articles.staged > 0 && (
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: COLORS.yellow, lineHeight: 1 }}>{site.articles.staged}</div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase' }}>Staged</div>
+                </div>
+              )}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: site.amazonEarnings > 0 ? COLORS.green : '#ccc', lineHeight: 1 }}>
+                  {site.amazonTag ? '$' + site.amazonEarnings.toFixed(2) : '--'}
+                </div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase' }}>Amazon</div>
+              </div>
+              {site.gsc && site.gsc.avgPosition != null && (
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: site.gsc.avgPosition > 30 ? COLORS.orange : COLORS.green, lineHeight: 1 }}>
+                    {site.gsc.avgPosition}
+                  </div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase' }}>GSC Pos</div>
+                </div>
+              )}
+              {site.gsc && site.gsc.impressions != null && (
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: site.gsc.impressions > 0 ? COLORS.blue : '#bbb', lineHeight: 1 }}>
+                    {site.gsc.impressions.toLocaleString()}
+                  </div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#999', fontWeight: 600, textTransform: 'uppercase' }}>Impr</div>
+                </div>
+              )}
+            </div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#999', lineHeight: 1.4 }}>{site.signal}</div>
+            {site.blocker && (
+              <div style={{
+                marginTop: 7, padding: '4px 8px', background: COLORS.red + '0f',
+                borderRadius: 6, fontFamily: "'Inter', sans-serif", fontSize: 10, color: COLORS.red, fontWeight: 600,
+              }}>
+                {'\uD83D\uDEAB'} {site.blocker}
+              </div>
+            )}
+            {site.nextCheck && (
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginTop: 6 }}>
+                Next gate: {site.nextCheck}
+              </div>
+            )}
+            {site.amazonTag && (
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginTop: 2 }}>
+                Tag: {site.amazonTag} &nbsp;|&nbsp; {site.gsc ? site.gsc.indexedPages + ' pages indexed' : ''}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function JobKanban({ tasks }) {
+  const columns = {};
+  KANBAN_COLS.forEach(col => { columns[col] = []; });
+  tasks.forEach(t => {
+    const stage = getJobStage(t);
+    if (stage && columns[stage] !== undefined) columns[stage].push(t);
+  });
+  return (
+    <div style={{ overflowX: 'auto', paddingBottom: 8 }}>
+      <div style={{ display: 'flex', gap: 10, minWidth: 'max-content', paddingBottom: 4 }}>
+        {KANBAN_COLS.map(col => {
+          const colColor = KANBAN_COL_COLORS[col];
+          const cards = columns[col];
+          return (
+            <div key={col} style={{ width: 180, flexShrink: 0 }}>
+              <div style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 700,
+                fontSize: 10,
+                color: colColor,
+                textTransform: 'uppercase',
+                letterSpacing: 0.8,
+                marginBottom: 8,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 5,
+              }}>
+                <span style={{ background: colColor + '20', color: colColor, borderRadius: 10, padding: '1px 7px', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 10 }}>{cards.length}</span>
+                {col}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {cards.length === 0 && (
+                  <div style={{ background: '#f9f9f9', borderRadius: 10, padding: '10px 12px', fontFamily: "'Inter', sans-serif", fontSize: 11, color: '#ccc', textAlign: 'center' }}>Empty</div>
+                )}
+                {cards.map(t => (
+                  <div key={t.id} style={{
+                    background: '#fff',
+                    border: '1px solid ' + colColor + '30',
+                    borderLeft: '3px solid ' + colColor,
+                    borderRadius: 10,
+                    padding: '9px 11px',
+                  }}>
+                    <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 11, color: '#2d2d2d', lineHeight: 1.3, marginBottom: 4 }}>
+                      {t.name.replace(/\s*--.*$/, '').replace(/\s*\(.*?\)\s*/g, ' ').trim()}
+                    </div>
+                    {t.lastModified && (
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc' }}>{t.lastModified}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function AddTaskRow({ onAdd }) {
+  const [show, setShow] = useState(false);
+  const [name, setName] = useState('');
+  const [detail, setDetail] = useState('');
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (show && inputRef.current) inputRef.current.focus();
+  }, [show]);
+
+  if (!show) {
+    return (
+      <button
+        onClick={() => setShow(true)}
+        style={{
+          width: '100%',
+          padding: '8px',
+          borderRadius: 10,
+          background: COLORS.lightGray,
+          color: '#aaa',
+          fontFamily: "'Inter', sans-serif",
+          fontSize: 12,
+          fontWeight: 600,
+          marginTop: 8,
+          transition: 'all 0.2s',
+        }}
+      >
+        + Add Task
+      </button>
+    );
+  }
+
+  const handleAdd = () => {
+    if (name.trim()) {
+      onAdd(name.trim(), detail.trim());
+      setName('');
+      setDetail('');
+      setShow(false);
+    }
+  };
+
+  return (
+    <div className="add-task-row" style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center' }}>
+      <input
+        ref={inputRef}
+        value={name}
+        onChange={e => setName(e.target.value)}
+        onKeyDown={e => e.key === 'Enter' && handleAdd()}
+        placeholder="Task name"
+        style={{
+          flex: 2,
+          padding: '8px 12px',
+          borderRadius: 8,
+          border: '1px solid ' + COLORS.midGray,
+          fontFamily: "'Inter', sans-serif",
+          fontSize: 12,
+        }}
+      />
+      <input
+        value={detail}
+        onChange={e => setDetail(e.target.value)}
+        onKeyDown={e => e.key === 'Enter' && handleAdd()}
+        placeholder="Detail (optional)"
+        style={{
+          flex: 3,
+          padding: '8px 12px',
+          borderRadius: 8,
+          border: '1px solid ' + COLORS.midGray,
+          fontFamily: "'Inter', sans-serif",
+          fontSize: 12,
+        }}
+      />
+      <button onClick={handleAdd} style={{
+        padding: '8px 16px',
+        borderRadius: 8,
+        background: COLORS.blue,
+        color: '#fff',
+        fontFamily: "'Inter', sans-serif",
+        fontSize: 12,
+        fontWeight: 600,
+      }}>Add</button>
+      <button onClick={() => { setShow(false); setName(''); setDetail(''); }} style={{
+        padding: '8px 12px',
+        borderRadius: 8,
+        background: COLORS.lightGray,
+        color: '#888',
+        fontFamily: "'Inter', sans-serif",
+        fontSize: 12,
+      }}>Cancel</button>
+    </div>
+  );
+}
+
+function WorkstreamCard({ ws, isExpanded, onToggle, taskFilter, searchQuery, onStatusChange, onAddTask, kanbanMode, onToggleKanban }) {
+  const completedCount = ws.tasks.filter(t => t.status === STATUS.COMPLETE).length;
+  const inProgressCount = ws.tasks.filter(t => t.status === STATUS.IN_PROGRESS).length;
+  const notStartedCount = ws.tasks.filter(t => t.status === STATUS.NOT_STARTED).length;
+  const blockedCount = ws.tasks.filter(t => t.status === STATUS.BLOCKED || t.status === STATUS.ON_HOLD).length;
+  const visibleTasks = ws.tasks.filter(t => matchesFilter(t, taskFilter) && matchesSearch(t, searchQuery));
+  const progress = calcProgress(ws.tasks);
+
+  return (
+    <div style={{
+      background: '#fff',
+      borderRadius: 16,
+      border: '1px solid ' + COLORS.midGray,
+      overflow: 'hidden',
+      boxShadow: isExpanded ? '0 4px 24px rgba(0,0,0,0.08)' : '0 1px 4px rgba(0,0,0,0.04)',
+      transition: 'box-shadow 0.3s ease',
+    }}>
+      <div
+        className="ws-header"
+        onClick={onToggle}
+        style={{
+          padding: '18px 20px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 14,
+          borderBottom: isExpanded ? '1px solid ' + COLORS.midGray : 'none',
+        }}
+      >
+        <span className="ws-icon" style={{ fontSize: 28 }}>{ws.icon}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4, flexWrap: 'wrap' }}>
+            <span className="ws-name" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 16, color: COLORS.dark }}>{ws.name}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, fontFamily: "'Montserrat', sans-serif", color: ws.color }}>{progress}%</span>
+          </div>
+          <ProgressBar progress={progress} color={ws.color} height={6} />
+          <p style={{ fontSize: 12, color: '#888', margin: '6px 0 0', fontFamily: "'Inter', sans-serif", lineHeight: 1.4 }}>{ws.summary}</p>
+        </div>
+        <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          {completedCount > 0 && <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, background: COLORS.green + '20', color: COLORS.green, fontWeight: 600 }}>{completedCount} done</span>}
+          {inProgressCount > 0 && <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, background: COLORS.blue + '20', color: COLORS.blue, fontWeight: 600 }}>{inProgressCount} active</span>}
+          {(notStartedCount + blockedCount) > 0 && <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, background: '#f0f0f0', color: '#888', fontWeight: 600 }}>{notStartedCount + blockedCount} pending</span>}
+        </div>
+        <span style={{ fontSize: 18, color: '#ccc', transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }}>{'\u25BC'}</span>
+      </div>
+
+      {isExpanded && (
+        <div className="ws-tasks" style={{ padding: '12px 20px 18px' }}>
+          {ws.id === 'job-search' && (
+            <div style={{ marginBottom: 12 }}>
+              <button
+                onClick={e => { e.stopPropagation(); onToggleKanban && onToggleKanban(); }}
+                style={{
+                  padding: '5px 14px',
+                  borderRadius: 20,
+                  background: kanbanMode ? COLORS.dark : COLORS.lightGray,
+                  color: kanbanMode ? '#fff' : '#888',
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  transition: 'all 0.2s',
+                }}
+              >
+                {kanbanMode ? '\u2630 List View' : '\u{1F4CB} Pipeline View'}
+              </button>
+            </div>
+          )}
+          {ws.id === 'job-search' && kanbanMode ? (
+            <JobKanban tasks={ws.tasks} />
+          ) : (
+            <>
+              {visibleTasks.length === 0 && (
+                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: '#bbb', textAlign: 'center', padding: 12 }}>No tasks match this filter</p>
+              )}
+              {visibleTasks.map((task, i) => (
+                <div key={task.id} className="task-row" style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 12,
+                  padding: '10px 0',
+                  borderBottom: i < visibleTasks.length - 1 ? '1px solid ' + COLORS.lightGray : 'none',
+                }}>
+                  <StatusBadge
+                    status={task.status}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onStatusChange(ws.id, task.id);
+                    }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: COLORS.dark }}>{task.name}</span>
+                      {(() => {
+                        const stale = getStalenessWarning(task);
+                        if (!stale) return null;
+                        return <span style={{
+                          fontSize: 9, fontWeight: 700, fontFamily: "'Inter', sans-serif",
+                          padding: '1px 6px', borderRadius: 8,
+                          background: stale.color + '20', color: stale.color,
+                        }}>{stale.label}</span>;
+                      })()}
+                    </div>
+                    <p className="task-detail" style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: '#999', margin: '3px 0 0', lineHeight: 1.4 }}>{task.detail}</p>
+                    {task.lastModified && (
+                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#ccc', marginTop: 2, display: 'inline-block' }}>Modified: {task.lastModified}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+          <AddTaskRow onAdd={(name, detail) => onAddTask(ws.id, name, detail)} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// === TAB CONFIG ===
+// === FERTILITY TICKER ===
+function FertilityTicker() {
+  const f = FERTILITY_STATE;
+  const daysToFW = daysUntil(f.fertileWindowStart);
+  const daysToOv = daysUntil(f.ovulationDate);
+  const inFW = daysToFW <= 0 && daysToOv >= -1;
+  const phaseColor = inFW ? '#e8526a' : '#7fb5b8';
+  const phaseColors = { early_follicular: '#7fb5b8', follicular: '#7fb5b8', ovulatory: '#e8526a', luteal: '#c4956e', late_luteal: '#c4956e' };
+  const color = phaseColors[f.phase] || '#7fb5b8';
+  return (
+    <div style={{ background: color + '08', border: '1px solid ' + color + '30', borderRadius: 14, padding: '12px 18px', marginBottom: 4 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <span style={{ fontSize: 16 }}>{'\uD83C\uDF38'}</span>
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color }}>Cycle Tracker</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb' }}>Cycle {f.cycleNumber} -- {f.phaseLabel}</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginLeft: 'auto' }}>Updated {f.lastUpdated}</span>
+      </div>
+      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 12 }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 28, color, lineHeight: 1 }}>{f.cycleDay}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Cycle Day</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 28, color: inFW ? '#e8526a' : daysToFW <= 3 ? '#fe8c43' : color, lineHeight: 1 }}>
+            {inFW ? 'NOW' : daysToFW + 'd'}
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Fertile Window</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 28, color: '#c4956e', lineHeight: 1 }}>{daysToOv}d</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>To Ovulation</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#aaa', lineHeight: 1 }}>May 6</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Next Period</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: '#aaa', lineHeight: 1 }}>May 1</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Earliest Test</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: f.lhSurgeDetected ? '#e8526a' : '#ccc', lineHeight: 1 }}>{f.lhSurgeDetected ? 'YES' : 'NO'}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>LH Surge</div>
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        {[
+          { label: 'Fertile Apr 17-22', color: '#e8526a' },
+          { label: 'Peak Apr 19-21', color: '#c4605a' },
+          { label: 'Ovulation Apr 21', color: '#c4956e' },
+          { label: 'Implant Apr 27 - May 1', color: '#7fb5b8' },
+          { label: 'Test May 1 (earliest)', color: '#888' },
+        ].map(b => (
+          <div key={b.label} style={{ background: b.color + '15', borderRadius: 8, padding: '4px 10px' }}>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: b.color, fontWeight: 600 }}>{b.label}</span>
+          </div>
+        ))}
+      </div>
+      {!f.lhSurgeDetected && daysToFW <= 5 && (
+        <div style={{ marginTop: 10, background: '#fe8c4320', borderRadius: 8, padding: '8px 12px' }}>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: '#fe8c43', fontWeight: 600 }}>
+            {'\u26A0\uFE0F'} Start LH strips Apr 17 (CD10) -- fertile window opens in {daysToFW} days
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// === FINANCE PULSE ===
+function FinancePulse() {
+  const f = FINANCE_STATE;
+  const taxDaysLeft = daysUntil(f.taxDeadline);
+  const taxUrgent = taxDaysLeft <= 3;
+  return (
+    <div style={{ background: taxUrgent ? '#c4605a08' : '#6aaa7e08', border: '1px solid ' + (taxUrgent ? '#c4605a30' : '#6aaa7e25'), borderRadius: 14, padding: '12px 18px', marginBottom: 4 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <span style={{ fontSize: 16 }}>{'\uD83D\uDCB0'}</span>
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: COLORS.dark }}>Financial Pulse</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginLeft: 'auto' }}>Updated {f.lastUpdated}</span>
+      </div>
+      {taxUrgent && (
+        <div style={{ background: '#c4605a18', border: '1px solid #c4605a40', borderRadius: 10, padding: '8px 14px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 22, color: '#c4605a', lineHeight: 1 }}>{taxDaysLeft}d</span>
+          <div>
+            <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: '#c4605a' }}>TAX DEADLINE APR 15</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#c4605a99' }}>
+              {f.irsNotification ? 'IRS notification pending -- check irs.gov/account before filing' : 'File Form 1040 or extension (4868)'}
+            </div>
+          </div>
+        </div>
+      )}
+      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 24, color: '#c4605a', lineHeight: 1 }}>
+            ${f.overBudget.toLocaleString()}
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Over Budget</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#bbb' }}>{f.budgetCategory}</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 24, color: COLORS.green, lineHeight: 1 }}>
+            ${f.uiWeeklyBenefit}/wk
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>UI Benefits</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 24, color: COLORS.blue, lineHeight: 1 }}>
+            {f.runwayMonths}mo
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Runway</div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 24, color: COLORS.orange, lineHeight: 1 }}>
+            -${f.monthlyDeficit.toLocaleString()}
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>Mo. Deficit</div>
+        </div>
+      </div>
+      {(f.monarchSyncExpired || f.amexBalance > 0) && (
+        <div style={{ marginTop: 10, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {f.monarchSyncExpired && (
+            <div style={{ background: COLORS.yellow + '18', borderRadius: 8, padding: '4px 10px' }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: COLORS.yellow, fontWeight: 600 }}>{'\u26A0\uFE0F'} Monarch Chase sync expired -- reauthorize</span>
+            </div>
+          )}
+          {f.amexBalance > 0 && (
+            <div style={{ background: '#5b8fa815', borderRadius: 8, padding: '4px 10px' }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#5b8fa8', fontWeight: 600 }}>Amex ${f.amexBalance} due {f.amexDue}</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// === CAREER PIPELINE ===
+function CareerPipeline() {
+  const c = CAREER_STATE;
+  const statusColor2 = { apply_now: COLORS.green, outreach_first: COLORS.orange, verify_apply: COLORS.blue, verify_remote: COLORS.yellow };
+  const statusLabel = { apply_now: 'APPLY NOW', outreach_first: 'OUTREACH FIRST', verify_apply: 'VERIFY+APPLY', verify_remote: 'VERIFY REMOTE' };
+  return (
+    <div style={{ background: '#5b8fa808', border: '1px solid #5b8fa825', borderRadius: 14, padding: '12px 18px', marginBottom: 4 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <span style={{ fontSize: 16 }}>{'\uD83D\uDCBC'}</span>
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: COLORS.blue }}>Job Pipeline</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb' }}>{c.targetComp} target -- {c.floorComp} floor</span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#ccc', marginLeft: 'auto' }}>Updated {c.lastUpdated}</span>
+      </div>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
+        {[
+          { label: 'Sourced',   value: c.sourcedCount,   color: '#2d2d2d' },
+          { label: 'Applied',   value: c.appliedCount,   color: '#3ca4d7' },
+          { label: 'Screening', value: c.screeningCount, color: '#8adbde' },
+          { label: 'Interview', value: c.interviewCount, color: '#fe8c43' },
+        ].map(s => (
+          <div key={s.label} style={{ textAlign: 'center', minWidth: 60 }}>
+            <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 28, color: s.color, lineHeight: 1 }}>{s.value}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>{s.label}</div>
+          </div>
+        ))}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: 8, borderLeft: '1px solid ' + COLORS.midGray }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb' }}>Target date</div>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: COLORS.blue }}>May 13 -- sign offer</div>
+        </div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#aaa', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>Top 5 Active Roles</div>
+        {c.topRoles.map((r, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', background: '#fff', borderRadius: 8, border: '1px solid ' + COLORS.midGray }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 11, color: '#ccc', minWidth: 14 }}>{i + 1}</span>
+            <div style={{ flex: 1 }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 11, color: COLORS.dark }}>{r.company}</span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#999', marginLeft: 6 }}>{r.title}</span>
+            </div>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#aaa' }}>{r.comp}</span>
+            <span style={{
+              fontSize: 9, fontWeight: 700, fontFamily: "'Inter', sans-serif",
+              padding: '2px 7px', borderRadius: 8,
+              background: (statusColor2[r.status] || '#aaa') + '20',
+              color: statusColor2[r.status] || '#aaa',
+              whiteSpace: 'nowrap',
+            }}>{statusLabel[r.status] || r.status}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const TABS = [
+  { id: 'career',    label: 'Career',    icon: '\uD83D\uDCBC', color: COLORS.blue },
+  { id: 'etsy',      label: 'Etsy',      icon: '\uD83C\uDFA8', color: COLORS.pink },
+  { id: 'affiliate', label: 'Affiliate', icon: '\uD83D\uDEE0\uFE0F', color: COLORS.orange },
+  { id: 'finance',   label: 'Finance',   icon: '\uD83D\uDCB0', color: COLORS.green },
+  { id: 'fertility', label: 'Fertility', icon: '\uD83C\uDF3C', color: COLORS.aqua },
+  { id: 'gmail',     label: 'Gmail',     icon: '\uD83D\uDCE7', color: '#ea4335' },
+  { id: 'todo',      label: 'To Do',     icon: '\uD83D\uDCCB', color: COLORS.dark },
+];
+const TAB_WS = {
+  career:    ['job-search'],
+  etsy:      ['shelzys'],
+  affiliate: ['toolshed', 'cleverhome', 'customgift'],
+  finance:   ['financial'],
+  fertility: ['ttc'],
+  gmail:     [],
+  todo:      ['cadence', 'seap', 'wedding-followup', 'pennstate'],
+};
+const TAB_AGENTS = {
+  career:    ['career'],
+  etsy:      ['etsy'],
+  affiliate: ['affiliate'],
+  finance:   ['financial'],
+  fertility: ['fertility'],
+  gmail:     ['gmail'],
+  todo:      [],
+};
+
+function TabBar({ activeTab, onTabChange }) {
+  return (
+    <div style={{ display: 'flex', gap: 0, borderBottom: '2px solid ' + COLORS.midGray, marginBottom: 20, overflowX: 'auto' }}>
+      {TABS.map(tab => {
+        const active = activeTab === tab.id;
+        return (
+          <button key={tab.id} onClick={() => onTabChange(tab.id)} style={{
+            padding: '10px 14px',
+            border: 'none',
+            background: active ? tab.color + '12' : 'transparent',
+            color: active ? tab.color : '#aaa',
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 12,
+            fontWeight: active ? 700 : 500,
+            borderBottom: active ? '3px solid ' + tab.color : '3px solid transparent',
+            marginBottom: -2,
+            cursor: 'pointer',
+            transition: 'all 0.15s',
+            whiteSpace: 'nowrap',
+            borderRadius: '8px 8px 0 0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 5,
+          }}>
+            <span style={{ fontSize: 13 }}>{tab.icon}</span>
+            {tab.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function GmailPanel() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ background: '#fff', borderRadius: 14, padding: '16px 20px', border: '1px solid ' + COLORS.midGray }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+          <div style={{ width: 3, height: 16, borderRadius: 2, background: '#ea4335' }} />
+          <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: 1.5 }}>Last Triage</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb', marginLeft: 'auto' }}>{GMAIL_DATA.date} at {GMAIL_DATA.time}</span>
+        </div>
+        <div style={{ display: 'flex', gap: 20, marginBottom: 16, flexWrap: 'wrap' }}>
+          {[
+            { label: 'Scanned', value: GMAIL_DATA.unreadScanned, color: '#ea4335' },
+            { label: 'Actions', value: GMAIL_DATA.actionItems.length, color: COLORS.orange },
+            { label: 'Low Pri', value: GMAIL_DATA.lowPriority, color: '#aaa' },
+          ].map(s => (
+            <div key={s.label} style={{ textAlign: 'center' }}>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 24, color: s.color, lineHeight: 1 }}>{s.value}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#888', fontWeight: 600, textTransform: 'uppercase' }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+        {GMAIL_DATA.actionItems.map((item, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 0', borderBottom: i < GMAIL_DATA.actionItems.length - 1 ? '1px solid ' + COLORS.lightGray : 'none' }}>
+            <span style={{
+              fontSize: 9, fontWeight: 700, fontFamily: "'Inter', sans-serif",
+              padding: '2px 8px', borderRadius: 8, flexShrink: 0, marginTop: 2,
+              background: item.priority === 'HIGH' ? COLORS.red + '18' : COLORS.orange + '18',
+              color: item.priority === 'HIGH' ? COLORS.red : COLORS.orange,
+            }}>{item.priority}</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: COLORS.dark }}>{item.title}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: '#999', marginTop: 2, lineHeight: 1.4 }}>{item.body}</div>
+              {item.action && <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: COLORS.blue, marginTop: 3 }}>\u27A4 {item.action}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+      {GMAIL_DATA.financialSummary && (
+        <div style={{ background: COLORS.green + '08', border: '1px solid ' + COLORS.green + '25', borderRadius: 12, padding: '12px 16px' }}>
+          <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 10, color: COLORS.green, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 6 }}>Financial Activity</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: '#666', lineHeight: 1.5 }}>{GMAIL_DATA.financialSummary}</div>
+        </div>
+      )}
+      <div style={{ background: COLORS.red + '08', border: '1px solid ' + COLORS.red + '20', borderRadius: 12, padding: '12px 16px' }}>
+        <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 10, color: COLORS.red, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 6 }}>Security Flags</div>
+        {GMAIL_DATA.securityFlags.map((flag, i) => (
+          <div key={i} style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: '#888', padding: '3px 0', lineHeight: 1.4 }}>\u26A0\uFE0F {flag}</div>
+        ))}
+      </div>
+      <div style={{ background: COLORS.yellow + '12', border: '1px solid ' + COLORS.yellow + '35', borderRadius: 10, padding: '10px 14px' }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: '#a07a30', fontWeight: 600 }}>
+          Last triage: April 9. Run Gmail agent for a fresh scan.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LifeTracker() {
+  const [workstreams, setWorkstreams] = useState(() => {
+    const saved = loadState();
+    return saved || DEFAULT_WORKSTREAMS;
+  });
+  const [expandedIds, setExpandedIds] = useState(new Set(['job-search']));
+  const [activeTab, setActiveTab] = useState('career');
+  const [kanbanJobSearch, setKanbanJobSearch] = useState(false);
+
+  useEffect(() => {
+    saveState(workstreams);
+  }, [workstreams]);
+
+  const toggle = (id) => {
+    setExpandedIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const cycleStatus = useCallback((wsId, taskId) => {
+    setWorkstreams(prev => prev.map(ws => {
+      if (ws.id !== wsId) return ws;
+      return {
+        ...ws,
+        tasks: ws.tasks.map(t => {
+          if (t.id !== taskId) return t;
+          const currentIdx = STATUS_CYCLE.indexOf(t.status);
+          const nextIdx = (currentIdx + 1) % STATUS_CYCLE.length;
+          return { ...t, status: STATUS_CYCLE[nextIdx], lastModified: today() };
+        }),
+      };
+    }));
+  }, []);
+
+  const addTask = useCallback((wsId, name, detail) => {
+    setWorkstreams(prev => prev.map(ws => {
+      if (ws.id !== wsId) return ws;
+      return {
+        ...ws,
+        tasks: [...ws.tasks, {
+          id: genId(),
+          name,
+          detail: detail || '',
+          status: STATUS.NOT_STARTED,
+          lastModified: today(),
+        }],
+      };
+    }));
+  }, []);
+
+  const resetData = () => {
+    if (confirm('Reset all data to defaults? This will clear any saved changes.')) {
+      setWorkstreams(DEFAULT_WORKSTREAMS);
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  };
+
+  const totalTasks = workstreams.reduce((sum, ws) => sum + ws.tasks.length, 0);
+  const completedTasks = workstreams.reduce((sum, ws) => sum + ws.tasks.filter(t => t.status === STATUS.COMPLETE).length, 0);
+  const inProgressTasks = workstreams.reduce((sum, ws) => sum + ws.tasks.filter(t => t.status === STATUS.IN_PROGRESS).length, 0);
+  const notStartedTasks = workstreams.reduce((sum, ws) => sum + ws.tasks.filter(t => t.status === STATUS.NOT_STARTED).length, 0);
+  const blockedTasks = workstreams.reduce((sum, ws) => sum + ws.tasks.filter(t => t.status === STATUS.BLOCKED || t.status === STATUS.ON_HOLD).length, 0);
+  const overallProgress = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  const tabWsIds = TAB_WS[activeTab] || [];
+  const tabWs = workstreams.filter(ws => tabWsIds.includes(ws.id));
+  const tabAgents = TAB_AGENTS[activeTab] || [];
+  const tabDecisions = DECISION_QUEUE.filter(d => tabAgents.includes(d.agent));
+
+  const renderWorkstreams = (wsItems) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {wsItems.map(ws => (
+        <WorkstreamCard
+          key={ws.id}
+          ws={ws}
+          isExpanded={expandedIds.has(ws.id)}
+          onToggle={() => toggle(ws.id)}
+          taskFilter="all"
+          searchQuery=""
+          onStatusChange={cycleStatus}
+          onAddTask={addTask}
+          kanbanMode={ws.id === 'job-search' && kanbanJobSearch}
+          onToggleKanban={ws.id === 'job-search' ? () => setKanbanJobSearch(prev => !prev) : undefined}
+        />
+      ))}
+    </div>
+  );
+
+  return (
+    <div style={{
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      background: COLORS.white,
+      minHeight: '100vh',
+      padding: '24px 20px',
+      maxWidth: 900,
+      margin: '0 auto',
+    }}>
+
+      {/* Header */}
+      <div className="shelzy-header">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10 }}>
+          <div>
+            <div className="shelzy-brand-mark">Shelzy's Designs</div>
+            <h1 className="header-title" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 26, color: COLORS.dark, margin: 0, letterSpacing: -0.5 }}>
+              Life OS
+            </h1>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#999', margin: '4px 0 0' }}>
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+            </p>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#bbb', margin: '2px 0 0' }}>
+              Last sync: {formatAgentUpdate(LAST_AGENT_UPDATE)}
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+            <button onClick={() => exportDashboardJSON(workstreams)} style={{ padding: '6px 14px', borderRadius: 8, background: '#f5f5f7', color: '#888', fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600 }}>Export</button>
+            <button onClick={resetData} style={{ padding: '6px 14px', borderRadius: 8, background: '#f5f5f7', color: '#aaa', fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600 }}>Reset</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mini stats */}
+      <div className="mini-stats-row" style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+        <MiniStat label="Total" value={totalTasks} color={COLORS.dark} />
+        <MiniStat label="Done" value={completedTasks} color={COLORS.green} />
+        <MiniStat label="Active" value={inProgressTasks} color={COLORS.blue} />
+        <MiniStat label="Queued" value={notStartedTasks} color={COLORS.orange} />
+        <MiniStat label="Blocked" value={blockedTasks} color={COLORS.red} />
+        <div style={{ flex: 1, minWidth: 140, display: 'flex', alignItems: 'center' }}>
+          <div style={{ width: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5 }}>Overall</span>
+              <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 13, color: COLORS.pink }}>{overallProgress}%</span>
+            </div>
+            <ProgressBar progress={overallProgress} color={COLORS.pink} height={7} />
+          </div>
+        </div>
+      </div>
+
+      {/* Critical deadlines -- always visible */}
+      <CountdownCards />
+
+      {/* Agent status -- always visible */}
+      <AgentStatusGrid />
+
+      {/* Tab navigation */}
+      <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+
+      {/* Tab content */}
+      <div style={{ paddingTop: 4 }}>
+
+        {activeTab === 'career' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <CareerPipeline />
+            {tabDecisions.length > 0 && <DecisionQueue items={tabDecisions} />}
+            <TomorrowPriorities />
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+        {activeTab === 'etsy' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <EtsyRevenueTicker />
+            {tabDecisions.length > 0 && <DecisionQueue items={tabDecisions} />}
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+        {activeTab === 'affiliate' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <AffiliateSitesPanel />
+            {tabDecisions.length > 0 && <DecisionQueue items={tabDecisions} />}
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+        {activeTab === 'finance' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <FinancePulse />
+            {tabDecisions.length > 0 && <DecisionQueue items={tabDecisions} />}
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+        {activeTab === 'fertility' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <FertilityTicker />
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+        {activeTab === 'gmail' && <GmailPanel />}
+
+        {activeTab === 'todo' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <TopActions workstreams={tabWs} />
+            <NeedsAttention workstreams={tabWs} />
+            <RecentlyCompleted workstreams={workstreams} />
+            {renderWorkstreams(tabWs)}
+          </div>
+        )}
+
+      </div>
+
+      <div style={{ textAlign: 'center', padding: '32px 0 12px' }}>
+        <div style={{ display: 'inline-block', background: '#eee', height: 1, width: 60, borderRadius: 1, marginBottom: 12 }} />
+        <div style={{ fontSize: 9, fontWeight: 600, fontFamily: "'Montserrat', sans-serif", letterSpacing: 2, textTransform: 'uppercase', color: '#ccc' }}>
+          Shelzy's Designs
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<LifeTracker />);
+</script>
+</body>
+</html>

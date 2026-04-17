@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Product } from "@/data/products";
 export type { Product } from "@/data/products";
 
@@ -8,8 +9,6 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const isPhysical = product.compatibility === "physical";
-  const hasLsUrl =
-    product.lemonSqueezyUrl && product.lemonSqueezyUrl !== "#";
 
   return (
     <Link
@@ -17,12 +16,15 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="group block bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
     >
       {/* Product image */}
-      <div className="relative aspect-square bg-light-gray overflow-hidden">
+      <div className="relative aspect-square bg-white overflow-hidden">
         {product.images[0] ? (
-          <img
+          <Image
             src={product.images[0]}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            width={400}
+            height={400}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 240px"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -39,7 +41,12 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {product.bestSeller && (
           <span className="absolute top-0 right-0 bg-pink text-white text-xs px-2 py-1 rounded-bl-lg font-semibold">
-            Best Seller
+            Popular
+          </span>
+        )}
+        {product.featured && !product.bestSeller && (
+          <span className="absolute top-0 right-0 bg-teal text-white text-xs px-2 py-1 rounded-bl-lg font-semibold">
+            Featured
           </span>
         )}
       </div>
@@ -52,6 +59,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="text-charcoal font-medium text-sm mb-2">
           ${product.price.toFixed(2)}
         </p>
+        {product.slug === "personalized-water-bottle" && (
+          <p className="text-xs text-text-light mb-2 leading-snug">
+            Includes a free matching template ($5.99 value) -- only on shelzysdesigns.com
+          </p>
+        )}
         <div className="flex items-center justify-between">
           {isPhysical ? (
             <span className="inline-block bg-orange/10 text-orange text-xs px-2 py-0.5 rounded-full">
@@ -63,11 +75,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
           <span className="text-pink text-xs font-semibold group-hover:underline">
-            {isPhysical
-              ? "Personalize Yours →"
-              : hasLsUrl
-              ? "Buy Now →"
-              : "Shop on Etsy →"}
+            {isPhysical ? "Make it mine →" : "Get the template →"}
           </span>
         </div>
       </div>

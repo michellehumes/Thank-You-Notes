@@ -5,6 +5,38 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const faqs = [
+  // ── Water Bottle Questions ────────────────────────────────────────────
+  {
+    question: "How does the water bottle personalization work?",
+    answer:
+      "On any water bottle product page, enter the name or text you want, select a font style, and click Order on Etsy. Your personalization details are pre-filled in the message to seller on Etsy. We confirm your order before we print anything.",
+  },
+  {
+    question: "How long does a custom water bottle take?",
+    answer:
+      "Production takes 3-5 business days after order confirmation. Standard shipping adds 3-7 business days. Expedited options are available at checkout on Etsy.",
+  },
+  {
+    question: "Will the design fade or peel?",
+    answer:
+      "No. We use permanent sublimation printing -- the design is fused into the coating, not printed on top of it. It will not peel, crack, or fade with normal use.",
+  },
+  {
+    question: "Are the water bottles dishwasher safe?",
+    answer:
+      "Hand washing is recommended to preserve the design and insulation properties long-term. The bottles are stainless steel and can handle a top-rack dishwasher cycle, but we recommend hand washing for longevity.",
+  },
+  {
+    question: "Can I order water bottles in bulk for an event or team?",
+    answer:
+      "Yes. Contact us at the link below for bulk pricing on 10 or more bottles. We handle wedding parties, corporate orders, team gifts, and school groups.",
+  },
+  {
+    question: "Can I return a personalized water bottle?",
+    answer:
+      "Because every bottle is made to order with your custom text, we cannot accept returns for buyer's remorse. If your bottle arrives damaged or the personalization is incorrect, contact us within 7 days and we will replace it at no charge.",
+  },
+  // ── Digital Template Questions ─────────────────────────────────────
   {
     question: "What file format are the templates in?",
     answer:
@@ -43,7 +75,7 @@ const faqs = [
   {
     question: "I have a question about a specific product.",
     answer:
-      "Email us at michelle.e.humes@gmail.com and we'll get back to you within 24 hours.",
+      "Send us a message through our Etsy shop or use the Contact page -- we respond within 24 hours.",
   },
 ];
 

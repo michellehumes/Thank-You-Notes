@@ -1,0 +1,74 @@
+{
+  "agents": {
+    "career": {
+      "status": "idle",
+      "last_run": "2026-04-13T22:18:25.461288+00:00",
+      "failures": 0,
+      "events_today": 37,
+      "freshness": "healthy",
+      "health_status": "healthy",
+      "last_health_check": "2026-04-13T22:12:46.412252+00:00",
+      "health": "healthy"
+    },
+    "etsy": {
+      "status": "idle",
+      "last_run": "2026-04-13T22:19:15.384198+00:00",
+      "failures": 0,
+      "events_today": 39,
+      "freshness": "healthy",
+      "health_status": "healthy",
+      "last_health_check": "2026-04-13T22:12:46.412291+00:00",
+      "health": "healthy"
+    },
+    "gmail": {
+      "status": "idle",
+      "last_run": "2026-04-13T22:16:02.083394+00:00",
+      "failures": 0,
+      "events_today": 36,
+      "freshness": "healthy",
+      "health_status": "healthy",
+      "last_health_check": "2026-04-13T22:12:46.412307+00:00",
+      "health": "healthy"
+    },
+    "fertility": {
+      "status": "idle",
+      "last_run": "2026-04-13T17:40:02.694416+00:00",
+      "failures": 0,
+      "events_today": 3,
+      "freshness": "healthy",
+      "health_status": "healthy",
+      "last_health_check": "2026-04-13T22:12:46.412318+00:00",
+      "health": "healthy"
+    },
+    "affiliate": {
+      "status": "idle",
+      "last_run": "2026-04-13T17:40:02.694473+00:00",
+      "failures": 0,
+      "events_today": 3,
+      "freshness": "healthy",
+      "health_status": "healthy",
+      "last_health_check": "2026-04-13T22:12:46.412327+00:00",
+      "health": "healthy"
+    },
+    "life-ops": {
+      "status": "idle",
+      "last_run": "2026-04-13T22:16:14.685692+00:00",
+      "failures": 0,
+      "events_today": 30,
+      "freshness": "healthy",
+      "health_status": "healthy",
+      "last_health_check": "2026-04-13T22:12:46.412336+00:00",
+      "health": "healthy"
+    }
+  },
+  "counts": {
+    "pending_reviews": 202,
+    "pending_actions": 148,
+    "failed_actions": 0,
+    "stale_agents": 0,
+    "alerts": 0
+  },
+  "last_updated": "2026-04-13T22:38:30.842479+00:00",
+  "last_global_update": "2026-04-13T22:12:46.410175+00:00",
+  "system_status": "healthy"
+}

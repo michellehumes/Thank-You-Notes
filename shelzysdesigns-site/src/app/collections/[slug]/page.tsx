@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
-import { products, getAllCategories } from "@/data/products";
+import { products, getPublishedProducts, getAllCategories } from "@/data/products";
+
+// Best-seller slugs (published products flagged bestSeller: true)
+const bestSellerSlugs = new Set(
+  getPublishedProducts().filter((p) => p.bestSeller).map((p) => p.slug)
+);
 
 // Virtual collections that combine multiple categories
 const virtualCollections: Record<
@@ -31,6 +37,38 @@ const virtualCollections: Record<
       "Printable activity bundles, party games, and digital art packs. Instant download PDF files ready to print at home. Great for parties, holidays, and family activities.",
     categorySlugs: ["printables-bundles"],
   },
+  "wedding-collection": {
+    name: "Wedding Collection",
+    description:
+      "Everything for your wedding day -- planners, seating charts, menus, welcome signs, bridal shower games, and more",
+    metaDescription:
+      "Wedding planning bundles, seating charts, timeline cards, welcome signs, menu cards, bridal shower games, and bachelorette itineraries. Instant download printables and spreadsheets for your perfect day.",
+    categorySlugs: ["wedding", "save-the-dates"],
+  },
+  "seasonal-gifts": {
+    name: "Seasonal Gifts",
+    description:
+      "Printable gift tags, cards, coupon books, and invitations for every occasion",
+    metaDescription:
+      "Teacher Appreciation gift tags, Mother's Day cards and certificates, Father's Day coupon books, and graduation invitations. Instant download printables you can personalize and print at home.",
+    categorySlugs: ["seasonal-gifts"],
+  },
+  "gifts-for-her": {
+    name: "Gifts for Her",
+    description:
+      "Personalized water bottles, wedding planners, budget tools, and party supplies -- thoughtful gifts she will actually use",
+    metaDescription:
+      "Personalized gifts for her: custom water bottles, wedding planners, budget trackers, and party supplies. Permanent sublimation printing on every bottle. Instant-download templates. Free personalization.",
+    categorySlugs: ["water-bottles", "wedding", "seasonal-gifts", "party-events"],
+  },
+  "best-sellers": {
+    name: "Best Sellers",
+    description:
+      "Our most popular products -- from custom water bottles to budget trackers and wedding planners",
+    metaDescription:
+      "Shop Shelzy's Designs best sellers: personalized water bottles, budget trackers, wedding planners, ADHD dashboards, and more. Customer favorites with free personalization on every bottle.",
+    categorySlugs: [],
+  },
 };
 
 // SEO meta descriptions per category slug
@@ -53,6 +91,8 @@ const categoryMetaDescriptions: Record<string, string> = {
     "Printable activity bundles, bachelorette games, holiday packs, and seasonal graphics. Instant download PDFs ready to print at home.",
   "water-bottles":
     "Personalized stainless steel water bottles with permanent sublimation printing. Free personalization on every bottle. Perfect for bridesmaids, bachelorette parties, kids, and corporate gifts. Ships in 3-5 business days.",
+  "seasonal-gifts":
+    "Printable gift tags, greeting cards, coupon books, and party invitations for Teacher Appreciation, Mother's Day, Father's Day, and graduation. Instant download PDFs you can personalize and print at home.",
 };
 
 export async function generateMetadata({
@@ -116,9 +156,11 @@ export default async function CollectionPage({
   // Check virtual collections first
   const virtual = virtualCollections[slug];
   if (virtual) {
-    const collectionProducts = products.filter((p) =>
-      virtual.categorySlugs.includes(p.category)
-    );
+    // best-sellers uses the bestSeller flag instead of category slugs
+    const collectionProducts =
+      slug === "best-sellers"
+        ? getPublishedProducts().filter((p) => bestSellerSlugs.has(p.slug))
+        : getPublishedProducts().filter((p) => virtual.categorySlugs.includes(p.category));
 
     return (
       <>
@@ -127,6 +169,13 @@ export default async function CollectionPage({
           {/* Collection hero */}
           <div className="bg-light-gray border-b border-mid-gray py-10">
             <div className="mx-auto max-w-[1200px] px-6">
+              <nav className="text-sm text-text-light mb-4">
+                <Link href="/" className="hover:text-charcoal transition">Home</Link>
+                <span className="mx-2">/</span>
+                <Link href="/shop" className="hover:text-charcoal transition">Shop</Link>
+                <span className="mx-2">/</span>
+                <span className="text-charcoal">{virtual.name}</span>
+              </nav>
               <h1 className="font-heading text-3xl sm:text-4xl font-bold text-charcoal mb-3">
                 {virtual.name}
               </h1>
@@ -174,7 +223,7 @@ export default async function CollectionPage({
     );
   }
 
-  const collectionProducts = products.filter((p) => p.category === slug);
+  const collectionProducts = getPublishedProducts().filter((p) => p.category === slug);
   const isPhysical = slug === "water-bottles";
 
   return (
@@ -184,6 +233,13 @@ export default async function CollectionPage({
         {/* Collection hero */}
         <div className="bg-light-gray border-b border-mid-gray py-10">
           <div className="mx-auto max-w-[1200px] px-6">
+            <nav className="text-sm text-text-light mb-4">
+              <Link href="/" className="hover:text-charcoal transition">Home</Link>
+              <span className="mx-2">/</span>
+              <Link href="/shop" className="hover:text-charcoal transition">Shop</Link>
+              <span className="mx-2">/</span>
+              <span className="text-charcoal">{category.name}</span>
+            </nav>
             <h1 className="font-heading text-3xl sm:text-4xl font-bold text-charcoal mb-3">
               {category.name}
             </h1>
