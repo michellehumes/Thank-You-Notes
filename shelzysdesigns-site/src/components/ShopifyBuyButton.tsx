@@ -16,6 +16,7 @@ import { useEffect, useRef } from "react";
 import { isShopifyEnabled, shopifyConfig } from "@/lib/shopify";
 
 interface ShopifyBuyButtonProps {
+  productId: string;
   variantId: string;
   label?: string;
 }
@@ -28,6 +29,7 @@ declare global {
 }
 
 export default function ShopifyBuyButton({
+  productId,
   variantId,
   label = "Add to cart",
 }: ShopifyBuyButtonProps) {
@@ -49,7 +51,7 @@ export default function ShopifyBuyButton({
       window.ShopifyBuy.UI.onReady(client).then((ui: unknown) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (ui as any).createComponent("product", {
-          id: variantId,
+          id: productId,
           node: mountRef.current,
           moneyFormat: "%24%7B%7Bamount%7D%7D",
           options: {
@@ -98,7 +100,7 @@ export default function ShopifyBuyButton({
     return () => {
       cancelled = true;
     };
-  }, [variantId, label]);
+  }, [productId, variantId, label]);
 
   if (!isShopifyEnabled()) return null;
   return <div ref={mountRef} />;
