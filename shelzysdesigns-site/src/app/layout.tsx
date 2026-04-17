@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { Montserrat, Inter } from "next/font/google";
+import { Montserrat, Inter, Fraunces } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import ExitIntentPopup from "@/components/ExitIntentPopup";
+import {
+  organizationSchema as orgSchema,
+  websiteSchema,
+} from "@/lib/schema";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -19,6 +23,14 @@ const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   display: "swap",
+});
+
+const fraunces = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  display: "swap",
+  axes: ["opsz"],
 });
 
 export const metadata: Metadata = {
@@ -49,20 +61,7 @@ export const metadata: Metadata = {
   other: { "p:domain_verify": "e3c1f8be645d6ac6344d51089de2c69a" },
 };
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Shelzy's Designs",
-  url: "https://shelzysdesigns.com",
-  logo: "https://shelzysdesigns.com/product_images/personalized-water-bottle.jpg",
-  description:
-    "Digital spreadsheet templates, planners, and personalized water bottles designed for real life. Instant download. Free personalization.",
-  sameAs: [
-    "https://www.etsy.com/shop/ShelzysDesignsStore",
-    "https://instagram.com/shelzysdesigns",
-    "https://pinterest.com/shelzysdesigns",
-  ],
-};
+const organizationSchema = orgSchema;
 
 export default function RootLayout({
   children,
@@ -72,13 +71,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${inter.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${inter.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AnnouncementBar />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         {children}
         <ExitIntentPopup />

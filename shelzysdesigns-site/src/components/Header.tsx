@@ -5,9 +5,10 @@ import Link from "next/link";
 
 const navLinks = [
   { label: "Shop All", href: "/shop" },
+  { label: "Gift Finder", href: "/gift-finder" },
+  { label: "For Mom", href: "/gifts-for/mom" },
+  { label: "For Dad", href: "/gifts-for/dad" },
   { label: "Water Bottles", href: "/collections/water-bottles" },
-  { label: "Best Sellers", href: "/collections/best-sellers" },
-  { label: "Gifts for Her", href: "/collections/gifts-for-her" },
   { label: "Wedding", href: "/collections/wedding" },
   { label: "Blog", href: "/blog" },
 ];
