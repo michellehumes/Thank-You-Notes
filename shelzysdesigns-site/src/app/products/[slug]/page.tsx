@@ -341,7 +341,7 @@ export default async function ProductPage({
               ) : (() => {
                 // Priority: Shopify direct checkout > Lemon Squeezy > Etsy
                 const shopifyEnabled = isShopifyEnabled();
-                const hasShopifyVariant = shopifyEnabled && !!product.shopifyVariantId;
+                const hasShopifyVariant = shopifyEnabled && !!product.shopifyProductId && !!product.shopifyVariantId;
                 const hasLsUrl =
                   product.lemonSqueezyUrl &&
                   product.lemonSqueezyUrl !== "#";
@@ -349,6 +349,7 @@ export default async function ProductPage({
                 if (hasShopifyVariant) {
                   return (
                     <ShopifyBuyButton
+                      productId={product.shopifyProductId!}
                       variantId={product.shopifyVariantId!}
                       label={`Buy Now -- $${product.price.toFixed(2)}`}
                     />
