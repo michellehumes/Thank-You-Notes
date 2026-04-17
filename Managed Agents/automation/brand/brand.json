@@ -1,0 +1,41 @@
+{
+  "name": "Shelzy's Designs",
+  "colors": {
+    "background": "#fefefe",
+    "primary": "#fb5887",
+    "secondary": "#fe8c43",
+    "tertiary": "#3ca4d7",
+    "accent": "#8adbde",
+    "text": "#2d2d2d",
+    "text_light": "#6b7280",
+    "success": "#34c759",
+    "warning": "#f59e0b",
+    "danger": "#ef4444"
+  },
+  "fonts": {
+    "heading": "Montserrat",
+    "body": "Inter",
+    "display": "Billion Calligraphy",
+    "heading_weights": "400-800",
+    "body_weights": "400-700",
+    "heading_transform": "uppercase"
+  },
+  "images": {
+    "etsy_listing": {
+      "dimensions": "2700x2025",
+      "dpi": 300,
+      "safe_zone": "center 70%",
+      "sequence_count": 10
+    },
+    "social": {
+      "instagram_square": "1080x1080",
+      "pinterest_pin": "1000x1500",
+      "facebook_cover": "1200x630"
+    }
+  },
+  "tone": {
+    "style": "bold, high contrast, clean SaaS aesthetic",
+    "voice": "professional, approachable, organized",
+    "avoid": ["cluttered layouts", "dark themes", "serif fonts", "low contrast"]
+  }
+}

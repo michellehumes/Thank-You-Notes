@@ -1,17 +1,22 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TrustBadges from "@/components/TrustBadges";
 import ProductCard from "@/components/ProductCard";
 import ProductTabs from "@/components/ProductTabs";
+import WaterBottleCustomizer from "@/components/WaterBottleCustomizer";
+import RecentlyViewedWrapper from "@/components/RecentlyViewedWrapper";
+import Testimonials from "@/components/Testimonials";
+import ShopifyBuyButton from "@/components/ShopifyBuyButton";
+import { isShopifyEnabled } from "@/lib/shopify";
 import {
   products,
   getProductBySlug,
   getProductsByCategory,
   getAllCategories,
 } from "@/data/products";
-import WaterBottleCustomizer from "@/components/WaterBottleCustomizer";
 
 // Blog back-links: maps product slug → relevant blog article(s)
 const productBlogLinks: Record<string, { href: string; title: string }[]> = {
@@ -79,18 +84,33 @@ export async function generateMetadata({
   const product = getProductBySlug(slug);
   if (!product) return { title: "Product Not Found" };
   const categoryName = getCategoryName(product.category);
-  const metaTitle = `${product.name} | ${categoryName} -- Shelzy's Designs`;
+  const metaTitle = `${product.name} -- ${categoryName}`;
   const metaDesc = product.description.length > 155
-    ? product.description.slice(0, 152) + "..."
+    ? product.description.slice(0, 155).replace(/\s+\S*$/, "") + "..."
     : product.description;
+  const ogImage = product.images[0]
+    ? `https://shelzysdesigns.com${product.images[0]}`
+    : undefined;
   return {
     title: metaTitle,
     description: metaDesc,
+    alternates: {
+      canonical: `https://shelzysdesigns.com/products/${product.slug}`,
+    },
     openGraph: {
       title: metaTitle,
       description: metaDesc,
       type: "website",
       siteName: "Shelzy's Designs",
+      ...(ogImage && {
+        images: [{ url: ogImage, width: 1200, height: 1200, alt: product.name }],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaTitle,
+      description: metaDesc,
+      ...(ogImage && { images: [ogImage] }),
     },
   };
 }
@@ -116,18 +136,6 @@ function getCompatibilityLabels(
     case "physical":
       return ["Permanent Sublimation Print", "Free Personalization"];
   }
-}
-
-function StarIcon() {
-  return (
-    <svg
-      className="w-5 h-5 text-orange"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-    </svg>
-  );
 }
 
 export default async function ProductPage({
@@ -180,11 +188,7 @@ export default async function ProductPage({
       },
     },
     category: categoryName,
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "5",
-      reviewCount: "47",
-    },
+    // aggregateRating omitted -- add only when real verified review data is available
   };
 
   // Breadcrumb schema
@@ -239,12 +243,16 @@ export default async function ProductPage({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
             {/* LEFT: Image Gallery */}
             <div>
-              <div className="aspect-square bg-light-gray rounded-lg overflow-hidden mb-4">
+              <div className="aspect-square bg-white rounded-lg overflow-hidden mb-4">
                 {product.images[0] ? (
-                  <img
+                  <Image
                     src={product.images[0]}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    width={600}
+                    height={600}
+                    priority
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="w-full h-full object-contain"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
@@ -259,14 +267,17 @@ export default async function ProductPage({
                 {product.images.slice(0, 4).map((img, i) => (
                   <div
                     key={i}
-                    className={`aspect-square bg-light-gray rounded-lg overflow-hidden ${
+                    className={`aspect-square bg-white rounded-lg overflow-hidden ${
                       i === 0 ? "ring-2 ring-pink" : ""
                     }`}
                   >
-                    <img
+                    <Image
                       src={img}
                       alt={`${product.name} preview ${i + 1}`}
-                      className="w-full h-full object-cover"
+                      width={150}
+                      height={150}
+                      sizes="25vw"
+                      className="w-full h-full object-contain"
                     />
                   </div>
                 ))}
@@ -280,13 +291,22 @@ export default async function ProductPage({
               </h1>
 
               {/* Star rating */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <StarIcon key={i} />
+              <div className="flex items-center gap-2 mb-3">
+                <div className="flex gap-0.5 text-orange">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
                   ))}
                 </div>
-                <span className="text-text-light text-sm">(47 reviews)</span>
+                <a
+                  href="https://www.etsy.com/shop/ShelzysDesignsStore#reviews"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-text-light hover:text-pink transition"
+                >
+                  4.9 stars · 290+ reviews on Etsy
+                </a>
               </div>
 
               {/* Price */}
@@ -306,17 +326,36 @@ export default async function ProductPage({
                 ))}
               </div>
 
-              {/* Buy Now — customizer for physical, direct checkout for digital */}
-              {product.compatibility === "physical" ? (
+              {/* Buy Now — customizer for physical, direct checkout for digital, or Coming Soon notice */}
+              {product.published === false ? (
+                <div className="w-full bg-light-gray border border-mid-gray rounded-lg py-4 px-6 mb-3 text-center">
+                  <p className="font-heading font-semibold text-charcoal text-sm mb-1">Coming Soon</p>
+                  <p className="text-text-light text-xs">This listing is not yet available. Check back soon.</p>
+                </div>
+              ) : product.compatibility === "physical" ? (
                 <WaterBottleCustomizer
                   productName={product.name}
                   etsyUrl={product.etsyUrl}
                   price={product.price}
                 />
               ) : (() => {
+                // Priority: Shopify direct checkout > Lemon Squeezy > Etsy
+                const shopifyEnabled = isShopifyEnabled();
+                const hasShopifyVariant = shopifyEnabled && !!product.shopifyProductId && !!product.shopifyVariantId;
                 const hasLsUrl =
                   product.lemonSqueezyUrl &&
                   product.lemonSqueezyUrl !== "#";
+
+                if (hasShopifyVariant) {
+                  return (
+                    <ShopifyBuyButton
+                      productId={product.shopifyProductId!}
+                      variantId={product.shopifyVariantId!}
+                      label={`Buy Now -- $${product.price.toFixed(2)}`}
+                    />
+                  );
+                }
+
                 const buyUrl = hasLsUrl
                   ? product.lemonSqueezyUrl
                   : product.etsyUrl;
@@ -334,16 +373,26 @@ export default async function ProductPage({
                 );
               })()}
 
-              {/* Fulfillment note — only shown for digital products; physical handled in customizer */}
-              {product.compatibility !== "physical" && (
-                <div className="flex items-center justify-center gap-2 text-text-light text-sm mb-6">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </svg>
-                  <span>Instant Download</span>
-                </div>
+              {/* Fulfillment note — only shown for published digital products; physical handled in customizer */}
+              {product.published !== false && product.compatibility !== "physical" && (
+                <>
+                  <div className="flex items-center justify-center gap-2 text-text-light text-sm mb-2">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <span>Instant Download</span>
+                  </div>
+                  <div className="text-center mb-6">
+                    <Link
+                      href="/download"
+                      className="text-xs text-text-light hover:text-pink transition"
+                    >
+                      Already purchased? Access your download &rarr;
+                    </Link>
+                  </div>
+                </>
               )}
 
               {/* Description */}
@@ -361,6 +410,9 @@ export default async function ProductPage({
               productName={product.name}
             />
           </div>
+
+          {/* Social proof -- testimonials */}
+          <Testimonials category={product.category} />
 
           {/* Cross-sell section */}
           {relatedProducts.length > 0 && (
@@ -410,8 +462,11 @@ export default async function ProductPage({
             </div>
           )}
 
+          {/* Recently Viewed */}
+          <RecentlyViewedWrapper currentSlug={product.slug} />
+
           {/* Trust badges */}
-          <TrustBadges />
+          <TrustBadges variant={product.compatibility === "physical" ? "physical" : "digital"} />
         </div>
       </main>
 

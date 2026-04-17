@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shelzy's Operations OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #fefefe;
+  color: #111827;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+/* Top Bar */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: linear-gradient(135deg, #fb5887 0%, #fe8c43 100%); color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 48px;
+  border-bottom: none;
+}
+.top-bar-title { font-weight: 700; font-size: 15px; letter-spacing: -0.3px; display: flex; align-items: center; gap: 10px; }
+.top-bar-center { font-size: 12px; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 16px; }
+.top-bar-right { display: flex; align-items: center; gap: 16px; font-size: 12px; }
+
+/* Status badges */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;
+}
+.badge-healthy { background: #064e3b; color: #6ee7b7; }
+.badge-warning { background: #78350f; color: #fcd34d; }
+.badge-degraded { background: #7c2d12; color: #fdba74; }
+.badge-failed { background: #7f1d1d; color: #fca5a5; }
+.badge-idle { background: #374151; color: #9ca3af; }
+.badge-running { background: #1e3a5f; color: #93c5fd; animation: pulse-badge 1.5s infinite; }
+.badge-stale { background: #7c2d12; color: #fdba74; }
+.badge-sm { padding: 1px 6px; font-size: 10px; }
+
+/* Light-bg badges */
+.badge-light-healthy { background: #d1fae5; color: #065f46; }
+.badge-light-warning { background: #fef3c7; color: #92400e; }
+.badge-light-degraded { background: #ffedd5; color: #9a3412; }
+.badge-light-failed { background: #fee2e2; color: #991b1b; }
+.badge-light-idle { background: #f3f4f6; color: #6b7280; }
+.badge-light-running { background: #dbeafe; color: #1e40af; animation: pulse-badge 1.5s infinite; }
+.badge-light-stale { background: #ffedd5; color: #9a3412; }
+
+@keyframes pulse-badge { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+/* Command Bar */
+.command-bar {
+  background: #fff; border-bottom: 1px solid #e2e5e9;
+  padding: 6px 24px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.cmd-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 4px;
+  border: 1px solid #d1d5db; background: #fff;
+  font-size: 11px; font-weight: 500; color: #374151;
+  cursor: pointer; transition: all 0.15s;
+  font-family: inherit;
+}
+.cmd-btn .duration { font-size: 10px; color: #9ca3af; margin-left: 2px; }
+.cmd-btn:hover { background: #f3f4f6; border-color: #9ca3af; }
+.cmd-btn:active { background: #e5e7eb; }
+.cmd-btn.primary { background: #3ca4d7; color: #fff; border-color: #3ca4d7; }
+.cmd-btn.primary:hover { background: #2e8ab5; }
+.cmd-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.cmd-btn .spinner {
+  width: 12px; height: 12px; border: 2px solid #9ca3af;
+  border-top-color: transparent; border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+.cmd-btn.primary .spinner { border-color: rgba(255,255,255,0.4); border-top-color: transparent; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.cmd-flash-success { animation: flash-green 0.8s; }
+.cmd-flash-error { animation: flash-red 0.8s; }
+@keyframes flash-green { 0% { box-shadow: 0 0 0 0 rgba(5,150,105,0.5); } 100% { box-shadow: none; } }
+@keyframes flash-red { 0% { box-shadow: 0 0 0 0 rgba(220,38,38,0.5); } 100% { box-shadow: none; } }
+
+/* Alerts Banner */
+.alerts-banner {
+  margin: 12px 24px 0; padding: 10px 16px;
+  background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px;
+  font-size: 13px; color: #991b1b;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.alerts-banner-warning {
+  background: #fffbeb; border-color: #fde68a; color: #92400e;
+}
+.alerts-banner ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.alerts-banner li::before { content: "-- "; font-weight: 600; }
+
+/* Action status strip */
+.action-status-strip {
+  display: flex; gap: 16px; padding: 4px 24px; background: #f9fafb;
+  border-bottom: 1px solid #e2e5e9; font-size: 11px; color: #6b7280;
+}
+.action-status-strip .label { font-weight: 600; color: #374151; }
+.action-status-strip .success { color: #059669; }
+.action-status-strip .error { color: #dc2626; }
+
+/* Section layouts */
+.section { margin: 12px 24px; }
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; cursor: pointer; user-select: none;
+}
+.section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 700; color: #3ca4d7;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.section-toggle { font-size: 11px; color: #6b7280; }
+
+/* Cards */
+.card {
+  background: #fff; border: 1px solid #e2e5e9;
+  border-radius: 6px; padding: 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+/* Agent Grid */
+.agent-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+@media (max-width: 1200px) { .agent-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .agent-grid { grid-template-columns: repeat(2, 1fr); } }
+.agent-card-name { font-weight: 600; font-size: 12px; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between; }
+.agent-card-metric { font-size: 11px; color: #6b7280; margin-top: 2px; }
+.agent-card-metric span { color: #111827; font-weight: 500; }
+.freshness-bar { height: 3px; background: #e5e7eb; border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.freshness-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+
+/* Tables */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th {
+  text-align: left; padding: 8px 10px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.4px; color: #6b7280;
+  border-bottom: 2px solid #e2e5e9; background: #f9fafb;
+}
+.data-table td { padding: 7px 10px; border-bottom: 1px solid #f3f4f6; }
+.data-table tr:nth-child(even) td { background: #fafbfc; }
+.data-table tr:hover td { background: #f0f4ff; }
+
+/* Review actions */
+.review-btn {
+  padding: 3px 10px; border-radius: 4px; border: 1px solid;
+  font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+.review-btn-approve { border-color: #059669; color: #059669; background: #fff; }
+.review-btn-approve:hover { background: #d1fae5; }
+.review-btn-hold { border-color: #d97706; color: #d97706; background: #fff; }
+.review-btn-hold:hover { background: #fef3c7; }
+.review-btn-reject { border-color: #dc2626; color: #dc2626; background: #fff; }
+.review-btn-reject:hover { background: #fee2e2; }
+
+/* Pipeline */
+.pipeline-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+@media (max-width: 1200px) { .pipeline-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .pipeline-grid { grid-template-columns: repeat(2, 1fr); } }
+.pipeline-col-header {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.4px; color: #6b7280; margin-bottom: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.pipeline-col-count {
+  background: #e5e7eb; color: #374151; padding: 1px 6px;
+  border-radius: 3px; font-size: 10px; font-weight: 600;
+}
+.pipeline-card {
+  background: #fff; border: 1px solid #e2e5e9; border-radius: 5px;
+  padding: 10px; margin-bottom: 6px; font-size: 12px;
+}
+.pipeline-card-company { font-weight: 600; font-size: 13px; color: #111827; }
+.pipeline-card-title { color: #6b7280; margin-top: 2px; }
+.pipeline-card-comp { color: #059669; font-weight: 500; margin-top: 3px; }
+.pipeline-card-meta { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+.pipeline-card-meta .badge { font-size: 9px; padding: 1px 5px; }
+.pipeline-card.needs-action { border-left: 3px solid #fb5887; }
+.pipeline-card.stale { border-left: 3px solid #d97706; }
+.pipeline-card.top-tier { border-left: 3px solid #3ca4d7; }
+.pipeline-col-scroll { max-height: 500px; overflow-y: auto; }
+
+/* Pipeline summary row */
+.pipeline-summary { display: flex; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.pipeline-summary-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; background: #fff; border: 1px solid #e2e5e9;
+  border-radius: 5px; font-size: 12px;
+}
+.pipeline-summary-count { font-weight: 700; font-size: 16px; color: #111827; }
+.pipeline-summary-label { color: #6b7280; font-size: 11px; }
+
+/* Metrics Row */
+.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.metric-value { font-size: 24px; font-weight: 700; color: #111827; }
+.metric-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.3px; margin-top: 2px; }
+.metric-sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; border-bottom: 2px solid #e2e5e9; margin-bottom: 12px; }
+.tab {
+  padding: 8px 18px; font-size: 12px; font-weight: 600;
+  color: #6b7280; cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -2px; transition: all 0.15s;
+}
+.tab:hover { color: #374151; }
+.tab.active { color: #3ca4d7; border-bottom-color: #3ca4d7; }
+
+/* Offline banner */
+.offline-banner {
+  background: #dc2626; color: #fff; text-align: center;
+  padding: 12px; font-size: 13px; font-weight: 600;
+}
+.offline-banner code {
+  background: rgba(255,255,255,0.2); padding: 2px 8px;
+  border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+}
+
+/* Skeleton loading */
+.skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* Priority badges */
+.priority-p1 { background: #fee2e2; color: #991b1b; }
+.priority-p2 { background: #ffedd5; color: #9a3412; }
+.priority-p3 { background: #fef3c7; color: #92400e; }
+.priority-p4 { background: #f3f4f6; color: #6b7280; }
+
+.empty-state { text-align: center; padding: 32px; color: #9ca3af; font-size: 13px; }
+.table-wrap { overflow-x: auto; }
+
+/* Product Launch Tracker */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.product-card { position: relative; }
+.product-card .status-dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px;
+}
+.status-dot-live { background: #059669; }
+.status-dot-listed { background: #3ca4d7; }
+.status-dot-ready_to_list { background: #fe8c43; }
+.status-dot-images_pending { background: #fb5887; }
+.status-dot-package_ready { background: #8adbde; }
+.status-dot-unknown { background: #9ca3af; }
+.product-status-summary { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.product-status-chip {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px; background: #fff; border: 1px solid #e2e5e9;
+  border-radius: 4px; font-size: 12px;
+}
+.product-status-chip .count { font-weight: 700; }
+
+/* Career enhancement */
+.materials-badges { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 4px; }
+.mat-badge {
+  font-size: 9px; padding: 1px 5px; border-radius: 3px;
+  background: #d1fae5; color: #065f46; font-weight: 600;
+}
+.mat-badge-missing { background: #fee2e2; color: #991b1b; }
+.days-badge { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 600; }
+.days-fresh { background: #d1fae5; color: #065f46; }
+.days-warm { background: #fef3c7; color: #92400e; }
+.days-stale { background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div id="root"><div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,system-ui;color:#6b7280;font-size:16px">Loading Shelzy's Operations OS...</div></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef } = React;
+
+const API = 'http://localhost:7777';
+
+// -- Utilities --
+
+function relativeTime(ts) {
+  if (!ts) return '--';
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return '--';
+  const now = Date.now();
+  const diff = now - d.getTime();
+  if (diff < 0) return 'just now';
+  const secs = Math.floor(diff / 1000);
+  if (secs < 60) return 'just now';
+  const mins = Math.floor(secs / 60);
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 30) return `${days}d ago`;
+  return d.toLocaleDateString();
+}
+
+function isoTitle(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  return isNaN(d.getTime()) ? '' : d.toISOString();
+}
+
+function statusClass(s) {
+  if (!s) return 'idle';
+  const l = String(s).toLowerCase();
+  if (l === 'healthy' || l === 'active' || l === 'ok') return 'healthy';
+  if (l === 'warning') return 'warning';
+  if (l === 'degraded') return 'degraded';
+  if (l === 'failed' || l === 'error' || l === 'critical') return 'failed';
+  if (l === 'running') return 'running';
+  if (l === 'stale') return 'stale';
+  return 'idle';
+}
+
+function freshnessColor(score) {
+  if (score >= 80) return '#059669';
+  if (score >= 50) return '#d97706';
+  return '#dc2626';
+}
+
+async function apiFetch(path) {
+  const res = await fetch(`${API}${path}`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+async function apiPost(path, body = null) {
+  const opts = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(`${API}${path}`, opts);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+// -- Career pipeline mapping --
+const PIPELINE_MAP = {
+  Sourced: ['sourced', 'sourced_location_check', 'sourced_comp_check', 'sourced_contact_leverage', 'sourced_needs_agency_id'],
+  Ready: ['verify_jd_then_apply', 'verify_apply', 'verify_remote', 'ready_to_apply', 'apply_now', 'needs_jd_verification', 'confirmed_live'],
+  Applied: ['applied', 'phone_screen_only', 'outreach_sent'],
+  Screening: ['screening'],
+  Interview: ['interview'],
+  Offer: ['offer'],
+  Killed: ['rejected_location', 'rejected_location_and_fit', 'rejected_location_and_comp', 'killed_comp', 'likely_expired_missed', 'recommended_skip'],
+  'On Hold': ['backup_only', 'conditional_comp_check', 'check_live_status'],
+};
+
+function mapJobToStage(status) {
+  if (!status) return 'Sourced';
+  const s = String(status).toLowerCase().trim();
+  for (const [stage, values] of Object.entries(PIPELINE_MAP)) {
+    if (values.includes(s)) return stage;
+  }
+  return 'Sourced';
+}
+
+// -- Components --
+
+function TopBar({ state, dashboard, reviewCount, alertCount, lastSync, offline }) {
+  const sysStatus = state?.system_status || dashboard?.system_status || 'unknown';
+  const agentCount = state?.agents ? Object.keys(state.agents).length : (Array.isArray(dashboard?.agent_grid) ? dashboard.agent_grid.length : Object.keys(dashboard?.agent_grid || {}).length);
+
+  return (
+    <div className="top-bar">
+      <div className="top-bar-title">
+        Shelzy's Operations OS
+        <span className={`badge badge-${statusClass(sysStatus)}`}>{sysStatus}</span>
+      </div>
+      <div className="top-bar-center">
+        <span title={isoTitle(lastSync)}>Synced {relativeTime(lastSync) || '--'}</span>
+        <span>{agentCount} agents</span>
+      </div>
+      <div className="top-bar-right">
+        {reviewCount > 0 && <span className="badge badge-warning">{reviewCount} pending reviews</span>}
+        {alertCount > 0 && <span className="badge badge-failed">{alertCount} alerts</span>}
+        {offline && <span className="badge badge-failed">OFFLINE</span>}
+      </div>
+    </div>
+  );
+}
+
+function CommandBar({ onAction, loadingActions }) {
+  const actions = [
+    { key: 'refresh', label: 'Refresh', primary: true },
+    { key: 'rules', label: 'Rules Engine', endpoint: '/api/run/rules-engine' },
+    { key: 'health', label: 'Health', endpoint: '/api/run/health' },
+    { key: 'rebuild', label: 'Rebuild', endpoint: '/api/run/rebuild' },
+    { key: 'career', label: 'Career', endpoint: '/api/run/agent/career' },
+    { key: 'life-ops', label: 'Life Ops', endpoint: '/api/run/agent/life-ops' },
+    { key: 'etsy', label: 'Etsy', endpoint: '/api/run/agent/etsy' },
+    { key: 'gmail', label: 'Gmail', endpoint: '/api/run/agent/gmail' },
+    { key: 'ingest', label: 'Ingest', endpoint: '/api/run/ingestion' },
+  ];
+
+  return (
+    <div className="command-bar">
+      {actions.map(a => {
+        const loading = loadingActions[a.key];
+        const flash = loadingActions[`${a.key}_flash`];
+        const dur = loadingActions[`${a.key}_dur`];
+        return (
+          <button
+            key={a.key}
+            className={`cmd-btn ${a.primary ? 'primary' : ''} ${flash || ''}`}
+            disabled={loading}
+            onClick={() => onAction(a.key, a.endpoint)}
+          >
+            {loading && <span className="spinner" />}
+            {a.label}
+            {dur && <span className="duration">{dur}</span>}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function ActionStatusStrip({ lastSuccess, lastFailure }) {
+  if (!lastSuccess && !lastFailure) return null;
+  return (
+    <div className="action-status-strip">
+      {lastSuccess && (
+        <span>
+          <span className="label">Last OK: </span>
+          <span className="success">{lastSuccess.label}</span>
+          <span> -- {lastSuccess.dur} -- {relativeTime(lastSuccess.at)}</span>
+          {lastSuccess.eventsAdded != null && <span> -- <span className="success">{lastSuccess.eventsAdded} events added</span></span>}
+        </span>
+      )}
+      {lastFailure && (
+        <span>
+          <span className="label">Last Fail: </span>
+          <span className="error">{lastFailure.label}</span>
+          <span> -- {relativeTime(lastFailure.at)}</span>
+        </span>
+      )}
+    </div>
+  );
+}
+
+function AlertsBanner({ state, dashboard, reviews }) {
+  const alerts = [];
+
+  // Stale agents
+  const agents = state?.agents || {};
+  for (const [name, info] of Object.entries(agents)) {
+    if (info?.status === 'stale' || info?.status === 'failed') {
+      alerts.push(`${name} is ${info.status}`);
+    }
+  }
+
+  // Dashboard agent grid stale
+  if (dashboard?.agent_grid) {
+    const grid = dashboard.agent_grid;
+    const entries = Array.isArray(grid) ? grid : Object.entries(grid).map(([k,v]) => ({...v, name: k}));
+    for (const ag of entries) {
+      const s = ag.status || ag.health_status;
+      if (s === 'stale' || s === 'failed') {
+        if (!alerts.some(a => a.startsWith(ag.name || ag.agent))) {
+          alerts.push(`${ag.name || ag.agent} is ${s}`);
+        }
+      }
+    }
+  }
+
+  // Pending reviews
+  const pending = (reviews || []).filter(r => r.status === 'pending' || !r.status);
+  if (pending.length > 0) alerts.push(`${pending.length} pending review${pending.length > 1 ? 's' : ''}`);
+
+  // Critical deadlines from dashboard
+  if (dashboard?.critical_deadlines) {
+    for (const dl of dashboard.critical_deadlines) {
+      alerts.push(dl.label || dl.title || dl);
+    }
+  }
+
+  if (alerts.length === 0) return null;
+
+  return (
+    <div className="alerts-banner">
+      <strong>ALERTS:</strong>
+      <ul>{alerts.map((a, i) => <li key={i}>{a}</li>)}</ul>
+    </div>
+  );
+}
+
+function AgentHealthGrid({ state, dashboard }) {
+  const AGENT_NAMES = ['career', 'etsy', 'gmail', 'fertility', 'affiliate', 'life-ops'];
+
+  const agentData = {};
+  // Merge from state
+  if (state?.agents) {
+    for (const [name, info] of Object.entries(state.agents)) {
+      agentData[name] = { ...info, name };
+    }
+  }
+  // Merge from dashboard agent_grid (may be dict or array)
+  if (dashboard?.agent_grid) {
+    const grid = dashboard.agent_grid;
+    if (Array.isArray(grid)) {
+      for (const ag of grid) {
+        const n = ag.name || ag.agent;
+        agentData[n] = { ...agentData[n], ...ag, name: n };
+      }
+    } else if (typeof grid === 'object') {
+      for (const [name, info] of Object.entries(grid)) {
+        agentData[name] = { ...agentData[name], ...info, name };
+      }
+    }
+  }
+
+  // Summaries
+  const summaries = dashboard?.summaries || {};
+
+  function getKeyMetric(name) {
+    const s = summaries[name] || summaries[`${name}_summary`] || {};
+    if (name === 'etsy') {
+      const es = dashboard?.etsy_summary || s;
+      if (es?.revenue) return `$${es.revenue} revenue`;
+      if (es?.orders) return `${es.orders} orders`;
+    }
+    if (name === 'affiliate') {
+      const as2 = dashboard?.affiliate_summary || s;
+      if (as2?.articles_live) return `${as2.articles_live} articles`;
+    }
+    if (name === 'career') {
+      const cs = dashboard?.career_summary || s;
+      if (cs?.active_roles) return `${cs.active_roles} active roles`;
+      if (cs?.total) return `${cs.total} roles`;
+    }
+    if (s.metric) return s.metric;
+    return null;
+  }
+
+  return (
+    <div className="section">
+      <div className="section-title" style={{ marginBottom: 12 }}>Agent Health</div>
+      <div className="agent-grid">
+        {AGENT_NAMES.map(name => {
+          const data = agentData[name] || {};
+          const status = data.status || data.health_status || 'idle';
+          const freshness = data.freshness_score ?? data.freshness ?? null;
+          const lastRun = data.last_run || data.last_heartbeat;
+          const eventsToday = data.events_today ?? data.event_count ?? null;
+          const metric = getKeyMetric(name);
+
+          return (
+            <div className="card" key={name}>
+              <div className="agent-card-name">
+                {name}
+                <span className={`badge badge-sm badge-light-${statusClass(status)}`}>{status}</span>
+              </div>
+              <div className="agent-card-metric">
+                Last run: <span title={isoTitle(lastRun)}>{relativeTime(lastRun)}</span>
+              </div>
+              {eventsToday != null && (
+                <div className="agent-card-metric">Events today: <span>{eventsToday}</span></div>
+              )}
+              {metric && <div className="agent-card-metric"><span>{metric}</span></div>}
+              {freshness != null && (
+                <div className="freshness-bar">
+                  <div
+                    className="freshness-fill"
+                    style={{ width: `${freshness}%`, background: freshnessColor(freshness) }}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function GmailWidget({ gmailData }) {
+  const [collapsed, setCollapsed] = useState(() => {
+    try { return localStorage.getItem('gm_collapsed') === '1'; } catch(e) { return false; }
+  });
+  const toggle = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    try { localStorage.setItem('gm_collapsed', next ? '1' : '0'); } catch(e) {}
+  };
+
+  if (!gmailData) {
+    return (
+      <div className="section">
+        <div className="section-header" onClick={toggle}>
+          <div className="section-title">Gmail Inbox</div>
+          <span className="section-toggle">{collapsed ? 'Show' : 'Hide'}</span>
+        </div>
+        {!collapsed && <div className="card"><div className="empty-state">Awaiting Gmail data -- agent has not run yet</div></div>}
+      </div>
+    );
+  }
+
+  const counts = gmailData.counts || {};
+  const actions = gmailData.top_actions || [];
+  const salesToday = gmailData.etsy_sales_today || {};
+  const security = gmailData.security_flags || [];
+  const lastRun = gmailData.last_run;
+
+  const priorityColor = (p) => p === 'high' ? '#991b1b' : p === 'medium' ? '#92400e' : '#6b7280';
+  const priorityBg = (p) => p === 'high' ? '#fee2e2' : p === 'medium' ? '#fef3c7' : '#f3f4f6';
+
+  return (
+    <div className="section">
+      <div className="section-header" onClick={toggle}>
+        <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          Gmail Inbox
+          {gmailData.total_actionable > 0 && <span className="badge badge-light-warning">{gmailData.total_actionable} action needed</span>}
+          {security.some(s => s.flag && s.flag.includes('REVIEW')) && <span className="badge badge-sm badge-light-failed">security review</span>}
+        </div>
+        <span className="section-toggle">{collapsed ? 'Show' : 'Hide'}</span>
+      </div>
+      {!collapsed && (
+        <>
+          <div className="metrics-grid" style={{ marginBottom: 12 }}>
+            <div className="card">
+              <div className="metric-value">{counts.job_recruiter || 0}</div>
+              <div className="metric-label">Recruiter Messages</div>
+            </div>
+            <div className="card">
+              <div className="metric-value">{counts.etsy_customer || 0}</div>
+              <div className="metric-label">Etsy Customer</div>
+            </div>
+            <div className="card">
+              <div className="metric-value">{counts.revenue_opportunity || 0}</div>
+              <div className="metric-label">Revenue Opps</div>
+            </div>
+            <div className="card">
+              <div className="metric-value">{counts.important_personal || 0}</div>
+              <div className="metric-label">Important Personal</div>
+            </div>
+            <div className="card">
+              <div className="metric-value" style={{ color: '#9ca3af' }}>{counts.low_priority || 0}</div>
+              <div className="metric-label">Low Priority</div>
+            </div>
+          </div>
+
+          {actions.length > 0 && (
+            <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 12 }}>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th style={{width: 30}}>#</th>
+                    <th style={{width: 80}}>Priority</th>
+                    <th style={{width: 140}}>Category</th>
+                    <th>Summary</th>
+                    <th style={{width: 160}}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {actions.map((a, i) => (
+                    <tr key={i}>
+                      <td style={{ fontWeight: 600, color: '#6b7280' }}>{a.rank || i+1}</td>
+                      <td><span className="badge badge-sm" style={{ background: priorityBg(a.priority), color: priorityColor(a.priority) }}>{a.priority}</span></td>
+                      <td style={{ fontSize: 11, fontWeight: 500 }}>{a.category}</td>
+                      <td style={{ fontSize: 12 }}>{a.summary?.substring(0, 120)}{a.summary?.length > 120 ? '...' : ''}</td>
+                      <td style={{ fontSize: 11, color: '#3ca4d7' }}>{a.action?.includes('SWITCH') ? a.action.split('--')[0] : (a.draft_created ? 'Draft ready' : 'Needs action')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {salesToday.total_orders > 0 && (
+            <div className="card" style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6, color: '#059669' }}>
+                Etsy Sales Today: {salesToday.total_orders} orders -- {salesToday.total_revenue}
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {(salesToday.orders || []).map((o, i) => (
+                  <span key={i} className="badge badge-sm badge-light-healthy">
+                    #{o.order?.slice(-4)} {o.amount} ({o.from?.substring(0, 12)})
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div style={{ fontSize: 11, color: '#9ca3af', textAlign: 'right' }}>
+            Last checked: {lastRun ? relativeTime(lastRun) : '--'}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function ReviewQueue({ reviews, onReview, archive }) {
+  const [collapsed, setCollapsed] = useState(() => {
+    try { return localStorage.getItem('rq_collapsed') === '1'; } catch(e) { return false; }
+  });
+  const [showHeld, setShowHeld] = useState(false);
+  const [showArchive, setShowArchive] = useState(false);
+  const [executionResults, setExecutionResults] = useState({});
+  const [filterType, setFilterType] = useState('all');
+  const [selected, setSelected] = useState(new Set());
+  const [bulkLoading, setBulkLoading] = useState(false);
+
+  const toggle = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    try { localStorage.setItem('rq_collapsed', next ? '1' : '0'); } catch(e) {}
+  };
+
+  const priorityOrder = { high: 0, medium: 1, low: 2 };
+  const sortByPriority = (a, b) => (priorityOrder[a.priority] ?? 3) - (priorityOrder[b.priority] ?? 3);
+
+  const allPending = (reviews || []).filter(r => r.status === 'pending' || !r.status).sort(sortByPriority);
+  const held = (reviews || []).filter(r => r.status === 'hold').sort(sortByPriority);
+
+  // Filter tabs
+  const FILTER_TABS = [
+    { key: 'all', label: 'All' },
+    { key: 'job', label: 'Jobs' },
+    { key: 'etsy_listing', label: 'Etsy' },
+    { key: 'email', label: 'Email' },
+    { key: 'affiliate_article', label: 'Affiliate' },
+  ];
+  const pending = filterType === 'all' ? allPending : allPending.filter(r => r.entity_type === filterType);
+  const tabCounts = {};
+  for (const tab of FILTER_TABS) {
+    tabCounts[tab.key] = tab.key === 'all' ? allPending.length : allPending.filter(r => r.entity_type === tab.key).length;
+  }
+  const hasPending = allPending.length > 0;
+
+  const handleAction = async (rid, action) => {
+    const result = await onReview(rid, action);
+    if (action === 'approve' && result?.execution) {
+      setExecutionResults(prev => ({ ...prev, [rid]: result.execution }));
+      setTimeout(() => setExecutionResults(prev => { const n = {...prev}; delete n[rid]; return n; }), 8000);
+    }
+    selected.delete(rid);
+    setSelected(new Set(selected));
+  };
+
+  const handleBulk = async (action) => {
+    if (selected.size === 0) return;
+    setBulkLoading(true);
+    try {
+      const resp = await apiPost('/api/reviews/bulk', { action, ids: [...selected] });
+      if (resp?.results) {
+        const execResults = {};
+        for (const r of resp.results) {
+          if (r.execution) execResults[r.id] = r.execution;
+        }
+        setExecutionResults(prev => ({ ...prev, ...execResults }));
+        setTimeout(() => {
+          setExecutionResults(prev => {
+            const n = {...prev};
+            for (const id of Object.keys(execResults)) delete n[id];
+            return n;
+          });
+        }, 8000);
+      }
+      setSelected(new Set());
+      await onReview(null, 'refresh');
+    } catch(e) { console.error('Bulk action failed:', e); }
+    setBulkLoading(false);
+  };
+
+  const toggleSelect = (rid) => {
+    const next = new Set(selected);
+    if (next.has(rid)) next.delete(rid); else next.add(rid);
+    setSelected(next);
+  };
+  const toggleAll = () => {
+    if (selected.size === pending.length) setSelected(new Set());
+    else setSelected(new Set(pending.map(r => r.review_id || r.id)));
+  };
+
+  const handleRestore = async (rid) => {
+    try {
+      await apiPost(`/api/archive/${rid}/restore`);
+      await onReview(null, 'refresh');
+    } catch(e) { console.error('Restore failed:', e); }
+  };
+
+  const archiveItems = archive?.items || [];
+
+  function ReviewRow({ item }) {
+    const rid = item.review_id || item.id;
+    const exec = executionResults[rid];
+    const isPending = item.status === 'pending' || !item.status;
+    const isHeld = item.status === 'hold';
+    const isChecked = selected.has(rid);
+    return (
+      <tr key={rid}>
+        {isPending && <td style={{width: 30}}><input type="checkbox" checked={isChecked} onChange={() => toggleSelect(rid)} /></td>}
+        <td><span className={`badge badge-sm priority-${(item.priority || 'p4').toLowerCase()}`}>{item.priority || '--'}</span></td>
+        <td><span className={`badge badge-sm badge-light-${item.entity_type === 'job' ? 'healthy' : item.entity_type === 'etsy_listing' ? 'warning' : 'idle'}`}>{item.entity_type || '--'}</span></td>
+        <td style={{ maxWidth: 360 }}>
+          <div style={{ fontWeight: 500, fontSize: 13 }}>{item.reason || '--'}</div>
+          {exec && (
+            <div style={{ marginTop: 4, fontSize: 11, padding: '3px 8px', borderRadius: 4, background: exec.success ? '#d1fae5' : '#fee2e2', color: exec.success ? '#065f46' : '#991b1b' }}>
+              Executed: {exec.action_taken} -- {exec.detail?.substring(0, 100)}
+            </div>
+          )}
+        </td>
+        <td style={{ fontSize: 11, color: '#6b7280' }}>{item.agent || '--'}</td>
+        <td>
+          {isPending && (
+            <span style={{ display: 'flex', gap: 4 }}>
+              <button className="review-btn review-btn-approve" onClick={() => handleAction(rid, 'approve')} title="Execute this action now">Approve</button>
+              <button className="review-btn" style={{ borderColor: '#d97706', color: '#d97706' }} onClick={() => handleAction(rid, 'hold')} title="Park for later">Hold</button>
+              <button className="review-btn review-btn-reject" onClick={() => handleAction(rid, 'reject')} title="Archive (30-day)">Reject</button>
+            </span>
+          )}
+          {isHeld && (
+            <span style={{ display: 'flex', gap: 4 }}>
+              <button className="review-btn review-btn-approve" onClick={() => handleAction(rid, 'approve')}>Approve</button>
+              <button className="review-btn review-btn-reject" onClick={() => handleAction(rid, 'reject')}>Reject</button>
+            </span>
+          )}
+        </td>
+      </tr>
+    );
+  }
+
+  return (
+    <div className="section">
+      <div className="section-header" onClick={toggle}>
+        <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          Action Queue
+          {hasPending && <span className="badge badge-light-warning">{allPending.length} pending</span>}
+          {held.length > 0 && <span className="badge badge-sm" style={{ background: '#fef3c7', color: '#92400e' }}>{held.length} on hold</span>}
+        </div>
+        <span className="section-toggle">{collapsed ? 'Show' : 'Hide'}</span>
+      </div>
+      {!collapsed && (
+        <>
+          {/* Filter tabs */}
+          {allPending.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+              <div className="tabs" style={{ marginBottom: 0, borderBottom: 'none' }}>
+                {FILTER_TABS.map(tab => (
+                  tabCounts[tab.key] > 0 || tab.key === 'all' ? (
+                    <div key={tab.key}
+                      className={`tab ${filterType === tab.key ? 'active' : ''}`}
+                      onClick={(e) => { e.stopPropagation(); setFilterType(tab.key); setSelected(new Set()); }}
+                      style={{ padding: '6px 12px' }}>
+                      {tab.label} {tabCounts[tab.key] > 0 && <span style={{ marginLeft: 4, fontSize: 10, opacity: 0.7 }}>({tabCounts[tab.key]})</span>}
+                    </div>
+                  ) : null
+                ))}
+              </div>
+              {selected.size > 0 && (
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                  <span style={{ fontSize: 11, color: '#6b7280' }}>{selected.size} selected</span>
+                  <button className="review-btn review-btn-approve" disabled={bulkLoading} onClick={() => handleBulk('approve')}>
+                    {bulkLoading ? '...' : 'Approve All'}
+                  </button>
+                  <button className="review-btn review-btn-reject" disabled={bulkLoading} onClick={() => handleBulk('reject')}>
+                    {bulkLoading ? '...' : 'Reject All'}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+            {pending.length === 0 ? (
+              <div className="empty-state">{filterType === 'all' ? 'No pending actions' : `No ${filterType} actions pending`}</div>
+            ) : (
+              <div className="table-wrap">
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th style={{width:30}}><input type="checkbox" checked={selected.size === pending.length && pending.length > 0} onChange={toggleAll} /></th>
+                      <th style={{width:60}}>Priority</th><th style={{width:80}}>Type</th><th>What Needs Doing</th>
+                      <th style={{width:70}}>Agent</th><th style={{width:180}}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pending.slice(0, 50).map((item, i) => <ReviewRow item={item} key={item.review_id || i} />)}
+                  </tbody>
+                </table>
+                {pending.length > 50 && (
+                  <div style={{ padding: 8, textAlign: 'center', fontSize: 12, color: '#6b7280' }}>
+                    Showing 50 of {pending.length} -- older items omitted
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          {held.length > 0 && (
+            <div style={{ marginTop: 8 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: '#92400e', cursor: 'pointer', padding: '4px 0' }} onClick={() => setShowHeld(!showHeld)}>
+                {showHeld ? 'Hide' : 'Show'} {held.length} held items
+              </div>
+              {showHeld && (
+                <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                  <div className="table-wrap">
+                    <table className="data-table">
+                      <thead>
+                        <tr>
+                          <th style={{width:60}}>Priority</th><th style={{width:80}}>Type</th><th>What Needs Doing</th>
+                          <th style={{width:70}}>Agent</th><th style={{width:180}}>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {held.map((item, i) => <ReviewRow item={item} key={item.review_id || i} />)}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          {archiveItems.length > 0 && (
+            <div style={{ marginTop: 8 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', cursor: 'pointer', padding: '4px 0' }} onClick={() => setShowArchive(!showArchive)}>
+                {showArchive ? 'Hide' : 'Show'} archive ({archiveItems.length} items -- auto-purges after 30 days)
+              </div>
+              {showArchive && (
+                <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                  <div className="table-wrap">
+                    <table className="data-table">
+                      <thead>
+                        <tr>
+                          <th style={{width:80}}>Type</th><th>Reason</th>
+                          <th style={{width:100}}>Archived</th><th style={{width:80}}>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {archiveItems.slice(0, 50).map((item, i) => (
+                          <tr key={item.review_id || i} style={{ opacity: 0.7 }}>
+                            <td><span className={`badge badge-sm badge-light-idle`}>{item.entity_type || '--'}</span></td>
+                            <td style={{ maxWidth: 360, fontSize: 12 }}>{item.reason || '--'}</td>
+                            <td style={{ fontSize: 11, color: '#9ca3af' }}>{relativeTime(item.archived_at)}</td>
+                            <td>
+                              <button className="review-btn" style={{ borderColor: '#3ca4d7', color: '#3ca4d7', fontSize: 10 }} onClick={() => handleRestore(item.review_id)}>Restore</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+function CareerPipeline({ careerData }) {
+  const [collapsed, setCollapsed] = useState(() => {
+    try { return localStorage.getItem('cp_collapsed') === '1'; } catch(e) { return false; }
+  });
+  const toggle = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    try { localStorage.setItem('cp_collapsed', next ? '1' : '0'); } catch(e) {}
+  };
+
+  const jobs = careerData?.jobs || careerData || [];
+  if (!Array.isArray(jobs)) {
+    return (
+      <div className="section">
+        <div className="section-header" onClick={toggle}>
+          <div className="section-title">Career Pipeline</div>
+          <span className="section-toggle">{collapsed ? 'Show' : 'Hide'}</span>
+        </div>
+        {!collapsed && <div className="card"><div className="empty-state">Awaiting career data</div></div>}
+      </div>
+    );
+  }
+
+  const ACTIVE_STAGES = ['Sourced', 'Ready', 'Applied', 'Screening', 'Interview', 'Offer'];
+  const INACTIVE_STAGES = ['Killed', 'On Hold'];
+
+  const buckets = {};
+  for (const stage of [...ACTIVE_STAGES, ...INACTIVE_STAGES]) buckets[stage] = [];
+  for (const job of jobs) {
+    const stage = mapJobToStage(job.status || job.pipeline_status);
+    if (buckets[stage]) buckets[stage].push(job);
+    else buckets['Sourced'].push(job);
+  }
+
+  const killedCount = buckets['Killed'].length;
+  const holdCount = buckets['On Hold'].length;
+  const activeTotal = ACTIVE_STAGES.reduce((sum, s) => sum + buckets[s].length, 0);
+  const mappedTotal = activeTotal + killedCount + holdCount;
+  const unmapped = jobs.length - mappedTotal;
+
+  function isStale(job) {
+    if (!job.last_touch && !job.last_updated) return false;
+    const d = new Date(job.last_touch || job.last_updated);
+    return (Date.now() - d.getTime()) > 7 * 24 * 60 * 60 * 1000;
+  }
+  function needsAction(job) {
+    const s = String(job.status || '').toLowerCase();
+    return s.includes('apply_now') || s.includes('outreach_first');
+  }
+  function isTopTier(job) {
+    const p = String(job.priority_tier || job.priority || '').toLowerCase();
+    return p === 'tier_1' || p === 't1' || p === '1' || p === 'high';
+  }
+
+  return (
+    <div className="section">
+      <div className="section-header" onClick={toggle}>
+        <div className="section-title">Career Pipeline</div>
+        <span className="section-toggle">{collapsed ? 'Show' : 'Hide'}</span>
+      </div>
+      {!collapsed && (
+        <>
+          <div className="pipeline-summary">
+            <div className="pipeline-summary-item">
+              <span className="pipeline-summary-count">{activeTotal}</span>
+              <span className="pipeline-summary-label">Active</span>
+            </div>
+            <div className="pipeline-summary-item">
+              <span className="pipeline-summary-count">{killedCount}</span>
+              <span className="pipeline-summary-label">Killed</span>
+            </div>
+            <div className="pipeline-summary-item">
+              <span className="pipeline-summary-count">{holdCount}</span>
+              <span className="pipeline-summary-label">On Hold</span>
+            </div>
+            <div className="pipeline-summary-item">
+              <span className="pipeline-summary-count">{jobs.length}</span>
+              <span className="pipeline-summary-label">Total</span>
+            </div>
+            {unmapped > 0 && (
+              <div className="pipeline-summary-item">
+                <span className="pipeline-summary-count" style={{color:'#d97706'}}>{unmapped}</span>
+                <span className="pipeline-summary-label">Unmapped</span>
+              </div>
+            )}
+          </div>
+          <div className="pipeline-grid">
+            {ACTIVE_STAGES.map(stage => (
+              <div key={stage}>
+                <div className="pipeline-col-header">
+                  {stage}
+                  <span className="pipeline-col-count">{buckets[stage].length}</span>
+                </div>
+                <div className="pipeline-col-scroll">
+                  {buckets[stage].length === 0 && (
+                    <div style={{ fontSize: 11, color: '#9ca3af', textAlign: 'center', padding: 12 }}>--</div>
+                  )}
+                  {buckets[stage].map((job, i) => {
+                    const classes = ['pipeline-card'];
+                    if (needsAction(job)) classes.push('needs-action');
+                    else if (isStale(job)) classes.push('stale');
+                    else if (isTopTier(job)) classes.push('top-tier');
+                    return (
+                      <div className={classes.join(' ')} key={i}>
+                        <div className="pipeline-card-company">{job.company || job.company_name || '--'}</div>
+                        <div className="pipeline-card-title">{job.title || job.role || '--'}</div>
+                        {(job.salary || job.comp_range || job.compensation) && (
+                          <div className="pipeline-card-comp">{job.salary || job.comp_range || job.compensation}</div>
+                        )}
+                        <div className="pipeline-card-meta">
+                          {job.remote_status && <span className="badge badge-sm badge-light-healthy">{job.remote_status}</span>}
+                          {(job.priority_tier || job.priority) && (
+                            <span className={`badge badge-sm priority-${isTopTier(job) ? 'p1' : 'p3'}`}>{job.priority_tier || job.priority}</span>
+                          )}
+                          {isStale(job) && <span className="badge badge-sm badge-light-warning">stale</span>}
+                          {needsAction(job) && <span className="badge badge-sm badge-light-failed">action needed</span>}
+                          {job.days_since_action != null && (
+                            <span className={`days-badge ${job.days_since_action <= 3 ? 'days-fresh' : job.days_since_action <= 7 ? 'days-warm' : 'days-stale'}`}>
+                              {job.days_since_action}d
+                            </span>
+                          )}
+                        </div>
+                        {job.materials && job.materials.length > 0 && (
+                          <div className="materials-badges">
+                            {job.has_resume && <span className="mat-badge">Resume</span>}
+                            {job.has_cover_letter && <span className="mat-badge">Cover Letter</span>}
+                            {job.materials.filter(m => !m.includes('resume') && !m.includes('cover')).map((m, mi) => (
+                              <span className="mat-badge" key={mi}>{m.replace(/_/g, ' ').replace(/-/g, ' ')}</span>
+                            ))}
+                          </div>
+                        )}
+                        {(!job.materials || job.materials.length === 0) && stage !== 'Killed' && stage !== 'On Hold' && (
+                          <div className="materials-badges">
+                            <span className="mat-badge mat-badge-missing">No materials</span>
+                          </div>
+                        )}
+                        {(job.last_touch || job.last_updated) && (
+                          <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }} title={isoTitle(job.last_touch || job.last_updated)}>
+                            Touched {relativeTime(job.last_touch || job.last_updated)}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function BusinessMetrics({ dashboard, fertility, affiliate, etsyData, ingestion }) {
+  const etsy = etsyData || null;
+  const aff = affiliate || null;
+  const fert = fertility || dashboard?.fertility_summary || dashboard?.summaries?.fertility || null;
+  const fin = dashboard?.finance_summary || dashboard?.summaries?.finance || null;
+
+  const cards = [];
+
+  // Etsy -- from /api/etsy real data
+  cards.push(
+    <div className="card" key="etsy">
+      <div className="metric-label">Etsy (30-day)</div>
+      {etsy && etsy.revenue_mtd != null ? (
+        <>
+          <div className="metric-value">${Number(etsy.revenue_mtd).toLocaleString()}</div>
+          <div className="metric-sub">
+            {etsy.orders_mtd != null && `${etsy.orders_mtd} orders`}
+            {etsy.visits_mtd != null && ` -- ${etsy.visits_mtd.toLocaleString()} visits`}
+            {etsy.cvr != null && ` -- ${etsy.cvr}% CVR`}
+          </div>
+          <div className="metric-sub">
+            {etsy.active_listings != null && `${etsy.active_listings} listings`}
+            {etsy.reviews != null && ` -- ${etsy.reviews} reviews`}
+            {etsy.ads_roas != null && ` -- Ads ROAS ${etsy.ads_roas}`}
+          </div>
+          {etsy.ads_daily_budget != null && (
+            <div className="metric-sub">Ads budget: ${etsy.ads_daily_budget}/day{etsy.ads_spend != null && ` (spent $${etsy.ads_spend})`}</div>
+          )}
+          {etsy.last_updated && <div style={{fontSize:10, color:'#9ca3af', marginTop:4}}>Updated {etsy.last_updated}</div>}
+        </>
+      ) : (
+        <div className="metric-sub" style={{ marginTop: 8 }}>
+          No live Etsy metrics
+          {etsy?.sources_missing?.length > 0 && <div style={{fontSize:10, color:'#d97706', marginTop:2}}>Missing: {etsy.sources_missing.join(', ')}</div>}
+        </div>
+      )}
+    </div>
+  );
+
+  // Affiliate -- from /api/affiliate real data
+  cards.push(
+    <div className="card" key="affiliate">
+      <div className="metric-label">Affiliate</div>
+      {aff && aff.articles_live != null ? (
+        <>
+          <div className="metric-value">{aff.articles_live} articles</div>
+          <div className="metric-sub">
+            Mode: {aff.active_mode || '--'}
+            {aff.articles_this_week > 0 && ` -- ${aff.articles_this_week} this week`}
+          </div>
+          <div className="metric-sub">
+            Amazon: ${aff.amazon_earnings_mtd || '0'} earnings
+            {aff.amazon_clicks_mtd != null && ` -- ${aff.amazon_clicks_mtd} clicks`}
+            {aff.amazon_conversion != null && ` -- ${aff.amazon_conversion}% CVR`}
+          </div>
+          {aff.gsc_impressions != null && (
+            <div className="metric-sub">GSC: {aff.gsc_impressions.toLocaleString()} impressions -- {aff.gsc_clicks} clicks -- pos {aff.gsc_avg_position}</div>
+          )}
+          {aff.next_check_gate && <div className="metric-sub">Next check: {aff.next_check_gate}</div>}
+          {aff.last_updated && <div style={{fontSize:10, color:'#9ca3af', marginTop:4}}>Updated {aff.last_updated}</div>}
+        </>
+      ) : (
+        <div className="metric-sub" style={{ marginTop: 8 }}>
+          No live affiliate metrics
+          {aff?.sources_missing?.length > 0 && <div style={{fontSize:10, color:'#d97706', marginTop:2}}>Missing: {aff.sources_missing.join(', ')}</div>}
+        </div>
+      )}
+    </div>
+  );
+
+  // Fertility
+  cards.push(
+    <div className="card" key="fertility">
+      <div className="metric-label">Fertility</div>
+      {fert ? (
+        <>
+          <div className="metric-value">Day {fert.cycle_day || fert.day || '--'}</div>
+          <div className="metric-sub">
+            {fert.phase || '--'}
+            {fert.fertile_window && ` -- Fertile: ${fert.fertile_window}`}
+          </div>
+        </>
+      ) : (
+        <div className="metric-sub" style={{ marginTop: 8 }}>No fertility data</div>
+      )}
+    </div>
+  );
+
+  // Expert Calls
+  const expert = ingestion?.data?.expert_calls || null;
+  cards.push(
+    <div className="card" key="expert">
+      <div className="metric-label">Expert Calls</div>
+      {expert ? (
+        <>
+          <div className="metric-value">${expert.revenue_total || 0}</div>
+          <div className="metric-sub">
+            {expert.calls_completed || 0} calls completed
+            {expert.pipeline?.length > 0 && ` -- ${expert.pipeline.length} in pipeline`}
+          </div>
+          <div className="metric-sub">
+            Target rate: {expert.target_rate || '--'}
+          </div>
+          <div className="metric-sub">
+            Platforms: {(expert.platforms || []).filter(p => p.status !== 'profile_needed').length} active / {(expert.platforms || []).length} total
+          </div>
+        </>
+      ) : (
+        <div className="metric-sub" style={{ marginTop: 8 }}>AWAITING DATA -- set up expert network profiles</div>
+      )}
+    </div>
+  );
+
+  // Finance (conditional)
+  if (fin) {
+    cards.push(
+      <div className="card" key="finance">
+        <div className="metric-label">Finance</div>
+        <div className="metric-value">{fin.runway || fin.balance || '--'}</div>
+        <div className="metric-sub">{fin.summary || fin.status || ''}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="section">
+      <div className="section-title" style={{ marginBottom: 12 }}>Business Metrics</div>
+      <div className="metrics-grid">{cards}</div>
+    </div>
+  );
+}
+
+function RecentActivity({ events, actions, health }) {
+  const [tab, setTab] = useState(() => {
+    try { return localStorage.getItem('ra_tab') || 'events'; } catch(e) { return 'events'; }
+  });
+
+  const switchTab = (t) => {
+    setTab(t);
+    try { localStorage.setItem('ra_tab', t); } catch(e) {}
+  };
+
+  return (
+    <div className="section">
+      <div className="section-title" style={{ marginBottom: 8 }}>Recent Activity</div>
+      <div className="tabs">
+        <div className={`tab ${tab === 'events' ? 'active' : ''}`} onClick={() => switchTab('events')}>Events</div>
+        <div className={`tab ${tab === 'actions' ? 'active' : ''}`} onClick={() => switchTab('actions')}>Actions</div>
+        <div className={`tab ${tab === 'health' ? 'active' : ''}`} onClick={() => switchTab('health')}>Health</div>
+      </div>
+      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        {tab === 'events' && <EventsTable data={events} />}
+        {tab === 'actions' && <ActionsTable data={actions} />}
+        {tab === 'health' && <HealthTable data={health} />}
+      </div>
+    </div>
+  );
+}
+
+function EventsTable({ data }) {
+  const rows = Array.isArray(data) ? data.slice(0, 30) : [];
+  if (rows.length === 0) return <div className="empty-state">No events</div>;
+  return (
+    <div className="table-wrap">
+      <table className="data-table">
+        <thead><tr><th>Time</th><th>Agent</th><th>Type</th><th>Title</th><th>Status</th></tr></thead>
+        <tbody>
+          {rows.map((e, i) => (
+            <tr key={i}>
+              <td className="mono" title={isoTitle(e.timestamp || e.ts)}>{relativeTime(e.timestamp || e.ts)}</td>
+              <td>{e.agent || '--'}</td>
+              <td>{e.type || e.event_type || '--'}</td>
+              <td style={{ maxWidth: 320 }}>{e.title || e.message || e.description || '--'}</td>
+              <td>{e.status && <span className={`badge badge-sm badge-light-${statusClass(e.status)}`}>{e.status}</span>}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function ActionsTable({ data }) {
+  const rows = Array.isArray(data) ? data.slice(0, 30) : [];
+  if (rows.length === 0) return <div className="empty-state">No actions</div>;
+  return (
+    <div className="table-wrap">
+      <table className="data-table">
+        <thead><tr><th>Time</th><th>Type</th><th>Result</th><th>Reason</th></tr></thead>
+        <tbody>
+          {rows.map((a, i) => (
+            <tr key={i}>
+              <td className="mono" title={isoTitle(a.timestamp || a.ts)}>{relativeTime(a.timestamp || a.ts)}</td>
+              <td>{a.type || a.action_type || '--'}</td>
+              <td>
+                {a.result && <span className={`badge badge-sm badge-light-${a.result === 'success' ? 'healthy' : a.result === 'error' ? 'failed' : 'warning'}`}>{a.result}</span>}
+                {!a.result && '--'}
+              </td>
+              <td style={{ maxWidth: 400 }}>{a.reason || a.message || '--'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function HealthTable({ data }) {
+  const rows = Array.isArray(data) ? data.slice(0, 30) : [];
+  if (rows.length === 0) return <div className="empty-state">No health snapshots</div>;
+  return (
+    <div className="table-wrap">
+      <table className="data-table">
+        <thead><tr><th>Time</th><th>System</th><th>Details</th></tr></thead>
+        <tbody>
+          {rows.map((h, i) => {
+            const agents = h.agents || h.agent_health || {};
+            const details = Object.entries(agents).map(([name, info]) => {
+              const f = typeof info === 'object' ? (info.freshness_score ?? info.freshness ?? '--') : info;
+              return `${name}: ${f}`;
+            }).join(' | ');
+            return (
+              <tr key={i}>
+                <td className="mono" title={isoTitle(h.timestamp || h.ts)}>{relativeTime(h.timestamp || h.ts)}</td>
+                <td><span className={`badge badge-sm badge-light-${statusClass(h.system_status || h.status)}`}>{h.system_status || h.status || '--'}</span></td>
+                <td className="mono" style={{ fontSize: 11 }}>{details || '--'}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function LoadingSkeleton() {
+  return (
+    <div style={{ padding: 24 }}>
+      <div className="skeleton" style={{ width: '100%', height: 48, marginBottom: 12 }} />
+      <div className="skeleton" style={{ width: '100%', height: 40, marginBottom: 16 }} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 12, marginBottom: 16 }}>
+        {[...Array(6)].map((_, i) => <div key={i} className="skeleton" style={{ height: 100 }} />)}
+      </div>
+      <div className="skeleton" style={{ width: '100%', height: 200, marginBottom: 16 }} />
+      <div className="skeleton" style={{ width: '100%', height: 300 }} />
+    </div>
+  );
+}
+
+// -- Revenue Command Center --
+
+function RevenueCenter({ etsyData, affiliate, ingestion, dashboard }) {
+  const etsyRev = etsyData?.revenue_mtd || 0;
+  const affRev = ingestion?.data?.affiliate?.amazon_earnings_mtd || affiliate?.amazon_earnings_mtd || 0;
+  const expertRev = ingestion?.data?.expert_calls?.revenue_total || 0;
+  const totalRevMTD = etsyRev + affRev + expertRev;
+  const fastest = ingestion?.executive_snapshot?.fastest_revenue_action || 'Run ingestion to compute';
+
+  return (
+    <div className="section">
+      <div className="section-title" style={{ marginBottom: 10 }}>Revenue Command Center</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 8 }}>
+        <div className="card" style={{ borderLeft: '3px solid #fb5887' }}>
+          <div style={{ fontSize: 10, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Total MTD</div>
+          <div style={{ fontSize: 22, fontWeight: 700, color: '#fb5887' }}>${totalRevMTD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+        </div>
+        <div className="card" style={{ borderLeft: '3px solid #fe8c43' }}>
+          <div style={{ fontSize: 10, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Etsy MTD</div>
+          <div style={{ fontSize: 18, fontWeight: 700 }}>${Number(etsyRev).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+          <div style={{ fontSize: 11, color: '#6b7280' }}>{etsyData?.orders_mtd || 0} orders -- {etsyData?.active_listings || '--'} listings</div>
+        </div>
+        <div className="card" style={{ borderLeft: '3px solid #3ca4d7' }}>
+          <div style={{ fontSize: 10, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Affiliate MTD</div>
+          <div style={{ fontSize: 18, fontWeight: 700 }}>${Number(affRev).toFixed(2)}</div>
+          <div style={{ fontSize: 11, color: '#6b7280' }}>{affiliate?.amazon_clicks_mtd || 0} clicks -- {affiliate?.articles_live || '--'} articles</div>
+        </div>
+        <div className="card" style={{ borderLeft: '3px solid #8adbde' }}>
+          <div style={{ fontSize: 10, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Expert Calls</div>
+          <div style={{ fontSize: 18, fontWeight: 700 }}>${Number(expertRev).toFixed(2)}</div>
+          <div style={{ fontSize: 11, color: '#6b7280' }}>{ingestion?.data?.expert_calls?.calls_completed || 0} calls</div>
+        </div>
+        <div className="card" style={{ gridColumn: 'span 2', borderLeft: '3px solid #3ca4d7' }}>
+          <div style={{ fontSize: 10, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Fastest Revenue Action</div>
+          <div style={{ fontSize: 13, fontWeight: 500, marginTop: 4 }}>{fastest}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -- Top Priorities --
+
+function TopPriorities({ ingestion }) {
+  const priorities = ingestion?.executive_snapshot?.top_10_priorities || [];
+  if (priorities.length === 0) return null;
+
+  return (
+    <div className="section">
+      <div className="section-title" style={{ marginBottom: 8 }}>Top Priorities</div>
+      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        <table className="data-table">
+          <thead><tr><th>#</th><th>Priority</th><th>Source</th><th>Urgency</th></tr></thead>
+          <tbody>
+            {priorities.slice(0, 10).map((p, i) => (
+              <tr key={i}>
+                <td style={{ fontWeight: 700, width: 30 }}>{i + 1}</td>
+                <td>{typeof p === 'string' ? p : (p.title || p.text || '--')}</td>
+                <td>{typeof p === 'object' ? (p.source || p.agent || '--') : '--'}</td>
+                <td>{typeof p === 'object' && p.urgency ? <span className={`badge badge-sm badge-light-${p.urgency === 'critical' ? 'failed' : p.urgency === 'high' ? 'warning' : 'idle'}`}>{p.urgency}</span> : '--'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// -- Product Launch Tracker --
+
+function ProductLaunchTracker({ products }) {
+  const [collapsed, setCollapsed] = useState(() => {
+    try { return localStorage.getItem('plt_collapsed') === '1'; } catch(e) { return false; }
+  });
+  const toggle = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    try { localStorage.setItem('plt_collapsed', next ? '1' : '0'); } catch(e) {}
+  };
+
+  const items = products?.products || [];
+  const byStatus = products?.by_status || {};
+
+  const STATUS_LABELS = {
+    live: 'Live',
+    listed: 'Listed',
+    ready_to_list: 'Ready to List',
+    images_pending: 'Images Pending',
+    package_ready: 'Package Ready',
+  };
+
+  const STATUS_ORDER = ['live', 'listed', 'ready_to_list', 'images_pending', 'package_ready'];
+
+  return (
+    <div className="section">
+      <div className="section-header" onClick={toggle}>
+        <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          Product Launch Tracker
+          <span className="badge badge-sm" style={{ background: '#8adbde', color: '#065f46' }}>{items.length} products</span>
+        </div>
+        <span className="section-toggle">{collapsed ? 'Show' : 'Hide'}</span>
+      </div>
+      {!collapsed && (
+        <>
+          <div className="product-status-summary">
+            {STATUS_ORDER.map(s => byStatus[s] ? (
+              <div className="product-status-chip" key={s}>
+                <span className={`status-dot status-dot-${s}`} />
+                <span className="count">{byStatus[s]}</span>
+                <span>{STATUS_LABELS[s] || s}</span>
+              </div>
+            ) : null)}
+          </div>
+          <div className="product-grid">
+            {items.map((p, i) => (
+              <div className="card product-card" key={i} style={{
+                borderLeft: `3px solid ${p.status === 'live' ? '#059669' : p.status === 'listed' ? '#3ca4d7' : p.status === 'ready_to_list' ? '#fe8c43' : p.status === 'images_pending' ? '#fb5887' : '#8adbde'}`
+              }}>
+                <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4 }}>
+                  <span className={`status-dot status-dot-${p.status}`} />
+                  {p.name}
+                </div>
+                <div style={{ fontSize: 11, color: '#6b7280', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  <span className={`badge badge-sm badge-light-${p.status === 'live' ? 'healthy' : p.status === 'images_pending' ? 'failed' : 'warning'}`}>
+                    {STATUS_LABELS[p.status] || p.status}
+                  </span>
+                  {p.price && <span style={{ color: '#059669', fontWeight: 600 }}>${Number(p.price).toFixed(2)}</span>}
+                </div>
+                {p.deadline && (
+                  <div style={{ fontSize: 10, color: '#6b7280', marginTop: 4 }}>Deadline: {p.deadline}</div>
+                )}
+                <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 4, display: 'flex', gap: 6 }}>
+                  <span>{p.images_generated ? 'Images done' : 'No images'}</span>
+                  <span>{p.etsy_listing_id ? `Etsy #${p.etsy_listing_id}` : 'Not on Etsy'}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          {items.length === 0 && <div className="card"><div className="empty-state">No products found</div></div>}
+        </>
+      )}
+    </div>
+  );
+}
+
+// -- App --
+
+function App() {
+  const [state, setState] = useState(null);
+  const [dashboard, setDashboard] = useState(null);
+  const [reviews, setReviews] = useState(null);
+  const [events, setEvents] = useState(null);
+  const [actions, setActions] = useState(null);
+  const [health, setHealth] = useState(null);
+  const [career, setCareer] = useState(null);
+  const [fertility, setFertility] = useState(null);
+  const [affiliate, setAffiliate] = useState(null);
+  const [etsyData, setEtsyData] = useState(null);
+  const [ingestion, setIngestion] = useState(null);
+  const [products, setProducts] = useState(null);
+  const [archive, setArchive] = useState(null);
+  const [gmailData, setGmailData] = useState(null);
+  const [offline, setOffline] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [lastSync, setLastSync] = useState(null);
+  const [loadingActions, setLoadingActions] = useState({});
+  const [lastSuccess, setLastSuccess] = useState(null);
+  const [lastFailure, setLastFailure] = useState(null);
+
+  const fetchAll = useCallback(async () => {
+    const fetchers = [
+      { key: 'state', path: '/api/state', set: setState },
+      { key: 'dashboard', path: '/api/dashboard', set: setDashboard },
+      { key: 'reviews', path: '/api/reviews', set: (d) => setReviews(d?.items || d) },
+      { key: 'events', path: '/api/events?limit=50', set: setEvents },
+      { key: 'actions', path: '/api/actions?limit=30', set: setActions },
+      { key: 'health', path: '/api/health', set: setHealth },
+      { key: 'career', path: '/api/career', set: setCareer },
+      { key: 'fertility', path: '/api/fertility', set: setFertility },
+      { key: 'affiliate', path: '/api/affiliate', set: setAffiliate },
+      { key: 'etsy', path: '/api/etsy', set: setEtsyData },
+      { key: 'ingestion', path: '/api/ingestion', set: setIngestion },
+      { key: 'products', path: '/api/products', set: setProducts },
+      { key: 'archive', path: '/api/archive', set: setArchive },
+      { key: 'gmail', path: '/api/gmail', set: setGmailData },
+    ];
+
+    const results = await Promise.allSettled(
+      fetchers.map(f => apiFetch(f.path).then(d => ({ ...f, data: d })))
+    );
+
+    let anySuccess = false;
+    for (const r of results) {
+      if (r.status === 'fulfilled') {
+        r.value.set(r.value.data);
+        anySuccess = true;
+      }
+    }
+
+    setOffline(!anySuccess);
+    if (anySuccess) setLastSync(new Date().toISOString());
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    fetchAll();
+    const interval = setInterval(fetchAll, 60000);
+    return () => clearInterval(interval);
+  }, [fetchAll]);
+
+  const handleAction = useCallback(async (key, endpoint) => {
+    const t0 = Date.now();
+    const fmtDur = (ms) => ms < 1000 ? `${ms}ms` : `${(ms/1000).toFixed(1)}s`;
+
+    if (key === 'refresh') {
+      setLoadingActions(prev => ({ ...prev, [key]: true }));
+      await fetchAll();
+      const dur = fmtDur(Date.now() - t0);
+      setLoadingActions(prev => ({ ...prev, [key]: false, [`${key}_flash`]: 'cmd-flash-success', [`${key}_dur`]: dur }));
+      setLastSuccess({ label: 'Refresh', dur, at: new Date().toISOString() });
+      setTimeout(() => setLoadingActions(prev => ({ ...prev, [`${key}_flash`]: '', [`${key}_dur`]: '' })), 4000);
+      return;
+    }
+
+    setLoadingActions(prev => ({ ...prev, [key]: true }));
+    try {
+      const result = await apiPost(endpoint);
+      const dur = fmtDur(Date.now() - t0);
+      setLoadingActions(prev => ({ ...prev, [key]: false, [`${key}_flash`]: 'cmd-flash-success', [`${key}_dur`]: dur }));
+      setLastSuccess({ label: key, dur, at: new Date().toISOString(), eventsAdded: result?.events_added || null });
+      await fetchAll();
+    } catch (err) {
+      const dur = fmtDur(Date.now() - t0);
+      setLoadingActions(prev => ({ ...prev, [key]: false, [`${key}_flash`]: 'cmd-flash-error', [`${key}_dur`]: dur }));
+      setLastFailure({ label: key, dur, at: new Date().toISOString(), error: String(err) });
+    }
+    setTimeout(() => setLoadingActions(prev => ({ ...prev, [`${key}_flash`]: '', [`${key}_dur`]: '' })), 4000);
+  }, [fetchAll]);
+
+  const handleReview = useCallback(async (id, action) => {
+    if (!id || action === 'refresh') {
+      await fetchAll();
+      return null;
+    }
+    try {
+      const result = await apiPost(`/api/review/${id}/${action}`);
+      await fetchAll();
+      return result;
+    } catch (err) {
+      console.error('Review action failed:', err);
+      return null;
+    }
+  }, [fetchAll]);
+
+  const reviewItems = Array.isArray(reviews) ? reviews : [];
+  const pendingReviews = reviewItems.filter(r => r.status === 'pending' || !r.status);
+
+  // Compute alerts count
+  let alertCount = 0;
+  const agents = state?.agents || {};
+  for (const info of Object.values(agents)) {
+    if (info?.status === 'stale' || info?.status === 'failed') alertCount++;
+  }
+  if (dashboard?.agent_grid) {
+    const grid = dashboard.agent_grid;
+    const entries = Array.isArray(grid) ? grid : Object.entries(grid).map(([k,v]) => ({...v, name: k}));
+    for (const ag of entries) {
+      const s = ag.status || ag.health_status;
+      if ((s === 'stale' || s === 'failed') && !agents[ag.name || ag.agent]) alertCount++;
+    }
+  }
+  if (dashboard?.critical_deadlines) alertCount += dashboard.critical_deadlines.length;
+  if (pendingReviews.length > 0) alertCount++;
+
+  if (offline && !loading) {
+    return (
+      <>
+        <TopBar state={state} dashboard={dashboard} reviewCount={0} alertCount={0} lastSync={lastSync} offline={true} />
+        <div className="offline-banner">
+          Dashboard server offline. Start with: <code>python3 scripts/dashboard_server.py</code>
+        </div>
+      </>
+    );
+  }
+
+  if (loading) {
+    return (
+      <>
+        <TopBar state={{}} dashboard={{}} reviewCount={0} alertCount={0} lastSync={null} offline={false} />
+        <LoadingSkeleton />
+      </>
+    );
+  }
+
+  const hasPendingReviews = pendingReviews.length > 0;
+
+  return (
+    <>
+      <TopBar
+        state={state}
+        dashboard={dashboard}
+        reviewCount={pendingReviews.length}
+        alertCount={alertCount}
+        lastSync={lastSync}
+        offline={offline}
+      />
+      <CommandBar onAction={handleAction} loadingActions={loadingActions} />
+      <ActionStatusStrip lastSuccess={lastSuccess} lastFailure={lastFailure} />
+      <AlertsBanner state={state} dashboard={dashboard} reviews={reviewItems} />
+      <AgentHealthGrid state={state} dashboard={dashboard} />
+      <RevenueCenter etsyData={etsyData} affiliate={affiliate} ingestion={ingestion} dashboard={dashboard} />
+      <GmailWidget gmailData={gmailData} />
+      <ProductLaunchTracker products={products} />
+      <TopPriorities ingestion={ingestion} />
+      {hasPendingReviews && <ReviewQueue reviews={reviewItems} onReview={handleReview} archive={archive} />}
+      <CareerPipeline careerData={career} />
+      <BusinessMetrics dashboard={dashboard} fertility={fertility} affiliate={affiliate} etsyData={etsyData} ingestion={ingestion} />
+      {!hasPendingReviews && <ReviewQueue reviews={reviewItems} onReview={handleReview} archive={archive} />}
+      <RecentActivity events={events} actions={actions} health={health} />
+      <div style={{ height: 40 }} />
+    </>
+  );
+}
+
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { error: null }; }
+  static getDerivedStateFromError(error) { return { error }; }
+  render() {
+    if (this.state.error) {
+      return React.createElement('div', {
+        style: { padding: 40, fontFamily: 'Inter, system-ui', color: '#dc2626' }
+      },
+        React.createElement('h2', null, 'Dashboard Error'),
+        React.createElement('pre', {
+          style: { background: '#fef2f2', padding: 16, borderRadius: 6, fontSize: 13, whiteSpace: 'pre-wrap' }
+        }, String(this.state.error?.message || this.state.error)),
+        React.createElement('button', {
+          onClick: () => { this.setState({ error: null }); },
+          style: { marginTop: 12, padding: '8px 16px', background: '#fb5887', color: '#fff', border: 'none', borderRadius: 5, cursor: 'pointer', fontFamily: 'inherit' }
+        }, 'Retry')
+      );
+    }
+    return this.props.children;
+  }
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <ErrorBoundary><App /></ErrorBoundary>
+);
+</script>
+</body>
+</html>

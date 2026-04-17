@@ -10,9 +10,10 @@ type Tab = (typeof tabs)[number];
 
 const content: Record<Tab, string[]> = {
   "Refund Policy": [
-    "All sales of digital products are final once the file has been downloaded. Because our products are delivered instantly and digitally, we are unable to accept returns or issue refunds after download.",
-    "If you experience a technical issue with your file — the file won't open, the download link is broken, or the content is incorrect — contact us within 7 days of purchase at michelle.e.humes@gmail.com. We will provide a replacement file or store credit at our discretion.",
-    "We do not offer refunds due to a change of mind, accidental purchase, or incompatibility with software you do not have. Please check the compatibility information listed on each product page before purchasing.",
+    "Custom Water Bottles: Because every bottle is personalized to your specifications, we cannot accept returns or issue refunds for buyer's remorse. If your bottle arrives damaged or the personalization is incorrect, contact us within 7 days of delivery and we will replace it at no charge. Photos of the issue are required.",
+    "Digital Templates: All sales of digital products are final once the file has been downloaded. Because our products are delivered instantly and digitally, we are unable to accept returns or issue refunds after download.",
+    "If you experience a technical issue with a digital file -- it won't open, the download link is broken, or the content is incorrect -- contact us within 7 days of purchase at shelzysdesigns@outlook.com. We will provide a replacement file or store credit at our discretion.",
+    "We do not offer refunds for digital products due to a change of mind, accidental purchase, or incompatibility with software you do not have. Please check the compatibility information listed on each product page before purchasing.",
     "For orders placed on Etsy, Etsy's buyer protection policy also applies.",
   ],
   "Terms of Service": [
@@ -27,7 +28,7 @@ const content: Record<Tab, string[]> = {
     "We do not sell, trade, or share your personal information with third parties for marketing purposes.",
     "We may use your email address to send order confirmations, download links, and occasional updates about new products. You may unsubscribe from marketing emails at any time.",
     "Our website uses standard analytics tools to understand traffic patterns and improve site performance. This data is aggregated and does not identify individual users.",
-    "If you have questions about your data or wish to request deletion, contact us at michelle.e.humes@gmail.com.",
+    "If you have questions about your data or wish to request deletion, contact us at shelzysdesigns@outlook.com.",
   ],
 };
 

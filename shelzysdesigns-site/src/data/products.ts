@@ -17,7 +17,8 @@ export interface Product {
     | "party-events"
     | "save-the-dates"
     | "printables-bundles"
-    | "water-bottles";
+    | "water-bottles"
+    | "seasonal-gifts";
   tags: string[];
   compatibility: "excel" | "sheets" | "both" | "pdf" | "physical";
   lemonSqueezyUrl: string;
@@ -25,6 +26,10 @@ export interface Product {
   featured: boolean;
   bestSeller: boolean;
   images: string[];
+  published?: boolean;
+  // ── Shopify direct checkout (Phase 1 -- optional until catalog synced)
+  shopifyProductId?: string;
+  shopifyVariantId?: string;
 }
 
 export interface Category {
@@ -53,7 +58,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4450651293/monthly-budget-tracker-google-sheets",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_01_img01.svg"],
+    images: ["/product_images/monthly-budget-tracker.jpg"],
+    shopifyProductId: "15086039105904",
+    shopifyVariantId: "53637865341296",
   },
   {
     id: 2,
@@ -69,7 +76,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4466923235/paycheck-budget-spreadsheet-biweekly",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_02_img01.svg"],
+    images: ["/product_images/paycheck-budget-planner.jpg"],
+    shopifyProductId: "15086039171440",
+    shopifyVariantId: "53637865537904",
   },
   {
     id: 3,
@@ -85,7 +94,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4468749322/digital-cash-stuffing-budget-system",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_03_img01.svg"],
+    images: ["/product_images/digital-cash-stuffing-system.jpg"],
+    shopifyProductId: "15086039204208",
+    shopifyVariantId: "53637865570672",
   },
   {
     id: 4,
@@ -101,7 +112,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4470666450/family-budget-spreadsheet-kids-expense",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_04_img01.svg"],
+    images: ["/product_images/family-budget-planner.jpg"],
+    shopifyProductId: "15086039236976",
+    shopifyVariantId: "53637865603440",
   },
   {
     id: 5,
@@ -117,7 +130,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4454684004/budget-spreadsheet-template-2026-monthly",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_05_img01.svg"],
+    images: ["/product_images/2026-annual-budget-planner.jpg"],
+    shopifyProductId: "15086039269744",
+    shopifyVariantId: "53637865636208",
   },
   {
     id: 6,
@@ -133,7 +148,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4472203453/debt-payoff-tracker-spreadsheet-snowball",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_06_img01.svg"],
+    images: ["/product_images/debt-payoff-tracker.jpg"],
+    shopifyProductId: "15086039335280",
+    shopifyVariantId: "53637865865584",
   },
   {
     id: 7,
@@ -149,7 +166,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455440202/debt-payoff-savings-goal-tracker-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_07_img01.svg"],
+    images: ["/product_images/debt-payoff-savings-tracker.jpg"],
+    shopifyProductId: "15086039368048",
+    shopifyVariantId: "53637865898352",
   },
 
   // ── Business ──────────────────────────────
@@ -167,7 +186,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4454785269/small-business-planner-spreadsheet-2026",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_08_img01.svg"],
+    images: ["/product_images/small-business-planner-2026.jpg"],
+    shopifyProductId: "15086039400816",
+    shopifyVariantId: "53637866062192",
   },
   {
     id: 9,
@@ -183,7 +204,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4444597633/side-hustle-income-expense-tracker-excel",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_09_img01.svg"],
+    images: ["/product_images/side-hustle-income-expense-tracker.jpg"],
+    shopifyProductId: "15086039433584",
+    shopifyVariantId: "53637866094960",
   },
   {
     id: 10,
@@ -199,7 +222,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4470488179/12-month-side-hustle-log-excel",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_10_img01.svg"],
+    images: ["/product_images/12-month-side-hustle-log.jpg"],
+    shopifyProductId: "15086039499120",
+    shopifyVariantId: "53637867110768",
   },
   {
     id: 11,
@@ -215,7 +240,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4464388900/business-finance-tracker-excel-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_11_img01.svg"],
+    images: ["/product_images/business-finance-net-worth-dashboard.jpg"],
+    shopifyProductId: "15086039531888",
+    shopifyVariantId: "53637867143536",
   },
   {
     id: 12,
@@ -231,7 +258,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4438165509/etsy-seller-spreadsheet-google-sheets",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_12_img01.svg"],
+    images: ["/product_images/etsy-seller-analytics-dashboard.jpg"],
+    shopifyProductId: "15086039564656",
+    shopifyVariantId: "53637867176304",
   },
   {
     id: 13,
@@ -247,7 +276,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4438165509/etsy-seller-spreadsheet-google-sheets",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_13_img01.svg"],
+    images: ["/product_images/etsy-seller-profit-calculator.jpg"],
+    shopifyProductId: "15086039597424",
+    shopifyVariantId: "53637867307376",
   },
 
   // ── Productivity + Life ───────────────────
@@ -265,7 +296,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4466870305/adhd-life-dashboard-planner-google",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_14_img01.svg"],
+    images: ["/product_images/adhd-life-dashboard.jpg"],
+    shopifyProductId: "15086039630192",
+    shopifyVariantId: "53637867340144",
   },
   {
     id: 15,
@@ -281,7 +314,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455457091/project-goal-tracker-google-sheets",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_15_img01.svg"],
+    images: ["/product_images/project-goal-tracker.jpg"],
+    shopifyProductId: "15086039662960",
+    shopifyVariantId: "53637867405680",
   },
   {
     id: 16,
@@ -297,7 +332,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4466932488/moving-planner-checklist-spreadsheet",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_16_img01.svg"],
+    images: ["/product_images/moving-day-planner.jpg"],
+    shopifyProductId: "15086039695728",
+    shopifyVariantId: "53637867438448",
   },
   {
     id: 17,
@@ -313,7 +350,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4466832536/vacation-trip-planner-spreadsheet-budget",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_17_img01.svg"],
+    images: ["/product_images/vacation-trip-planner.jpg"],
+    shopifyProductId: "15086039728496",
+    shopifyVariantId: "53637867471216",
   },
   {
     id: 18,
@@ -329,7 +368,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455422930/weekly-meal-planner-google-sheets",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_18_img01.svg"],
+    images: ["/product_images/weekly-meal-planner.jpg"],
+    shopifyProductId: "15086039794032",
+    shopifyVariantId: "53637867635056",
   },
   {
     id: 19,
@@ -345,7 +386,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455422930/weekly-meal-planner-google-sheets",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_19_img01.svg"],
+    images: ["/product_images/meal-planner-auto-grocery-list.jpg"],
+    shopifyProductId: "15086039826800",
+    shopifyVariantId: "53637867667824",
   },
   {
     id: 20,
@@ -361,7 +404,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455432592/workout-tracker-google-sheets-gym",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_20_img01.svg"],
+    images: ["/product_images/workout-tracker.jpg"],
+    shopifyProductId: "15086039859568",
+    shopifyVariantId: "53637867700592",
   },
   {
     id: 21,
@@ -377,7 +422,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455450716/kids-chore-chart-daily-routine-reward",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_21_img01.svg"],
+    images: ["/product_images/kids-chore-chart-routine-tracker.jpg"],
+    shopifyProductId: "15086039892336",
+    shopifyVariantId: "53637867733360",
   },
   {
     id: 22,
@@ -393,7 +440,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455371770/home-organization-planner-2026-cleaning",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_22_img01.svg"],
+    images: ["/product_images/home-cleaning-organization-planner.jpg"],
+    shopifyProductId: "15086039925104",
+    shopifyVariantId: "53637867766128",
   },
 
   // ── Education ─────────────────────────────
@@ -411,7 +460,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455378310/2026-student-planner-spreadsheet-grade",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_23_img01.svg"],
+    images: ["/product_images/student-academic-planner-2026.jpg"],
+    shopifyProductId: "15086039957872",
+    shopifyVariantId: "53637867798896",
   },
   {
     id: 24,
@@ -427,7 +478,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455359615/teacher-planner-2026-google-sheets-excel",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_24_img01.svg"],
+    images: ["/product_images/teacher-planner-2026.jpg"],
+    shopifyProductId: "15086039990640",
+    shopifyVariantId: "53637867831664",
   },
 
   // ── Other Templates (category: productivity or business as appropriate) ──
@@ -445,7 +498,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455352356/2026-social-media-planner-spreadsheet",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_25_img01.svg"],
+    images: ["/product_images/social-media-planner-2026.jpg"],
+    shopifyProductId: "15086040023408",
+    shopifyVariantId: "53637867864432",
   },
   {
     id: 26,
@@ -461,7 +516,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4453348355/2026-social-media-content-planner-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_26_img01.svg"],
+    images: ["/product_images/social-media-content-planner.jpg"],
+    shopifyProductId: "15086040056176",
+    shopifyVariantId: "53637867897200",
   },
   {
     id: 27,
@@ -477,7 +534,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4469948638/ugc-creator-media-kit-template-canva",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_27_img01.svg"],
+    images: ["/product_images/ugc-creator-media-kit.jpg"],
+    shopifyProductId: "15086040088944",
+    shopifyVariantId: "53637868028272",
   },
   {
     id: 28,
@@ -493,7 +552,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455461292/rental-property-income-tracker-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_28_img01.svg"],
+    images: ["/product_images/rental-property-income-tracker.jpg"],
+    shopifyProductId: "15086040121712",
+    shopifyVariantId: "53637868061040",
   },
   {
     id: 29,
@@ -509,7 +570,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4472387217/pet-expense-tracker-spreadsheet-dog-cat",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_29_img01.svg"],
+    images: ["/product_images/pet-expense-tracker.jpg"],
+    shopifyProductId: "15086040154480",
+    shopifyVariantId: "53637868093808",
   },
   {
     id: 30,
@@ -525,7 +588,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4460558570/babys-first-year-milestone-tracker",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_30_img01.svg"],
+    images: ["/product_images/babys-first-year-milestone-tracker.jpg"],
+    shopifyProductId: "15086040187248",
+    shopifyVariantId: "53637868126576",
   },
   {
     id: 31,
@@ -541,7 +606,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4472491170/co-parenting-schedule-planner-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_31_img01.svg"],
+    images: ["/product_images/co-parenting-schedule-planner.jpg"],
+    shopifyProductId: "15086040220016",
+    shopifyVariantId: "53637868159344",
   },
   {
     id: 32,
@@ -557,7 +624,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4455332835/complete-2026-job-search-tracker-excel",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_32_img01.svg"],
+    images: ["/product_images/job-search-command-center.jpg"],
+    shopifyProductId: "15086040252784",
+    shopifyVariantId: "53637868192112",
   },
 
   // ── Wedding ───────────────────────────────
@@ -575,7 +644,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4439536794/bridal-shower-planner-spreadsheet-google",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_33_img01.svg"],
+    images: ["/product_images/bridal-shower-planner.jpg"],
+    shopifyProductId: "15086040285552",
+    shopifyVariantId: "53637868224880",
   },
   {
     id: 34,
@@ -591,7 +662,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4458817296/wedding-vendor-tracker-budget",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_34_img01.svg"],
+    images: ["/product_images/wedding-vendor-comparison-tool.jpg"],
+    shopifyProductId: "15086040318320",
+    shopifyVariantId: "53637868257648",
   },
   {
     id: 35,
@@ -607,7 +680,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4458817296/wedding-vendor-tracker-budget",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_35_img01.svg"],
+    images: ["/product_images/wedding-budget-tracker.jpg"],
+    shopifyProductId: "15086040351088",
+    shopifyVariantId: "53637868290416",
   },
   {
     id: 36,
@@ -623,7 +698,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4453351463/wedding-planning-checklist-budget",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_36_img01.svg"],
+    images: ["/product_images/wedding-planning-checklist-budget.jpg"],
+    shopifyProductId: "15086040383856",
+    shopifyVariantId: "53637868323184",
   },
   {
     id: 37,
@@ -639,7 +716,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4430861134/interactive-wedding-planner-dashboard",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_37_img01.svg"],
+    images: ["/product_images/interactive-wedding-planner-dashboard.jpg"],
+    shopifyProductId: "15086040449392",
+    shopifyVariantId: "53637868454256",
   },
   {
     id: 38,
@@ -655,7 +734,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4431620170/bachelorette-party-planner-spreadsheet",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_38_img01.svg"],
+    images: ["/product_images/bachelorette-party-planner.jpg"],
+    shopifyProductId: "15086040482160",
+    shopifyVariantId: "53637868487024",
   },
 
   // ── Party + Events ────────────────────────
@@ -670,10 +751,13 @@ export const products: Product[] = [
     tags: ["graduation", "party", "planner", "celebration", "event"],
     compatibility: "both",
     lemonSqueezyUrl: "#",
-    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
     featured: false,
     bestSeller: false,
+    published: false,
     images: ["/shelzy_images/shelzy_39_img01.svg"],
+    shopifyProductId: "15086040514928",
+    shopifyVariantId: "53637868519792",
   },
   {
     id: 40,
@@ -689,7 +773,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4472597131/easter-basket-budget-planner-spreadsheet",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_40_img01.svg"],
+    images: ["/product_images/easter-basket-budget-planner.jpg"],
+    shopifyProductId: "15086040547696",
+    shopifyVariantId: "53637868552560",
   },
 
   // ── Save the Dates ────────────────────────
@@ -707,7 +793,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452708398/san-jose-skyline-save-the-date-hand",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_41_img01.svg"],
+    images: ["/product_images/san-jose-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040580464",
+    shopifyVariantId: "53637868585328",
   },
   {
     id: 42,
@@ -723,7 +811,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4458588248/the-hillsboro-club-hillsboro-beach-save",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_42_img01.svg"],
+    images: ["/product_images/hillsboro-lighthouse-save-the-date.jpg"],
+    shopifyProductId: "15086040646000",
+    shopifyVariantId: "53637868683632",
   },
   {
     id: 43,
@@ -739,7 +829,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452705060/philadelphia-skyline-save-the-date-hand",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_43_img01.svg"],
+    images: ["/product_images/philadelphia-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040678768",
+    shopifyVariantId: "53637868716400",
   },
   {
     id: 44,
@@ -755,7 +847,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452707708/dallas-skyline-save-the-date-hand-drawn",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_44_img01.svg"],
+    images: ["/product_images/dallas-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040711536",
+    shopifyVariantId: "53637868749168",
   },
   {
     id: 45,
@@ -771,7 +865,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452708980/austin-skyline-save-the-date-hand-drawn",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_45_img01.svg"],
+    images: ["/product_images/austin-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040744304",
+    shopifyVariantId: "53637868781936",
   },
   {
     id: 46,
@@ -787,7 +883,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452698201/chicago-skyline-save-the-date-hand-drawn",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_46_img01.svg"],
+    images: ["/product_images/chicago-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040777072",
+    shopifyVariantId: "53637868814704",
   },
   {
     id: 47,
@@ -803,7 +901,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452697625/los-angeles-skyline-save-the-date-hand",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_47_img01.svg"],
+    images: ["/product_images/los-angeles-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040842608",
+    shopifyVariantId: "53637868945776",
   },
   {
     id: 48,
@@ -819,7 +919,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4452692821/nyc-skyline-save-the-date-template-hand",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_48_img01.svg"],
+    images: ["/product_images/nyc-skyline-save-the-date.jpg"],
+    shopifyProductId: "15086040875376",
+    shopifyVariantId: "53637868978544",
   },
 
   // ── Printables + Bundles ──────────────────
@@ -837,7 +939,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4434199130/bachelorette-party-scavenger-hunt",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_49_img01.svg"],
+    images: ["/product_images/bachelorette-scavenger-hunt.jpg"],
+    shopifyProductId: "15086040908144",
+    shopifyVariantId: "53637869011312",
   },
   {
     id: 50,
@@ -853,7 +957,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4457898606/villa-vibes-bachelorette-party-bundle-23",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_50_img01.svg"],
+    images: ["/product_images/villa-vibes-bachelorette-bundle.jpg"],
+    shopifyProductId: "15086040940912",
+    shopifyVariantId: "53637869044080",
   },
   {
     id: 51,
@@ -869,7 +975,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4461345391/st-patricks-day-kids-activity-bundle",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_51_img01.svg"],
+    images: ["/product_images/st-patricks-day-kids-activity-bundle.jpg"],
+    shopifyProductId: "15086040973680",
+    shopifyVariantId: "53637869076848",
   },
   {
     id: 52,
@@ -885,7 +993,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4461340341/st-patricks-day-png-bundle-retro",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_52_img01.svg"],
+    images: ["/product_images/st-patricks-day-png-bundle.jpg"],
+    shopifyProductId: "15086041006448",
+    shopifyVariantId: "53637869109616",
   },
   {
     id: 53,
@@ -901,7 +1011,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4461552541/40-days-lent-activity-bundle-for-kids",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_53_img01.svg"],
+    images: ["/product_images/40-day-lent-devotional-activity-bundle.jpg"],
+    shopifyProductId: "15086041039216",
+    shopifyVariantId: "53637869142384",
   },
   {
     id: 54,
@@ -917,7 +1029,9 @@ export const products: Product[] = [
     etsyUrl: "https://www.etsy.com/listing/4467420325/mothers-day-svg-bundle-mom-life-cut",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_54_img01.svg"],
+    images: ["/product_images/mothers-day-svg-bundle.jpg"],
+    shopifyProductId: "15086041071984",
+    shopifyVariantId: "53637869175152",
   },
 
   // ── Water Bottles (Physical) ──────────────
@@ -927,15 +1041,15 @@ export const products: Product[] = [
     name: "Personalized Water Bottle",
     description:
       "Your name, permanently. Our stainless steel water bottles use sublimation printing that fuses your design directly into the coating. No decals, no vinyl, nothing that peels or scratches off. Just a clean, custom bottle built to last.",
-    price: 34.99,
+    price: 28.99,
     category: "water-bottles",
     tags: ["water bottle", "personalized", "sublimation", "custom", "gift"],
     compatibility: "physical",
     lemonSqueezyUrl: "#",
-    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    etsyUrl: "https://www.etsy.com/listing/4427123494",
     featured: true,
     bestSeller: true,
-    images: ["/shelzy_images/shelzy_55_img01.svg"],
+    images: ["/product_images/personalized-water-bottle.jpg"],
   },
   {
     id: 56,
@@ -948,10 +1062,10 @@ export const products: Product[] = [
     tags: ["water bottle", "wedding", "bridesmaid", "personalized", "bridal party"],
     compatibility: "physical",
     lemonSqueezyUrl: "#",
-    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    etsyUrl: "https://www.etsy.com/listing/4435252492",
     featured: true,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_56_img01.svg"],
+    images: ["/product_images/wedding-water-bottle-set.jpg"],
   },
   {
     id: 57,
@@ -964,10 +1078,10 @@ export const products: Product[] = [
     tags: ["water bottle", "bachelorette", "party", "personalized", "matching"],
     compatibility: "physical",
     lemonSqueezyUrl: "#",
-    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    etsyUrl: "https://www.etsy.com/listing/4465825536",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_57_img01.svg"],
+    images: ["/product_images/bachelorette-party-water-bottles.jpg"],
   },
   {
     id: 58,
@@ -980,10 +1094,10 @@ export const products: Product[] = [
     tags: ["water bottle", "kids", "school", "sports", "personalized"],
     compatibility: "physical",
     lemonSqueezyUrl: "#",
-    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    etsyUrl: "https://www.etsy.com/listing/4428315092",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_58_img01.svg"],
+    images: ["/product_images/kids-personalized-water-bottle.jpg"],
   },
   {
     id: 59,
@@ -996,10 +1110,10 @@ export const products: Product[] = [
     tags: ["water bottle", "corporate", "bulk", "branded", "business gifts"],
     compatibility: "physical",
     lemonSqueezyUrl: "#",
-    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    etsyUrl: "https://www.etsy.com/listing/4426781154",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_59_img01.svg"],
+    images: ["/product_images/corporate-bulk-water-bottles.jpg"],
   },
   {
     id: 60,
@@ -1012,10 +1126,240 @@ export const products: Product[] = [
     tags: ["water bottle", "holiday", "christmas", "gift", "seasonal"],
     compatibility: "physical",
     lemonSqueezyUrl: "#",
-    etsyUrl: "https://www.etsy.com/shop/ShelzysDesigns",
+    etsyUrl: "https://www.etsy.com/listing/4435264870",
     featured: false,
     bestSeller: false,
-    images: ["/shelzy_images/shelzy_60_img01.svg"],
+    images: ["/product_images/holiday-water-bottle.jpg"],
+  },
+
+  // ── Seasonal Gifts ──────────────────────
+  {
+    id: 61,
+    slug: "teacher-appreciation-gift-tags",
+    name: "Teacher Appreciation Gift Tags",
+    description:
+      "Show your favorite teacher some love with printable gift tags perfect for end-of-year gifts, Teacher Appreciation Week, or any time you want to say thank you. Print at home, cut, and attach to any gift.",
+    price: 4.99,
+    category: "seasonal-gifts",
+    tags: ["teacher", "appreciation", "gift tags", "printable", "school"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
+    featured: false,
+    bestSeller: false,
+    published: false,
+    images: ["/shelzy_images/shelzy_61_img01.svg"],
+    shopifyProductId: "15086041104752",
+    shopifyVariantId: "53637869207920",
+  },
+  {
+    id: 62,
+    slug: "mothers-day-gift-certificates",
+    name: "Mother's Day Gift Certificates",
+    description:
+      "Give Mom something personal with printable gift certificates she can redeem for breakfast in bed, a spa day, a movie night, or anything you dream up. Customize the text and print at home.",
+    price: 5.0,
+    category: "seasonal-gifts",
+    tags: ["mothers day", "gift certificate", "printable", "mom", "coupon"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
+    featured: false,
+    bestSeller: false,
+    published: false,
+    images: ["/shelzy_images/shelzy_62_img01.svg"],
+    shopifyProductId: "15086041137520",
+    shopifyVariantId: "53637869240688",
+  },
+  {
+    id: 63,
+    slug: "mothers-day-printable-cards",
+    name: "Mother's Day Printable Cards",
+    description:
+      "Beautiful printable cards for Mom, Grandma, or any mother figure in your life. Print on cardstock, fold, and add your own message inside. Multiple designs included.",
+    price: 4.0,
+    category: "seasonal-gifts",
+    tags: ["mothers day", "card", "printable", "mom", "greeting card"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
+    featured: false,
+    bestSeller: false,
+    published: false,
+    images: ["/shelzy_images/shelzy_63_img01.svg"],
+    shopifyProductId: "15086041170288",
+    shopifyVariantId: "53637869273456",
+  },
+  {
+    id: 64,
+    slug: "graduation-party-invitation",
+    name: "Graduation Party Invitation",
+    description:
+      "Celebrate the graduate with a stylish printable invitation. Customize with their name, school, date, and party details. Print at home or send digitally.",
+    price: 4.0,
+    category: "seasonal-gifts",
+    tags: ["graduation", "invitation", "party", "printable", "celebration"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
+    featured: false,
+    bestSeller: false,
+    published: false,
+    images: ["/shelzy_images/shelzy_64_img01.svg"],
+    shopifyProductId: "15086041203056",
+    shopifyVariantId: "53637869306224",
+  },
+  {
+    id: 65,
+    slug: "fathers-day-coupon-book",
+    name: "Father's Day Coupon Book",
+    description:
+      "A printable coupon book Dad will actually use. Includes pre-written coupons for car washes, breakfast in bed, remote control rights, and blank ones he can fill in himself.",
+    price: 4.99,
+    category: "seasonal-gifts",
+    tags: ["fathers day", "coupon book", "printable", "dad", "gift"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
+    featured: false,
+    bestSeller: false,
+    published: false,
+    images: ["/shelzy_images/shelzy_65_img01.svg"],
+    shopifyProductId: "15086041268592",
+    shopifyVariantId: "53637869404528",
+  },
+
+  // ── Wedding (new printable designs) ─────
+  {
+    id: 66,
+    slug: "wedding-planning-bundle",
+    name: "Wedding Planning Bundle",
+    description:
+      "Everything you need to plan your wedding in one download. Includes a budget tracker, guest list manager, vendor contact sheet, timeline planner, and seating chart template. Works in Excel and Google Sheets.",
+    price: 19.99,
+    category: "wedding",
+    tags: ["wedding", "planning", "bundle", "budget", "guest list", "all-in-one"],
+    compatibility: "both",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/listing/4476200829",
+    featured: true,
+    bestSeller: false,
+    images: ["/product_images/wedding-planning-bundle.jpg"],
+    shopifyProductId: "15086041301360",
+    shopifyVariantId: "53637869437296",
+  },
+  {
+    id: 67,
+    slug: "coastal-bridal-shower-games",
+    name: "Coastal Bridal Shower Games",
+    description:
+      "A set of printable bridal shower games with a breezy coastal theme. Includes bingo, he said she said, advice cards, and more. Print at home and play at any beach or nautical-themed shower.",
+    price: 7.0,
+    category: "wedding",
+    tags: ["bridal shower", "games", "coastal", "beach", "printable", "party"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/listing/4488636881",
+    featured: false,
+    bestSeller: false,
+    images: ["/product_images/coastal-bridal-shower-games.jpg"],
+    shopifyProductId: "15086041334128",
+    shopifyVariantId: "53637869470064",
+  },
+  {
+    id: 68,
+    slug: "wedding-seating-chart",
+    name: "Wedding Seating Chart",
+    description:
+      "A clean, elegant seating chart template you can customize with your guest names and table numbers. Print as a poster or display on a screen at your reception.",
+    price: 6.99,
+    category: "wedding",
+    tags: ["wedding", "seating chart", "reception", "printable", "table"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
+    featured: false,
+    bestSeller: false,
+    published: false,
+    images: ["/shelzy_images/shelzy_68_img01.svg"],
+    shopifyProductId: "15086041366896",
+    shopifyVariantId: "53637869502832",
+  },
+  {
+    id: 69,
+    slug: "wedding-day-timeline-card",
+    name: "Wedding Day Timeline Card",
+    description:
+      "Keep your wedding party and guests on schedule with a printable timeline card. Customize with your ceremony, cocktail hour, reception, and send-off times.",
+    price: 5.99,
+    category: "wedding",
+    tags: ["wedding", "timeline", "schedule", "card", "printable", "day-of"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
+    featured: false,
+    bestSeller: false,
+    published: false,
+    images: ["/shelzy_images/shelzy_69_img01.svg"],
+    shopifyProductId: "15086041399664",
+    shopifyVariantId: "53637869535600",
+  },
+  {
+    id: 70,
+    slug: "coastal-wedding-welcome-sign",
+    name: "Coastal Wedding Welcome Sign",
+    description:
+      "Welcome your guests with a beautiful coastal-themed sign you can print as a poster or display on an easel. Customize with your names, date, and venue. Perfect for beach and waterfront weddings.",
+    price: 8.0,
+    category: "wedding",
+    tags: ["wedding", "welcome sign", "coastal", "beach", "printable", "poster"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
+    featured: false,
+    bestSeller: false,
+    published: false,
+    images: ["/shelzy_images/shelzy_70_img01.svg"],
+    shopifyProductId: "15086041432432",
+    shopifyVariantId: "53637869568368",
+  },
+  {
+    id: 71,
+    slug: "wedding-menu-card",
+    name: "Wedding Menu Card",
+    description:
+      "An elegant printable menu card for your reception dinner. Customize with your courses, dietary notes, and wedding date. Print on cardstock for a polished table setting.",
+    price: 5.49,
+    category: "wedding",
+    tags: ["wedding", "menu", "card", "reception", "printable", "dinner"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
+    featured: false,
+    bestSeller: false,
+    published: false,
+    images: ["/shelzy_images/shelzy_71_img01.svg"],
+    shopifyProductId: "15086041465200",
+    shopifyVariantId: "53637869601136",
+  },
+  {
+    id: 72,
+    slug: "bachelorette-weekend-itinerary",
+    name: "Bachelorette Weekend Itinerary",
+    description:
+      "Keep the whole crew on the same page with a printable weekend itinerary. Customize with your destination, activities, restaurants, and emergency contacts. Share digitally or print for everyone.",
+    price: 5.99,
+    category: "wedding",
+    tags: ["bachelorette", "itinerary", "weekend", "party", "printable", "trip"],
+    compatibility: "pdf",
+    lemonSqueezyUrl: "#",
+    etsyUrl: "https://www.etsy.com/shop/ShelzysDesignsStore",
+    featured: false,
+    bestSeller: false,
+    published: false,
+    images: ["/shelzy_images/shelzy_72_img01.svg"],
+    shopifyProductId: "15086041530736",
+    shopifyVariantId: "53637869666672",
   },
 ];
 
@@ -1075,6 +1419,12 @@ const categories: Category[] = [
     description:
       "Premium stainless steel water bottles with permanent sublimation printing. Free personalization on every bottle.",
   },
+  {
+    slug: "seasonal-gifts",
+    name: "Seasonal Gifts",
+    description:
+      "Printable gift tags, cards, coupon books, and invitations for Teacher Appreciation, Mother's Day, Father's Day, and graduation",
+  },
 ];
 
 // ─────────────────────────────────────────────
@@ -1085,16 +1435,20 @@ export function getProductBySlug(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
 }
 
+export function getPublishedProducts(): Product[] {
+  return products.filter((p) => p.published !== false);
+}
+
 export function getProductsByCategory(category: string): Product[] {
   return products.filter((p) => p.category === category);
 }
 
 export function getFeaturedProducts(): Product[] {
-  return products.filter((p) => p.featured);
+  return products.filter((p) => p.published !== false && p.featured);
 }
 
 export function getBestSellers(): Product[] {
-  return products.filter((p) => p.bestSeller);
+  return products.filter((p) => p.published !== false && p.bestSeller);
 }
 
 export function getAllCategories(): Category[] {

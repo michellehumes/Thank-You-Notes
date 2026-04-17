@@ -25,7 +25,7 @@ export interface BlogPost {
   secondaryKeywords: string[];
   internalLinks: { label: string; href: string }[];
   faq: { question: string; answer: string }[];
-  category: "budget-finance" | "wedding" | "productivity" | "business" | "etsy";
+  category: "budget-finance" | "wedding" | "productivity" | "business" | "etsy" | "water-bottles";
   excerpt: string;
   bodySections: Section[];
 }
@@ -78,20 +78,20 @@ export const blogPosts: BlogPost[] = [
       "We compare the best budget spreadsheet templates for 2026 — free and paid — so you can find the one that actually fits your money style.",
     bodySections: [
       {
-        type: "h2",
-        text: "Why Most Budget Templates Fail Before March",
+        type: "p",
+        text: "I built the first version of our budget tracker for myself after downloading seven different free templates and abandoning every single one of them. They were either too cluttered, too basic, or just ugly enough that I didn't want to open them. A budget you don't open doesn't work. So I started over with a blank sheet and built what I actually needed.",
       },
       {
         type: "p",
-        text: "Every January, millions of people download a budget template. By March, most of them have stopped using it. The template isn't the problem — the fit is. A budget built for someone who gets paid biweekly looks nothing like one built for a freelancer with irregular income. A household tracking groceries for five needs different categories than a single person splitting rent with a roommate. The best budget spreadsheet template for 2026 isn't the most comprehensive one — it's the one you'll actually open next month.",
+        text: "The templates in this shop came out of that same frustration. Here's what we've learned about what actually matters -- and how different options stack up.",
       },
       {
         type: "h2",
-        text: "What Actually Matters in a Budget Spreadsheet",
+        text: "What Makes a Budget Spreadsheet Worth Using",
       },
       {
         type: "p",
-        text: "Before comparing specific templates, it helps to know what separates a useful budget spreadsheet from a pretty one that collects dust. Here's what to look for:",
+        text: "The best budget template isn't the most comprehensive one -- it's the one you'll actually open next month. Here's what separates useful from abandoned:",
       },
       {
         type: "ul",
@@ -154,7 +154,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         type: "p",
-        text: "Our Monthly Budget Tracker is built for anyone who wants a clean, comprehensive view of their finances every month. It includes separate tabs for income, fixed expenses, variable expenses, and savings — all feeding into a visual dashboard that shows your balance, savings rate, and spending by category. Formulas are pre-built and locked so you can't accidentally break them. Works in both Excel and Google Sheets.",
+        text: "This is the one I use personally and the one that sells every day. It has separate tabs for income, fixed expenses, variable expenses, and savings -- all feeding into a visual dashboard that shows your balance, savings rate, and category spending at a glance. Formulas are pre-built. You can't accidentally break them. Works in Excel and Google Sheets. $5.99.",
       },
       {
         type: "h3",
@@ -240,6 +240,7 @@ export const blogPosts: BlogPost[] = [
         href: "/products/wedding-vendor-comparison-tool",
       },
       { label: "Bridal Shower Planner", href: "/products/bridal-shower-planner" },
+      { label: "Personalized Wedding Water Bottles", href: "/collections/water-bottles" },
     ],
     faq: [
       {
@@ -558,11 +559,11 @@ export const blogPosts: BlogPost[] = [
       },
       {
         type: "p",
-        text: "Most small business owners know their revenue number. Fewer know their actual profit after expenses. Even fewer can tell you which product line or service is most profitable, how their revenue this quarter compares to last quarter, or exactly how much they owe in estimated taxes. This isn't a knowledge problem — it's a system problem. When your financial data lives in your bank app, your receipts live in your email, and your goals live in a notes app, there's no way to see the full picture.",
+        text: "I run a small shop. For the first year, my revenue lived in one tab, my expenses in another, my inventory in a sticky note, and my goals in a notes app I opened twice. It worked fine until I needed to answer a real question -- 'am I actually making money?' -- and I couldn't.",
       },
       {
         type: "p",
-        text: "A small business planner spreadsheet puts everything in one organized workbook so you stop spending mental energy tracking down information and start spending it on decisions.",
+        text: "The Small Business Planner in our shop came out of rebuilding that system from scratch. Everything in one workbook: revenue, expenses, profit, goals, inventory. Here's what a planner like that should actually track -- and why.",
       },
       {
         type: "h2",
@@ -840,16 +841,16 @@ export const blogPosts: BlogPost[] = [
       "A meal planner that builds your grocery list automatically saves more than time -- it cuts food waste, reduces stress, and keeps you out of the drive-through.",
     bodySections: [
       {
+        type: "p",
+        text: "I built our meal planner template because I kept doing the same thing every Sunday: writing out meals, then rewriting the entire grocery list from scratch, then forgetting one ingredient anyway and ending up at the store twice. The version I built auto-generates the grocery list from whatever meals you plan for the week. Change a meal -- the list updates. Add a recipe -- the ingredients appear. It sounds obvious. I couldn't find a free template that actually did it.",
+      },
+      {
         type: "h2",
-        text: "Why Meal Planning Fails for Most People",
+        text: "Why Meal Planning Usually Fails",
       },
       {
         type: "p",
-        text: "Most meal planning systems collapse within two weeks. Not because the idea is bad -- meal planning genuinely works -- but because the execution is tedious. Writing out a plan, then writing out a grocery list from scratch, then realizing mid-week you forgot an ingredient and defaulting to takeout. The friction kills the habit.",
-      },
-      {
-        type: "p",
-        text: "The fix isn't more motivation. It's less friction. The right meal planner template eliminates the steps that cause people to give up: the blank-page problem, the manual grocery list, and the mental load of tracking what you have versus what you need.",
+        text: "It's not a motivation problem. It's a friction problem. The right template removes the two steps that cause people to quit: the blank-page planning problem and the manual grocery list. Here's what actually makes the difference:",
       },
       {
         type: "h2",
@@ -1090,6 +1091,935 @@ export const blogPosts: BlogPost[] = [
       {
         type: "callout",
         text: "The Job Search Command Center works in Google Sheets and Microsoft Excel. Download instantly -- no waiting, no account required. Start tracking today.",
+      },
+    ],
+  },
+
+  // ── Article 8: What to Engrave on a Water Bottle ──────────────────────
+  {
+    slug: "what-to-engrave-on-a-water-bottle",
+    title: "What to Engrave on a Water Bottle (50+ Personalization Ideas)",
+    metaTitle:
+      "What to Engrave on a Water Bottle (50+ Ideas) | Shelzy's Designs",
+    metaDescription:
+      "Not sure what to put on a personalized water bottle? Here are 50+ engraving ideas for names, quotes, gifts, wedding parties, and more.",
+    ogImageAlt: "Personalized water bottle engraving ideas and inspiration",
+    ogImage: `${BASE_URL}/blog/images/what-to-engrave-on-a-water-bottle.jpg`,
+    headline: "What to Engrave on a Water Bottle (50+ Personalization Ideas)",
+    description:
+      "Not sure what to put on a personalized water bottle? Here are 50+ engraving ideas for names, quotes, gifts, wedding parties, and more.",
+    datePublished: "2026-04-15",
+    dateModified: "2026-04-15",
+    targetKeyword: "what to engrave on a water bottle",
+    secondaryKeywords: [
+      "personalized water bottle ideas",
+      "custom water bottle text",
+      "water bottle engraving ideas",
+      "personalized water bottle gift",
+    ],
+    internalLinks: [
+      { label: "Custom Water Bottles", href: "/collections/water-bottles" },
+      { label: "Wedding Water Bottle Set", href: "/products/wedding-water-bottle-set" },
+      { label: "Bachelorette Party Water Bottles", href: "/products/bachelorette-party-water-bottles" },
+    ],
+    faq: [
+      {
+        question: "What should I engrave on a personalized water bottle?",
+        answer:
+          "The most popular options are a first name, a full name, a short quote or motto, initials or a monogram, a date (graduation, wedding, birthday), or a nickname. For gifts, the recipient's name alone is always a safe, elegant choice.",
+      },
+      {
+        question: "How many characters can fit on a water bottle?",
+        answer:
+          "Most personalized water bottles accommodate up to 40 characters. Shorter text -- a name, initials, or a brief phrase -- looks the cleanest and is easiest to read at a glance.",
+      },
+      {
+        question: "What are good engraving ideas for a bridesmaid water bottle?",
+        answer:
+          "Bridesmaid names, roles ('Maid of Honor', 'Bridesmaid', 'Bride'), the wedding date, or a short phrase like 'Bride Squad' or 'Bridesmaid Crew' all work beautifully. Matching font styles across the whole set makes the gift feel cohesive.",
+      },
+      {
+        question: "Can I put a quote on a water bottle?",
+        answer:
+          "Yes -- short quotes work well. Keep it under 40 characters. One-liners, mottos, and meaningful phrases engrave cleanly. Longer quotes tend to be too small to read comfortably.",
+      },
+    ],
+    category: "water-bottles",
+    excerpt:
+      "50+ engraving ideas for personalized water bottles -- names, quotes, gifts, wedding parties, and everything in between.",
+    bodySections: [
+      {
+        type: "p",
+        text: "You've found the bottle. You know you want to personalize it. Now you're staring at a blank text field wondering: what do I actually put on this thing? The good news is there's no wrong answer -- but there are ideas that photograph better, hold up longer, and feel more intentional. Here's every engraving idea worth considering, organized by occasion and style.",
+      },
+      {
+        type: "h2",
+        text: "Names and Initials (The Classic Approach)",
+      },
+      {
+        type: "p",
+        text: "There's a reason a first name is the default answer to 'what should I engrave?'. It's personal without being complicated, legible at a glance, and never goes out of style. Here are the variations that work best:",
+      },
+      {
+        type: "ul",
+        items: [
+          "First name only (e.g., 'Sarah') -- clean, personal, great for everyday bottles",
+          "Full name (e.g., 'Sarah Mitchell') -- slightly more formal, excellent for gifts",
+          "Initials (e.g., 'S.M.' or 'SMM') -- elegant, minimalist, timeless",
+          "Monogram (first, last, middle in traditional order) -- classic, especially for wedding party gifts",
+          "Nickname or name you actually go by ('Sasha', 'Coach Davis', 'Dr. Kim')",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Short Quotes and Mottos",
+      },
+      {
+        type: "p",
+        text: "Short quotes work on water bottles when they stay under about 40 characters. Long quotes get compressed and are nearly impossible to read. Here are phrases that land well at bottle scale:",
+      },
+      {
+        type: "ul",
+        items: [
+          "'Stay hydrated' -- simple, functional, a little funny",
+          "'One day at a time'",
+          "'Run your own race'",
+          "'Built different'",
+          "'Do hard things'",
+          "'Drink water, be kind'",
+          "'Chase the sun'",
+          "'Keep going'",
+          "'She believed she could'",
+          "'Strong and kind'",
+          "'Make it happen'",
+          "'Fueled by [coffee/tea/spite]' -- adjust the last word to fit the person",
+        ],
+      },
+      {
+        type: "callout",
+        text: "Keep quotes under 40 characters. A six-word phrase in a clean script font reads beautifully. A full sentence wraps awkwardly and loses impact.",
+      },
+      {
+        type: "h2",
+        text: "Wedding Party Water Bottles",
+      },
+      {
+        type: "p",
+        text: "Personalized water bottles are one of the most used wedding party gifts -- they go with bridesmaids to the rehearsal, the getting-ready suite, and beyond the wedding day. Here's what works best for each role:",
+      },
+      {
+        type: "h3",
+        text: "Bridesmaids and Maid of Honor",
+      },
+      {
+        type: "ul",
+        items: [
+          "Name + role: 'Emma -- Maid of Honor'",
+          "Name + wedding date: 'Emma // 06.14.2026'",
+          "Role alone: 'Bridesmaid' or 'Maid of Honor' (works when giving a matching set)",
+          "Bride's surname: 'Team Mitchell' or 'Mitchell Wedding'",
+          "'Bride Squad' across matching bottles",
+          "Each bridesmaid's name individually (most personal approach)",
+        ],
+      },
+      {
+        type: "h3",
+        text: "Bride",
+      },
+      {
+        type: "ul",
+        items: [
+          "'Mrs. [last name]' or 'Soon to be Mrs. [last name]'",
+          "'Bride' (classic for bachelorette events)",
+          "New initials post-wedding: 'E.A.M.'",
+          "Wedding date only: '06.14.2026'",
+          "Couple's initials: 'E + J'",
+        ],
+      },
+      {
+        type: "h3",
+        text: "Groomsmen and Best Man",
+      },
+      {
+        type: "ul",
+        items: [
+          "First name + role: 'Jake -- Best Man'",
+          "Name alone",
+          "'Groomsman' or 'Best Man' across a matching set",
+          "The groom's last name: 'Mitchell Crew'",
+        ],
+      },
+      {
+        type: "p",
+        text: "Shop our personalized wedding water bottle sets, or order individual bottles for each member of your wedding party.",
+      },
+      {
+        type: "h2",
+        text: "Graduation and Milestone Gifts",
+      },
+      {
+        type: "ul",
+        items: [
+          "Name + graduation year: 'Alex -- Class of 2026'",
+          "Degree abbreviation + name: 'Dr. Kim' or 'J.D. Mitchell'",
+          "School abbreviation + name: 'Penn State -- Jordan'",
+          "Motivational phrase for the grad: 'The best is yet to come'",
+          "Name + milestone: 'Emily -- RN' or 'Sarah -- PhD'",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Birthday and Personal Gifts",
+      },
+      {
+        type: "ul",
+        items: [
+          "Name + age: 'Sam -- 30' or 'Turning 40'",
+          "Name alone (always works)",
+          "A nickname only they use",
+          "'[Name]'s Water' or '[Name]'s Bottle' -- casual, fun",
+          "Birthday date: 'April 15' or '04.15'",
+          "A phrase they say constantly (an in-joke or personal motto)",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Athletes and Active People",
+      },
+      {
+        type: "ul",
+        items: [
+          "Name + sport: 'Mia -- Soccer'",
+          "Jersey number: '#12' or 'Mitchell // 12'",
+          "Team name + name",
+          "Personal record or goal (for a runner, lifter, or cyclist)",
+          "'Train hard' or 'Earn it'",
+          "Distance milestone: '26.2' for a marathon runner",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Corporate and Team Gifts",
+      },
+      {
+        type: "p",
+        text: "Personalized water bottles make excellent corporate gifts and team recognition awards. For bulk orders, we recommend:",
+      },
+      {
+        type: "ul",
+        items: [
+          "Name + company name: 'Jordan -- Acme Corp'",
+          "Employee name + role or department",
+          "Company name or logo text across a unified set",
+          "Recognition phrase: '[Name] -- Employee of the Year 2026'",
+          "Onboarding gift: name + start year",
+        ],
+      },
+      {
+        type: "callout",
+        text: "Ordering 10 or more bottles? Contact us for bulk pricing. We handle corporate gifts, team recognition, and event favors.",
+      },
+      {
+        type: "h2",
+        text: "Kids and School",
+      },
+      {
+        type: "ul",
+        items: [
+          "First name (clearest for school use -- teachers and other kids can identify it)",
+          "First name + last initial: 'Lily M.'",
+          "Name + grade: 'Lily -- 3rd Grade'",
+          "A small phrase they love: 'Lily the Explorer'",
+          "Sports team name + number for young athletes",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Bachelorette Party",
+      },
+      {
+        type: "ul",
+        items: [
+          "'Bride' for the guest of honor",
+          "Each guest's name individually",
+          "'Bachelorette Weekend [year]' across a matching set",
+          "Destination name: 'Nashville Bachelorette 2026'",
+          "Roles with names: 'Maid of Honor -- Emma'",
+          "Funny nicknames the group actually uses",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Font Style Tips",
+      },
+      {
+        type: "p",
+        text: "The text you choose matters, but so does how it looks. Here's a quick guide to our four font styles:",
+      },
+      {
+        type: "ul",
+        items: [
+          "Script (Cursive) -- best for names, wedding party bottles, and romantic phrases. Elegant and personal.",
+          "Block (Bold Print) -- best for single words, team names, athletic contexts. High readability.",
+          "Serif (Classic) -- best for formal names, initials, dates. Timeless and professional.",
+          "Sans-Serif (Modern) -- best for short motivational phrases, corporate gifts. Clean and contemporary.",
+        ],
+      },
+      {
+        type: "h2",
+        text: "The One Rule That Always Works",
+      },
+      {
+        type: "p",
+        text: "When in doubt, go with just the name. It's the option that photographs best, reads clearly at any size, and means something to the person holding the bottle every time they use it. Everything else is an upgrade on that foundation.",
+      },
+      {
+        type: "p",
+        text: "Ready to design yours? Browse our personalized water bottle collection and use the customizer on any product page to preview your text and font before you order.",
+      },
+    ],
+  },
+
+  // ── Article 9: Best Personalized Bachelorette Gifts ───────────────────
+  {
+    slug: "best-personalized-bachelorette-gifts",
+    title: "Best Personalized Bachelorette Gifts (That the Whole Squad Will Actually Use)",
+    metaTitle:
+      "Best Personalized Bachelorette Gifts (2026) | Shelzy's Designs",
+    metaDescription:
+      "Skip the plastic sashes. Here are the best personalized bachelorette gifts for the bride and her squad -- including custom water bottles, planners, and more.",
+    ogImageAlt: "Personalized bachelorette party gifts for the bride and squad",
+    ogImage: `${BASE_URL}/blog/images/best-personalized-bachelorette-gifts.jpg`,
+    headline:
+      "Best Personalized Bachelorette Gifts (That the Whole Squad Will Actually Use)",
+    description:
+      "Skip the plastic sashes. Here are the best personalized bachelorette gifts for the bride and her squad -- including custom water bottles, planners, and more.",
+    datePublished: "2026-04-15",
+    dateModified: "2026-04-15",
+    targetKeyword: "personalized bachelorette gifts",
+    secondaryKeywords: [
+      "bachelorette party gifts",
+      "custom bachelorette gifts",
+      "bride squad gifts",
+      "personalized gifts for bachelorette party",
+    ],
+    internalLinks: [
+      { label: "Bachelorette Party Water Bottles", href: "/products/bachelorette-party-water-bottles" },
+      { label: "Custom Water Bottles Collection", href: "/collections/water-bottles" },
+      { label: "Wedding Water Bottle Set", href: "/products/wedding-water-bottle-set" },
+      { label: "Bachelorette Weekend Itinerary", href: "/products/bachelorette-weekend-itinerary" },
+    ],
+    faq: [
+      {
+        question: "What are the best personalized bachelorette gifts?",
+        answer:
+          "Custom water bottles are consistently among the most used bachelorette gifts because they go everywhere -- the getting-ready suite, the party, the flight home. Personalized with each squad member's name, they double as a party favor and a keepsake.",
+      },
+      {
+        question: "How far in advance should I order personalized bachelorette gifts?",
+        answer:
+          "Order at least 2 weeks before the event. Custom water bottles take 3-5 business days to produce plus shipping time. For destination bachelorettes, give yourself 3 weeks minimum.",
+      },
+      {
+        question: "What should I put on bachelorette party water bottles?",
+        answer:
+          "Popular choices: each guest's name, the bride's name and role ('Bride'), the wedding date, a destination name for a destination bachelorette ('Nashville 2026'), or 'Bride Squad' across a matching set.",
+      },
+      {
+        question: "How much should I spend on bachelorette party gifts?",
+        answer:
+          "Most bachelorette party gifts land in the $20-50 per person range. Personalized water bottles typically fall in the $30-35 range, making them a strong value for something the recipient will actually keep and use.",
+      },
+    ],
+    category: "wedding",
+    excerpt:
+      "The best personalized bachelorette gifts -- from custom water bottles to digital planning tools -- ranked by how much the squad will actually use them.",
+    bodySections: [
+      {
+        type: "p",
+        text: "The bar for bachelorette gifts has officially moved past plastic tiaras and 'Bride Tribe' foam cups. The best bachelorette gifts right now are things people actually keep -- and at the top of that list are personalized items the whole squad can use before, during, and long after the party.",
+      },
+      {
+        type: "p",
+        text: "Here's what's worth giving, what to avoid, and how to pull off a cohesive gifting moment without spending a fortune.",
+      },
+      {
+        type: "h2",
+        text: "Why Personalized Gifts Work Better for Bachelorette Parties",
+      },
+      {
+        type: "p",
+        text: "Bachelorette parties are inherently group events. The best gifts acknowledge that -- they look great as a matching set, photograph beautifully, and give each person something that's unmistakably theirs. Generic gifts disappear into a pile; personalized ones get used.",
+      },
+      {
+        type: "h2",
+        text: "1. Custom Water Bottles (Best Overall)",
+      },
+      {
+        type: "p",
+        text: "Personalized water bottles are the most versatile bachelorette gift available right now. They travel with the squad from the getting-ready suite to the party to the flight home. Made right -- stainless steel with permanent sublimation printing, not a stick-on decal that peels -- they become an everyday carry item long after the bachelorette weekend is over.",
+      },
+      {
+        type: "p",
+        text: "What to put on them: each bridesmaid's name, the bride's bottle engraved with 'Bride' or her new last name, the bachelorette destination ('Nashville 2026'), or a phrase the group actually uses. Font choice matters -- script for an elegant feel, block for something bold and fun.",
+      },
+      {
+        type: "callout",
+        text: "Personalized water bottles in a matching set photograph exceptionally well. If the bachelorette party will have any kind of photo moment, the bottles will be in it.",
+      },
+      {
+        type: "h2",
+        text: "2. Bachelorette Weekend Itinerary (For the Planner Bride)",
+      },
+      {
+        type: "p",
+        text: "The maid of honor doing the planning will appreciate this more than anyone, but the whole group benefits. A well-designed bachelorette itinerary keeps everyone on time, accounts for reservations and activities, and makes the whole weekend feel organized and intentional rather than reactive.",
+      },
+      {
+        type: "p",
+        text: "A digital itinerary template is a practical gift for the person doing the work of coordinating the trip -- and it costs a fraction of the time saved.",
+      },
+      {
+        type: "h2",
+        text: "3. Matching Robes or Pajamas (Classic for a Reason)",
+      },
+      {
+        type: "p",
+        text: "Satin robes with each person's name or role are a bachelorette staple for a simple reason: they create a getting-ready photo moment that every bride wants. They're comfortable, they read well in photos, and they feel celebratory. Monogrammed or name-embroidered options are widely available at most price points.",
+      },
+      {
+        type: "h2",
+        text: "4. Personalized Tote Bags",
+      },
+      {
+        type: "p",
+        text: "A canvas tote with each person's name is a functional, low-cost option that gets used immediately -- fill it with snacks, sunscreen, or small treats for the weekend. It works as a welcome bag and as something the person takes home. Canvas totes are inexpensive to personalize and photograph well as a group.",
+      },
+      {
+        type: "h2",
+        text: "5. Skincare or Self-Care Kits",
+      },
+      {
+        type: "p",
+        text: "A small curated skincare set makes an excellent bachelorette gift for morning-after recovery. Sheet masks, a lip balm, a travel-size moisturizer, and an eye cream in a personalized bag or box feel intentional without being expensive. This is a low-personalization option that still feels thoughtful.",
+      },
+      {
+        type: "h2",
+        text: "What to Skip",
+      },
+      {
+        type: "ul",
+        items: [
+          "Plastic props and accessories -- fun for an hour, forgotten immediately",
+          "Anything too fragile to travel -- bachelorette parties involve luggage",
+          "Generic 'Bride Tribe' items with no personalization -- they feel mass-produced",
+          "Novelty items that have no use beyond the party",
+          "Anything breakable for a destination bachelorette",
+        ],
+      },
+      {
+        type: "h2",
+        text: "How to Pull Off a Cohesive Bachelorette Gift Moment",
+      },
+      {
+        type: "p",
+        text: "The best bachelorette gifts work as a set. If you're giving water bottles, do one per person with each name. If you're doing robes, get a matching set in the same color. Cohesion in the getting-ready photos comes from matching items, not matching prices.",
+      },
+      {
+        type: "p",
+        text: "For the water bottles specifically: order early. Personalized bottles take 3-5 business days to produce plus shipping time. For a destination bachelorette, place your order 3 weeks out minimum.",
+      },
+      {
+        type: "h2",
+        text: "Budget Breakdown",
+      },
+      {
+        type: "ul",
+        items: [
+          "Custom water bottles: $30-35 per person",
+          "Personalized tote bags: $15-25 per person",
+          "Matching robes: $25-45 per person",
+          "Bachelorette itinerary template: $6-8 (covers the whole group)",
+          "Self-care kit: $20-35 per person",
+        ],
+      },
+      {
+        type: "p",
+        text: "Most bachelorette gift budgets land between $20-50 per person. A personalized water bottle at the $30-35 range is one of the stronger uses of that budget -- it gets used every day, not just at the party.",
+      },
+    ],
+  },
+
+  // ── Article 10: How to Order a Custom Water Bottle ────────────────────
+  {
+    slug: "how-to-order-a-custom-water-bottle",
+    title: "How to Order a Custom Water Bottle: What to Know Before You Buy",
+    metaTitle:
+      "How to Order a Custom Water Bottle | Shelzy's Designs",
+    metaDescription:
+      "Everything you need to know before ordering a personalized water bottle -- turnaround times, personalization tips, font choices, and what to avoid.",
+    ogImageAlt: "How to order a custom personalized water bottle guide",
+    ogImage: `${BASE_URL}/blog/images/how-to-order-a-custom-water-bottle.jpg`,
+    headline:
+      "How to Order a Custom Water Bottle: What to Know Before You Buy",
+    description:
+      "Everything you need to know before ordering a personalized water bottle -- turnaround times, personalization tips, font choices, and what to avoid.",
+    datePublished: "2026-04-15",
+    dateModified: "2026-04-15",
+    targetKeyword: "how to order a custom water bottle",
+    secondaryKeywords: [
+      "personalized water bottle",
+      "custom water bottle",
+      "order custom water bottle",
+      "sublimation water bottle",
+    ],
+    internalLinks: [
+      { label: "Custom Water Bottles", href: "/collections/water-bottles" },
+      { label: "Personalized Water Bottle", href: "/products/personalized-water-bottle" },
+      { label: "Wedding Water Bottle Set", href: "/products/wedding-water-bottle-set" },
+    ],
+    faq: [
+      {
+        question: "How long does it take to receive a custom water bottle?",
+        answer:
+          "Production takes 3-5 business days after your order is confirmed. Standard shipping adds 3-7 business days. Total time from order to delivery is typically 6-12 business days.",
+      },
+      {
+        question: "Can I see a preview before my water bottle is made?",
+        answer:
+          "Yes. The product page customizer shows you exactly how your text and font selection will appear. We also confirm your personalization details before production begins.",
+      },
+      {
+        question: "What if I make a typo in my personalization?",
+        answer:
+          "Contact us as soon as possible after placing your order. We review all personalizations before printing, and we'll reach out if anything looks off. Once production begins, changes may not be possible.",
+      },
+      {
+        question: "What materials are Shelzy's Designs water bottles made from?",
+        answer:
+          "Our bottles are double-wall vacuum insulated stainless steel with BPA-free lids. The personalization uses permanent sublimation printing -- the design is fused into the coating, not applied on top.",
+      },
+    ],
+    category: "water-bottles",
+    excerpt:
+      "A practical guide to ordering personalized water bottles -- what to enter, what to expect, how long it takes, and how to avoid the most common mistakes.",
+    bodySections: [
+      {
+        type: "p",
+        text: "Ordering a custom water bottle should be straightforward. But personalization adds a step that catches first-time buyers off-guard -- questions about what text to use, how long production takes, and whether the design will actually look good on the finished bottle. This guide answers all of that.",
+      },
+      {
+        type: "h2",
+        text: "Step 1: Choose Your Bottle",
+      },
+      {
+        type: "p",
+        text: "Start by picking the right size and style for how you (or the recipient) will actually use it. Our water bottles come in 17oz, 20oz, and 32oz. The 20oz is the most popular -- it fits in most car cup holders, is light enough to carry all day, and holds enough for a standard workout or work session. The 32oz is the choice for people who want to hit their daily hydration goal with fewer refills.",
+      },
+      {
+        type: "h2",
+        text: "Step 2: Enter Your Personalization",
+      },
+      {
+        type: "p",
+        text: "On the product page, you'll see the personalization field. Here's what to know before you type:",
+      },
+      {
+        type: "ul",
+        items: [
+          "Character limit is 40 characters -- a name, short phrase, or date fits comfortably",
+          "Shorter text reads more cleanly -- a single name or 3-4 word phrase is better than a full sentence",
+          "Capitalization matters: 'Sarah' looks different from 'SARAH' -- decide which you want",
+          "Punctuation is allowed: dates like '06.14.26', symbols like '+', and simple abbreviations work well",
+          "No profanity or trademarked names (e.g., sports team logos) -- we'll contact you if there's an issue",
+        ],
+      },
+      {
+        type: "callout",
+        text: "The most common ordering mistake: rushing through the personalization field. Take 30 seconds to read it back before clicking Order. We review every order before production, but typos occasionally slip through.",
+      },
+      {
+        type: "h2",
+        text: "Step 3: Select Your Font Style",
+      },
+      {
+        type: "p",
+        text: "Font choice changes the feel of the bottle significantly. Here's how to match font to purpose:",
+      },
+      {
+        type: "ul",
+        items: [
+          "Script (Cursive) -- best for names, wedding party gifts, occasion bottles. Elegant, personal, timeless.",
+          "Block (Bold Print) -- best for athletic use, team gifts, short motivational phrases. Bold and readable.",
+          "Serif (Classic) -- best for formal names, initials, dates. Professional and polished.",
+          "Sans-Serif (Modern) -- best for corporate gifts, minimal aesthetic, single words. Clean and contemporary.",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Step 4: Complete Your Order on Etsy",
+      },
+      {
+        type: "p",
+        text: "After you select your personalization and font, clicking Order on Etsy takes you directly to the checkout page with your personalization details pre-filled in the message to seller. You'll complete payment through Etsy's secure checkout.",
+      },
+      {
+        type: "h2",
+        text: "What Happens After You Order",
+      },
+      {
+        type: "p",
+        text: "Here's the production timeline from click to delivery:",
+      },
+      {
+        type: "ol",
+        items: [
+          "Order received -- we review your personalization details (same or next business day)",
+          "Production begins -- your bottle is printed using permanent sublimation (1-2 days)",
+          "Quality check -- we inspect the finished bottle before it ships",
+          "Ships out -- you receive tracking via Etsy notifications",
+          "Delivered -- standard: 3-7 business days after ship date",
+        ],
+      },
+      {
+        type: "p",
+        text: "Total time from order to delivery: 6-12 business days (standard shipping). If you have a deadline -- a birthday, bachelorette party, or wedding -- order at least 2 weeks in advance to be safe.",
+      },
+      {
+        type: "h2",
+        text: "How Sublimation Printing Works (and Why It Matters)",
+      },
+      {
+        type: "p",
+        text: "There are two ways to put a design on a water bottle: a decal (applied to the surface) and sublimation (fused into the coating). Decals peel. Sublimation doesn't.",
+      },
+      {
+        type: "p",
+        text: "Sublimation printing uses heat to transfer dye directly into the surface coating of the bottle. The result is a design that is part of the bottle -- not sitting on top of it. It won't peel after washing, won't scratch off with normal use, and won't fade with exposure to water or sunlight.",
+      },
+      {
+        type: "h2",
+        text: "Care Instructions",
+      },
+      {
+        type: "ul",
+        items: [
+          "Hand wash recommended to preserve the design and insulation long-term",
+          "Top-rack dishwasher is acceptable for the bottle body -- hand wash the lid",
+          "Do not use abrasive scrubbers on the printed surface",
+          "Do not microwave",
+          "The bottle keeps cold drinks cold for 24 hours and hot drinks hot for 12 hours",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Ordering for a Group or Event",
+      },
+      {
+        type: "p",
+        text: "Ordering personalized bottles for a wedding party, team, or corporate event? A few things to know:",
+      },
+      {
+        type: "ul",
+        items: [
+          "Each bottle in a group order can have different personalization (different names)",
+          "Order them together for consistent production timing",
+          "Contact us before ordering groups of 10 or more -- bulk pricing is available",
+          "For weddings and events with hard deadlines, order 3 weeks in advance minimum",
+        ],
+      },
+      {
+        type: "callout",
+        text: "For bulk orders of 10+ bottles, contact us before you order. We offer group pricing and can coordinate production timing for events.",
+      },
+      {
+        type: "h2",
+        text: "Returns and Issues",
+      },
+      {
+        type: "p",
+        text: "Because every bottle is made to order, we cannot accept returns for buyer's remorse or personalization regret. If your bottle arrives damaged or the personalization is incorrect (not what you entered), contact us within 7 days and we'll replace it at no charge.",
+      },
+      {
+        type: "p",
+        text: "Ready to order? Browse our full collection of personalized water bottles and use the customizer on any product page to preview your text before you buy.",
+      },
+    ],
+  },
+
+  // ── Article 11: Best Personalized Birthday Gifts Under $50 ──
+  {
+    slug: "best-personalized-birthday-gifts-under-50",
+    title: "Best Personalized Birthday Gifts Under $50 (That People Actually Love)",
+    metaTitle:
+      "Best Personalized Birthday Gifts Under $50 | Shelzy's Designs",
+    metaDescription:
+      "Looking for a personalized birthday gift that won't break the bank? We've rounded up the best custom birthday gifts under $50 -- from personalized water bottles to digital planners.",
+    ogImageAlt: "Best personalized birthday gifts under $50 -- custom water bottles and digital templates",
+    ogImage: `${BASE_URL}/blog/images/best-personalized-birthday-gifts-under-50.jpg`,
+    headline:
+      "Best Personalized Birthday Gifts Under $50 (That People Actually Love)",
+    description:
+      "A practical guide to the best personalized birthday gifts under $50 -- things that feel thoughtful, look great, and don't require a last-minute Amazon panic.",
+    datePublished: "2026-04-15",
+    dateModified: "2026-04-15",
+    targetKeyword: "personalized birthday gifts under 50",
+    secondaryKeywords: [
+      "personalized birthday gifts",
+      "custom birthday gifts",
+      "unique birthday gifts",
+      "personalized water bottle gift",
+      "best birthday gifts for her",
+    ],
+    internalLinks: [
+      { label: "Personalized Water Bottle", href: "/products/personalized-water-bottle" },
+      { label: "Monthly Budget Tracker", href: "/products/monthly-budget-tracker" },
+      { label: "ADHD Life Dashboard", href: "/products/adhd-life-dashboard" },
+      { label: "Shop All Gifts", href: "/collections/gifts-for-her" },
+    ],
+    faq: [
+      {
+        question: "What is a good personalized birthday gift under $50?",
+        answer:
+          "A personalized stainless steel water bottle ($34.99) is one of the best options -- it's practical, looks great, and feels custom without feeling generic. Other strong picks: a digital planner or budget tracker they can use every day.",
+      },
+      {
+        question: "How long does a personalized water bottle take to ship?",
+        answer:
+          "Personalized water bottles from Shelzy's Designs ship in 3-5 business days with standard shipping. The sublimation printing is done to order, so you'll want to order at least a week before the birthday.",
+      },
+      {
+        question: "Are personalized gifts better than regular gifts?",
+        answer:
+          "Yes -- studies consistently show that personalized gifts feel more thoughtful and are kept longer than generic ones. Even a small personalization (a name, an inside joke, a meaningful date) makes a big difference in how the gift lands.",
+      },
+      {
+        question: "What do you put on a personalized water bottle for a birthday?",
+        answer:
+          "Popular choices: the person's name, a nickname, their birth year, a motivational phrase, or a meaningful date. Keep it short -- 1-3 words or a short phrase prints best and looks cleanest on the bottle.",
+      },
+    ],
+    category: "water-bottles",
+    excerpt:
+      "The best personalized birthday gifts under $50 -- from custom water bottles to digital planners -- that feel thoughtful without requiring a lot of planning.",
+    bodySections: [
+      {
+        type: "p",
+        text: "One of the most common messages I get in my shop is some version of: \"I have no idea what to get her but I want it to feel personal.\" I love those messages, because that is exactly what we make for.",
+      },
+      {
+        type: "p",
+        text: "Everything in our shop is either fully personalized or designed to feel like it was made specifically for someone. Here are the gifts that customers come back to order again and again -- for birthdays, holidays, and \"I just wanted to get you something\" moments.",
+      },
+      {
+        type: "h2",
+        text: "A Personalized Water Bottle -- $34.99",
+      },
+      {
+        type: "p",
+        text: "This is our most popular birthday gift, and honestly it's not close. We use sublimation printing -- not vinyl, not stickers, not decals. The design is fused permanently into the coating of the bottle. It will not peel in the dishwasher. It will not scratch off when it bumps around in a gym bag. It just stays beautiful.",
+      },
+      {
+        type: "p",
+        text: "You tell us the name, phrase, or date you want printed. We handle everything else. The bottle ships in 3-5 business days, which means if you order at least a week before the birthday, you're golden.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Premium stainless steel -- double-walled, keeps cold 24 hours",
+          "Permanent sublimation print -- dishwasher safe, won't peel or fade",
+          "Free personalization on every single order",
+          "Multiple sizes and colors",
+          "Ships in 3-5 business days",
+        ],
+      },
+      {
+        type: "callout",
+        text: "Who it's perfect for: the friend who lives at the gym, the coworker who has everything, the mom who would never buy something nice for herself, the sister-in-law you always struggle to shop for.",
+      },
+      {
+        type: "h2",
+        text: "A Digital Planner She'll Actually Use -- $5.99 to $12.99",
+      },
+      {
+        type: "p",
+        text: "I designed every template in this shop because I needed it myself and couldn't find one that worked. The budget tracker started because I kept abandoning spreadsheets that were either too complicated or too ugly to open. The ADHD dashboard came from a year of trying to figure out how to actually function. These aren't templates made to look good in a screenshot -- they're tools I built to use every day.",
+      },
+      {
+        type: "p",
+        text: "They download instantly. Your person has access the second checkout is complete -- no waiting, no shipping. Works in Google Sheets and Excel.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Budget Tracker ($5.99) -- for the friend who just moved out or started a new job",
+          "ADHD Life Dashboard ($9.99) -- for anyone who struggles to feel organized",
+          "Wedding Planner ($12.99) -- if she's engaged or deep in bridesmaid duties",
+          "Meal Planner ($7.99) -- for the person who hates the \"what's for dinner\" question",
+        ],
+      },
+      {
+        type: "h2",
+        text: "The Bachelorette Water Bottle Set -- for a group birthday",
+      },
+      {
+        type: "p",
+        text: "If the birthday is also a trip -- a bachelorette weekend that happens to fall on someone's birthday, a girls' trip, a milestone celebration -- matching personalized water bottles for the whole group are something people keep talking about for years. Each bottle gets a different name. They ship together. It's a group gift that actually photographs well and doesn't involve a giant card everyone signs in the parking lot.",
+      },
+      {
+        type: "h2",
+        text: "What to put on the bottle",
+      },
+      {
+        type: "p",
+        text: "Short and specific is always better than long and generic. A first name. A nickname only you call her. Her graduation year. A phrase she says constantly. The city she grew up in. Something that makes it unmistakably hers. If you're unsure, her first name alone is beautiful -- simple, permanent, personal.",
+      },
+      {
+        type: "h2",
+        text: "Order timing",
+      },
+      {
+        type: "p",
+        text: "Water bottles are made to order -- we personalize each one when it's placed. Production takes 1-2 days, shipping is 3-5 business days. Order at least 7 days before the birthday and you'll be comfortable. Digital templates are instant -- no timing to worry about at all.",
+      },
+    ],
+  },
+
+  // ── Article 12: Budget Spreadsheet Templates for Couples ──
+  {
+    slug: "budget-spreadsheet-templates-for-couples",
+    title: "Budget Spreadsheet Templates for Couples (That Don't Start Fights)",
+    metaTitle:
+      "Budget Spreadsheet Templates for Couples | Shelzy's Designs",
+    metaDescription:
+      "Managing money as a couple is harder than managing it alone. Here are the best budget spreadsheet templates for couples -- designed for two incomes, shared expenses, and different spending styles.",
+    ogImageAlt: "Budget spreadsheet template for couples managing shared finances",
+    ogImage: `${BASE_URL}/blog/images/budget-spreadsheet-templates-for-couples.jpg`,
+    headline:
+      "Budget Spreadsheet Templates for Couples (That Don't Start Fights)",
+    description:
+      "Managing money as a couple is harder than managing it alone. Here are the best budget spreadsheet templates for couples -- designed for two incomes, shared expenses, and different spending styles.",
+    datePublished: "2026-04-15",
+    dateModified: "2026-04-15",
+    targetKeyword: "budget spreadsheet template for couples",
+    secondaryKeywords: [
+      "couples budget template",
+      "shared budget spreadsheet",
+      "budget for two people",
+      "household budget template",
+      "joint budget google sheets",
+    ],
+    internalLinks: [
+      { label: "Monthly Budget Tracker", href: "/products/monthly-budget-tracker" },
+      { label: "Family Budget Planner", href: "/products/family-budget-planner" },
+      { label: "Paycheck Budget Planner", href: "/products/paycheck-budget-planner" },
+      { label: "Budget + Finance Collection", href: "/collections/budget-finance" },
+    ],
+    faq: [
+      {
+        question: "What is the best budget spreadsheet for couples?",
+        answer:
+          "The Monthly Budget Tracker ($5.99) handles two income streams, shared and individual expenses, and a combined dashboard showing your household's full financial picture. For couples on different pay schedules, the Paycheck Budget Planner ($7.99) works better -- it builds your budget per paycheck rather than per month.",
+      },
+      {
+        question: "Should couples have a joint budget or separate budgets?",
+        answer:
+          "Most couples do best with a hybrid: a shared budget for household and joint expenses, plus individual spending money each person controls without needing to report it. Our Family Budget Planner has built-in sections for both.",
+      },
+      {
+        question: "How do you split expenses fairly between partners with different incomes?",
+        answer:
+          "The most common approaches are 50/50 (simple, works when incomes are similar), proportional (each contributes a percentage of income), or a joint account for shared expenses plus separate personal accounts. Our budget templates accommodate all three -- just adjust the income and expense tabs to reflect how you split things.",
+      },
+      {
+        question: "Does the budget template work in Google Sheets?",
+        answer:
+          "Yes -- all of our templates work in both Google Sheets and Excel. Google Sheets is the easier option for couples since you can both access and edit the same file without sending anything back and forth.",
+      },
+    ],
+    category: "budget-finance",
+    excerpt:
+      "Managing money as a couple is harder than managing it solo. The right budget template makes shared finances less of a negotiation and more of a system.",
+    bodySections: [
+      {
+        type: "p",
+        text: "Here's the thing nobody tells you about managing money with a partner: it's not really about the money. It's about having a shared system both people actually trust and use. You can have identical incomes, identical financial goals, and still fight about spending if one person is tracking carefully and the other has no idea what the budget even is.",
+      },
+      {
+        type: "p",
+        text: "I designed our budget templates to be genuinely shareable. One file, both people can see it, everything in one place. Here's what works, what doesn't, and which template fits your situation.",
+      },
+      {
+        type: "h2",
+        text: "The core problem with most couples' budgets",
+      },
+      {
+        type: "p",
+        text: "Most budget templates are built for one person. One income column. One set of spending categories. One person doing all the tracking. That works fine until you add a second income, shared rent, different spending habits, and two people who have very different ideas about what \"discretionary\" means.",
+      },
+      {
+        type: "p",
+        text: "What couples actually need: a template that handles two incomes cleanly, separates shared expenses from personal spending, and shows a combined picture without requiring one person to be the sole spreadsheet manager.",
+      },
+      {
+        type: "h2",
+        text: "Monthly Budget Tracker -- best for couples with similar pay schedules",
+      },
+      {
+        type: "p",
+        text: "This is our most-used template and it works well for couples who are both paid monthly or semi-monthly. There's an income section with multiple rows -- enter both salaries, any freelance income, side income, whatever you bring in. The expense section has shared categories (rent, utilities, groceries) and personal categories you can customize for each person. The dashboard shows total household income, total expenses, and what's left at month end.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Works in Google Sheets -- both partners can edit the same file",
+          "Pre-built income rows for two earners",
+          "Shared and personal expense sections",
+          "Visual dashboard showing household balance at a glance",
+          "$5.99, instant download",
+        ],
+      },
+      {
+        type: "h2",
+        text: "Paycheck Budget Planner -- best for couples on different pay schedules",
+      },
+      {
+        type: "p",
+        text: "If one person is paid weekly and one is paid bi-weekly, or one has a salary and one does freelance, a monthly template gets messy. The Paycheck Budget Planner builds the budget around when money actually arrives. You assign bills and expenses to whichever paycheck covers them. Nothing gets lost between pay periods, and you always know exactly what's coming in and going out before each paycheck lands.",
+      },
+      {
+        type: "h2",
+        text: "Family Budget Planner -- best for households with shared savings goals",
+      },
+      {
+        type: "p",
+        text: "If you're saving for something specific together -- a house, a vacation, a baby, early retirement -- the Family Budget Planner has dedicated savings goal tracking alongside the regular budget. You set the goal, set the timeline, and the template calculates how much you need to set aside each month to hit it. Good for couples who want the budget to work toward something, not just track what already happened.",
+      },
+      {
+        type: "h2",
+        text: "How to set it up as a couple",
+      },
+      {
+        type: "ol",
+        items: [
+          "Download and open in Google Sheets -- share the file with your partner so both of you have edit access",
+          "Enter both incomes in the income section",
+          "List every shared expense (rent, utilities, subscriptions, groceries)",
+          "Add a 'personal spending' line for each person -- an amount each of you can spend without reporting it",
+          "Review together once a week, not daily -- daily reviews turn into arguments, weekly reviews turn into habits",
+        ],
+      },
+      {
+        type: "callout",
+        text: "The personal spending line is the most important line in a couples' budget. Everyone needs some money they control completely. Build it in from the start.",
+      },
+      {
+        type: "h2",
+        text: "The one thing that makes couples budgets work",
+      },
+      {
+        type: "p",
+        text: "It's not the template. It's a regular check-in. Pick one day a week -- Sunday works well -- and spend 15 minutes looking at the numbers together. Not to audit each other. Just to stay on the same page. Couples who do this report fewer money arguments and more progress toward shared goals. The template just makes the numbers easy to see.",
       },
     ],
   },

@@ -6,6 +6,7 @@ export default function EmailCapture() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [discountCode, setDiscountCode] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -24,7 +25,8 @@ export default function EmailCapture() {
 
       if (res.ok) {
         setStatus("success");
-        setMessage(data.message || "You're in! Check your inbox.");
+        setMessage(data.message || "Your code is ready.");
+        setDiscountCode(data.discountCode || "WELCOME15");
         setEmail("");
       } else {
         setStatus("error");
@@ -44,8 +46,13 @@ export default function EmailCapture() {
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
-        <p className="font-heading font-semibold text-charcoal text-lg mb-1">You&apos;re in!</p>
-        <p className="text-text-light text-sm">{message}</p>
+        <p className="font-heading font-semibold text-charcoal text-lg mb-1">Check your inbox...</p>
+        <p className="text-text-light text-sm mb-4">Your 15% off code is on its way.</p>
+        <div className="inline-block bg-white border-2 border-dashed border-pink rounded-xl px-8 py-4">
+          <p className="text-xs text-text-light uppercase tracking-widest font-heading font-semibold mb-1">Your 15% off code</p>
+          <p className="font-heading font-bold text-3xl text-pink tracking-widest">{discountCode}</p>
+          <p className="text-xs text-text-light mt-2">Use at checkout on your first order</p>
+        </div>
       </div>
     );
   }

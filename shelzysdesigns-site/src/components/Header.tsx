@@ -6,28 +6,33 @@ import Link from "next/link";
 const navLinks = [
   { label: "Shop All", href: "/shop" },
   { label: "Water Bottles", href: "/collections/water-bottles" },
-  { label: "Templates", href: "/collections/templates" },
-  { label: "Planners", href: "/collections/planners" },
+  { label: "Best Sellers", href: "/collections/best-sellers" },
+  { label: "Gifts for Her", href: "/collections/gifts-for-her" },
   { label: "Wedding", href: "/collections/wedding" },
   { label: "Blog", href: "/blog" },
-  { label: "FAQ", href: "/faq" },
-  { label: "About", href: "/about" },
 ];
 
-function CartIcon() {
+function LogoMark() {
   return (
     <svg
-      className="w-5 h-5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      viewBox="0 0 40 40"
+      className="w-9 h-9 flex-shrink-0"
+      aria-hidden="true"
     >
-      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <path d="M16 10a4 4 0 01-8 0" />
+      <rect width="40" height="40" rx="10" fill="#E91E63" />
+      <text
+        x="50%"
+        y="54%"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontFamily="Montserrat, sans-serif"
+        fontWeight="700"
+        fontSize="19"
+        fill="#ffffff"
+        letterSpacing="-0.5"
+      >
+        SD
+      </text>
     </svg>
   );
 }
@@ -38,8 +43,16 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-mid-gray">
       <div className="mx-auto max-w-[1200px] px-6 flex items-center justify-between h-16">
-        <Link href="/" className="font-heading font-bold text-charcoal text-xl">
-          Shelzy&apos;s Designs
+        <Link href="/" className="flex items-center gap-3" aria-label="Shelzy's Designs home">
+          <LogoMark />
+          <span className="hidden md:flex flex-col leading-tight">
+            <span className="font-heading font-bold text-charcoal text-lg">
+              Shelzy&apos;s Designs
+            </span>
+            <span className="text-pink text-xs font-medium">
+              Personal gifts. Practical tools.
+            </span>
+          </span>
         </Link>
 
         {/* Desktop nav */}
@@ -55,17 +68,8 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Right side: cart + mobile hamburger */}
+        {/* Right side: mobile hamburger */}
         <div className="flex items-center gap-3">
-          {/* Cart icon */}
-          <Link
-            href="/shop"
-            aria-label="Shop"
-            className="text-charcoal hover:text-pink transition p-1"
-          >
-            <CartIcon />
-          </Link>
-
           {/* Mobile hamburger */}
           <button
             className="md:hidden flex flex-col gap-1.5 p-2"

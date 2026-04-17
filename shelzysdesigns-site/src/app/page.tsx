@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -47,7 +48,25 @@ const collections = [
   },
 ];
 
-const steps = [
+const bottleSteps = [
+  {
+    num: 1,
+    title: "Choose Your Bottle",
+    desc: "Pick your size, color, and style. All bottles are premium stainless steel.",
+  },
+  {
+    num: 2,
+    title: "Add Personalization",
+    desc: "Enter a name, phrase, or date. We print it permanently -- no peeling, ever.",
+  },
+  {
+    num: 3,
+    title: "Delivered in Days",
+    desc: "Ships in 3-5 business days. Perfect for gifts, events, and everyday use.",
+  },
+];
+
+const templateSteps = [
   {
     num: 1,
     title: "Choose Your Template",
@@ -65,21 +84,21 @@ const steps = [
   },
 ];
 
-const reviews = [
+const reviews: { quote: string; name: string; product: string }[] = [
   {
-    quote:
-      "This budget tracker saved me so much time. I finally know where my money goes each month.",
-    name: "Jordan M.",
+    quote: "I bought 14 water bottles for my Love Island themed Bach trip and they looked AMAZING!!! Exactly as pictured and all my friends are obsessed with them!",
+    name: "Zobia",
+    product: "Personalized Water Bottle",
   },
   {
-    quote:
-      "I used the wedding planner for my entire engagement and it kept everything organized. Worth every penny.",
-    name: "Priya S.",
+    quote: "Customer service is superb. I asked how I could customise the ADHD planner to better suit my needs, and Shelzy was incredibly helpful. Would definitely recommend this seller, absolutely top notch.",
+    name: "Yvonne",
+    product: "ADHD Life Dashboard",
   },
   {
-    quote:
-      "Clean design, easy to use, and the formulas do the heavy lifting. Exactly what I needed for my small business.",
-    name: "Taylor R.",
+    quote: "The seller was so easy to work with, easy to communicate with and made sure that these arrived on time for my wedding. I would recommend this shop to anyone!",
+    name: "Courtney",
+    product: "Wedding Order",
   },
 ];
 
@@ -97,38 +116,88 @@ export default function Home() {
             {/* Text */}
             <div className="text-center md:text-left">
               <p className="text-pink font-heading font-semibold text-sm tracking-wide uppercase mb-3">
-                Spreadsheets, Planners + Custom Bottles
+                Personalized Water Bottles + Digital Templates
               </p>
               <h1 className="font-heading text-4xl sm:text-5xl font-bold text-charcoal leading-tight mb-5">
-                Organize Your Life with Templates That Actually Work
+                Gifts They&apos;ll Love. Tools That Actually Work.
               </h1>
               <p className="text-text-light text-lg mb-8 max-w-lg mx-auto md:mx-0">
-                Budget trackers, wedding planners, business dashboards, and
-                personalized water bottles -- all designed for real life.
-                Download instantly. Customize freely.
+                Custom water bottles with permanent sublimation printing, plus
+                instant-download templates for budgeting, wedding planning, and
+                more. Free personalization on every bottle.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Link
-                  href="/shop"
+                  href="/collections/water-bottles"
                   className="inline-block bg-pink hover:bg-pink-hover text-white font-heading font-semibold px-8 py-3.5 rounded-lg transition text-center"
                 >
-                  Shop All Templates
+                  Shop Custom Bottles
                 </Link>
                 <Link
-                  href="/collections/water-bottles"
+                  href="/shop"
                   className="inline-block border-2 border-charcoal text-charcoal hover:bg-charcoal hover:text-white font-heading font-semibold px-8 py-3.5 rounded-lg transition text-center"
                 >
-                  Custom Water Bottles
+                  Browse Templates
                 </Link>
+              </div>
+
+              {/* Third CTA: email capture */}
+              <div className="mt-8 max-w-lg mx-auto md:mx-0">
+                <p className="text-sm font-heading font-semibold text-charcoal mb-2">
+                  Get 15% off your first order
+                </p>
+                <p className="text-xs text-text-light mb-3">
+                  Plus new templates and planning tips -- twice a month.
+                </p>
+                <EmailCapture />
               </div>
             </div>
 
-            {/* Decorative grid */}
+            {/* Product image grid */}
             <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto md:mx-0 md:ml-auto">
-              <div className="aspect-[4/5] rounded-2xl bg-pink/15" />
-              <div className="aspect-[4/5] rounded-2xl bg-teal/20 translate-y-6" />
-              <div className="aspect-[4/5] rounded-2xl bg-orange/15 -translate-y-6" />
-              <div className="aspect-[4/5] rounded-2xl bg-blue/10" />
+              <Link href="/products/personalized-water-bottle" className="aspect-square rounded-2xl overflow-hidden bg-white block group">
+                <Image
+                  src="/product_images/personalized-water-bottle.jpg"
+                  alt="Personalized Water Bottle"
+                  width={400}
+                  height={400}
+                  priority
+                  sizes="(max-width: 768px) 45vw, 180px"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </Link>
+              <Link href="/products/wedding-water-bottle-set" className="aspect-square rounded-2xl overflow-hidden bg-white translate-y-6 block group">
+                <Image
+                  src="/product_images/wedding-water-bottle-set.jpg"
+                  alt="Wedding Water Bottle Set"
+                  width={400}
+                  height={400}
+                  priority
+                  sizes="(max-width: 768px) 45vw, 180px"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </Link>
+              <Link href="/products/monthly-budget-tracker" className="aspect-square rounded-2xl overflow-hidden bg-white -translate-y-6 block group">
+                <Image
+                  src="/product_images/monthly-budget-tracker.jpg"
+                  alt="Monthly Budget Tracker"
+                  width={400}
+                  height={400}
+                  priority
+                  sizes="(max-width: 768px) 45vw, 180px"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </Link>
+              <Link href="/products/coastal-bridal-shower-games" className="aspect-square rounded-2xl overflow-hidden bg-white block group">
+                <Image
+                  src="/product_images/coastal-bridal-shower-games.jpg"
+                  alt="Coastal Bridal Shower Games"
+                  width={400}
+                  height={400}
+                  sizes="(max-width: 768px) 45vw, 180px"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </Link>
             </div>
           </div>
         </section>
@@ -163,22 +232,47 @@ export default function Home() {
               How It Works
             </h2>
             <p className="text-white/60 text-center mb-12 max-w-md mx-auto">
-              From checkout to customized in under five minutes.
+              Two ways to shop. Both ridiculously easy.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
-              {steps.map((step) => (
-                <div key={step.num} className="flex flex-col items-center">
-                  <div className="w-16 h-16 rounded-full bg-pink text-white flex items-center justify-center font-heading font-bold text-2xl mb-5">
-                    {step.num}
-                  </div>
-                  <h3 className="font-heading font-semibold text-lg text-white mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-white/70 text-sm max-w-xs">
-                    {step.desc}
-                  </p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Water Bottles Track */}
+              <div>
+                <p className="text-blue font-heading font-semibold text-sm tracking-wide uppercase text-center mb-8">
+                  Custom Water Bottles
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+                  {bottleSteps.map((step) => (
+                    <div key={step.num} className="flex flex-col items-center">
+                      <div className="w-14 h-14 rounded-full bg-blue text-white flex items-center justify-center font-heading font-bold text-xl mb-4">
+                        {step.num}
+                      </div>
+                      <h3 className="font-heading font-semibold text-base text-white mb-2">
+                        {step.title}
+                      </h3>
+                      <p className="text-white/70 text-sm">{step.desc}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              {/* Templates Track */}
+              <div>
+                <p className="text-pink font-heading font-semibold text-sm tracking-wide uppercase text-center mb-8">
+                  Digital Templates
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+                  {templateSteps.map((step) => (
+                    <div key={step.num} className="flex flex-col items-center">
+                      <div className="w-14 h-14 rounded-full bg-pink text-white flex items-center justify-center font-heading font-bold text-xl mb-4">
+                        {step.num}
+                      </div>
+                      <h3 className="font-heading font-semibold text-base text-white mb-2">
+                        {step.title}
+                      </h3>
+                      <p className="text-white/70 text-sm">{step.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -210,41 +304,94 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── Gift Occasions ───────────────────── */}
+        <section className="bg-light-gray py-16">
+          <div className="mx-auto max-w-[1200px] px-6">
+            <h2 className="font-heading text-3xl font-bold text-charcoal text-center mb-3">
+              The Perfect Personalized Gift
+            </h2>
+            <p className="text-text-light text-center mb-10 max-w-md mx-auto">
+              A custom water bottle they&apos;ll actually use -- with their name, a date, or whatever makes it theirs.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { label: "Birthdays", emoji: "🎂", href: "/collections/gifts-for-her" },
+                { label: "Weddings", emoji: "💍", href: "/collections/wedding" },
+                { label: "Graduation", emoji: "🎓", href: "/collections/water-bottles" },
+                { label: "Just Because", emoji: "🌸", href: "/collections/best-sellers" },
+              ].map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="bg-white rounded-2xl p-6 flex flex-col items-center text-center hover:shadow-md transition group"
+                >
+                  <span className="text-4xl mb-3">{item.emoji}</span>
+                  <span className="font-heading font-semibold text-charcoal group-hover:text-pink transition">{item.label}</span>
+                </Link>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <Link
+                href="/collections/water-bottles"
+                className="inline-block bg-pink hover:bg-pink-hover text-white font-heading font-semibold px-8 py-3.5 rounded-lg transition"
+              >
+                Shop Custom Bottles
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* ── Social Proof ─────────────────────── */}
         <section className="bg-light-gray py-16">
           <div className="mx-auto max-w-[1200px] px-6">
-            <h2 className="font-heading text-3xl font-bold text-charcoal text-center mb-10">
-              Trusted by 500+ Happy Customers
+            <h2 className="font-heading text-3xl font-bold text-charcoal text-center mb-6">
+              Loved by Customers on Etsy
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {reviews.map((review) => (
-                <div
-                  key={review.name}
-                  className="bg-white rounded-xl p-6 shadow-sm"
-                >
-                  {/* Stars */}
-                  <div className="flex gap-1 mb-4 text-orange">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <svg
-                        key={i}
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                      </svg>
-                    ))}
+            {reviews.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {reviews.map((review) => (
+                  <div
+                    key={review.name}
+                    className="bg-white rounded-xl p-6 shadow-sm"
+                  >
+                    <div className="flex gap-1 mb-4 text-orange">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <svg
+                          key={i}
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <p className="text-charcoal text-sm mb-4 leading-relaxed">
+                      &ldquo;{review.quote}&rdquo;
+                    </p>
+                    <p className="font-heading font-semibold text-sm text-charcoal">
+                      {review.name}
+                      <span className="text-text-light font-normal ml-1">· {review.product} · via Etsy</span>
+                    </p>
                   </div>
-                  <p className="text-charcoal text-sm mb-4 leading-relaxed">
-                    &ldquo;{review.quote}&rdquo;
-                  </p>
-                  <p className="font-heading font-semibold text-sm text-charcoal">
-                    {review.name}
-                  </p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center">
+                <p className="text-text-light mb-6 max-w-md mx-auto">
+                  See what customers are saying about Shelzy&apos;s Designs on our Etsy shop.
+                </p>
+                <a
+                  href="https://www.etsy.com/shop/ShelzysDesignsStore#reviews"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block border-2 border-charcoal text-charcoal font-heading font-semibold px-8 py-3 rounded-lg hover:bg-charcoal hover:text-white transition"
+                >
+                  Read Our Reviews on Etsy
+                </a>
+              </div>
+            )}
           </div>
         </section>
 
@@ -255,8 +402,7 @@ export default function Home() {
               Get 15% Off Your First Order
             </h2>
             <p className="text-text-light mb-8">
-              Sign up for early access to new templates, exclusive discounts, and
-              planning tips delivered to your inbox.
+              Plus new templates and planning tips -- twice a month.
             </p>
             <EmailCapture />
           </div>
@@ -279,7 +425,7 @@ export default function Home() {
               href="/about"
               className="inline-block border-2 border-charcoal text-charcoal font-heading font-semibold px-8 py-3 rounded-lg hover:bg-charcoal hover:text-white transition"
             >
-              Learn More
+              Meet the Designer
             </Link>
           </div>
         </section>

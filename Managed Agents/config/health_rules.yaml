@@ -1,0 +1,75 @@
+# Health Engine Configuration for Michelle's Operations OS
+# Defines thresholds for agent freshness, failure detection, and system status
+
+# Global thresholds
+global:
+  # Agent is stale if last_run > schedule_interval_hours * stale_threshold_multiplier
+  stale_threshold_multiplier: 1.5
+
+  # Number of consecutive failures before warning status
+  warning_failure_threshold: 2
+
+  # Freshness score decays by this amount per hour since last run
+  # Score starts at 100 and decays linearly
+  freshness_decay_per_hour: 10
+
+  # Freshness score will not go below this value
+  freshness_floor: 0
+
+  # Number of stale or failed agents before system is "degraded"
+  system_degraded_threshold: 2
+
+  # Number of stale or failed agents before system is "failed"
+  system_failed_threshold: 4
+
+# Per-agent overrides (optional -- agents not listed use global defaults)
+agent_overrides:
+  career:
+    # Career runs every 4 hours, so stale after 6 hours (4 * 1.5)
+    # No override needed -- global multiplier handles this
+
+  fertility:
+    # Fertility data is daily, so a slightly longer grace period is fine
+    stale_threshold_multiplier: 2.0
+    freshness_decay_per_hour: 5
+
+  life-ops:
+    # Life-ops runs twice daily -- critical for dashboard freshness
+    warning_failure_threshold: 1
+
+# Health status definitions
+status_definitions:
+  healthy:
+    label: "Healthy"
+    condition: "Last run within expected interval, no recent failures"
+
+  warning:
+    label: "Warning"
+    condition: "Approaching stale threshold OR 1-2 recent failures"
+
+  stale:
+    label: "Stale"
+    condition: "Last run exceeded stale threshold"
+
+  failed:
+    label: "Failed"
+    condition: "Last run errored OR consecutive failures >= warning_failure_threshold"
+
+  unknown:
+    label: "Unknown"
+    condition: "No run data available"
+
+# Affiliate production target alerts
+affiliate_targets:
+  # Minimum articles per day during scale mode
+  articles_per_day_target: 3
+  # Warning if fewer than this many articles in the last 7 days
+  weekly_minimum: 15
+  # Alert if affiliate agent has not run in this many hours
+  stale_hours: 26
+
+# System-level status rollup
+system_status:
+  ok: "All agents healthy or warning"
+  degraded: "2+ agents stale or failed"
+  failed: "4+ agents stale or failed"

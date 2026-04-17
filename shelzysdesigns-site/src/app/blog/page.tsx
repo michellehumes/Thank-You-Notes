@@ -5,14 +5,14 @@ import Footer from "@/components/Footer";
 import { getAllBlogPosts } from "@/data/blog-posts";
 
 export const metadata: Metadata = {
-  title: "Spreadsheet Templates Blog — Tips, Guides & Comparisons | Shelzy's Designs",
+  title: "Blog — Guides, Tips & Personalization Ideas | Shelzy's Designs",
   description:
-    "Budget templates, wedding planning spreadsheets, ADHD planners, Etsy seller dashboards — guides and comparisons to help you find the right template for how you actually live and work.",
+    "Personalized water bottle ideas, budget templates, wedding planning spreadsheets, and more -- practical guides to help you find the right product for how you actually live.",
   alternates: {
     canonical: "https://shelzysdesigns.com/blog",
   },
   openGraph: {
-    title: "Spreadsheet Templates Blog | Shelzy's Designs",
+    title: "Blog — Guides, Tips & Personalization Ideas | Shelzy's Designs",
     description:
       "Budget templates, wedding planning spreadsheets, ADHD planners, Etsy seller dashboards — guides and comparisons to help you find the right template.",
     type: "website",
@@ -33,6 +33,7 @@ const categoryLabels: Record<string, string> = {
   productivity: "Productivity",
   business: "Business",
   etsy: "Etsy",
+  "water-bottles": "Water Bottles",
 };
 
 const categoryColors: Record<string, string> = {
@@ -41,6 +42,16 @@ const categoryColors: Record<string, string> = {
   productivity: "bg-blue/10 text-blue",
   business: "bg-orange/10 text-orange",
   etsy: "bg-pink/10 text-pink",
+  "water-bottles": "bg-blue/10 text-blue",
+};
+
+const cardBgColors: Record<string, string> = {
+  "budget-finance": "bg-pink/15",
+  wedding: "bg-teal/15",
+  productivity: "bg-blue/15",
+  business: "bg-orange/15",
+  etsy: "bg-pink/15",
+  "water-bottles": "bg-blue/15",
 };
 
 export default function BlogIndex() {
@@ -75,11 +86,14 @@ export default function BlogIndex() {
                   href={`/blog/${post.slug}`}
                   className="group bg-white rounded-xl border border-mid-gray overflow-hidden hover:shadow-md transition"
                 >
-                  {/* Image placeholder */}
-                  <div className="aspect-[16/9] bg-light-gray flex items-center justify-center">
-                    <span className="font-heading font-bold text-2xl text-mid-gray select-none">
-                      SD
-                    </span>
+                  {/* Featured image */}
+                  <div className={`aspect-[16/9] overflow-hidden ${cardBgColors[post.category] || "bg-white"}`}>
+                    <img
+                      src={post.ogImage.replace("https://shelzysdesigns.com", "")}
+                      alt={post.ogImageAlt}
+                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
                   </div>
 
                   <div className="p-6">
