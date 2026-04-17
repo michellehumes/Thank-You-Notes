@@ -13,10 +13,16 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group block bg-white border border-mid-gray hover:border-pink hover:shadow-md transition-all duration-300"
+      className="group block rounded-2xl overflow-hidden bg-white transition-all duration-300 hover:-translate-y-1.5"
+      style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05)" }}
+      onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.boxShadow = "0 16px 40px rgba(0,0,0,0.13), 0 4px 12px rgba(0,0,0,0.07)")}
+      onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.boxShadow = "0 2px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05)")}
     >
-      {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-cream">
+      {/* Image area — tinted bg per type */}
+      <div
+        className="relative aspect-square overflow-hidden"
+        style={{ background: isPhysical ? "#FDE8EF" : "#E8F7F8" }}
+      >
         {product.images[0] ? (
           <Image
             src={product.images[0]}
@@ -24,50 +30,42 @@ export default function ProductCard({ product }: ProductCardProps) {
             width={400}
             height={400}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 240px"
-            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-[1.05]"
+            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-[1.06]"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <span className="font-heading font-bold text-3xl text-mid-gray select-none">
+            <span className="font-heading font-extrabold text-3xl opacity-20 select-none text-charcoal">
               {product.name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()}
             </span>
           </div>
         )}
 
-        {/* Badge */}
         {product.bestSeller && (
-          <span className="absolute top-2.5 left-2.5 text-[9px] tracking-widest uppercase px-2 py-1 font-heading font-bold bg-pink text-white">
+          <span className="absolute top-3 left-3 bg-pink text-white text-[9px] font-heading font-bold tracking-widest uppercase px-2.5 py-1 rounded-full">
             Popular
           </span>
         )}
         {product.featured && !product.bestSeller && (
-          <span className="absolute top-2.5 left-2.5 text-[9px] tracking-widest uppercase px-2 py-1 font-heading font-bold bg-charcoal text-white">
+          <span className="absolute top-3 left-3 bg-charcoal text-white text-[9px] font-heading font-bold tracking-widest uppercase px-2.5 py-1 rounded-full">
             Featured
           </span>
         )}
-
-        {/* Arrow on hover */}
-        <div className="absolute bottom-2.5 right-2.5 w-8 h-8 bg-pink text-white flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0">
-          →
-        </div>
       </div>
 
       {/* Info */}
-      <div className="p-4 border-t border-mid-gray">
-        <h3 className="font-heading font-semibold text-sm text-charcoal leading-snug mb-2 group-hover:text-pink transition-colors">
+      <div className="p-4">
+        <h3 className="font-heading font-semibold text-sm text-charcoal leading-snug mb-3 group-hover:text-pink transition-colors line-clamp-2">
           {product.name}
         </h3>
         <div className="flex items-center justify-between">
-          <span className="font-heading font-bold text-sm text-charcoal">
+          <span className="font-heading font-bold text-charcoal text-sm">
             ${product.price.toFixed(2)}
           </span>
           <span
-            className="text-[9px] tracking-widest uppercase px-2 py-0.5 font-heading font-semibold"
+            className="text-[9px] font-heading font-bold tracking-widest uppercase px-2.5 py-1 rounded-full"
             style={{
-              background: isPhysical ? "rgba(254,140,67,0.1)" : "rgba(138,219,222,0.15)",
-              color: isPhysical ? "var(--color-orange)" : "var(--color-teal)" ,
-              // override teal to be slightly darker for readability
-              ...(isPhysical ? {} : { color: "#2a9ea3" }),
+              background: isPhysical ? "rgba(254,140,67,0.12)" : "rgba(60,164,215,0.12)",
+              color: isPhysical ? "var(--color-orange)" : "var(--color-blue)",
             }}
           >
             {isPhysical ? "Ships 3–5d" : "Instant DL"}
