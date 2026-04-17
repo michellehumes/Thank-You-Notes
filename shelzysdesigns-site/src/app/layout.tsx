@@ -28,9 +28,7 @@ const inter = Inter({
 const fraunces = Fraunces({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
   display: "swap",
-  axes: ["opsz"],
 });
 
 export const metadata: Metadata = {
