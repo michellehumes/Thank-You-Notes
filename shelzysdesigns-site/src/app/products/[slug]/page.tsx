@@ -375,14 +375,24 @@ export default async function ProductPage({
 
               {/* Fulfillment note — only shown for published digital products; physical handled in customizer */}
               {product.published !== false && product.compatibility !== "physical" && (
-                <div className="flex items-center justify-center gap-2 text-text-light text-sm mb-6">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </svg>
-                  <span>Instant Download</span>
-                </div>
+                <>
+                  <div className="flex items-center justify-center gap-2 text-text-light text-sm mb-2">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <span>Instant Download</span>
+                  </div>
+                  <div className="text-center mb-6">
+                    <Link
+                      href="/download"
+                      className="text-xs text-text-light hover:text-pink transition"
+                    >
+                      Already purchased? Access your download &rarr;
+                    </Link>
+                  </div>
+                </>
               )}
 
               {/* Description */}
