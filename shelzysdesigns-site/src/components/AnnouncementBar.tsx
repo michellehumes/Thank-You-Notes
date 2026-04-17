@@ -4,21 +4,21 @@ import { useState } from "react";
 
 export default function AnnouncementBar() {
   const [dismissed, setDismissed] = useState(false);
-
   if (dismissed) return null;
 
   return (
-    <div className="bg-pink text-white text-sm font-heading font-semibold text-center py-2.5 px-10 relative">
-      <span>
-        New customers get 15% off &mdash; use code{" "}
-        <span className="tracking-widest font-bold">WELCOME15</span> at checkout
-      </span>
+    <div className="relative text-center py-2.5 px-10 bg-pink text-white">
+      <p className="text-xs font-heading font-semibold tracking-widest uppercase">
+        New customers &mdash; use{" "}
+        <span className="font-bold border-b border-white/40">WELCOME15</span>{" "}
+        for 15% off ✦
+      </p>
       <button
         onClick={() => setDismissed(true)}
-        aria-label="Dismiss announcement"
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition text-lg leading-none"
+        aria-label="Dismiss"
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors text-lg leading-none"
       >
-        &times;
+        ×
       </button>
     </div>
   );

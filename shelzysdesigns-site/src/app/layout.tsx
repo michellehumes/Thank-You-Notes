@@ -10,13 +10,15 @@ import "./globals.css";
 const montserrat = Montserrat({
   variable: "--font-heading",
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["500", "600", "700", "800"],
+  display: "swap",
 });
 
 const inter = Inter({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -43,13 +45,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: ["/product_images/personalized-water-bottle.jpg"],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  other: {
-    "p:domain_verify": "e3c1f8be645d6ac6344d51089de2c69a",
-  },
+  robots: { index: true, follow: true },
+  other: { "p:domain_verify": "e3c1f8be645d6ac6344d51089de2c69a" },
 };
 
 const organizationSchema = {
@@ -87,7 +84,6 @@ export default function RootLayout({
         <ExitIntentPopup />
         <Analytics />
         <SpeedInsights />
-        {/* Google Analytics 4 */}
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
             <Script
@@ -101,9 +97,7 @@ export default function RootLayout({
             />
           </>
         )}
-        {/* Lemon Squeezy checkout overlay — activates on links with class="lemonsqueezy-button" */}
         <Script src="https://app.lemonsqueezy.com/js/lemon.js" strategy="afterInteractive" />
-        {/* Shopify Buy Button SDK — loads only when checkout is enabled */}
         {process.env.NEXT_PUBLIC_SHOPIFY_CHECKOUT_ENABLED === "true" && (
           <Script
             src="https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js"
