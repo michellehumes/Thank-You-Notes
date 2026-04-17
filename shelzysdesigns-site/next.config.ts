@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const securityHeaders = [
-  { key: "X-Frame-Options", value: "DENY" },
+  // X-Frame-Options removed -- use CSP frame-ancestors instead (allows Shopify checkout iframe)
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
@@ -11,6 +11,11 @@ const securityHeaders = [
   {
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+  },
+  {
+    key: "Content-Security-Policy",
+    value:
+      "frame-ancestors 'self' https://checkout.shopify.com https://*.myshopify.com https://*.shopifycs.com",
   },
 ];
 
