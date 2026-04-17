@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import ReviewStars from "@/components/ReviewStars";
 import type { Product } from "@/data/products";
 export type { Product } from "@/data/products";
 
@@ -54,9 +57,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* Info */}
       <div className="p-4">
-        <h3 className="font-heading font-semibold text-sm text-charcoal leading-snug mb-3 group-hover:text-pink transition-colors line-clamp-2">
+        <h3 className="font-heading font-semibold text-sm text-charcoal leading-snug mb-2 group-hover:text-pink transition-colors line-clamp-2">
           {product.name}
         </h3>
+        {(product.bestSeller || product.featured) && (
+          <div className="mb-2">
+            <ReviewStars size="sm" showCount={false} />
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <span className="font-heading font-bold text-charcoal text-sm">
             ${product.price.toFixed(2)}

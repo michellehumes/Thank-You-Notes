@@ -63,10 +63,10 @@ export default function HeroEmailCapture() {
   return (
     <div className="mt-6 max-w-md mx-auto md:mx-0">
       <p className="font-heading text-sm font-semibold text-charcoal mb-1">
-        Get 15% off your first order
+        Get the free printable gift-tag pack + 10% off
       </p>
       <p className="text-text-light text-xs mb-3">
-        Plus new templates and planning tips -- twice a month.
+        Delivered the second you sign up. Plus new templates twice a month.
       </p>
       <form
         onSubmit={handleSubmit}

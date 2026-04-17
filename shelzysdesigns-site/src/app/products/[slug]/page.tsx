@@ -10,6 +10,8 @@ import WaterBottleCustomizer from "@/components/WaterBottleCustomizer";
 import RecentlyViewedWrapper from "@/components/RecentlyViewedWrapper";
 import Testimonials from "@/components/Testimonials";
 import ShopifyBuyButton from "@/components/ShopifyBuyButton";
+import Guarantee from "@/components/Guarantee";
+import { digitalProductFAQ, physicalProductFAQ } from "@/lib/schema";
 import { isShopifyEnabled } from "@/lib/shopify";
 import {
   products,
@@ -191,6 +193,11 @@ export default async function ProductPage({
     // aggregateRating omitted -- add only when real verified review data is available
   };
 
+  const faqSchema =
+    product.compatibility === "physical"
+      ? physicalProductFAQ(product.name)
+      : digitalProductFAQ(product.name);
+
   // Breadcrumb schema
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -215,6 +222,10 @@ export default async function ProductPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       <main className="flex-1">
@@ -401,6 +412,9 @@ export default async function ProductPage({
               </p>
             </div>
           </div>
+
+          {/* Guarantee — trust block */}
+          <Guarantee variant={product.compatibility === "physical" ? "physical" : "digital"} />
 
           {/* Tab section */}
           <div className="mb-16">

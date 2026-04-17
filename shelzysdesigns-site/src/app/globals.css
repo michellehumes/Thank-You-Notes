@@ -19,6 +19,7 @@
   /* ── Typography ── */
   --font-heading:  var(--font-heading), 'Montserrat', sans-serif;
   --font-body:     var(--font-body),    'Inter', system-ui, sans-serif;
+  --font-display:  var(--font-display), 'Fraunces', Georgia, serif;
 }
 
 /* ── Base ── */
@@ -56,3 +57,19 @@ h1, h2, h3, h4, h5, h6 {
 .delay-400 { animation-delay: 400ms; }
 .delay-500 { animation-delay: 500ms; }
 .delay-600 { animation-delay: 600ms; }
+
+/* ── Display serif — reserved for key H1s only ── */
+.font-display {
+  font-family: var(--font-display);
+  font-feature-settings: "ss01" on, "ss02" on;
+  letter-spacing: -0.02em;
+}
+
+/* ── Hand-drawn underline accent ── */
+.hand-underline {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 12' preserveAspectRatio='none'><path d='M2 8 C 40 2, 80 12, 120 6 S 175 4, 178 8' stroke='%23fb5887' stroke-width='3' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 10px;
+  padding-bottom: 6px;
+}

@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 
-export default function EmailCapture() {
+interface EmailCaptureProps {
+  source?: string; // e.g. "homepage_hero", "gifts-for_mom", "founder_block"
+}
+
+export default function EmailCapture({ source = "site_generic" }: EmailCaptureProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -18,7 +22,7 @@ export default function EmailCapture() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, source }),
       });
 
       const data = await res.json();
@@ -47,9 +51,11 @@ export default function EmailCapture() {
           </svg>
         </div>
         <p className="font-heading font-semibold text-charcoal text-lg mb-1">Check your inbox...</p>
-        <p className="text-text-light text-sm mb-4">Your 15% off code is on its way.</p>
+        <p className="text-text-light text-sm mb-4">
+          Your printable gift-tag pack + 10% off code is on its way.
+        </p>
         <div className="inline-block bg-white border-2 border-dashed border-pink rounded-xl px-8 py-4">
-          <p className="text-xs text-text-light uppercase tracking-widest font-heading font-semibold mb-1">Your 15% off code</p>
+          <p className="text-xs text-text-light uppercase tracking-widest font-heading font-semibold mb-1">Your 10% off code</p>
           <p className="font-heading font-bold text-3xl text-pink tracking-widest">{discountCode}</p>
           <p className="text-xs text-text-light mt-2">Use at checkout on your first order</p>
         </div>
@@ -64,7 +70,7 @@ export default function EmailCapture() {
         name="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Your email address"
+        placeholder="your@email.com"
         required
         disabled={status === "loading"}
         className="flex-1 px-4 py-3 rounded-lg border border-mid-gray text-charcoal text-sm focus:outline-none focus:ring-2 focus:ring-pink disabled:opacity-60"
@@ -74,7 +80,7 @@ export default function EmailCapture() {
         disabled={status === "loading" || !email}
         className="bg-pink hover:bg-pink-hover text-white font-heading font-semibold px-6 py-3 rounded-lg transition whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        {status === "loading" ? "Sending…" : "Send My Code"}
+        {status === "loading" ? "Sending…" : "Get My Free Pack"}
       </button>
       {status === "error" && (
         <p className="w-full text-sm text-red-500 mt-1">{message}</p>
