@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Printable Gift Tags — Shelzy's Designs</title>
+  <style>
+    /* Screen styles */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+    .screen-header {
+      text-align: center;
+      padding: 32px 20px 24px;
+      background: #fff;
+      border-bottom: 3px solid #fb5887;
+    }
+    .screen-header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 28px;
+      color: #1a1a1a;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .screen-header p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 12px;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .screen-header .brand {
+      font-size: 13px;
+      color: #fb5887;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .print-btn {
+      display: inline-block;
+      background: #fb5887;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 16px;
+      font-family: 'Montserrat', Arial, sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .print-btn:hover { background: #e0456e; }
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-top: 10px;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+
+    /* Print sheet wrapper */
+    .sheet-container {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 20px 48px;
+    }
+    .sheet-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+
+    /* The printable page */
+    .print-page {
+      width: 8.5in;
+      min-height: 11in;
+      background: #fff;
+      margin: 0 auto;
+      padding: 0.45in 0.45in;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(4, auto);
+      gap: 0.22in;
+    }
+
+    /* Individual gift tag */
+    .tag {
+      border-radius: 14px;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 2.2in;
+      border: 2px dashed #e0e0e0;
+      page-break-inside: avoid;
+    }
+
+    /* Hole punch indicator */
+    .tag::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2.5px dashed #ccc;
+      background: transparent;
+      z-index: 10;
+    }
+
+    .tag-header {
+      height: 0.72in;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+      margin-top: 0.35in;
+    }
+    .tag-occasion {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.15;
+    }
+    .tag-body {
+      flex: 1;
+      padding: 10px 18px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .tag-field {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      border-bottom: 1.5px solid;
+      padding-bottom: 3px;
+    }
+    .tag-field-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      white-space: nowrap;
+      font-family: 'Montserrat', Arial, sans-serif;
+      padding-bottom: 1px;
+    }
+    .tag-field-line {
+      flex: 1;
+      height: 1px;
+    }
+
+    /* Color themes per tag */
+    .tag-pink .tag-header { background: linear-gradient(135deg, #fb5887 0%, #ff8fab 100%); }
+    .tag-pink .tag-occasion { color: #fff; }
+    .tag-pink .tag-field { border-color: #fb5887; }
+    .tag-pink .tag-field-label { color: #fb5887; }
+    .tag-pink .tag-body { background: #fff8fa; }
+
+    .tag-blue .tag-header { background: linear-gradient(135deg, #3ca4d7 0%, #70bde8 100%); }
+    .tag-blue .tag-occasion { color: #fff; }
+    .tag-blue .tag-field { border-color: #3ca4d7; }
+    .tag-blue .tag-field-label { color: #3ca4d7; }
+    .tag-blue .tag-body { background: #f3f9fd; }
+
+    .tag-blush .tag-header { background: linear-gradient(135deg, #f7a8bc 0%, #fdd0da 100%); }
+    .tag-blush .tag-occasion { color: #c23060; }
+    .tag-blush .tag-field { border-color: #f7a8bc; }
+    .tag-blush .tag-field-label { color: #c23060; }
+    .tag-blush .tag-body { background: #fff5f7; }
+
+    .tag-navy .tag-header { background: linear-gradient(135deg, #1d5f82 0%, #2c7fad 100%); }
+    .tag-navy .tag-occasion { color: #fff; }
+    .tag-navy .tag-field { border-color: #2c7fad; }
+    .tag-navy .tag-field-label { color: #1d5f82; }
+    .tag-navy .tag-body { background: #f2f8fb; }
+
+    .tag-coral .tag-header { background: linear-gradient(135deg, #ff7f5c 0%, #ffa98a 100%); }
+    .tag-coral .tag-occasion { color: #fff; }
+    .tag-coral .tag-field { border-color: #ff7f5c; }
+    .tag-coral .tag-field-label { color: #d94f2a; }
+    .tag-coral .tag-body { background: #fff8f5; }
+
+    .tag-mint .tag-header { background: linear-gradient(135deg, #45b89a 0%, #78d4bc 100%); }
+    .tag-mint .tag-occasion { color: #fff; }
+    .tag-mint .tag-field { border-color: #45b89a; }
+    .tag-mint .tag-field-label { color: #2e8a72; }
+    .tag-mint .tag-body { background: #f2fbf8; }
+
+    .tag-lavender .tag-header { background: linear-gradient(135deg, #9b7dd4 0%, #c0a8e8 100%); }
+    .tag-lavender .tag-occasion { color: #fff; }
+    .tag-lavender .tag-field { border-color: #9b7dd4; }
+    .tag-lavender .tag-field-label { color: #6b4eaa; }
+    .tag-lavender .tag-body { background: #f8f4fe; }
+
+    .tag-gold .tag-header { background: linear-gradient(135deg, #c9952a 0%, #f0c060 100%); }
+    .tag-gold .tag-occasion { color: #fff; }
+    .tag-gold .tag-field { border-color: #c9952a; }
+    .tag-gold .tag-field-label { color: #8a6010; }
+    .tag-gold .tag-body { background: #fffbf0; }
+
+    /* Branding footer strip on each tag */
+    .tag-brand {
+      font-size: 8px;
+      text-align: right;
+      padding: 4px 10px 4px;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #ccc;
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: #fff; }
+      .screen-header, .sheet-container > .sheet-label, .sheet-container > .instructions, .print-btn { display: none !important; }
+      .sheet-container { margin: 0; padding: 0; max-width: none; }
+      .print-page {
+        width: 8.5in;
+        min-height: 11in;
+        padding: 0.45in 0.45in;
+        margin: 0;
+        box-shadow: none;
+        gap: 0.22in;
+      }
+      .tag { page-break-inside: avoid; }
+      .tag::before { border-color: #bbb; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Screen-only header -->
+  <div class="screen-header">
+    <p class="brand">Shelzy's Designs</p>
+    <h1>Free Printable Gift Tags</h1>
+    <p>8 beautiful gift tags, ready to print and cut. Welcome to the Shelzy's Designs community!</p>
+    <button class="print-btn" onclick="window.print()">Print Gift Tags</button>
+    <p class="instructions">Print on cardstock for best results. Cut along the dashed lines. Punch a hole at the top for ribbon or twine.</p>
+  </div>
+
+  <!-- Print sheet -->
+  <div class="sheet-container">
+
+    <div class="print-page">
+
+      <!-- Tag 1: Happy Birthday -->
+      <div class="tag tag-pink">
+        <div class="tag-header">
+          <div class="tag-occasion">Happy Birthday</div>
+        </div>
+        <div class="tag-body">
+          <div class="tag-field">
+            <span class="tag-field-label">To</span>
+            <div class="tag-field-line"></div>
+          </div>
+          <div class="tag-field">
+            <span class="tag-field-label">From</span>
+            <div class="tag-field-line"></div>
+          </div>
+        </div>
+        <div class="tag-brand">Shelzy's Designs</div>
+      </div>
+
+      <!-- Tag 2: Thank You -->
+      <div class="tag tag-blue">
+        <div class="tag-header">
+          <div class="tag-occasion">Thank You</div>
+        </div>
+        <div class="tag-body">
+          <div class="tag-field">
+            <span class="tag-field-label">To</span>
+            <div class="tag-field-line"></div>
+          </div>
+          <div class="tag-field">
+            <span class="tag-field-label">From</span>
+            <div class="tag-field-line"></div>
+          </div>
+        </div>
+        <div class="tag-brand">Shelzy's Designs</div>
+      </div>
+
+      <!-- Tag 3: Congratulations -->
+      <div class="tag tag-blush">
+        <div class="tag-header">
+          <div class="tag-occasion">Congratulations</div>
+        </div>
+        <div class="tag-body">
+          <div class="tag-field">
+            <span class="tag-field-label">To</span>
+            <div class="tag-field-line"></div>
+          </div>
+          <div class="tag-field">
+            <span class="tag-field-label">From</span>
+            <div class="tag-field-line"></div>
+          </div>
+        </div>
+        <div class="tag-brand">Shelzy's Designs</div>
+      </div>
+
+      <!-- Tag 4: With Love -->
+      <div class="tag tag-lavender">
+        <div class="tag-header">
+          <div class="tag-occasion">With Love</div>
+        </div>
+        <div class="tag-body">
+          <div class="tag-field">
+            <span class="tag-field-label">To</span>
+            <div class="tag-field-line"></div>
+          </div>
+          <div class="tag-field">
+            <span class="tag-field-label">From</span>
+            <div class="tag-field-line"></div>
+          </div>
+        </div>
+        <div class="tag-brand">Shelzy's Designs</div>
+      </div>
+
+      <!-- Tag 5: Just Because -->
+      <div class="tag tag-coral">
+        <div class="tag-header">
+          <div class="tag-occasion">Just Because</div>
+        </div>
+        <div class="tag-body">
+          <div class="tag-field">
+            <span class="tag-field-label">To</span>
+            <div class="tag-field-line"></div>
+          </div>
+          <div class="tag-field">
+            <span class="tag-field-label">From</span>
+            <div class="tag-field-line"></div>
+          </div>
+        </div>
+        <div class="tag-brand">Shelzy's Designs</div>
+      </div>
+
+      <!-- Tag 6: For You -->
+      <div class="tag tag-mint">
+        <div class="tag-header">
+          <div class="tag-occasion">For You</div>
+        </div>
+        <div class="tag-body">
+          <div class="tag-field">
+            <span class="tag-field-label">To</span>
+            <div class="tag-field-line"></div>
+          </div>
+          <div class="tag-field">
+            <span class="tag-field-label">From</span>
+            <div class="tag-field-line"></div>
+          </div>
+        </div>
+        <div class="tag-brand">Shelzy's Designs</div>
+      </div>
+
+      <!-- Tag 7: Happy Holidays -->
+      <div class="tag tag-navy">
+        <div class="tag-header">
+          <div class="tag-occasion">Happy Holidays</div>
+        </div>
+        <div class="tag-body">
+          <div class="tag-field">
+            <span class="tag-field-label">To</span>
+            <div class="tag-field-line"></div>
+          </div>
+          <div class="tag-field">
+            <span class="tag-field-label">From</span>
+            <div class="tag-field-line"></div>
+          </div>
+        </div>
+        <div class="tag-brand">Shelzy's Designs</div>
+      </div>
+
+      <!-- Tag 8: Blank / Your Message -->
+      <div class="tag tag-gold">
+        <div class="tag-header">
+          <div class="tag-occasion">From the Heart</div>
+        </div>
+        <div class="tag-body">
+          <div class="tag-field">
+            <span class="tag-field-label">To</span>
+            <div class="tag-field-line"></div>
+          </div>
+          <div class="tag-field">
+            <span class="tag-field-label">From</span>
+            <div class="tag-field-line"></div>
+          </div>
+        </div>
+        <div class="tag-brand">Shelzy's Designs</div>
+      </div>
+
+    </div><!-- end .print-page -->
+
+  </div><!-- end .sheet-container -->
+
+</body>
+</html>
