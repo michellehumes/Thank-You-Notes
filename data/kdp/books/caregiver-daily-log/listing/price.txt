@@ -1,0 +1,9 @@
+Paperback: $9.99
+KDP printing cost estimate (6x9, 110 pages, B&W): ~$2.17
+Net royalty per paperback sale (60% - printing): ~$3.82
+
+Kindle: $4.99
+Net royalty per Kindle sale (70%): ~$3.49
+
+Break-even (to cover $0 -- all profit from page 1): 0 sales needed
+Monthly target (10 sales/month): ~$38.20 net

@@ -1,7 +1,7 @@
 # KDP Book Catalog — Shelzy's Designs
 
-Last updated: 2026-04-17
-Total books: 0 live | 5 in pipeline
+Last updated: 2026-04-19
+Total books: 0 live | 8 in pipeline
 
 ---
 
@@ -20,6 +20,9 @@ Total books: 0 live | 5 in pipeline
 | medication-log-book | Medication Log Book | Medication Log Book (daily meds, dosage, refills) | interior-done | -- | $7.99 | ~$2.74 | -- | Created 2026-04-15 |
 | symptom-tracking-journal | Daily Symptom Tracker | Symptom Tracking Journal | interior-done | -- | $7.99 | ~$2.62 | -- | Created 2026-04-17 |
 | blood-pressure-log-book | Blood Pressure Log Book | Blood Pressure Log Book | interior-done | -- | $6.99 | ~$2.09 | -- | Created 2026-04-17 |
+| caregiver-daily-log | Caregiver Daily Log | Caregiver Daily Log (elder care, memory care) | interior-done | -- | $9.99 | ~$3.82 | -- | Created 2026-04-19 |
+| home-maintenance-log-book | Home Maintenance Log Book | Home Maintenance Log Book (annual tracker) | interior-done | -- | $9.99 | ~$3.94 | -- | Created 2026-04-19 |
+| cancer-treatment-journal | Cancer Treatment Journal | Cancer Treatment Journal (chemo cycles, doctor Q&A) | interior-done | -- | $10.99 | ~$4.30 | -- | Created 2026-04-19 |
 
 ---
 

@@ -1,6 +1,6 @@
 # KDP Niche Queue — Shelzy's Designs
 
-Last updated: 2026-04-17
+Last updated: 2026-04-19
 Status: EXPANDED -- 90 niches, 30 days of daily 3-book batches
 
 ---
@@ -14,6 +14,9 @@ Status: EXPANDED -- 90 niches, 30 days of daily 3-book batches
 | Medication Log Book (daily meds, dosage, refills) | medication-log-book | interior-done | 2026-04-15 |
 | Symptom Tracking Journal | symptom-tracking-journal | interior-done | 2026-04-17 |
 | Blood Pressure Log Book | blood-pressure-log-book | interior-done | 2026-04-17 |
+| Caregiver Daily Log (elder care, memory care) | caregiver-daily-log | interior-done | 2026-04-19 |
+| Home Maintenance Log Book (annual tracker) | home-maintenance-log-book | interior-done | 2026-04-19 |
+| Cancer Treatment Journal (chemo cycles, doctor Q&A) | cancer-treatment-journal | interior-done | 2026-04-19 |
 
 ---
 
@@ -21,9 +24,6 @@ Status: EXPANDED -- 90 niches, 30 days of daily 3-book batches
 
 | # | Niche | Category | Michelle Edge | Priority |
 |---|-------|----------|---------------|----------|
-| 4 | Caregiver Daily Log (elder care, memory care) | Health | High emotional purchase | HIGH |
-| 5 | Home Maintenance Log Book (annual tracker) | Home | Already built for Etsy -- crossover | HIGH |
-| 6 | Cancer Treatment Journal (chemo cycles, doctor Q&A) | Health | Oncology/Keytruda background | HIGH |
 | 7 | Pet Health Journal (vet visits, vaccines, medications) | Pet | Universal buyer | HIGH |
 | 8 | Baby's First Year Journal (milestones, memories) | Baby | Gift purchase, evergreen | HIGH |
 | 9 | Mental Health & CBT Workbook Journal | Mental Health | High demand, therapeutic | HIGH |
